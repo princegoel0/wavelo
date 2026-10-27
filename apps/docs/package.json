@@ -1,0 +1,10 @@
+{
+  "name": "@wavelo/docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node dist/index.js > dist/index.html"
+  }
+}

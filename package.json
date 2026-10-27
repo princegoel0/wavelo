@@ -1,0 +1,41 @@
+{
+  "name": "wavelo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal loading and motion library",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/docs"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @wavelo/core && npm run build --workspaces --if-present",
+    "check": "npm run build && npm run typecheck && npm test && npm run catalog && npm run measure",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "catalog": "node scripts/validate-catalog.mjs",
+    "measure": "node scripts/bundle.mjs",
+    "audit:visual": "node scripts/visual-audit.mjs",
+    "audit:visual:correctness": "node scripts/audit-loader-visual-correctness.mjs",
+    "docs:build": "npm run build --workspace @wavelo/docs",
+    "pack:check": "npm pack --dry-run --workspaces --if-present",
+    "test:browser": "node tests/browser.test.mjs"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^22.2.3",
+    "@angular/platform-browser": "^22.2.3",
+    "@angular/platform-browser-dynamic": "^22.2.3",
+    "@angular/platform-server": "^22.2.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "axe-core": "^4.14.0",
+    "domino": "^2.1.8",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.64.1",
+    "react-dom": "^19.3.1",
+    "rxjs": "^7.8.2",
+    "typescript": "^5.7.2",
+    "zone.js": "^0.16.3"
+  }
+}

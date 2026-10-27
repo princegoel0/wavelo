@@ -1,0 +1,14 @@
+{
+  "name": "@wavelo/angular",
+  "version": "0.1.0",
+  "description": "Angular component integration for Wavelo",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {"@wavelo/core": "0.1.0"},
+  "peerDependencies": {"@angular/core": ">=22.2.3 <23"},
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {".": {"types": "./dist/index.d.ts", "import": "./dist/index.js"}},
+  "scripts": {"build": "tsc -p tsconfig.json"}
+}

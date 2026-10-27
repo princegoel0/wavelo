@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {"rootDir": "src", "outDir": "dist", "noEmit": false, "paths": {"@wavelo/core": ["../core/dist/index.d.ts"], "@wavelo/core/*": ["../core/dist/*"]}},
+  "include": ["src/**/*.ts"]
+}
