@@ -44,6 +44,14 @@ Audited version: `0.1.0`
 - [ ] Review the final tarball file lists and changelog once more.
 - [ ] Obtain explicit approval to publish; this audit performed no npm login,
   publish, version mutation, or registry operation.
+- [ ] Configure npm trusted publishing for this GitHub repository/workflow and
+  create the protected `npm` environment.
+- [ ] Set the repository variable `RELEASE_ENABLED=true` only when automatic
+  publishing from `main` is approved. With the variable unset or false, the
+  release workflow validates but does not publish.
+- [ ] Update all seven package versions consistently in the merge to `main`.
+  The release workflow rejects a gated release when any package version is
+  unchanged or the versions differ.
 
 ## Exact publish preparation commands
 
@@ -86,3 +94,12 @@ until the owner actions above are complete.
 
 These publication commands were documented only; none was executed during the
 audit.
+
+## Automatic release workflow
+
+`.github/workflows/release.yml` runs validation on every push to `main` and on
+manual dispatch. Publishing is gated by the `RELEASE_ENABLED` repository
+variable and the protected `npm` environment. When enabled, it verifies that
+all seven package versions changed consistently, then publishes each package
+with npm provenance using GitHub Actions OIDC. No npm token is stored in the
+repository.
