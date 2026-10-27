@@ -8,10 +8,11 @@ Decision: **BLOCKED**
 ## Executive summary
 
 The local implementation and package checks pass, and the release workflow was
-hardened without publishing or changing GitHub/npm settings. The release is
-still blocked because npm trusted publishing, the protected GitHub `npm`
-environment, branch protection, and final interactive visual acceptance are
-external owner actions that were not verified here.
+hardened without publishing or changing npm settings. GitHub repository
+safeguards are now configured: protected `main`, required CI/review controls,
+and a protected `npm` environment with owner approval. The release is still
+blocked because npm trusted publishing and final interactive visual acceptance
+remain unverified.
 
 The original workflow had release-critical defects:
 
@@ -28,8 +29,8 @@ The original workflow had release-critical defects:
 7. Chromium installation was not explicit for the browser checks on a clean
    GitHub runner.
 
-These were corrected locally. Changes have **not** been pushed, merged, tagged,
-published, or enabled.
+These were corrected and pushed to `dev`. No changes were merged to `main`,
+tagged, published, or enabled for release.
 
 ## Files inspected
 
@@ -138,15 +139,17 @@ the workflow publishes deterministic validated tarballs in a fixed order.
 
 ### GitHub owner actions
 
-- [ ] Create the protected environment named `npm`.
-- [ ] Configure required reviewers/approval rules for the `npm` environment.
+- [x] Create the protected environment named `npm`.
+- [x] Configure `princegoel0` as a required reviewer for the `npm` environment.
+- [x] Restrict the `npm` environment to protected branches.
 - [ ] Configure npm trusted publishing for repository
   `princegoel0/wavelo`, workflow `release.yml`, and environment `npm`.
-- [ ] Set repository variable `RELEASE_ENABLED=true` only after release approval.
-- [ ] Keep the variable unset or false during development.
-- [ ] Protect `main` and require the CI and release validation checks before
+- [x] Keep repository variable `RELEASE_ENABLED=false` during development.
+- [x] Protect `main` and require the CI `verify` check before
   merging from `dev`.
-- [ ] Require pull requests and prevent direct unreviewed pushes to `main`.
+- [x] Require pull requests, one approval, conversation resolution, and prevent
+  force pushes to `main`.
+- [ ] Set repository variable `RELEASE_ENABLED=true` only after release approval.
 
 ### npm owner actions
 
