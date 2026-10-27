@@ -6,10 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write
-
 concurrency:
   group: npm-release
   cancel-in-progress: false
@@ -32,12 +28,10 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run docs:build
+      - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - run: npm run audit:visual:correctness
       - run: npm run pack:check
-      - name: Create release tarballs
-        if: steps.gate.outputs.enabled == 'true'
-        run: npm pack --workspaces --pack-destination release-tarballs
       - name: Check release gate
         id: gate
         shell: bash
@@ -53,60 +47,51 @@ jobs:
       - name: Verify package versions changed consistently
         if: steps.gate.outputs.enabled == 'true'
         id: version
-        shell: bash
         run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const { execFileSync } = require('node:child_process');
-          const packages = [
-            'packages/core/package.json',
-            'packages/vanilla/package.json',
-            'packages/web-components/package.json',
-            'packages/react/package.json',
-            'packages/vue/package.json',
-            'packages/svelte/package.json',
-            'packages/angular/package.json'
-          ];
-          const changed = execFileSync('git', ['diff', '--name-only', 'HEAD^', 'HEAD'], { encoding: 'utf8' }).trim().split(/\r?\n/);
-          const versions = packages.map((file) => {
-            const current = JSON.parse(fs.readFileSync(file, 'utf8')).version;
-            if (!changed.includes(file)) throw new Error(`${file} version was not changed in this merge`);
-            return current;
-          });
-          if (new Set(versions).size !== 1) throw new Error(`Package versions must match: ${versions.join(', ')}`);
-          const version = versions[0];
-          if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) throw new Error(`Invalid release version: ${version}`);
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
-          NODE
-      - name: Upload release tarballs
+          node scripts/validate-release.mjs
+          node -e "const fs=require('node:fs'); const v=JSON.parse(fs.readFileSync('packages/core/package.json','utf8')).version; fs.appendFileSync(process.env.GITHUB_OUTPUT, 'version='+v+'\\n')"
+      - name: Build release tarballs
+        if: steps.gate.outputs.enabled == 'true'
+        run: npm pack --workspaces --pack-destination release-tarballs
+      - name: Upload validated release tarballs
         if: steps.gate.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: wavelo-${{ steps.version.outputs.version }}-tarballs
-          path: |
-            packages/*/*.tgz
-            !packages/*/node_modules/**
+          path: release-tarballs/*.tgz
 
   publish:
     name: Publish npm packages
     needs: validate
-    if: needs.validate.outputs.release_enabled == 'true'
+    if: needs.validate.outputs.release_enabled == 'true' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     environment:
       name: npm
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-      - run: npm ci
+      - name: Download validated release tarballs
+        uses: actions/download-artifact@v4
+        with:
+          name: wavelo-${{ needs.validate.outputs.version }}-tarballs
+          path: release-tarballs
       - name: Publish packages with provenance
+        shell: bash
         run: |
-          npm publish --workspace @wavelo/core --access public --provenance
-          npm publish --workspace @wavelo/vanilla --access public --provenance
-          npm publish --workspace @wavelo/web-components --access public --provenance
-          npm publish --workspace @wavelo/react --access public --provenance
-          npm publish --workspace @wavelo/vue --access public --provenance
-          npm publish --workspace @wavelo/svelte --access public --provenance
-          npm publish --workspace @wavelo/angular --access public --provenance
+          set -euo pipefail
+          for package in \
+            wavelo-core \
+            wavelo-vanilla \
+            wavelo-web-components \
+            wavelo-react \
+            wavelo-vue \
+            wavelo-svelte \
+            wavelo-angular
+          do
+            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public --provenance
+          done

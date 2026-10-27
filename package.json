@@ -18,6 +18,7 @@
     "measure": "node scripts/bundle.mjs",
     "audit:visual": "node scripts/visual-audit.mjs",
     "audit:visual:correctness": "node scripts/audit-loader-visual-correctness.mjs",
+    "release:validate": "node scripts/validate-release.mjs",
     "docs:build": "npm run build --workspace @wavelo/docs",
     "pack:check": "npm pack --dry-run --workspaces --if-present",
     "test:browser": "node tests/browser.test.mjs"
