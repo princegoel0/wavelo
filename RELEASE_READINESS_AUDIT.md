@@ -192,7 +192,10 @@ the workflow publishes deterministic validated tarballs in a fixed order.
   `princegoel0/wavelo`, workflow `release.yml`, and environment `npm`.
 - [x] Keep repository variable `RELEASE_ENABLED=false` during development.
 - [x] Protect `main` and require the CI `verify` check before
-  merging from `dev`.
+  merging from `dev`. Verified 2026-10-28: protection is active with
+  `strict: true`, one required approval, conversation resolution, admins
+  enforced and force-push blocked — but the required contexts list only
+  `verify`, so the new `verify-browser` job does not gate a merge yet.
 - [x] Require pull requests, one approval, conversation resolution, and prevent
   force pushes to `main`.
 - [ ] Set repository variable `RELEASE_ENABLED=true` only after release approval.
@@ -227,8 +230,8 @@ No npm login, token creation, account change, or registry mutation was done.
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
-| GitHub Actions workflow execution | Not run locally; requires GitHub |
-| npm trusted publishing/provenance | Not verifiable without owner configuration and publication |
+| GitHub Actions workflow execution | Passed on GitHub for `dev` at `41cf7c3`: `verify` and `verify-browser` both green, including the Playwright install on a clean runner. Not run locally. |
+| npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer |
 
 The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
 

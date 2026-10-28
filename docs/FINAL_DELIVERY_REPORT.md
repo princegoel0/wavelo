@@ -56,6 +56,7 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
+| GitHub Actions, `dev` at `41cf7c3` | Passed: `verify` and `verify-browser` both green, including `npx playwright install --with-deps chromium` on a clean runner |
 
 ## Browser evidence
 
@@ -118,9 +119,12 @@ pre-remediation renderer and is kept as history.
 
 ## Remaining limitations
 
-1. npm trusted publishing, provenance policy, package ownership and the protected
-   `npm` environment are owner-side settings that this repository cannot verify.
-2. GitHub Actions paths were read, not executed; CI has not run this build.
+1. npm trusted publishing, provenance policy and package ownership are owner-side
+   settings that this repository cannot verify.
+2. CI has run this build on GitHub: both the `verify` and `verify-browser` jobs
+   passed for `dev` at `41cf7c3`. What is not yet closed is that `main` requires
+   only the `verify` context, so a failing `verify-browser` job would not block a
+   merge until it is added to the required status checks.
 3. Only Chromium is exercised. Safari and Firefox are untested, and the documented
    engine floor is inferred from the CSS features used.
 4. Framework compatibility is demonstrated at one version per declared peer range.

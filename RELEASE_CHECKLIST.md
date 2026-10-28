@@ -33,11 +33,13 @@ Audited version: `0.1.0`
 - [x] Verified each of the 81 designs renders identically from only its own
   stylesheet slice, so the modular entry points are complete.
 - [x] Verified style slices are injected once per document (12 loaders across
-  four kinds produce four head elements, none in a host).
+  five render kinds produce five head elements, none inside a host).
 - [x] Reviewed `.github/workflows/ci.yml`: it runs validation and packaging
   checks only; it does not publish or mutate npm.
 - [x] Added a `verify-browser` CI job so computed-style and axe checks run on
   every push and pull request, not only in the release workflow.
+- [x] Confirmed on GitHub that both jobs are green for `dev` at `41cf7c3`,
+  including the Playwright install step on a clean runner.
 - [x] Ran `npm run check`: passed; build with catalog generation, strict
   typecheck, 25 unit tests, catalog drift check, documentation sync, and bundle
   budgets.
@@ -56,21 +58,29 @@ Audited version: `0.1.0`
 
 ## Owner actions before publishing
 
+- [ ] Add `verify-browser` to the required status checks for `main`. Protection
+  currently requires only `verify`, so a failing computed-style or axe suite
+  would not block a merge.
+- [ ] Configure npm trusted publishing on npmjs.com for repository
+  `princegoel0/wavelo`, workflow `release.yml`, and environment `npm`. The GitHub
+  side is already in place: the `npm` environment exists with a protected-branch
+  policy and `princegoel0` as required reviewer.
 - [ ] Confirm the intended public registry access policy and npm provenance
-  settings in the release environment.
+  settings for the release.
 - [ ] Confirm package version `0.1.0` is the intended initial release and that
   no package has already been published under these names.
 - [ ] Review the final tarball file lists and changelog once more.
 - [ ] Obtain explicit approval to publish; this audit performed no npm login,
   publish, version mutation, or registry operation.
-- [ ] Configure npm trusted publishing for this GitHub repository/workflow and
-  create the protected `npm` environment.
 - [ ] Set the repository variable `RELEASE_ENABLED=true` only when automatic
-  publishing from `main` is approved. With the variable unset or false, the
-  release workflow validates but does not publish.
+  publishing from `main` is approved. Verified 2026-10-28: it is currently
+  `false`, so a merge to `main` validates but publishes nothing.
 - [ ] Update all seven package versions consistently in the merge to `main`.
   The release workflow rejects a gated release when any package version is
   unchanged or the versions differ.
+- [ ] Decide whether to tag the release (for example `v0.1.0`). The repository
+  has no tags at all today, and `release.yml` does not create one after
+  publishing.
 
 ## Exact publish preparation commands
 
