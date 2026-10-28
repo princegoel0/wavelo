@@ -56,10 +56,10 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
-| GitHub Actions, `dev` at `41cf7c3` | Passed: `verify` and `verify-browser` both green, including `npx playwright install --with-deps chromium` on a clean runner |
-| `dev` → `main` merge | Done as merge commit `da4ce47` through pull request #3 |
-| GitHub Actions, `main` at `da4ce47` | `CI` passed; `Release packages`: `Validate release` green, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
-| npm registry state | `0.1.0` not present for any of the seven names; organization `wavelo` exists with `princegoel072` as owner |
+| GitHub Actions, `dev` at `19cffe1` | Passed: `verify` and `verify-browser` both green on the push run and the pull-request run, including `npx playwright install --with-deps chromium` on a clean runner |
+| `dev` → `main` merge | Done as merge commit `603ecfc` through pull request #6, which also carried `b6e67b6` (colour cycle and skeleton visibility) that was on `dev` only |
+| GitHub Actions, `main` at `603ecfc` | `CI` passed (`verify` 31s, `verify-browser` 48s); `Release packages`: `Validate release` green in 1m23s, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
+| npm registry state | `0.1.0` not present for any of the seven names (`npm view @wavelo/core version` returns a 404); organization `wavelo` exists with `princegoel072` as owner |
 
 ## Browser evidence
 

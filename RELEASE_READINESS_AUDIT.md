@@ -215,7 +215,7 @@ Every checked box below was re-read from GitHub or the npm registry on
   merge. With reviews at `0`, the two required status checks are the only gate on
   `main`.
 - [x] Repository variable `RELEASE_ENABLED` is `false`, verified after the merge:
-  the release workflow ran on `main` at `da4ce47` with `Validate release` green
+  the release workflow ran on `main` at `603ecfc` with `Validate release` green
   and `Publish npm packages` **skipped**, and `npm run release:validate` still
   reports nothing published.
 - [x] Repository secret `NPM_TOKEN` created for the granular npm token.
@@ -263,7 +263,7 @@ been run.
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
-| GitHub Actions workflow execution | Passed on GitHub for `dev` at `41cf7c3`: `verify` and `verify-browser` both green, including the Playwright install on a clean runner. Not run locally. |
+| GitHub Actions workflow execution | Passed on GitHub for `dev` at `19cffe1` (push run and pull-request run) and for `main` at `603ecfc`: `verify` and `verify-browser` both green, including the Playwright install on a clean runner. Not run locally. |
 | npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer |
 
 The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
