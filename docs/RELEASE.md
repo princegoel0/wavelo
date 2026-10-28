@@ -23,7 +23,9 @@ Install the generated tarball in a clean temporary project, resolve every public
 subpath — `@wavelo/core/loaders/<id>`, `@wavelo/core/css`, `@wavelo/core/styles`,
 `@wavelo/core/styles.css` — compile a documented example with strict `tsc
 --noEmit`, and inspect the contents before publishing. Confirm package names,
-access, version, changelog, license, and provenance settings. Only then run the
+access, version, changelog, and license. Provenance is not available for the
+first release, which publishes with a granular `NPM_TOKEN`; add npm trusted
+publishing per package afterwards and restore `--provenance`. Only then run the
 approved release workflow or `npm publish` for the reviewed package.
 
 Consumers need to know one thing this repository cannot verify for them: no

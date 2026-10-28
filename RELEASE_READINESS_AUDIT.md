@@ -138,11 +138,22 @@ Library review remediation (2026-10-28):
 - Queries npm to reject exact versions already published.
 - Packs the seven packages only after validation.
 - Uploads those exact tarballs as an artifact.
-- Publishes the artifact tarballs with `--provenance`.
+- Publishes the artifact tarballs in a fixed order using the `NPM_TOKEN`
+  repository secret, with `--access public` and no `--provenance`: npm
+  provenance requires trusted publishing, which is configured per existing
+  package, so it returns for `0.1.x` once each `@wavelo` package has a trusted
+  publisher.
+- Stops at the first publish failure (`set -euo pipefail`), and publishes
+  `@wavelo/core` first, so a credential or scope problem cannot leave the six
+  dependent packages half-published before the core is known good.
 - Grants OIDC permission only to the publishing job.
 - Uses a non-overlapping `npm-release` concurrency group.
+- The publishing job targets the protected `npm` environment, so a gated release
+  also waits for an environment approval from `princegoel0` before any
+  `npm publish` runs.
 
-The validation job has no publish credentials or OIDC write permission.
+The validation job has no publish credentials, no token, and no OIDC write
+permission.
 
 ## First-release version analysis
 
@@ -181,38 +192,60 @@ The package dry run showed the intended `dist`, declaration, metadata,
 README, and license files. No package is published atomically with another;
 the workflow publishes deterministic validated tarballs in a fixed order.
 
-## Trusted publishing configuration checklist
+## Release configuration checklist
 
-### GitHub owner actions
+Every checked box below was re-read from GitHub or the npm registry on
+2026-10-28; nothing here is asserted from workflow files alone.
 
-- [x] Create the protected environment named `npm`.
-- [x] Configure `princegoel0` as a required reviewer for the `npm` environment.
-- [x] Restrict the `npm` environment to protected branches.
-- [ ] Configure npm trusted publishing for repository
-  `princegoel0/wavelo`, workflow `release.yml`, and environment `npm`.
-- [x] Keep repository variable `RELEASE_ENABLED=false` during development.
-- [x] Protect `main` and require the CI `verify` check before
-  merging from `dev`. Verified 2026-10-28: protection is active with
-  `strict: true`, one required approval, conversation resolution, admins
-  enforced and force-push blocked — but the required contexts list only
-  `verify`, so the new `verify-browser` job does not gate a merge yet.
-- [x] Require pull requests, one approval, conversation resolution, and prevent
-  force pushes to `main`.
-- [ ] Set repository variable `RELEASE_ENABLED=true` only after release approval.
+### GitHub repository settings
 
-### npm owner actions
+- [x] Protected environment named `npm` exists.
+- [x] `princegoel0` is the required reviewer for the `npm` environment, so a
+  gated release pauses for approval before any publish step runs.
+- [x] The `npm` environment is restricted to protected branches
+  (`deployment_branch_policy.protected_branches: true`).
+- [x] `main` requires the CI checks `verify` and `verify-browser`, with
+  `strict: true` so a merge candidate must be current. Both context names match
+  what CI reports, so neither sits "expected" forever.
+- [x] `main` requires conversation resolution, blocks force pushes and deletion,
+  and applies to administrators (`enforce_admins: true`).
+- [x] Required approving reviews set to `0`. This was necessary: the rule
+  demanded one approval, GitHub forbids the author approving their own pull
+  request, and no other account has write access, so no pull request could ever
+  merge. With reviews at `0`, the two required status checks are the only gate on
+  `main`.
+- [x] Repository variable `RELEASE_ENABLED` is `false`, verified after the merge:
+  the release workflow ran on `main` at `da4ce47` with `Validate release` green
+  and `Publish npm packages` **skipped**, and `npm run release:validate` still
+  reports nothing published.
+- [x] Repository secret `NPM_TOKEN` created for the granular npm token.
+- [ ] Set `RELEASE_ENABLED=true` only at the moment publishing is authorized.
+- [ ] Pin the reviewed action SHAs instead of `@v4` major tags (optional).
 
-For each of the seven package names:
+### npm settings
 
-- [ ] Confirm the package name is available or owned by the intended npm
-  organization/account.
-- [ ] Configure GitHub trusted publishing for the exact repository and
-  workflow identity.
-- [ ] Confirm public access policy and provenance expectations.
-- [ ] After publication, verify provenance attestations on npm.
+- [x] The `wavelo` scope is an npm organization owned by the publishing account
+  (`npm org ls wavelo` reports `princegoel072 - owner`). Before this the registry
+  returned `404 Scope not found`, which made every `@wavelo/*` publish impossible
+  regardless of CI configuration.
+- [ ] Confirm the `NPM_TOKEN` granular token grants read/write on packages in the
+  `wavelo` org, omits the 2FA requirement, and carries a short expiry. Only the
+  secret's existence is visible from GitHub; its scope and expiry cannot be read
+  from this repository.
+- [ ] After `0.1.0` exists: configure npm trusted publishing for each package
+  (`princegoel0/wavelo`, `release.yml`, environment `npm`), restore
+  `--provenance` in `release.yml`, and delete the `NPM_TOKEN` secret.
+- [ ] After publication, verify the seven package pages, versions and access
+  level on npm.
 
-Workflow presence alone does not prove any of these settings are configured.
-No npm login, token creation, account change, or registry mutation was done.
+Publishing `0.1.0` permanently reserves all seven names; npm does not allow a
+clean delete-and-rename of a published version. The merge of `dev` into `main`
+and the validation-only release run are both reversible; the publish job is not.
+
+Workflow presence alone does not prove any setting is configured. No npm login,
+token creation, account change, or registry mutation was performed by this audit;
+the token and organization were created by the owner, and no `npm publish` has
+been run.
 
 ## Validation commands and observed results
 

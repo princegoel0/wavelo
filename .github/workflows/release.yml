@@ -75,15 +75,20 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
+          token: ${{ secrets.NPM_TOKEN }}
       - name: Download validated release tarballs
         uses: actions/download-artifact@v4
         with:
           name: wavelo-${{ needs.validate.outputs.version }}-tarballs
           path: release-tarballs
-      - name: Publish packages with provenance
+      - name: Publish packages
         shell: bash
         run: |
           set -euo pipefail
+          # Provenance requires npm trusted publishing, which is configured per
+          # existing package, so the first release publishes with a granular
+          # token and `--provenance` returns once trusted publishing is set up
+          # for each @wavelo package.
           for package in \
             wavelo-core \
             wavelo-vanilla \
@@ -93,5 +98,5 @@ jobs:
             wavelo-svelte \
             wavelo-angular
           do
-            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public --provenance
+            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public
           done
