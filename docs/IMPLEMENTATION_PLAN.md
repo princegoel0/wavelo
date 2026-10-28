@@ -1,5 +1,12 @@
 # Wavelo implementation plan
 
+Status: the plan below is implemented. It records how the work was sequenced, not
+the current contract — for that read [README.md](../README.md),
+[docs/COMPATIBILITY.md](COMPATIBILITY.md), [docs/FRAMEWORKS.md](FRAMEWORKS.md),
+[docs/BUNDLE_SIZE.md](BUNDLE_SIZE.md) and
+[docs/FINAL_DELIVERY_REPORT.md](FINAL_DELIVERY_REPORT.md), which `npm run
+docs:check` keeps aligned with the build.
+
 ## Completed phases
 
 1. **Audit** — inspected the root PRD, identified missing runtime and release

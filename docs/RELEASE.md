@@ -5,16 +5,31 @@ not happen without explicit approval.
 
 ```powershell
 npm install
-npm run check
-npm run build
+npm run build          # builds the core, regenerates catalog entry points, builds adapters
+npm run check          # typecheck, 25 unit tests, catalog drift, docs sync, bundle budgets
+npm run test:browser   # Chromium: computed styles, style injection, slice isolation, axe
+npm run docs:build
 npm run measure
 npm pack --workspace @wavelo/core
 ```
 
-Install the generated tarball in a clean temporary project, compile a documented
-example, and inspect its contents before publishing. Confirm package names, access,
-version, changelog, license, and provenance settings. Only then run the approved
-release workflow or `npm publish` for the reviewed package.
+`npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
+against `packages/core/src/catalog.ts`; after changing the catalog run
+`npm run catalog:generate` and commit the regenerated files. `npm run docs:check`
+reads the counts and bundle figures from the build, so a stale document fails
+rather than drifting silently.
+
+Install the generated tarball in a clean temporary project, resolve every public
+subpath — `@wavelo/core/loaders/<id>`, `@wavelo/core/css`, `@wavelo/core/styles`,
+`@wavelo/core/styles.css` — compile a documented example with strict `tsc
+--noEmit`, and inspect the contents before publishing. Confirm package names,
+access, version, changelog, license, and provenance settings. Only then run the
+approved release workflow or `npm publish` for the reviewed package.
+
+Consumers need to know one thing this repository cannot verify for them: no
+adapter inlines CSS, so a server-rendered page must include
+`@wavelo/core/styles.css` (or the slices it rendered) in its document head.
+State it in the release notes.
 
 Never publish an unreviewed pull request. Use semantic versioning and record the
 exact validation environment in release notes.

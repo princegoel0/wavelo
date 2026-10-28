@@ -1,0 +1,10 @@
+# Generated catalog modules are compared byte-for-byte by
+# `npm run catalog`, so their line endings must not depend on the checkout.
+*.ts text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.svelte text eol=lf
+*.png binary

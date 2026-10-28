@@ -4,11 +4,40 @@
   "description": "Vue component integration for Wavelo",
   "type": "module",
   "license": "MIT",
-  "dependencies": {"@wavelo/core": "0.1.0"},
-  "peerDependencies": {"vue": ">=3.5.44 <4"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/princegoel0/wavelo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/princegoel0/wavelo/issues"
+  },
+  "homepage": "https://github.com/princegoel0/wavelo#readme",
+  "keywords": [
+    "loading",
+    "spinner",
+    "loader",
+    "vue",
+    "animation",
+    "accessible"
+  ],
+  "dependencies": {
+    "@wavelo/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "vue": ">=3.5.44 <4"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
-  "exports": {".": {"types": "./dist/index.d.ts", "import": "./dist/index.js"}},
-  "scripts": {"build": "tsc -p tsconfig.json"}
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
 }

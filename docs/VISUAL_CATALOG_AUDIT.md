@@ -33,7 +33,7 @@ audit because doing so requires coordinated preset/API deprecation work.
 | `arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `half-circle`; public import retained for compatibility. |
 | `multi-arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `dual-ring`; public import retained for compatibility. |
 | `dotted-circle` | spinner | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `segmented-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `dotted-circle`; public import retained for compatibility. |
+| `segmented-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Deprecated alias of `dotted-circle`; public import retained for compatibility. |
 | `half-circle` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `ellipse` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `rotating-square` | spinner | Human reviewed | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
@@ -54,7 +54,7 @@ audit because doing so requires coordinated preset/API deprecation work.
 | `scaling-dots` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `rotating-dots` | dots | Human reviewed | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `dot-wave` | dots | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `dot-matrix` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Deprecated alias of `grid-pulse`; public import retained for compatibility. |
+| `dot-matrix` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Deprecated alias of `grid-pulse`; public import retained for compatibility. |
 | `grid-pulse` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `alternating-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Shares linear-dot structure with fading/staggered dots; improve alternating grouping. |
 | `expanding-dot` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |

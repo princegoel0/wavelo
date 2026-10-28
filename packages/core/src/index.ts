@@ -1,6 +1,8 @@
 export * from './types.js';
+export * from './config.js';
 export * from './registry.js';
 export * from './validation.js';
-export * from './render.js';
-export * from './render-catalog.js';
-export * from './dom.js';
+export { renderLoaderWithDefinition, styleKey } from './render.js';
+export { renderLoader } from './render-catalog.js';
+export { ensureStyles, renderStylesheets, stylesheetMarkup } from './styles.js';
+export { createLoaderElement, mountLoader } from './dom.js';
