@@ -38,8 +38,11 @@ Audited version: `0.1.0`
   checks only; it does not publish or mutate npm.
 - [x] Added a `verify-browser` CI job so computed-style and axe checks run on
   every push and pull request, not only in the release workflow.
-- [x] Confirmed on GitHub that both jobs are green for `dev` at `41cf7c3`,
-  including the Playwright install step on a clean runner.
+- [x] Confirmed on GitHub that both jobs are green for `dev` at `19cffe1` and for
+  `main` at `603ecfc`, including the Playwright install step on a clean runner.
+- [x] Merged `dev` into `main` as `603ecfc` through pull request #6; the release
+  workflow ran there with `Validate release` green and `Publish npm packages`
+  skipped, because `RELEASE_ENABLED` is `false`.
 - [x] Ran `npm run check`: passed; build with catalog generation, strict
   typecheck, 30 unit tests, catalog drift check, documentation sync, and bundle
   budgets.
