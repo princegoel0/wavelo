@@ -181,6 +181,22 @@ test('the progress family renders seven distinguishable designs', () => {
   assert.match(css, /\.wavelo--progress-top\{[^}]*position:fixed/);
 });
 
+test('unset colours are not emitted as self-referencing variables', () => {
+  // `--wavelo-color: var(--wavelo-color, #6366f1)` on the element that declares
+  // it is a cycle: CSS resolves it as invalid and every design inherits the page
+  // colour instead. Defaults belong to the stylesheet rules that consume them.
+  const plain = renderLoader({ type: 'ring', label: 'Loading' });
+  assert.doesNotMatch(plain.html, /--wavelo-color:/);
+  assert.doesNotMatch(plain.html, /--wavelo-secondary-color:/);
+  assert.doesNotMatch(plain.html, /--wavelo-background:/);
+  assert.match(plain.css, /color:var\(--wavelo-color,#6366f1\)/);
+
+  const coloured = renderLoader({ type: 'ring', color: '#010203', secondaryColor: '#040506', backgroundColor: '#070809', label: 'Loading' });
+  assert.match(coloured.html, /--wavelo-color:#010203/);
+  assert.match(coloured.html, /--wavelo-secondary-color:#040506/);
+  assert.match(coloured.html, /--wavelo-background:#070809/);
+});
+
 test('generated loader modules match the catalog exactly', async () => {
   const files = await readdir(new URL('../packages/core/dist/loaders/', import.meta.url));
   const modules = files.filter((name) => name.endsWith('.js') && name !== 'index.js').map((name) => name.replace('.js', ''));

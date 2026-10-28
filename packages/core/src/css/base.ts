@@ -1,7 +1,7 @@
 import { keyframesCss } from './keyframes.js';
 
 export const baseCss = `
-.wavelo{display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:var(--wavelo-width);height:var(--wavelo-height);color:var(--wavelo-color);background:var(--wavelo-background);animation-duration:var(--wavelo-duration);animation-direction:var(--wavelo-direction);animation-play-state:var(--wavelo-play-state)}
+.wavelo{display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:var(--wavelo-width);height:var(--wavelo-height);color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);animation-duration:var(--wavelo-duration);animation-direction:var(--wavelo-direction);animation-play-state:var(--wavelo-play-state)}
 .wavelo__part{box-sizing:border-box;background:currentColor}
 .wavelo-host{display:contents}
 .wavelo,.wavelo[data-wavelo-theme="light"]{--wavelo-skeleton-base:#e5e7eb;--wavelo-skeleton-highlight:#f9fafb}

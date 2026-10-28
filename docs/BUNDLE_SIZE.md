@@ -6,20 +6,23 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 11,278 | 3.6 KB (3,705 B) | 4,096 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 13,447 | 4,099 | 4,608 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 39,180 | 8.3 KB (8,511 B) | 10,240 |
-| `@wavelo/core` + registry walk over all 81 designs | 39,183 | 8,516 | 10,240 |
-| `@wavelo/react` | 39,603 | 8,730 | 9,216 |
-| `@wavelo/vue` | 40,370 | 9,038 | 9,216 |
-| `@wavelo/angular` | 42,281 | 9,853 | 10,240 |
-| `@wavelo/svelte` | 39,189 | 8,511 | 9,216 |
-| `@wavelo/web-components` | 40,681 | 9,107 | 9,216 |
-| `@wavelo/vanilla` | 39,500 | 8,666 | 9,216 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 24,709 raw | 3,738 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 11,305 | 3.6 KB (3,708 B) | 4,096 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 13,632 | 4,153 | 5,120 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 39,365 | 8.4 KB (8,563 B) | 10,240 |
+| `@wavelo/core` + registry walk over all 81 designs | 39,368 | 8,568 | 10,240 |
+| `@wavelo/react` | 39,788 | 8,784 | 10,240 |
+| `@wavelo/vue` | 40,555 | 9,093 | 10,240 |
+| `@wavelo/angular` | 42,466 | 9,908 | 11,264 |
+| `@wavelo/svelte` | 39,374 | 8,563 | 10,240 |
+| `@wavelo/web-components` | 40,866 | 9,163 | 10,240 |
+| `@wavelo/vanilla` | 39,685 | 8,719 | 10,240 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 24,895 raw | 3,799 | — |
 
-Headroom is deliberately tight: `vue` and `web-components` sit within ~180 B of
-their budgets, so a careless addition to the core fails CI instead of shipping.
+The budget that backs the "modular catalog" claim is `individual-loader`: a
+design chosen at build time must not carry the rest of the catalog. Adapters and
+`renderLoader` choose by string at runtime, so they legitimately carry every
+slice; their budgets are set from that reality with roughly 10% headroom rather
+than pretending to be per-design.
 
 ## Why the numbers look like this
 

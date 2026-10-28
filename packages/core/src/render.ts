@@ -15,8 +15,10 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
-    if (type === 'skeleton-line' || type === 'image-placeholder') return '';
-    return many(type === 'skeleton-avatar' ? 1 : type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
+    // Line, avatar and image placeholders are painted by the element itself;
+    // only the composite layouts need child tracks.
+    if (type === 'skeleton-line' || type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    return many(type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
   }
   if (kind === 'progress') {
     if (type === 'progress-steps') {
@@ -67,16 +69,23 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     `--wavelo-size:${config.size}`,
     `--wavelo-width:${config.width}`,
     `--wavelo-height:${config.height}`,
-    `--wavelo-color:${config.color}`,
-    `--wavelo-secondary-color:${config.secondaryColor}`,
-    `--wavelo-background:${config.backgroundColor}`,
+    // Only the colours the caller chose are set here. An inline
+    // `--wavelo-color: var(--wavelo-color, #6366f1)` is a self-reference, which
+    // resolves to nothing and would leave every design inheriting the page
+    // colour; setting `--wavelo-background` would also defeat the per-design
+    // fallbacks, such as the section overlay's own scrim.
+    config.color === undefined ? '' : `--wavelo-color:${config.color}`,
+    config.secondaryColor === undefined ? '' : `--wavelo-secondary-color:${config.secondaryColor}`,
+    config.backgroundColor === undefined ? '' : `--wavelo-background:${config.backgroundColor}`,
     `--wavelo-duration:${config.duration}`,
     `--wavelo-stroke:${config.strokeWidth}px`,
     `--wavelo-direction:${config.direction ?? 'normal'}`,
     `--wavelo-play-state:${config.paused ? 'paused' : 'running'}`,
     `--wavelo-progress:${config.value === undefined ? '35%' : `${(config.value / config.max) * 100}%`}`,
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
-  ].join(';');
+  ]
+    .filter(Boolean)
+    .join(';');
   const classes = ['wavelo', `wavelo--${definition.kind}`, `wavelo--${definition.id}`, config.className].filter(Boolean).join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));

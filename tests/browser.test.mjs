@@ -355,6 +355,64 @@ test('the gallery keeps its top-of-page bar inside the preview card', async () =
   server.close();
 });
 
+test('the default palette, gradients and overlay scrim actually paint', async () => {
+  const body = [
+    ['ring', { type: 'ring', label: 'Loading' }],
+    ['gradient-ring', { type: 'gradient-ring', label: 'Loading' }],
+    ['overlay', { type: 'overlay', label: 'Loading' }],
+    ['explicit', { type: 'ring', color: '#123456', label: 'Loading' }]
+  ]
+    .map(([key, config]) => `<div class="case" data-key="${key}">${renderLoader(config).html}</div>`)
+    .join('');
+  await page.setContent(
+    `<!doctype html><html><head><style>${allStyles}</style></head><body><div data-key="inherited" style="--wavelo-color:#00ff00">${renderLoader({ type: 'ring', label: 'Loading' }).html}</div>${body}</body></html>`
+  );
+  const rows = await page.evaluate(() =>
+    [...document.querySelectorAll('[data-key]')].map((wrap) => {
+      const style = getComputedStyle(wrap.querySelector('.wavelo'));
+      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor };
+    })
+  );
+  const at = (key) => rows.find((row) => row.key === key);
+
+  assert.equal(at('ring').color, 'rgb(99, 102, 241)', 'the documented default colour must paint without configuration');
+  assert.equal(at('explicit').color, 'rgb(18, 52, 86)', 'an explicit colour must win');
+  assert.equal(at('inherited').color, 'rgb(0, 255, 0)', 'a page-level --wavelo-color must still override the default');
+  assert.match(at('gradient-ring').borderImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.notEqual(at('overlay').background, 'rgba(0, 0, 0, 0)', 'the section overlay must have a scrim');
+});
+
+test('every design paints something visible', async () => {
+  await setContentPage(
+    loaderRegistry
+      .map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`)
+      .join('')
+  );
+  const invisible = await page.evaluate(() => {
+    const paints = (element) => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 0.5 || rect.height < 0.5) return false;
+      const filled = style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
+      const bordered = parseFloat(style.borderTopWidth) > 0 && style.borderTopStyle !== 'none' && !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.borderTopColor);
+      return filled || bordered;
+    };
+    const pseudoPaints = (element, which) => {
+      const style = getComputedStyle(element, which);
+      if (style.content === 'none') return false;
+      return parseFloat(style.borderTopWidth) > 0 || style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
+    };
+    return [...document.querySelectorAll('[data-design]')]
+      .filter((wrap) => {
+        const root = wrap.querySelector('.wavelo');
+        const parts = [...root.querySelectorAll('.wavelo__part')];
+        return !(paints(root) || parts.some(paints) || pseudoPaints(root, '::before') || pseudoPaints(root, '::after'));
+      })
+      .map((wrap) => wrap.dataset.design);
+  });
+  assert.deepEqual(invisible, [], `these designs render nothing visible: ${invisible.join(', ')}`);
+});
+
 test('documentation gallery renders and has no axe violations', async () => {
   const axe = await readFile(resolve('node_modules/axe-core/axe.min.js'), 'utf8');
   const galleryHtml = await readFile(resolve('apps/docs/dist/index.html'), 'utf8');
