@@ -7,7 +7,9 @@ import { chromium } from 'playwright';
 const outputDirectory = resolve('release-audit');
 const screenshotPath = resolve(outputDirectory, 'catalog-corrected-contact-sheet.png');
 const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
-const staticTypes = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top', 'progress-upload', 'page-transition']);
+// Designs with no CSS animation by design: determinate tracks whose fill is the
+// value, not motion. Anything else in the catalog must be sampled as advancing.
+const staticTypes = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top']);
 
 function expectedBehavior(loader) {
   const descriptions = {

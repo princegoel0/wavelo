@@ -42,6 +42,20 @@ Boolean options (`paused`) need binding syntax in Vue and Svelte
 (`:paused="true"`, `paused={true}`); a bare attribute reads as a string there.
 On the custom element, `paused=""` is true and `paused="false"` is false.
 
+## Determinate progress
+
+Seven designs render a value: `progress-bar`, `progress-ring`, `progress-steps`,
+`progress-top`, `progress-upload`, `segmented-bar` and `page-transition`. They
+are the designs whose render kind is `progress`, which is also what decides their
+accessibility contract — a labelled render exposes `role="progressbar"` with
+`aria-valuemin`, `aria-valuemax` and `aria-valuenow`, and `value` is clamped to
+`[0, max]` by validation. A design of any other kind ignores `value` for
+semantics even if one is passed.
+
+`progress-top` is `position: fixed` by design, because it is a page-edge
+indicator; contain it in a preview or card the way the documentation gallery
+does. `progress-steps` fills whole steps: `ceil(value / max * 5)` of five.
+
 ## Styles and server rendering
 
 Client code needs nothing: `ensureStyles` puts each distinct slice in

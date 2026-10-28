@@ -6,27 +6,30 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 10,972 | 3.5 KB (3,617 B) | 4,096 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 13,141 | 4,007 | 4,608 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 37,730 | 8.1 KB (8,268 B) | 10,240 |
-| `@wavelo/core` + registry walk over all 81 designs | 37,733 | 8,276 | 10,240 |
-| `@wavelo/react` | 38,153 | 8,487 | 9,216 |
-| `@wavelo/vue` | 38,920 | 8,795 | 9,216 |
-| `@wavelo/angular` | 40,831 | 9,578 | 10,240 |
-| `@wavelo/svelte` | 37,739 | 8,269 | 9,216 |
-| `@wavelo/web-components` | 39,231 | 8,867 | 9,216 |
-| `@wavelo/vanilla` | 38,050 | 8,423 | 9,216 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 23,446 raw | 3,570 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 11,278 | 3.6 KB (3,705 B) | 4,096 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 13,447 | 4,099 | 4,608 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 39,180 | 8.3 KB (8,511 B) | 10,240 |
+| `@wavelo/core` + registry walk over all 81 designs | 39,183 | 8,516 | 10,240 |
+| `@wavelo/react` | 39,603 | 8,730 | 9,216 |
+| `@wavelo/vue` | 40,370 | 9,038 | 9,216 |
+| `@wavelo/angular` | 42,281 | 9,853 | 10,240 |
+| `@wavelo/svelte` | 39,189 | 8,511 | 9,216 |
+| `@wavelo/web-components` | 40,681 | 9,107 | 9,216 |
+| `@wavelo/vanilla` | 39,500 | 8,666 | 9,216 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 24,709 raw | 3,738 | — |
+
+Headroom is deliberately tight: `vue` and `web-components` sit within ~180 B of
+their budgets, so a careless addition to the core fails CI instead of shipping.
 
 ## Why the numbers look like this
 
 Styles and markup are separate. A design's stylesheet slice is `baseCss` plus the
 one render-kind slice it uses; the shared base carries the layout shell, the
-reduced-motion and theme rules, and all 37 `@keyframes` blocks (3.2 KB, listed
+reduced-motion and theme rules, and all 39 `@keyframes` blocks (3.3 KB, listed
 once for the whole catalog rather than repeated per kind).
 
-- Importing one design costs its slice: the `ring` entry point ships 1.2 KB of
-  ring rules rather than the 23 KB sheet for all 81 designs.
+- Importing one design costs its slice: the `ring` entry point ships 1.0 KB of
+  ring rules rather than the 24 KB sheet for all 81 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can
   render every design; it is paid once per page, not once per loader.

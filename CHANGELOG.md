@@ -29,6 +29,14 @@ Not yet published.
   computed styles and `document.getAnimations()` in Chromium.
 - Framework bridges for React, Angular, Vue, Svelte, vanilla DOM and Web
   Components, each accepting the full configuration surface.
+- All seven determinate progress designs render their documented contract,
+  verified by measurement in Chromium: the ring is square so its conic fill reads
+  as a circle, `progress-steps` fills whole steps in proportion to the value,
+  `segmented-bar` fills to the value instead of saturating at 20%,
+  `progress-upload` and `page-transition` have their own motion and no longer
+  render pixel-identical to `progress-bar`, and `page-transition` exposes
+  `progressbar` semantics because determinate behaviour now follows the render
+  kind rather than the catalog category.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, aliases, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style
