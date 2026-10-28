@@ -57,6 +57,9 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
 | GitHub Actions, `dev` at `41cf7c3` | Passed: `verify` and `verify-browser` both green, including `npx playwright install --with-deps chromium` on a clean runner |
+| `dev` → `main` merge | Done as merge commit `da4ce47` through pull request #3 |
+| GitHub Actions, `main` at `da4ce47` | `CI` passed; `Release packages`: `Validate release` green, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
+| npm registry state | `0.1.0` not present for any of the seven names; organization `wavelo` exists with `princegoel072` as owner |
 
 ## Browser evidence
 
@@ -119,12 +122,17 @@ pre-remediation renderer and is kept as history.
 
 ## Remaining limitations
 
-1. npm trusted publishing, provenance policy and package ownership are owner-side
-   settings that this repository cannot verify.
-2. CI has run this build on GitHub: both the `verify` and `verify-browser` jobs
-   passed for `dev` at `41cf7c3`. What is not yet closed is that `main` requires
-   only the `verify` context, so a failing `verify-browser` job would not block a
-   merge until it is added to the required status checks.
+1. npm-side trusted publishing and provenance policy remain owner-side settings.
+   The scope itself is settled: npm organization `wavelo` exists and
+   `princegoel072` owns it. The first release publishes from CI with a granular
+   token; trusted publishing and `--provenance` return per package afterwards.
+2. CI has run this build on GitHub. After the `dev` → `main` merge, both `verify`
+   and `verify-browser` passed, and the release workflow ran with `Validate
+   release` green and `Publish npm packages` **skipped**, which proves the gate
+   holds. `main` now requires both status checks with `strict: true`; approving
+   reviews are set to `0` because GitHub forbids approving your own pull request
+   and no other account has write access, so those two checks are the only merge
+   gate on `main`.
 3. Only Chromium is exercised. Safari and Firefox are untested, and the documented
    engine floor is inferred from the CSS features used.
 4. Framework compatibility is demonstrated at one version per declared peer range.

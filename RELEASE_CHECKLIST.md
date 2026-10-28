@@ -58,29 +58,36 @@ Audited version: `0.1.0`
 
 ## Owner actions before publishing
 
-- [ ] Add `verify-browser` to the required status checks for `main`. Protection
-  currently requires only `verify`, so a failing computed-style or axe suite
-  would not block a merge.
-- [ ] Configure npm trusted publishing on npmjs.com for repository
-  `princegoel0/wavelo`, workflow `release.yml`, and environment `npm`. The GitHub
-  side is already in place: the `npm` environment exists with a protected-branch
-  policy and `princegoel0` as required reviewer.
-- [ ] Confirm the intended public registry access policy and npm provenance
-  settings for the release.
-- [ ] Confirm package version `0.1.0` is the intended initial release and that
-  no package has already been published under these names.
+Re-checked against GitHub and the npm registry on 2026-10-28.
+
+- [x] `verify` **and** `verify-browser` are required status checks for `main`,
+  with `strict: true`. Both names match what CI reports.
+- [x] Required approving reviews set to `0` — the rule could never be satisfied,
+  because GitHub forbids approving your own pull request and no other account has
+  write access. The two status checks are now the only merge gate on `main`.
+- [x] npm organization `wavelo` created and owned by `princegoel072`
+  (`npm org ls wavelo`). Previously the scope did not exist, which blocked every
+  `@wavelo/*` publish.
+- [x] `NPM_TOKEN` repository secret created for the granular npm token, and
+  `release.yml` updated to authenticate with it and publish without
+  `--provenance` (npm provenance needs trusted publishing, which can only be
+  configured for a package that already exists).
+- [ ] Confirm the `NPM_TOKEN` token itself grants read/write on packages in the
+  `wavelo` org, omits the 2FA requirement, and expires soon. Only the secret's
+  existence is visible from GitHub.
+- [ ] Confirm package version `0.1.0` is the intended initial release; verified
+  unpublished for all seven names on 2026-10-28.
 - [ ] Review the final tarball file lists and changelog once more.
-- [ ] Obtain explicit approval to publish; this audit performed no npm login,
-  publish, version mutation, or registry operation.
-- [ ] Set the repository variable `RELEASE_ENABLED=true` only when automatic
-  publishing from `main` is approved. Verified 2026-10-28: it is currently
-  `false`, so a merge to `main` validates but publishes nothing.
-- [ ] Update all seven package versions consistently in the merge to `main`.
-  The release workflow rejects a gated release when any package version is
-  unchanged or the versions differ.
-- [ ] Decide whether to tag the release (for example `v0.1.0`). The repository
-  has no tags at all today, and `release.yml` does not create one after
-  publishing.
+- [ ] Obtain explicit approval to publish. Publishing reserves all seven names
+  permanently and is not cleanly reversible.
+- [ ] Set the repository variable `RELEASE_ENABLED=true` only at the moment
+  publishing is authorized. It is currently `false`, and after the `dev` → `main`
+  merge the release workflow ran with `Publish npm packages` **skipped**.
+- [ ] Approve the `npm` environment deployment when the gated run asks for it.
+- [ ] After `0.1.0`: configure npm trusted publishing per package, restore
+  `--provenance`, and delete the `NPM_TOKEN` secret.
+- [ ] Tag the release (for example `v0.1.0`) after publication. The repository
+  has no tags and `release.yml` does not create one.
 
 ## Exact publish preparation commands
 
@@ -134,7 +141,14 @@ audit.
 
 `.github/workflows/release.yml` runs validation on every push to `main` and on
 manual dispatch. Publishing is gated by the `RELEASE_ENABLED` repository
-variable and the protected `npm` environment. When enabled, it verifies that
-all seven package versions changed consistently, then publishes each package
-with npm provenance using GitHub Actions OIDC. No npm token is stored in the
-repository.
+variable, the protected `npm` environment approval, and `github.ref ==
+refs/heads/main`. When enabled it verifies all seven package versions are
+consistent and not already on npm, packs and uploads the tarballs, then publishes
+them in a fixed order with `--access public` using the `NPM_TOKEN` secret.
+
+`@wavelo/core` publishes first and the loop stops at the first failure, so a bad
+credential or scope cannot leave the six dependent packages half-published.
+`--provenance` is intentionally absent for the first release: npm creates
+provenance only for a package with a configured trusted publisher, which cannot
+exist before the package does. Restore it per package for `0.1.x` and delete the
+secret at that point.
