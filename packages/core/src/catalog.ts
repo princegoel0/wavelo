@@ -14,13 +14,13 @@ export type CatalogEntry = [
 ];
 
 export const catalogEntries: readonly CatalogEntry[] = [
-  ['circular', 'Circular border', 'spinner', 'ring', 'Classic circular border spinner'],
+  ['circular', 'Circular border', 'spinner', 'ring', 'Closed circular border with a sweeping accent arc'],
   ['ring', 'Ring', 'spinner', 'ring', 'Open ring spinner'],
   ['dual-ring', 'Dual ring', 'spinner', 'rings', 'Nested dual-ring rotation'],
-  ['arc', 'Rotating arc', 'spinner', 'ring', 'Single rotating arc'],
-  ['multi-arc', 'Multiple arcs', 'spinner', 'rings', 'Layered rotating arcs'],
+  ['arc', 'Rotating arc', 'spinner', 'ring', 'Single quarter-turn rotating arc'],
+  ['multi-arc', 'Multiple arcs', 'spinner', 'rings', 'Three layered arcs rotating in alternating directions'],
   ['dotted-circle', 'Dotted circle', 'spinner', 'dots', 'Circular dotted spinner'],
-  ['segmented-ring', 'Segmented ring', 'spinner', 'rings', 'Segmented circular indicator'],
+  ['segmented-ring', 'Segmented ring', 'spinner', 'ring', 'Dashed circular indicator'],
   ['half-circle', 'Half circle', 'spinner', 'ring', 'Half-circle sweep'],
   ['ellipse', 'Elliptical spinner', 'spinner', 'ring', 'Elliptical rotation'],
   ['rotating-square', 'Rotating square', 'spinner', 'shape', 'Rotating square'],
@@ -28,9 +28,9 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['orbiting-dots', 'Orbiting dots', 'spinner', 'orbit', 'Dots orbiting a center'],
   ['orbiting-circles', 'Orbiting circles', 'spinner', 'orbit', 'Circles orbiting a center'],
   ['gradient-ring', 'Gradient ring', 'spinner', 'ring', 'Gradient ring sweep'],
-  ['thin-line', 'Thin line', 'spinner', 'ring', 'Minimal thin line'],
-  ['thick-stroke', 'Thick stroke', 'spinner', 'ring', 'Bold stroke spinner'],
-  ['monochrome', 'Monochrome', 'spinner', 'ring', 'Minimal monochrome spinner'],
+  ['thin-line', 'Thin line', 'spinner', 'ring', 'Minimal hairline ring'],
+  ['thick-stroke', 'Thick stroke', 'spinner', 'ring', 'Bold heavy-stroke ring'],
+  ['monochrome', 'Monochrome', 'spinner', 'ring', 'Half-filled rotating disc'],
   ['svg-star', 'SVG star', 'spinner', 'shape', 'Star-shaped SVG spinner'],
   ['three-dots', 'Three dots', 'dots', 'dots', 'Three-dot sequence'],
   ['four-dots', 'Four dots', 'dots', 'dots', 'Four-dot sequence'],
@@ -41,11 +41,11 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['scaling-dots', 'Scaling dots', 'dots', 'pulse', 'Scaling dots'],
   ['rotating-dots', 'Rotating dots', 'dots', 'orbit', 'Rotating dots'],
   ['dot-wave', 'Dot wave', 'dots', 'wave', 'Wave of dots'],
-  ['dot-matrix', 'Dot matrix', 'dots', 'dots', 'Matrix pulse'],
-  ['grid-pulse', 'Grid pulse', 'dots', 'pulse', 'Grid pulse'],
+  ['dot-matrix', 'Dot matrix', 'dots', 'dots', 'Three-by-three pulsing dot matrix'],
+  ['grid-pulse', 'Grid pulse', 'dots', 'pulse', 'Two-by-two pulsing grid'],
   ['alternating-dots', 'Alternating dots', 'dots', 'dots', 'Alternating dot groups'],
-  ['expanding-dot', 'Expanding dot', 'dots', 'pulse', 'Expanding dot'],
-  ['ripple-dot', 'Ripple dot', 'dots', 'rings', 'Ripple from a dot'],
+  ['expanding-dot', 'Expanding dot', 'dots', 'pulse', 'Single dot expanding and contracting'],
+  ['ripple-dot', 'Ripple dot', 'dots', 'rings', 'Ripple expanding from a centre dot'],
   ['staggered-dots', 'Staggered dots', 'dots', 'dots', 'Staggered dot timing'],
   ['vertical-dots', 'Vertical bouncing dots', 'dots', 'wave', 'Vertical dot bounce'],
   ['equalizer', 'Equalizer bars', 'bars', 'bars', 'Audio equalizer bars'],
@@ -53,11 +53,11 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['vertical-pulse-bars', 'Vertical pulse bars', 'bars', 'bars', 'Vertical pulse bars'],
   ['horizontal-pulse-bars', 'Horizontal pulse bars', 'bars', 'wave', 'Horizontal pulse bars'],
   ['waveform', 'Waveform', 'bars', 'wave', 'Waveform animation'],
-  ['audio-waveform', 'Audio waveform', 'bars', 'wave', 'Audio-style waveform'],
+  ['audio-waveform', 'Audio waveform', 'bars', 'bars', 'Seven-bar audio waveform'],
   ['fading-bars', 'Fading bars', 'bars', 'bars', 'Sequential fading bars'],
   ['growing-bars', 'Growing bars', 'bars', 'bars', 'Growing and shrinking bars'],
   ['alternating-bars', 'Alternating bars', 'bars', 'bars', 'Alternating bar motion'],
-  ['gradient-bars', 'Gradient bars', 'bars', 'bars', 'Gradient bars'],
+  ['gradient-bars', 'Gradient bars', 'bars', 'bars', 'Gradient-filled equalizer bars'],
   ['segmented-bar', 'Segmented bar', 'progress', 'progress', 'Segmented progress bar'],
   ['moving-stripe', 'Moving stripe', 'bars', 'wave', 'Traveling stripe'],
   ['traveling-highlight', 'Traveling highlight', 'bars', 'wave', 'Highlight sweep'],
@@ -65,7 +65,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['multi-wave', 'Multi-wave', 'bars', 'wave', 'Multiple wave layers'],
   ['ripple-circles', 'Ripple circles', 'creative', 'rings', 'Expanding ripple circles'],
   ['expanding-circles', 'Expanding circles', 'creative', 'rings', 'Expanding concentric circles'],
-  ['morphing-shapes', 'Morphing shapes', 'creative', 'shape', 'Morphing geometric shape'],
+  ['morphing-shapes', 'Morphing shapes', 'creative', 'shape', 'Shape morphing between square, triangle and diamond'],
   ['infinity', 'Infinity loop', 'creative', 'rings', 'Infinity loop'],
   ['helix', 'DNA helix', 'creative', 'wave', 'DNA-style helix'],
   ['cube', 'Cube rotation', 'creative', 'shape', 'Cube rotation'],
@@ -98,23 +98,11 @@ export const catalogEntries: readonly CatalogEntry[] = [
 ];
 
 /**
- * Public IDs that render a canonical design instead of their own. Keeping the
- * map here means an alias can never render differently from its target.
+ * Public IDs that render a canonical design instead of their own. Kept empty:
+ * every catalog entry now has its own implementation, so no ID borrows another
+ * design's appearance while carrying a name that promises something else.
  */
-export const catalogAliases: Readonly<Record<string, string>> = {
-  circular: 'ring',
-  arc: 'half-circle',
-  'multi-arc': 'dual-ring',
-  'segmented-ring': 'dotted-circle',
-  'thin-line': 'ring',
-  'thick-stroke': 'ring',
-  monochrome: 'ring',
-  'four-dots': 'three-dots',
-  'five-dots': 'three-dots',
-  'dot-matrix': 'grid-pulse',
-  'audio-waveform': 'waveform',
-  'gradient-bars': 'equalizer'
-};
+export const catalogAliases: Readonly<Record<string, string>> = {};
 
 /** Usage-shaped shortcuts that resolve to a catalog design. */
 export const patternPresets: readonly [id: string, type: string][] = [

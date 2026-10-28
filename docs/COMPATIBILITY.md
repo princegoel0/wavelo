@@ -18,8 +18,8 @@ tested.
 
 ## Configuration surface
 
-The catalog holds 81 public IDs (69 active designs, 12 deprecated aliases)
-built from 11 render kinds and 11 stylesheet slices. Every adapter accepts the
+The catalog holds 81 public IDs, each with its own implementation, built from
+11 render kinds and 11 stylesheet slices. Every adapter accepts the
 same 20 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
@@ -101,9 +101,15 @@ framework versions used for each published package.
 
 ## Catalog compatibility policy
 
-Deprecated IDs stay importable and render their canonical design identically,
-including metadata: an alias entry mirrors its target's `kind`, `options` and
-`supportsProgress`, and `aliasOf` names the target so consumers can migrate
-without a breaking removal. `npm run catalog` rejects an alias whose metadata
-disagrees with its target. The active catalog is validated for unique visual
-signatures and stays above the PRD minimum of 60 designs.
+Every public ID renders its own design. The catalog previously carried 12
+deprecated aliases that borrowed a canonical design while keeping a name that
+promised something else: "Four dots" rendered three dots, "Thick stroke" rendered
+the same 3px ring as "Ring", and "Dot matrix" rendered three dots in a row. Those
+IDs now have real implementations, so nothing needs deprecating before the first
+release.
+
+The alias mechanism (`aliasOf`, `deprecated`, and the metadata mirroring that goes
+with it) stays in the registry for future renames, and `npm run catalog` rejects
+an alias whose metadata disagrees with its target; the catalog currently has zero
+aliases. Two browser tests guard the property that matters: no two designs may
+render identically, and every design must paint something visible.

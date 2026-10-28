@@ -11,12 +11,39 @@ export function styleKey(css: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/** The one design that renders real SVG rather than CSS boxes. */
+const SVG_STAR =
+  '<svg class="wavelo__part" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.36 1.4 6.66L12 16.9 6.05 20l1.4-6.66L2.5 8.98l6.6-.72z"/></svg>';
+
+/** Part count for designs whose name promises a specific number of elements. */
+const PART_COUNTS: Record<string, number> = {
+  'three-dots': 3,
+  'four-dots': 4,
+  'five-dots': 5,
+  'dot-matrix': 9,
+  'grid-pulse': 4,
+  'expanding-dot': 1,
+  'audio-waveform': 7,
+  'dotted-circle': 8,
+  infinity: 2,
+  triangles: 3,
+  'ripple-circles': 3,
+  'expanding-circles': 3,
+  'nested-squares': 3,
+  'concentric-pulse': 3,
+  helix: 6
+};
+
+const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
+
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
-    if (type === 'skeleton-line' || type === 'image-placeholder') return '';
-    return many(type === 'skeleton-avatar' ? 1 : type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
+    // Line, avatar and image placeholders are painted by the element itself;
+    // only the composite layouts need child tracks.
+    if (type === 'skeleton-line' || type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    return many(type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
   }
   if (kind === 'progress') {
     if (type === 'progress-steps') {
@@ -31,16 +58,9 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
     }
     return part;
   }
-  if (type === 'dotted-circle') return many(8);
-  if (type === 'infinity') return many(2);
-  if (type === 'triangles') return many(3);
-  if (type === 'ripple-circles' || type === 'expanding-circles' || type === 'nested-squares' || type === 'concentric-pulse') return many(3);
-  if (type === 'helix') return many(6);
-  if (kind === 'bars' || kind === 'wave') return many(5);
-  if (kind === 'dots') return many(type === 'three-dots' ? 3 : 5);
-  if (kind === 'orbit') return many(5);
-  if (kind === 'pulse') return many(3);
-  return part;
+  if (type === 'svg-star') return SVG_STAR;
+  if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
+  return many(KIND_COUNTS[kind] ?? 1);
 }
 
 type Attributes = Record<string, string>;
@@ -67,16 +87,23 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     `--wavelo-size:${config.size}`,
     `--wavelo-width:${config.width}`,
     `--wavelo-height:${config.height}`,
-    `--wavelo-color:${config.color}`,
-    `--wavelo-secondary-color:${config.secondaryColor}`,
-    `--wavelo-background:${config.backgroundColor}`,
+    // Only the colours the caller chose are set here. An inline
+    // `--wavelo-color: var(--wavelo-color, #6366f1)` is a self-reference, which
+    // resolves to nothing and would leave every design inheriting the page
+    // colour; setting `--wavelo-background` would also defeat the per-design
+    // fallbacks, such as the section overlay's own scrim.
+    config.color === undefined ? '' : `--wavelo-color:${config.color}`,
+    config.secondaryColor === undefined ? '' : `--wavelo-secondary-color:${config.secondaryColor}`,
+    config.backgroundColor === undefined ? '' : `--wavelo-background:${config.backgroundColor}`,
     `--wavelo-duration:${config.duration}`,
     `--wavelo-stroke:${config.strokeWidth}px`,
     `--wavelo-direction:${config.direction ?? 'normal'}`,
     `--wavelo-play-state:${config.paused ? 'paused' : 'running'}`,
     `--wavelo-progress:${config.value === undefined ? '35%' : `${(config.value / config.max) * 100}%`}`,
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
-  ].join(';');
+  ]
+    .filter(Boolean)
+    .join(';');
   const classes = ['wavelo', `wavelo--${definition.kind}`, `wavelo--${definition.id}`, config.className].filter(Boolean).join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));

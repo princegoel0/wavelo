@@ -31,7 +31,7 @@ const catalogKb = ((await gzipped("import { renderLoader } from '@wavelo/core'; 
 /** [file, strings that must appear] */
 const required = [
   ['README.md', [`${ids} designs`, `${slices} stylesheet slices`, `${options} configuration keys`]],
-  ['CHANGELOG.md', [`${ids} public IDs`, `${active} active designs`, `${aliases} deprecated aliases`]],
+  ['CHANGELOG.md', [`${ids} public IDs`, aliases ? `${aliases} deprecated aliases` : 'no deprecated aliases']],
   ['docs/COMPATIBILITY.md', [`${options} configuration keys`, `${slices} render kinds`, 'styles.css']],
   ['docs/FRAMEWORKS.md', ['@wavelo/core/styles.css', 'ensureStyles']],
   ['packages/core/README.md', [`${slices} render kinds`, 'ensureStyles', 'renderStylesheets']],

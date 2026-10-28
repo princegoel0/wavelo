@@ -22,15 +22,45 @@ test('the generated ID list matches the catalog', async () => {
   assert.deepEqual([...loaderIds].sort(), loaderRegistry.map((loader) => loader.id).sort());
 });
 
-test('deprecated aliases preserve their public IDs while rendering canonical behavior', () => {
-  for (const definition of loaderRegistry.filter((loader) => loader.deprecated)) {
-    const alias = renderLoader({ type: definition.id, label: definition.name });
-    const canonical = renderLoader({ type: definition.aliasOf, label: definition.name });
-    assert.equal(alias.fallback, false, definition.id);
-    assert.equal(alias.definition.id, definition.aliasOf);
-    assert.equal(alias.html, canonical.html, `${definition.id} markup differs from ${definition.aliasOf}`);
-    assert.equal(alias.css, canonical.css, `${definition.id} stylesheet differs from ${definition.aliasOf}`);
+test('every catalog ID renders its own design', () => {
+  // The catalog used to carry 12 deprecated aliases that borrowed another
+  // design's appearance while keeping a name that promised something else:
+  // "Four dots" rendered three, "Thick stroke" rendered a 3px ring, "Dot matrix"
+  // rendered three dots in a row. Every ID now has its own implementation, and
+  // the browser suite asserts that no two designs render identically.
+  assert.equal(loaderRegistry.filter((loader) => loader.deprecated).length, 0);
+  assert.equal(loaderRegistry.filter((loader) => loader.aliasOf).length, 0);
+  assert.equal(new Set(loaderRegistry.map((loader) => loader.id)).size, loaderRegistry.length);
+  const markup = new Set(loaderRegistry.map((loader) => renderLoader({ type: loader.id, label: loader.name }).html));
+  assert.equal(markup.size, loaderRegistry.length, 'two IDs render identical markup');
+  for (const definition of loaderRegistry) {
+    const result = renderLoader({ type: definition.id, label: definition.name });
+    assert.equal(result.definition.id, definition.id);
+    assert.equal(result.fallback, false, definition.id);
   }
+});
+
+test('designs whose names promise a count render that many parts', () => {
+  const counts = {
+    'three-dots': 3,
+    'four-dots': 4,
+    'five-dots': 5,
+    'dot-matrix': 9,
+    'grid-pulse': 4,
+    'expanding-dot': 1,
+    'audio-waveform': 7,
+    'dotted-circle': 8,
+    helix: 6,
+    'skeleton-card': 3,
+    'skeleton-table': 6,
+    'progress-steps': 5
+  };
+  for (const [id, expected] of Object.entries(counts)) {
+    const result = renderLoader({ type: id, value: 50, max: 100, label: id });
+    const actual = (result.html.match(/wavelo__part/g) ?? []).length;
+    assert.equal(actual, expected, `${id} renders ${actual} parts, its name promises ${expected}`);
+  }
+  assert.match(renderLoader({ type: 'svg-star', label: 'star' }).html, /<svg[^>]*class="wavelo__part"/);
 });
 
 test('rendering is deterministic and accessible when labelled', () => {
@@ -179,6 +209,22 @@ test('the progress family renders seven distinguishable designs', () => {
   assert.match(css, /\.wavelo--page-transition[^}]*wavelo-transition/);
   assert.match(css, /\.wavelo--segmented-bar[^}]*repeating-linear-gradient/);
   assert.match(css, /\.wavelo--progress-top\{[^}]*position:fixed/);
+});
+
+test('unset colours are not emitted as self-referencing variables', () => {
+  // `--wavelo-color: var(--wavelo-color, #6366f1)` on the element that declares
+  // it is a cycle: CSS resolves it as invalid and every design inherits the page
+  // colour instead. Defaults belong to the stylesheet rules that consume them.
+  const plain = renderLoader({ type: 'ring', label: 'Loading' });
+  assert.doesNotMatch(plain.html, /--wavelo-color:/);
+  assert.doesNotMatch(plain.html, /--wavelo-secondary-color:/);
+  assert.doesNotMatch(plain.html, /--wavelo-background:/);
+  assert.match(plain.css, /color:var\(--wavelo-color,#6366f1\)/);
+
+  const coloured = renderLoader({ type: 'ring', color: '#010203', secondaryColor: '#040506', backgroundColor: '#070809', label: 'Loading' });
+  assert.match(coloured.html, /--wavelo-color:#010203/);
+  assert.match(coloured.html, /--wavelo-secondary-color:#040506/);
+  assert.match(coloured.html, /--wavelo-background:#070809/);
 });
 
 test('generated loader modules match the catalog exactly', async () => {

@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "expanding-dot", name: "Expanding dot", category: "dots", kind: "pulse", description: "Expanding dot", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "expanding-dot" };
+const definition: LoaderDefinition = { id: "expanding-dot", name: "Expanding dot", category: "dots", kind: "pulse", description: "Single dot expanding and contracting", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "expanding-dot" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const expandingDot = (config: Omit<LoaderConfig, 'type'> = {}) =>

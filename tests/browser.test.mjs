@@ -355,6 +355,223 @@ test('the gallery keeps its top-of-page bar inside the preview card', async () =
   server.close();
 });
 
+test('the default palette, gradients and overlay scrim actually paint', async () => {
+  const body = [
+    ['ring', { type: 'ring', label: 'Loading' }],
+    ['gradient-ring', { type: 'gradient-ring', label: 'Loading' }],
+    ['overlay', { type: 'overlay', label: 'Loading' }],
+    ['explicit', { type: 'ring', color: '#123456', label: 'Loading' }]
+  ]
+    .map(([key, config]) => `<div class="case" data-key="${key}">${renderLoader(config).html}</div>`)
+    .join('');
+  await page.setContent(
+    `<!doctype html><html><head><style>${allStyles}</style></head><body><div data-key="inherited" style="--wavelo-color:#00ff00">${renderLoader({ type: 'ring', label: 'Loading' }).html}</div>${body}</body></html>`
+  );
+  const rows = await page.evaluate(() =>
+    [...document.querySelectorAll('[data-key]')].map((wrap) => {
+      const style = getComputedStyle(wrap.querySelector('.wavelo'));
+      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor };
+    })
+  );
+  const at = (key) => rows.find((row) => row.key === key);
+
+  assert.equal(at('ring').color, 'rgb(99, 102, 241)', 'the documented default colour must paint without configuration');
+  assert.equal(at('explicit').color, 'rgb(18, 52, 86)', 'an explicit colour must win');
+  assert.equal(at('inherited').color, 'rgb(0, 255, 0)', 'a page-level --wavelo-color must still override the default');
+  assert.match(at('gradient-ring').borderImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.notEqual(at('overlay').background, 'rgba(0, 0, 0, 0)', 'the section overlay must have a scrim');
+});
+
+test('every design paints something visible', async () => {
+  await setContentPage(
+    loaderRegistry
+      .map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`)
+      .join('')
+  );
+  const invisible = await page.evaluate(() => {
+    const paints = (element) => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 0.5 || rect.height < 0.5) return false;
+      const filled =
+        style.backgroundImage !== 'none' ||
+        !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor) ||
+        // SVG designs paint through `fill`, not background or border.
+        !['', 'none', 'rgba(0, 0, 0, 0)', 'transparent'].includes(style.fill);
+      const bordered = parseFloat(style.borderTopWidth) > 0 && style.borderTopStyle !== 'none' && !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.borderTopColor);
+      return filled || bordered;
+    };
+    const pseudoPaints = (element, which) => {
+      const style = getComputedStyle(element, which);
+      if (style.content === 'none') return false;
+      return parseFloat(style.borderTopWidth) > 0 || style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
+    };
+    return [...document.querySelectorAll('[data-design]')]
+      .filter((wrap) => {
+        const root = wrap.querySelector('.wavelo');
+        const parts = [...root.querySelectorAll('.wavelo__part')];
+        return !(paints(root) || parts.some(paints) || pseudoPaints(root, '::before') || pseudoPaints(root, '::after'));
+      })
+      .map((wrap) => wrap.dataset.design);
+  });
+  assert.deepEqual(invisible, [], `these designs render nothing visible: ${invisible.join(', ')}`);
+});
+
+test('each design renders what its name says', async () => {
+  const body = [
+    'thin-line', 'thick-stroke', 'ring', 'arc', 'half-circle', 'circular', 'segmented-ring', 'monochrome',
+    'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots', 'four-dots', 'five-dots',
+    'dot-matrix', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation', 'audio-waveform',
+    'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star'
+  ]
+    .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
+    .join('');
+  await setContentPage(body);
+
+  const rows = await page.evaluate(() =>
+    [...document.querySelectorAll('[data-case]')].map((wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const style = getComputedStyle(root);
+      const parts = [...root.querySelectorAll('.wavelo__part')];
+      // A side only counts when it is actually drawn: an element with no border
+      // still reports currentColor, which is not a visible side.
+      const sides = ['Top', 'Right', 'Bottom', 'Left'].filter((side) => {
+        const width = Number.parseFloat(style[`border${side}Width`]);
+        return width > 0 && style[`border${side}Style`] !== 'none' && style[`border${side}Color`] !== 'rgba(0, 0, 0, 0)';
+      });
+      const pseudo = (which) => {
+        const s = getComputedStyle(root, which);
+        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth };
+      };
+      return {
+        id: wrap.dataset.case,
+        parts: parts.length,
+        svg: root.querySelectorAll('svg').length,
+        sides: sides.length,
+        sideNames: sides.join(''),
+        borderWidth: style.borderTopWidth,
+        borderStyle: style.borderTopStyle,
+        borderImage: style.borderImageSource,
+        backgroundImage: style.backgroundImage,
+        gridColumns: style.gridTemplateColumns,
+        animation: style.animationName,
+        clipPath: style.clipPath,
+        partBackground: parts.length ? getComputedStyle(parts[0]).backgroundImage : 'none',
+        partFill: parts.length ? getComputedStyle(parts[0]).fill : '-',
+        partDelays: parts.map((part) => getComputedStyle(part).animationDelay),
+        partAnimations: [...new Set(parts.map((part) => getComputedStyle(part).animationName))],
+        before: pseudo('::before'),
+        after: pseudo('::after')
+      };
+    })
+  );
+  const at = (id) => rows.find((row) => row.id === id);
+
+  // Stroke weights must differ, or "thin" and "thick" are just words. Border
+  // widths cannot be fractional, so compare rather than pin an exact value.
+  assert.equal(at('thin-line').borderWidth, '1px');
+  assert.equal(at('ring').borderWidth, '3px');
+  assert.ok(
+    Number.parseFloat(at('thick-stroke').borderWidth) > Number.parseFloat(at('ring').borderWidth) * 2,
+    `thick-stroke is ${at('thick-stroke').borderWidth}, ring is ${at('ring').borderWidth}`
+  );
+
+  // Arc length is the number of visible border sides.
+  assert.equal(at('arc').sides, 1, 'arc must be a single quarter-turn side');
+  assert.equal(at('half-circle').sides, 2, 'half-circle must span two sides');
+  assert.equal(at('circular').sides, 4, 'circular must be a closed border');
+  assert.ok(at('circular').before, 'circular must carry its sweeping accent arc');
+  assert.equal(at('circular').before.animation, 'wavelo-spin');
+
+  assert.equal(at('segmented-ring').borderStyle, 'dashed');
+  assert.equal(at('segmented-ring').sides, 4, 'a segmented ring is a complete dashed circle');
+  assert.match(at('monochrome').backgroundImage, /conic-gradient/, 'monochrome must be a half-filled disc');
+  assert.match(at('gradient-ring').borderImage ?? '', /linear-gradient/);
+
+  // Layered arcs: the element plus both pseudo-elements, at three insets.
+  const multi = at('multi-arc');
+  assert.ok(multi.before && multi.after, 'multi-arc must layer three arcs');
+  assert.notEqual(multi.before.inset, multi.after.inset);
+  assert.equal(at('dual-ring').sides, 0, 'dual-ring is built from its two pseudo arcs');
+
+  // A ripple from a dot: solid centre plus an expanding ring.
+  const ripple = at('ripple-dot');
+  assert.equal(ripple.before.animation, 'wavelo-pulse');
+  assert.match(ripple.before.background, /rgb/, 'the centre dot must be filled');
+  assert.equal(ripple.after.animation, 'wavelo-ripple');
+
+  // Counts promised by the names.
+  assert.equal(at('three-dots').parts, 3);
+  assert.equal(at('four-dots').parts, 4);
+  assert.equal(at('five-dots').parts, 5);
+  assert.equal(at('dot-matrix').parts, 9);
+  assert.equal(at('grid-pulse').parts, 4);
+  assert.equal(at('expanding-dot').parts, 1);
+  assert.equal(at('audio-waveform').parts, 7);
+
+  // Matrix and grid must actually be grids, not a row of dots.
+  assert.equal(at('dot-matrix').gridColumns.split(' ').length, 3, 'dot-matrix must be three columns');
+  assert.equal(at('grid-pulse').gridColumns.split(' ').length, 2, 'grid-pulse must be two columns');
+
+  // "Sequential pulse" must be staggered; the generic background indicator is not.
+  assert.equal(new Set(at('pulsing-dots').partDelays).size, 3, 'pulsing-dots must stagger its three parts');
+  assert.equal(new Set(at('background-operation').partDelays).size, 1, 'background-operation pulses in unison');
+  assert.equal(at('expanding-dot').partAnimations[0], 'wavelo-scale-dot');
+
+  assert.equal(at('audio-waveform').partAnimations[0], 'wavelo-audio');
+  assert.notEqual(at('audio-waveform').partAnimations[0], at('waveform').partAnimations[0]);
+  assert.match(at('gradient-bars').partBackground, /linear-gradient/, 'gradient-bars must paint a gradient');
+  assert.equal(at('equalizer').partBackground, 'none');
+
+  assert.equal(at('rotating-diamond').animation, 'wavelo-diamond');
+  assert.equal(at('morphing-shapes').animation, 'wavelo-morph');
+  assert.notEqual(at('rotating-square').animation, at('rotating-diamond').animation);
+
+  // The star is described as SVG, so it must be SVG.
+  assert.equal(at('svg-star').svg, 1, 'svg-star must render an <svg> element');
+  assert.equal(at('svg-star').parts, 1);
+  assert.notEqual(at('svg-star').partFill, 'none');
+});
+
+test('no two designs in the catalog render identically', async () => {
+  await setContentPage(
+    loaderRegistry.map((loader) => `<div data-case="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`).join('')
+  );
+  const signatures = await page.evaluate(() => {
+    const describe = (element, pseudo) => {
+      const style = getComputedStyle(element, pseudo ?? null);
+      const rect = element.getBoundingClientRect();
+      return [
+        Math.round(rect.width), Math.round(rect.height), style.borderRadius, style.borderTopWidth, style.borderTopStyle,
+        ['Top', 'Right', 'Bottom', 'Left'].map((side) => getComputedStyle(element, pseudo ?? null)[`border${side}Color`]).join('/'),
+        style.borderImageSource, style.clipPath, style.backgroundImage, style.backgroundColor, style.animationName,
+        style.animationDelay, style.fill, style.display, style.gridTemplateColumns, style.transform, style.inset, style.content
+      ].join('~');
+    };
+    return [...document.querySelectorAll('[data-case]')].map((wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const parts = [...root.querySelectorAll('.wavelo__part')];
+      return {
+        id: wrap.dataset.case,
+        signature: [
+          describe(root),
+          parts.length,
+          parts.map((part) => `${describe(part)}@${part.tagName}`).join(','),
+          describe(root, '::before'),
+          describe(root, '::after')
+        ].join('##')
+      };
+    });
+  });
+  const groups = new Map();
+  for (const row of signatures) {
+    if (!groups.has(row.signature)) groups.set(row.signature, []);
+    groups.get(row.signature).push(row.id);
+  }
+  const duplicates = [...groups.values()].filter((ids) => ids.length > 1);
+  assert.deepEqual(duplicates, [], `these designs render identically: ${duplicates.map((ids) => ids.join(' == ')).join('; ')}`);
+});
+
 test('documentation gallery renders and has no axe violations', async () => {
   const axe = await readFile(resolve('node_modules/axe-core/axe.min.js'), 'utf8');
   const galleryHtml = await readFile(resolve('apps/docs/dist/index.html'), 'utf8');

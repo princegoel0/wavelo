@@ -96,6 +96,61 @@ check(stylesheet.includes('data-wavelo-motion="always"'), 'dist/wavelo.css lost 
 check(stylesheet.includes('data-wavelo-theme="dark"'), 'dist/wavelo.css lost the dark theme rules');
 check(loaderAttributes.length === loaderConfigKeys.length, 'attribute names and config keys disagree');
 
+// A keyframe that a slice references but does not import leaves that design
+// frozen, and nothing else in the pipeline would notice.
+const frameModules = await readdir(new URL('../packages/core/src/css/keyframes/', import.meta.url));
+const frameName = new Map();
+for (const file of frameModules) {
+  const text = await readFile(new URL(`../packages/core/src/css/keyframes/${file}`, import.meta.url), 'utf8');
+  const match = text.match(/@keyframes\s+([a-z0-9-]+)/);
+  check(Boolean(match), `css/keyframes/${file} defines no keyframe`);
+  if (match) frameName.set(match[1], file.replace('.ts', ''));
+}
+const sliceFiles = [
+  ['base.ts', new URL('../packages/core/src/css/base.ts', import.meta.url)],
+  ...(await readdir(new URL('../packages/core/src/css/kinds/', import.meta.url))).map((file) => [`kinds/${file}`, new URL(`../packages/core/src/css/kinds/${file}`, import.meta.url)])
+];
+const usedModules = new Set();
+const slices = [];
+for (const [label, path] of sliceFiles) {
+  const text = await readFile(path, 'utf8');
+  slices.push({
+    label,
+    template: text.match(/export const \w+ = `([\s\S]*)`;/)?.[1] ?? '',
+    imports: new Set([...text.matchAll(/keyframes\/([a-z0-9-]+)\.js/g)].map((match) => match[1]))
+  });
+}
+const base = slices.find((slice) => slice.label === 'base.ts');
+// A design is always composed as the base plus one kind, so the base carries the
+// frames that several kinds share; one it lends out is not unused there, and a
+// kind that re-imports it would ship the same `@keyframes` twice.
+const sharedWithKinds = new Set();
+for (const slice of slices) {
+  if (slice === base) continue;
+  for (const module of slice.imports) usedModules.add(module);
+  for (const [frame, module] of frameName) {
+    if (new RegExp(`${frame}(?![\\w-])`).test(slice.template)) sharedWithKinds.add(module);
+  }
+}
+for (const module of base.imports) usedModules.add(module);
+for (const slice of slices) {
+  for (const [frame, module] of frameName) {
+    const referenced = new RegExp(`${frame}(?![\\w-])`).test(slice.template);
+    const available = slice.imports.has(module) || (slice !== base && base.imports.has(module));
+    if (referenced && !available) check(false, `${slice.label} animates with ${frame} but neither it nor the base imports ${module}.js`);
+    if (!referenced && slice.imports.has(module) && !(slice === base && sharedWithKinds.has(module))) {
+      check(false, `${slice.label} imports ${module}.js but never uses ${frame}`);
+    }
+    if (slice !== base && referenced && slice.imports.has(module) && base.imports.has(module)) {
+      check(false, `${slice.label} imports ${module}.js, which the base already ships`);
+    }
+  }
+}
+for (const file of frameModules) {
+  const module = file.replace('.ts', '');
+  check(usedModules.has(module), `css/keyframes/${file} is imported by no slice`);
+}
+
 const docs = await readFile(new URL('../apps/docs/dist/index.html', import.meta.url), 'utf8');
 for (const loader of loaderRegistry) {
   check(docs.includes(`type: '${loader.id}'`), `Documentation gallery is missing ${loader.id}`);

@@ -23,10 +23,10 @@ Audited version: `0.1.0`
 - [x] Verified runtime imports from all seven packed packages.
 - [x] Compiled packed-package TypeScript declarations with strict
   `tsc --noEmit`, and confirmed the typed `LoaderId` rejects a non-catalog ID.
-- [x] Verified all 12 deprecated aliases remain importable, render without
-  fallback, produce byte-identical markup to their canonical design, and mirror
-  its `kind`, `options` and progress support in metadata.
-- [x] Verified alias presets target canonical IDs.
+- [x] Verified every public ID renders its own design: no two designs render
+  identically at four animation frames, every design paints something visible,
+  and designs whose names promise a count or a stroke weight render it.
+- [x] Verified presets target catalog IDs.
 - [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
   Chromium through computed styles and `document.getAnimations()` play-states,
   and confirmed the assertions fail if the CSS defect is reintroduced.
@@ -41,17 +41,18 @@ Audited version: `0.1.0`
 - [x] Confirmed on GitHub that both jobs are green for `dev` at `41cf7c3`,
   including the Playwright install step on a clean runner.
 - [x] Ran `npm run check`: passed; build with catalog generation, strict
-  typecheck, 25 unit tests, catalog drift check, documentation sync, and bundle
+  typecheck, 30 unit tests, catalog drift check, documentation sync, and bundle
   budgets.
-- [x] Ran `npm run test:browser`: passed; 10 tests in Chromium.
+- [x] Ran `npm run test:browser`: passed; 16 tests in Chromium.
 - [x] Ran `npm run docs:build`: passed.
 - [x] Ran `npm run docs:check`: passed; documented counts and bundle figures are
   read from the build, so a stale document fails the pipeline.
 - [x] Ran `npm run pack:check`: passed.
 - [x] Ran `npm run audit:visual`: passed.
-- [x] Ran `npm run audit:visual:correctness`: passed; 69 active designs, 62 with
-  animations sampled as advancing in Chromium and 7 determinate-progress designs
-  verified through value binding, plus 12 aliases.
+- [x] Ran `npm run audit:visual:correctness`: passed; 81 active designs, 76 with
+  animations sampled as advancing in Chromium and 5 determinate-progress designs
+  verified through value binding. Every public ID has its own implementation, so
+  no design borrows another name.
 - [ ] Human interactive review of motion quality in a real browser remains an
   owner decision; automated evidence proves each design animates, not that each
   animation looks right.

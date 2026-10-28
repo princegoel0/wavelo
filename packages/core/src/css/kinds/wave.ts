@@ -1,3 +1,12 @@
+import { css as highlightFrames } from '../keyframes/highlight.js';
+import { css as stripeFrames } from '../keyframes/stripe.js';
+import { css as waveFrames } from '../keyframes/wave.js';
+import { css as waveformFrames } from '../keyframes/waveform.js';
+import { css as waveformReverseFrames } from '../keyframes/waveform-reverse.js';
+import { css as horizontalPulseFrames } from '../keyframes/horizontal-pulse.js';
+import { css as helixFrames } from '../keyframes/helix.js';
+import { css as helixLineFrames } from '../keyframes/helix-line.js';
+
 export const waveCss = `
 .wavelo--wave{gap:3px}
 .wavelo--wave .wavelo__part{width:calc(var(--wavelo-size) / 8);height:70%;border-radius:2px;animation:wavelo-wave var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
@@ -20,4 +29,4 @@ export const waveCss = `
 .wavelo--helix .wavelo__part:nth-child(5){transform:translate(-28px,16px)}
 .wavelo--helix .wavelo__part:nth-child(6){transform:translate(28px,26px)}
 .wavelo--helix:before,.wavelo--helix:after{content:"";position:absolute;left:25%;top:46%;width:50%;height:8%;border-top:var(--wavelo-stroke) solid currentColor;border-radius:50%;animation:wavelo-helix-line var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
-`;
+${highlightFrames}${stripeFrames}${waveFrames}${waveformFrames}${waveformReverseFrames}${horizontalPulseFrames}${helixFrames}${helixLineFrames}`;

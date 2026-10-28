@@ -1,3 +1,6 @@
+import { css as uploadFrames } from '../keyframes/upload.js';
+import { css as transitionFrames } from '../keyframes/transition.js';
+
 export const progressCss = `
 .wavelo--progress{width:var(--wavelo-width);height:var(--wavelo-height);min-width:4rem;max-height:1rem;overflow:hidden;border-radius:999px;background:color-mix(in srgb,currentColor 18%,transparent)}
 .wavelo--progress .wavelo__part{height:100%;width:var(--wavelo-progress);border-radius:inherit;transition:width .2s ease}
@@ -12,4 +15,4 @@ export const progressCss = `
 .wavelo--page-transition{position:relative;top:0;left:0;width:100%;height:3px;max-height:3px;border-radius:0}
 .wavelo--page-transition .wavelo__part{background:linear-gradient(90deg,color-mix(in srgb,currentColor 35%,transparent),currentColor,color-mix(in srgb,currentColor 35%,transparent));background-size:200% 100%;animation:wavelo-transition var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--progress-top{position:fixed;top:0;left:0;width:100%;height:3px;max-height:3px;border-radius:0}
-`;
+${uploadFrames}${transitionFrames}`;

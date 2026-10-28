@@ -27,13 +27,13 @@ audit because doing so requires coordinated preset/API deprecation work.
 
 | Design ID | Category | Review status | Findings | Decision |
 |---|---|---|---|---|
-| `circular` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `ring`; public import retained for compatibility. |
+| `circular` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Near-duplicate of ring/arc; improve with a genuinely different mechanism or merge into ring. |
 | `ring` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Baseline ring; retain as canonical ring primitive. |
 | `dual-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Distinct nested structure; retain, but verify motion separation in a future animation review. |
-| `arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `half-circle`; public import retained for compatibility. |
-| `multi-arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `dual-ring`; public import retained for compatibility. |
+| `arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Near-duplicate of circular/ring; improve arc geometry and motion or merge. |
+| `multi-arc` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Shares nested-ring structure with dual-ring/segmented-ring; improve geometry or merge. |
 | `dotted-circle` | spinner | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `segmented-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Deprecated alias of `dotted-circle`; public import retained for compatibility. |
+| `segmented-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Stroke-style variation of ring family; improve segmentation or merge. |
 | `half-circle` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `ellipse` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `rotating-square` | spinner | Human reviewed | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
@@ -41,20 +41,20 @@ audit because doing so requires coordinated preset/API deprecation work.
 | `orbiting-dots` | spinner | Human reviewed | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `orbiting-circles` | spinner | Human reviewed | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `gradient-ring` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `thin-line` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `ring`; public import retained for compatibility. |
-| `thick-stroke` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `ring`; public import retained for compatibility. |
-| `monochrome` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Deprecated alias of `ring`; public import retained for compatibility. |
+| `thin-line` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Cosmetic stroke-width variant of ring; move to customization or replace. |
+| `thick-stroke` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Cosmetic stroke-width variant of ring; move to customization or replace. |
+| `monochrome` | spinner | Human reviewed | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Color/theme variation rather than a distinct design; move to theme preset or replace. |
 | `svg-star` | spinner | Human reviewed | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `three-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Canonical three-dot sequence; retain. |
-| `four-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Deprecated alias of `three-dots`; public import retained for compatibility. |
-| `five-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Deprecated alias of `three-dots`; public import retained for compatibility. |
+| `four-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Dot-count variation of three/five dots; improve timing/arrangement or merge into configurable preset. |
+| `five-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Dot-count variation of three/four dots; improve timing/arrangement or merge into configurable preset. |
 | `bouncing-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `pulsing-dots` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `fading-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `scaling-dots` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `rotating-dots` | dots | Human reviewed | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `dot-wave` | dots | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `dot-matrix` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Deprecated alias of `grid-pulse`; public import retained for compatibility. |
+| `dot-matrix` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Static dot-count variation of dot sequence; improve matrix layout or merge. |
 | `grid-pulse` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `alternating-dots` | dots | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Shares linear-dot structure with fading/staggered dots; improve alternating grouping. |
 | `expanding-dot` | dots | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
@@ -66,11 +66,11 @@ audit because doing so requires coordinated preset/API deprecation work.
 | `vertical-pulse-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with bouncing/growing bars; improve rhythm or merge. |
 | `horizontal-pulse-bars` | bars | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Orientation variant of bar family; retain if horizontal motion is intentional. |
 | `waveform` | bars | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
-| `audio-waveform` | bars | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Deprecated alias of `waveform`; public import retained for compatibility. |
+| `audio-waveform` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Near-duplicate of waveform; replace with a distinct waveform topology or merge. |
 | `fading-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with equalizer/growing bars; improve timing or merge. |
 | `growing-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `alternating-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with equalizer/fading bars; improve grouping or merge. |
-| `gradient-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Deprecated alias of `equalizer`; public import retained for compatibility. |
+| `gradient-bars` | bars | Human reviewed | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Cosmetic color variation of bars; move to theme preset or replace. |
 | `segmented-bar` | progress | Human reviewed | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
 | `moving-stripe` | bars | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `traveling-highlight` | bars | Human reviewed | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |

@@ -50,9 +50,10 @@ export function catalogArtifacts(loaderRegistry) {
   ].join('\n');
   files.set('src/loaders/index.ts', barrel);
 
+  const aliases = loaderRegistry.filter((definition) => definition.deprecated).length;
   const idsFile = [
     HEADER,
-    '/** Every public catalog ID, deprecated aliases included. */',
+    `/** Every public catalog ID${aliases ? `, ${aliases} of them deprecated aliases` : ''}. */`,
     'export const loaderIds = [',
     ...loaderRegistry.map((d) => `  ${JSON.stringify(d.id)},`),
     '] as const;',

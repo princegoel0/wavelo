@@ -25,8 +25,15 @@ function dimension(value: number | string | undefined, fallback: string): string
   return value;
 }
 
-function color(value: string | undefined, fallback: string): string {
-  if (value === undefined) return fallback;
+/**
+ * Colours are validated but never defaulted here. Emitting a default like
+ * `--wavelo-color: var(--wavelo-color, #6366f1)` on the element that also
+ * declares the property is a self-reference, which CSS resolves as invalid at
+ * computed-value time — the colour and every gradient using it would be lost.
+ * Defaults live in the stylesheet rules that consume each property instead.
+ */
+function optionalColor(value: string | undefined): string | undefined {
+  if (value === undefined) return undefined;
   if (!SAFE_COLOR.test(value.trim())) throw new LoaderConfigurationError(`Invalid color: ${value}`);
   return value.trim();
 }
@@ -84,9 +91,9 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
     size: dimension(input.size, '2.5rem'),
     width: dimension(input.width, dimension(input.size, '2.5rem')),
     height: dimension(input.height, dimension(input.size, '2.5rem')),
-    color: color(input.color, 'var(--wavelo-color, #6366f1)'),
-    secondaryColor: color(input.secondaryColor, 'var(--wavelo-secondary-color, #a5b4fc)'),
-    backgroundColor: color(input.backgroundColor, 'transparent'),
+    color: optionalColor(input.color),
+    secondaryColor: optionalColor(input.secondaryColor),
+    backgroundColor: optionalColor(input.backgroundColor),
     duration: duration(input.duration, speed),
     speed,
     strokeWidth: input.strokeWidth ?? 3,

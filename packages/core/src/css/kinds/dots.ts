@@ -1,3 +1,8 @@
+import { css as fadeDotFrames } from '../keyframes/fade-dot.js';
+import { css as altDotFrames } from '../keyframes/alt-dot.js';
+import { css as altDotReverseFrames } from '../keyframes/alt-dot-reverse.js';
+import { css as staggerDotFrames } from '../keyframes/stagger-dot.js';
+
 export const dotsCss = `
 .wavelo--dots{gap:calc(var(--wavelo-size) / 7)}
 .wavelo--dots .wavelo__part{width:calc(var(--wavelo-size) / 5);height:calc(var(--wavelo-size) / 5);border-radius:50%;animation:wavelo-pulse var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
@@ -22,4 +27,9 @@ export const dotsCss = `
 .wavelo--staggered-dots .wavelo__part{animation:wavelo-stagger-dot var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--infinite-scroll{gap:4px}
 .wavelo--infinite-scroll .wavelo__part{width:12%;height:12%;animation:wavelo-bounce-dot var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
-`;
+.wavelo--dot-matrix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:calc(var(--wavelo-size) / 14);width:var(--wavelo-size);height:var(--wavelo-size);background:transparent}
+.wavelo--dot-matrix .wavelo__part{width:100%;height:100%;border-radius:22%;animation:wavelo-pulse var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
+.wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration) / -4)}
+.wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(5),.wavelo--dot-matrix .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration) / -2)}
+.wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration) * -3 / 4)}
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}`;

@@ -46,8 +46,8 @@ docs:check` keeps aligned with the build.
 Angular SSR is verified with Angular 22's `renderApplication` server context,
 and the complete 81-card catalog has a desktop contact sheet, mobile layout
 check, and per-design review in `docs/VISUAL_CATALOG_AUDIT.md`. The release
-now has 69 active visual signatures and 12 documented deprecated aliases for
-cosmetic/count variants. Generic shape entries have distinct geometry rules,
+now has 81 distinct visual signatures and no deprecated aliases: every ID has
+its own implementation. Generic shape entries have distinct geometry rules,
 presets target canonical IDs, and the release audit is currently **NO-GO** pending final review of the
 renderer-specific visual correctness artifact. The latest correction split
 catalog lookup from modular rendering so individual loader imports no longer
@@ -58,11 +58,10 @@ cards, and measured the new production bundles. The detailed evidence is in
 ## Visual correctness remediation
 
 - Rebuilt the renderer around ID-specific geometry and animation contracts for
-  all 69 active designs; deprecated aliases still resolve to their canonical
-  implementations.
+  all 81 designs; every ID renders its own geometry and animation contract.
 - Rebuilt `apps/docs/dist/index.html` and captured
   `release-audit/catalog-corrected-contact-sheet.png`.
-- Automated audit: 69 active designs and 12 aliases located, CSS/DOM contracts
+- Automated audit: all 81 designs located, CSS/DOM contracts
   present, progress-ring value binding present, and desktop/mobile overflow
   checks passed.
 - Human screenshot review found no page-level overlay after the documentation
