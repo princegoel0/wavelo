@@ -1,5 +1,5 @@
 import { escapeHtml, normalizeConfig } from './validation.js';
-import type { LoaderConfig, LoaderDefinition, RenderKind, RenderResult } from './types.js';
+import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult } from './types.js';
 
 /** FNV-1a, used to identify a stylesheet slice so it is injected only once. */
 export function styleKey(css: string): string {
@@ -11,7 +11,7 @@ export function styleKey(css: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
-function parts(kind: RenderKind, type: string): string {
+function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
@@ -19,7 +19,16 @@ function parts(kind: RenderKind, type: string): string {
     return many(type === 'skeleton-avatar' ? 1 : type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
   }
   if (kind === 'progress') {
-    if (type === 'progress-steps' || type === 'segmented-bar') return many(5);
+    if (type === 'progress-steps') {
+      // Steps are discrete: a value fills whole steps, and the same 35% default
+      // used for `--wavelo-progress` decides the fill when no value is given.
+      const steps = 5;
+      const filled = Math.ceil(((config.value ?? 35) / config.max) * steps);
+      return Array.from(
+        { length: steps },
+        (_, index) => `<span class="wavelo__part" aria-hidden="true" data-wavelo-step="${index < filled ? 'filled' : 'empty'}"></span>`
+      ).join('');
+    }
     return part;
   }
   if (type === 'dotted-circle') return many(8);
@@ -76,7 +85,7 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +
     attributes(dataAttributes) +
     attributes(attrs) +
-    `>${parts(definition.kind, definition.id)}</span>`;
+    `>${parts(definition.kind, definition.id, config)}</span>`;
   return {
     html,
     css,

@@ -245,6 +245,116 @@ test('data attributes survive the browser round trip', async () => {
   assert.deepEqual(attrs, { testid: 'probe', analytics: 'section "a"', nestedScripts: 0 });
 });
 
+test('every determinate design reflects its value in the browser', async () => {
+  const ids = loaderRegistry.filter((loader) => loader.kind === 'progress').map((loader) => loader.id);
+  const values = [0, 50, 100];
+  const body = ids
+    .flatMap((id) => values.map((value) => `<div data-key="${id}@${value}">${renderLoader({ type: id, value, max: 100, label: 'Working' }).html}</div>`))
+    .join('');
+  await setContentPage(body);
+
+  const rows = await page.evaluate(() => {
+    const viewport = window.innerWidth;
+    return [...document.querySelectorAll('[data-key]')].map((wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const parts = [...root.querySelectorAll('.wavelo__part')];
+      const rootStyle = getComputedStyle(root);
+      const rect = root.getBoundingClientRect();
+      const animated = parts.find((part) => getComputedStyle(part).animationName !== 'none') ?? root;
+      const live = document.getAnimations().find((animation) => animation.effect?.target === animated);
+      return {
+        key: wrap.dataset.key,
+        role: root.getAttribute('role'),
+        valuenow: root.getAttribute('aria-valuenow'),
+        position: rootStyle.position,
+        rootWidth: rect.width,
+        rootHeight: rect.height,
+        viewport,
+        backgroundImage: rootStyle.backgroundImage,
+        partCount: parts.length,
+        partWidth: parts.length ? parts[0].getBoundingClientRect().width : 0,
+        filled: parts.filter((part) => part.dataset.waveloStep === 'filled').length,
+        animation: getComputedStyle(animated).animationName,
+        playState: live ? live.playState : 'none'
+      };
+    });
+  });
+  const at = (id, value) => rows.find((row) => row.key === `${id}@${value}`);
+
+  for (const id of ids) {
+    for (const value of values) {
+      const row = at(id, value);
+      assert.equal(row.role, 'progressbar', `${id}@${value} role`);
+      assert.equal(row.valuenow, String(value), `${id}@${value} aria-valuenow`);
+    }
+  }
+
+  // The ring must be a circle: a rectangular conic gradient reads as a pie, not a ring.
+  for (const value of values) {
+    const row = at('progress-ring', value);
+    assert.equal(row.rootWidth, row.rootHeight, `progress-ring@${value} is ${row.rootWidth}x${row.rootHeight}, not square`);
+    assert.ok(row.backgroundImage.includes('conic-gradient'), `progress-ring@${value} has no conic fill`);
+    assert.ok(row.backgroundImage.includes(`${value}%`), `progress-ring@${value} fill does not match the value: ${row.backgroundImage}`);
+  }
+
+  // Steps are discrete: the number of filled steps must follow the value.
+  const expectedFilled = { 0: 0, 50: 3, 100: 5 };
+  for (const value of values) {
+    const row = at('progress-steps', value);
+    assert.equal(row.partCount, 5, 'progress-steps must render five steps');
+    assert.equal(row.filled, expectedFilled[value], `progress-steps@${value} filled ${row.filled} of 5`);
+  }
+
+  // Bar-shaped designs must fill in proportion to the value, not saturate early.
+  for (const id of ['progress-bar', 'segmented-bar', 'progress-upload', 'page-transition']) {
+    const widths = values.map((value) => at(id, value).partWidth);
+    const track = at(id, 100).partWidth;
+    assert.ok(widths[0] < widths[1] && widths[1] < widths[2], `${id} fill is not monotonic in value: ${widths}`);
+    assert.ok(Math.abs(widths[1] - track / 2) <= 1, `${id} at 50 fills ${widths[1]}px of a ${track}px track`);
+    assert.ok(Math.abs(widths[2] - track) <= 1, `${id} at 100 fills ${widths[2]}px of a ${track}px track`);
+  }
+
+  // Two designs carry motion to signal activity, and both must actually run.
+  assert.equal(at('progress-upload', 50).animation, 'wavelo-upload');
+  assert.equal(at('page-transition', 50).animation, 'wavelo-transition');
+  for (const id of ['progress-upload', 'page-transition']) {
+    assert.equal(at(id, 50).playState, 'running', `${id} animation is not running`);
+  }
+
+  // The top-of-page bar is fixed and spans the viewport, by design.
+  const top = at('progress-top', 50);
+  assert.equal(top.position, 'fixed');
+  assert.equal(top.rootWidth, top.viewport, 'progress-top must span the viewport');
+  assert.ok(Math.abs(top.partWidth - top.viewport / 2) <= 1, `progress-top at 50 fills ${top.partWidth}px of ${top.viewport}px`);
+});
+
+test('the gallery keeps its top-of-page bar inside the preview card', async () => {
+  const galleryHtml = await readFile(resolve('apps/docs/dist/index.html'), 'utf8');
+  const server = createServer((_request, response) => {
+    response.writeHead(200, { 'content-type': 'text/html' });
+    response.end(galleryHtml);
+  });
+  await new Promise((resolveListen) => server.listen(0, resolveListen));
+  const galleryPage = await browser.newPage();
+  await galleryPage.goto(`http://127.0.0.1:${server.address().port}`);
+  const contained = await galleryPage.evaluate(() => {
+    const element = document.querySelector('.preview .wavelo--progress-top');
+    if (!element) return { found: false };
+    const preview = element.closest('.preview').getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
+    return {
+      found: true,
+      position: getComputedStyle(element).position,
+      inside: rect.top >= preview.top - 1 && rect.bottom <= preview.bottom + 1 && rect.left >= preview.left - 1 && rect.right <= preview.right + 1
+    };
+  });
+  assert.equal(contained.found, true, 'the gallery has no progress-top preview');
+  assert.equal(contained.position, 'relative', 'the gallery must contain the fixed bar in its preview');
+  assert.equal(contained.inside, true, 'progress-top escaped its preview card');
+  await galleryPage.close();
+  server.close();
+});
+
 test('documentation gallery renders and has no axe violations', async () => {
   const axe = await readFile(resolve('node_modules/axe-core/axe.min.js'), 'utf8');
   const galleryHtml = await readFile(resolve('apps/docs/dist/index.html'), 'utf8');

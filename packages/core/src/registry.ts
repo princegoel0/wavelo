@@ -25,7 +25,10 @@ export const loaderRegistry: readonly LoaderDefinition[] = catalogEntries.map(([
     kind,
     description,
     options: [],
-    supportsProgress: category === 'progress',
+    // Determinate behaviour belongs to the render kind, not the marketing
+    // category: `page-transition` is an application pattern that still renders a
+    // value-driven bar, so it must expose progressbar semantics.
+    supportsProgress: kind === 'progress',
     stability: 'stable',
     visualSignature: id
   };

@@ -136,6 +136,51 @@ test('each design ships only its own stylesheet slice', () => {
   assert.match(card.css, /\.wavelo\{/);
 });
 
+test('every determinate design exposes progressbar semantics, and only those do', () => {
+  const determinate = loaderRegistry.filter((loader) => loader.kind === 'progress');
+  assert.equal(determinate.length, 7);
+  for (const definition of determinate) {
+    const result = renderLoader({ type: definition.id, value: 40, max: 80, label: 'Working' });
+    assert.match(result.html, /role="progressbar"/, definition.id);
+    assert.match(result.html, /aria-valuenow="40"/, definition.id);
+    assert.match(result.html, /aria-valuemax="80"/, definition.id);
+    assert.ok(definition.supportsProgress, `${definition.id} must advertise progress support`);
+  }
+  for (const definition of loaderRegistry.filter((loader) => loader.kind !== 'progress').slice(0, 20)) {
+    const result = renderLoader({ type: definition.id, value: 40, max: 80, label: 'Working' });
+    assert.doesNotMatch(result.html, /role="progressbar"/, definition.id);
+  }
+});
+
+test('progress steps fill whole steps in proportion to the value', () => {
+  const filled = (config) => {
+    const result = renderLoader({ type: 'progress-steps', max: 100, label: 'Working', ...config });
+    return (result.html.match(/data-wavelo-step="filled"/g) ?? []).length;
+  };
+  assert.equal(filled({ value: 0 }), 0);
+  assert.equal(filled({ value: 25 }), 2);
+  assert.equal(filled({ value: 50 }), 3);
+  assert.equal(filled({ value: 75 }), 4);
+  assert.equal(filled({ value: 100 }), 5);
+  assert.equal(renderLoader({ type: 'progress-steps', label: 'Working' }).html.match(/data-wavelo-step="filled"/g).length, 2);
+  assert.equal((renderLoader({ type: 'progress-steps', value: 100, max: 100, label: 'L' }).html.match(/wavelo__part/g) ?? []).length, 5);
+});
+
+test('the progress family renders seven distinguishable designs', () => {
+  const ids = loaderRegistry.filter((loader) => loader.kind === 'progress').map((loader) => loader.id);
+  const rendered = ids.map((id) => renderLoader({ type: id, value: 60, max: 100, label: 'Working' }));
+  assert.equal(new Set(rendered.map((result) => result.html)).size, ids.length, 'two progress designs render identical markup');
+  // Designs that must differ from the plain bar each need their own rule; the
+  // plain bar itself is styled by the shared `.wavelo--progress` rules.
+  const css = rendered[0].css;
+  assert.match(css, /\.wavelo--progress-ring\{[^}]*min-width:0/);
+  assert.match(css, /\.wavelo--progress-steps[^}]*data-wavelo-step="filled"/);
+  assert.match(css, /\.wavelo--progress-upload[^}]*wavelo-upload/);
+  assert.match(css, /\.wavelo--page-transition[^}]*wavelo-transition/);
+  assert.match(css, /\.wavelo--segmented-bar[^}]*repeating-linear-gradient/);
+  assert.match(css, /\.wavelo--progress-top\{[^}]*position:fixed/);
+});
+
 test('generated loader modules match the catalog exactly', async () => {
   const files = await readdir(new URL('../packages/core/dist/loaders/', import.meta.url));
   const modules = files.filter((name) => name.endsWith('.js') && name !== 'index.js').map((name) => name.replace('.js', ''));

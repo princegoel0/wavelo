@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "page-transition", name: "Page transition", category: "application", kind: "progress", description: "Page transition indicator", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "page-transition" };
+const definition: LoaderDefinition = { id: "page-transition", name: "Page transition", category: "application", kind: "progress", description: "Page transition indicator", options: ["className","color","direction","duration","height","label","max","paused","reducedMotion","size","speed","strokeWidth","style","theme","value","width"], supportsProgress: true, stability: "stable", visualSignature: "page-transition" };
 const styles = `${baseCss}${progressCss}`;
 
 export const pageTransition = (config: Omit<LoaderConfig, 'type'> = {}) =>

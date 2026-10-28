@@ -38,4 +38,6 @@ export const keyframesCss = `
 @keyframes wavelo-concentric{0%,100%{transform:scale(.65);opacity:.25}50%{transform:scale(1);opacity:1}}
 @keyframes wavelo-triangle-orbit{to{transform:rotate(360deg) translateY(-45%)}}
 @keyframes wavelo-shimmer{to{background-position:-200% 0}}
+@keyframes wavelo-upload{to{background-position:24px 0}}
+@keyframes wavelo-transition{to{background-position:-200% 0}}
 `;

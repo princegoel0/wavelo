@@ -104,7 +104,7 @@ audit because doing so requires coordinated preset/API deprecation work.
 | `button` | application | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Application-role variant; retain because placement semantics differ. |
 | `overlay` | application | Human reviewed | Rendered in the consistent gallery card; overlay primitive, indeterminate semantics. | Application-role variant; retain because overlay semantics differ. |
 | `fullscreen` | application | Human reviewed | Rendered in the consistent gallery card; overlay primitive, indeterminate semantics. | Application-role variant; retain because viewport semantics differ. |
-| `page-transition` | application | Human reviewed | Rendered in the consistent gallery card; progress primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `page-transition` | application | Human reviewed | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
 | `image-placeholder` | application | Human reviewed | Rendered in the consistent gallery card; skeleton primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `infinite-scroll` | application | Human reviewed | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `background-operation` | application | Human reviewed | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
