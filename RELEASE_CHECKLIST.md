@@ -1,6 +1,6 @@
 # Wavelo release checklist
 
-Audit date: 2026-10-27  
+Audit date: 2026-10-27, re-run 2026-10-28 after the library review
 Audited version: `0.1.0`
 
 ## Completed
@@ -8,32 +8,51 @@ Audited version: `0.1.0`
 - [x] Verified all seven publishable package names and versions:
   `@wavelo/core`, `@wavelo/vanilla`, `@wavelo/web-components`,
   `@wavelo/react`, `@wavelo/vue`, `@wavelo/svelte`, and `@wavelo/angular`.
+- [x] Added `repository`, `bugs`, `homepage` and `keywords` to all seven
+  manifests, and `./package.json` exports plus a `@wavelo/core/styles.css`
+  subpath to the core.
 - [x] Verified MIT license metadata, package-local `README.md`, and
   package-local `LICENSE` in every tarball.
 - [x] Verified `main`, `types`, ESM package format, package exports, files
-  allowlists, runtime dependencies, and framework peer dependencies.
+  allowlists, runtime dependencies, and framework peer dependencies, by
+  resolving every public subpath from a clean consumer project.
 - [x] Generated fresh tarballs for all seven packages.
 - [x] Installed all seven tarballs into a new clean consumer with
-  `npm install --ignore-scripts`; install completed with 0 vulnerabilities.
+  `npm install --ignore-scripts`; imports, SSR rendering, slice sizes and
+  strict `tsc --noEmit` all passed, with one hoisted copy of `@wavelo/core`.
 - [x] Verified runtime imports from all seven packed packages.
 - [x] Compiled packed-package TypeScript declarations with strict
-  `tsc --noEmit`.
+  `tsc --noEmit`, and confirmed the typed `LoaderId` rejects a non-catalog ID.
 - [x] Verified all 12 deprecated aliases remain importable, render without
-  fallback, and report their canonical visual signatures.
+  fallback, produce byte-identical markup to their canonical design, and mirror
+  its `kind`, `options` and progress support in metadata.
 - [x] Verified alias presets target canonical IDs.
-- [x] Verified the changelog, root README, MIT license, compatibility policy,
-  release instructions, and deprecation documentation.
+- [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
+  Chromium through computed styles and `document.getAnimations()` play-states,
+  and confirmed the assertions fail if the CSS defect is reintroduced.
+- [x] Verified each of the 81 designs renders identically from only its own
+  stylesheet slice, so the modular entry points are complete.
+- [x] Verified style slices are injected once per document (12 loaders across
+  four kinds produce four head elements, none in a host).
 - [x] Reviewed `.github/workflows/ci.yml`: it runs validation and packaging
   checks only; it does not publish or mutate npm.
-- [x] Ran `npm run check`: passed; 17 tests, catalog validation, and bundle
-  budgets passed.
-- [x] Ran `npm run test:browser`: passed.
+- [x] Added a `verify-browser` CI job so computed-style and axe checks run on
+  every push and pull request, not only in the release workflow.
+- [x] Ran `npm run check`: passed; build with catalog generation, strict
+  typecheck, 25 unit tests, catalog drift check, documentation sync, and bundle
+  budgets.
+- [x] Ran `npm run test:browser`: passed; 10 tests in Chromium.
 - [x] Ran `npm run docs:build`: passed.
+- [x] Ran `npm run docs:check`: passed; documented counts and bundle figures are
+  read from the build, so a stale document fails the pipeline.
 - [x] Ran `npm run pack:check`: passed.
 - [x] Ran `npm run audit:visual`: passed.
-- [ ] Resolve the remaining visual-review limitation documented in
-  `docs/LOADER_VISUAL_CORRECTNESS_AUDIT.md`; release recommendation remains
-  **NO-GO** until active-loader motion is reviewed interactively.
+- [x] Ran `npm run audit:visual:correctness`: passed; 69 active designs, 62 with
+  animations sampled as advancing in Chromium and 7 determinate-progress designs
+  verified through value binding, plus 12 aliases.
+- [ ] Human interactive review of motion quality in a real browser remains an
+  owner decision; automated evidence proves each design animates, not that each
+  animation looks right.
 
 ## Owner actions before publishing
 
@@ -57,14 +76,20 @@ Audited version: `0.1.0`
 
 ```powershell
 npm ci
-npx playwright install chromium
+npx playwright install --with-deps chromium
 npm run check
 npm run test:browser
 npm run docs:build
+npm run docs:check
 npm run audit:visual
+npm run audit:visual:correctness
 npm run pack:check
 npm pack --workspaces --pack-destination .\release-audit\approved-tarballs
 ```
+
+`npm pack --workspaces` also produces `wavelo-docs-0.1.0.tgz`; `@wavelo/docs` is
+`"private": true`, so npm refuses to publish it and only the seven other tarballs
+are release inputs.
 
 Inspect the seven tarballs in `release-audit\approved-tarballs`, then install
 them into a fresh consumer and repeat the runtime/type checks. Do not publish

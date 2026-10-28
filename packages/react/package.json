@@ -4,11 +4,41 @@
   "description": "React component integration for Wavelo",
   "type": "module",
   "license": "MIT",
-  "dependencies": {"@wavelo/core": "0.1.0"},
-  "peerDependencies": {"react": ">=19.3.1 <20", "react-dom": ">=19.3.1 <20"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/princegoel0/wavelo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/princegoel0/wavelo/issues"
+  },
+  "homepage": "https://github.com/princegoel0/wavelo#readme",
+  "keywords": [
+    "loading",
+    "spinner",
+    "loader",
+    "react",
+    "animation",
+    "accessible"
+  ],
+  "dependencies": {
+    "@wavelo/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=19.3.1 <20",
+    "react-dom": ">=19.3.1 <20"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
-  "exports": {".": {"types": "./dist/index.d.ts", "import": "./dist/index.js"}},
-  "scripts": {"build": "tsc -p tsconfig.json"}
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
 }

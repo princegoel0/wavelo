@@ -10,11 +10,15 @@
     "apps/docs"
   ],
   "scripts": {
-    "build": "npm run build --workspace @wavelo/core && npm run build --workspaces --if-present",
-    "check": "npm run build && npm run typecheck && npm test && npm run catalog && npm run measure",
+    "build": "npm run build:core && node scripts/generate-catalog.mjs && npm run build:all",
+    "build:core": "npm run build --workspace @wavelo/core",
+    "build:all": "npm run build --workspaces --if-present",
+    "check": "npm run build && npm run typecheck && npm test && npm run catalog && npm run docs:check && npm run measure",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test --test-concurrency=1 tests/core.test.mjs tests/framework.test.mjs tests/angular.test.mjs tests/angular-ssr.test.mjs",
     "catalog": "node scripts/validate-catalog.mjs",
+    "catalog:generate": "npm run build:core && node scripts/generate-catalog.mjs && npm run build:core",
+    "docs:check": "node scripts/validate-docs.mjs",
     "measure": "node scripts/bundle.mjs",
     "audit:visual": "node scripts/visual-audit.mjs",
     "audit:visual:correctness": "node scripts/audit-loader-visual-correctness.mjs",

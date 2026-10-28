@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getCanonicalLoaderDefinition, loaderRegistry, renderLoader, LoaderConfigurationError } from '../packages/core/dist/index.js';
+import { readdir } from 'node:fs/promises';
+import { getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, renderLoader, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
 test('catalog has distinct metadata and required categories', () => {
   assert.ok(new Set(loaderRegistry.map((loader) => loader.id)).size >= 60);
@@ -16,12 +17,19 @@ test('catalog has distinct metadata and required categories', () => {
   }
 });
 
-test('deprecated catalog aliases preserve their public IDs while rendering canonical behavior', () => {
+test('the generated ID list matches the catalog', async () => {
+  const { loaderIds } = await import('../packages/core/dist/ids.js');
+  assert.deepEqual([...loaderIds].sort(), loaderRegistry.map((loader) => loader.id).sort());
+});
+
+test('deprecated aliases preserve their public IDs while rendering canonical behavior', () => {
   for (const definition of loaderRegistry.filter((loader) => loader.deprecated)) {
-    const result = renderLoader({ type: definition.id, label: definition.name });
-    assert.equal(result.fallback, false, definition.id);
-    assert.match(result.html, new RegExp(`wavelo--${definition.aliasOf}`));
-    assert.equal(result.definition.id, definition.aliasOf);
+    const alias = renderLoader({ type: definition.id, label: definition.name });
+    const canonical = renderLoader({ type: definition.aliasOf, label: definition.name });
+    assert.equal(alias.fallback, false, definition.id);
+    assert.equal(alias.definition.id, definition.aliasOf);
+    assert.equal(alias.html, canonical.html, `${definition.id} markup differs from ${definition.aliasOf}`);
+    assert.equal(alias.css, canonical.css, `${definition.id} stylesheet differs from ${definition.aliasOf}`);
   }
 });
 
@@ -29,12 +37,21 @@ test('rendering is deterministic and accessible when labelled', () => {
   const result = renderLoader({ type: 'orbiting-dots', label: 'Loading data', size: 48 });
   assert.match(result.html, /role="status"/);
   assert.match(result.html, /aria-label="Loading data"/);
+  assert.equal(result.html, renderLoader({ type: 'orbiting-dots', label: 'Loading data', size: 48 }).html);
   assert.match(result.css, /prefers-reduced-motion/);
+});
+
+test('an unlabelled design is hidden from assistive technology', () => {
+  const result = renderLoader({ type: 'ring' });
+  assert.match(result.html, /aria-hidden="true"/);
+  assert.doesNotMatch(result.html, /role=/);
 });
 
 test('progress values use supplied measurements only', () => {
   const result = renderLoader({ type: 'progress-bar', value: 25, max: 50, label: 'Uploading' });
   assert.match(result.html, /aria-valuenow="25"/);
+  assert.match(result.html, /aria-valuemax="50"/);
+  assert.match(result.html, /role="progressbar"/);
   assert.match(result.html, /--wavelo-progress:50%/);
 });
 
@@ -43,6 +60,61 @@ test('unsafe configuration is rejected', () => {
   assert.throws(() => renderLoader({ type: 'inline', style: { '--wavelo-color': 'red;' } }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'inline', duration: 'expression(alert(1))' }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'inline', max: 0 }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'inline', theme: 'sepia' }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'inline', ['data-on click']: 'x' }), LoaderConfigurationError);
+});
+
+test('configuration values cannot break out of an attribute', () => {
+  const result = renderLoader({ type: 'inline', label: '"><script>alert(1)</script>', 'data-note': '"a\'b"' });
+  assert.doesNotMatch(result.html, /<script/);
+  assert.match(result.html, /aria-label="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/);
+  assert.match(result.html, /data-note="&quot;a&#39;b&quot;"/);
+});
+
+test('every supported configuration key reaches the rendered element', () => {
+  const cases = [
+    ['size', { size: 48 }, '--wavelo-size:48px'],
+    ['width', { width: 44 }, '--wavelo-width:44px'],
+    ['height', { height: 22 }, '--wavelo-height:22px'],
+    ['color', { color: '#010203' }, '--wavelo-color:#010203'],
+    ['secondaryColor', { secondaryColor: '#020304' }, '--wavelo-secondary-color:#020304'],
+    ['backgroundColor', { backgroundColor: '#030405' }, '--wavelo-background:#030405'],
+    ['speed', { speed: 2 }, '--wavelo-duration:0.5s'],
+    ['duration', { duration: '2s' }, '--wavelo-duration:2s'],
+    ['strokeWidth', { strokeWidth: 7 }, '--wavelo-stroke:7px'],
+    ['theme', { theme: 'dark' }, 'data-wavelo-theme="dark"'],
+    ['direction', { direction: 'reverse' }, '--wavelo-direction:reverse'],
+    ['paused', { paused: true }, '--wavelo-play-state:paused'],
+    ['label', { label: 'Working' }, 'aria-label="Working"'],
+    ['className', { className: 'demo-case' }, 'demo-case'],
+    ['style', { style: { '--wavelo-radius': '9px' } }, '--wavelo-radius:9px'],
+    ['reducedMotion', { reducedMotion: 'never' }, 'data-wavelo-motion="never"'],
+    ['data-testid', { 'data-testid': 'loader' }, 'data-testid="loader"'],
+    ['data-*', { 'data-analytics': 'section-a' }, 'data-analytics="section-a"'],
+    ['value', { value: 25 }, 'aria-valuenow="25"'],
+    ['max', { value: 25, max: 50 }, 'aria-valuemax="50"']
+  ];
+  for (const [key, config, marker] of cases) {
+    const result = renderLoader({ type: 'progress-bar', max: 100, label: 'Loading', ...config });
+    assert.ok(result.html.includes(marker), `${key} did not reach the markup: ${result.html}`);
+  }
+});
+
+test('loaderConfigKeys covers the whole documented configuration surface', () => {
+  assert.deepEqual([...loaderConfigKeys].sort(), [
+    'backgroundColor', 'className', 'color', 'data-testid', 'direction', 'duration', 'height', 'label', 'max',
+    'paused', 'reducedMotion', 'secondaryColor', 'size', 'speed', 'strokeWidth', 'style', 'theme', 'type', 'value', 'width'
+  ]);
+  assert.equal(loaderAttributes.length, loaderConfigKeys.length);
+  assert.ok(loaderAttributes.includes('secondary-color'));
+  assert.ok(loaderAttributes.includes('data-testid'));
+});
+
+test('an unknown type renders the default design and reports the substitution', () => {
+  const result = renderLoader({ type: 'definitely-not-a-design', label: 'Loading' });
+  assert.equal(result.fallback, true);
+  assert.equal(result.definition.id, 'inline');
+  assert.equal(renderLoader({ label: 'Loading' }).fallback, false);
 });
 
 test('every registered design renders its own stable identity', () => {
@@ -54,38 +126,20 @@ test('every registered design renders its own stable identity', () => {
   }
 });
 
-test('reduced motion and common customization are serialized consistently', () => {
-  const result = renderLoader({
-    type: 'gradient-ring',
-    size: '3rem',
-    width: 80,
-    height: 40,
-    duration: '2s',
-    strokeWidth: 4,
-    reducedMotion: 'always',
-    paused: true,
-    style: { '--wavelo-color': '#123456' }
-  });
-  assert.match(result.html, /data-wavelo-motion="always"/);
-  assert.match(result.html, /--wavelo-width:80px/);
-  assert.match(result.html, /--wavelo-duration:2s/);
-  assert.match(result.html, /--wavelo-play-state:paused/);
-  assert.match(result.html, /--wavelo-color:#123456/);
+test('each design ships only its own stylesheet slice', () => {
+  const ring = renderLoader({ type: 'ring' });
+  const card = renderLoader({ type: 'skeleton-card' });
+  assert.ok(ring.css.length < card.css.length + 4000, 'ring slice unexpectedly large');
+  assert.doesNotMatch(ring.css, /\.wavelo--skeleton-card/);
+  assert.doesNotMatch(card.css, /\.wavelo--ring\{/);
+  assert.match(ring.css, /\.wavelo\{/);
+  assert.match(card.css, /\.wavelo\{/);
 });
 
-test('documented individual loader exports are importable', async () => {
-  for (const [entry, id] of [
-    ['orbit', 'orbiting-dots'],
-    ['pulse', 'pulsing-dots'],
-    ['spinner', 'circular'],
-    ['skeleton', 'skeleton-card'],
-    ['progress', 'progress-bar']
-  ]) {
-    const module = await import(`../packages/core/dist/loaders/${entry}.js`);
-    const result = module[entry]({ label: id });
-    assert.equal(result.definition.id, id === 'circular' ? 'ring' : id);
-    assert.equal(result.fallback, false);
-  }
+test('generated loader modules match the catalog exactly', async () => {
+  const files = await readdir(new URL('../packages/core/dist/loaders/', import.meta.url));
+  const modules = files.filter((name) => name.endsWith('.js') && name !== 'index.js').map((name) => name.replace('.js', ''));
+  assert.deepEqual(modules.sort(), loaderRegistry.map((loader) => loader.id).sort());
 });
 
 test('every registered loader has a working modular entry point', async () => {
@@ -96,6 +150,9 @@ test('every registered loader has a working modular entry point', async () => {
     const result = module[exportName]({ label: definition.name });
     assert.equal(result.definition.id, definition.aliasOf ?? definition.id);
     assert.equal(result.fallback, false);
+    const dynamic = renderLoader({ type: definition.id, label: definition.name });
+    assert.equal(result.html, dynamic.html, `${definition.id} differs between entry points`);
+    assert.equal(result.css, dynamic.css, `${definition.id} styles differ between entry points`);
   }
 });
 

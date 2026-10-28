@@ -1,7 +1,9 @@
-import { LoaderConfigurationError, LoaderConfig, NormalizedLoaderConfig } from './types.js';
+import { LoaderConfigurationError, LoaderConfig, NormalizedLoaderConfig, Theme } from './types.js';
 
 const SAFE_COLOR = /^(?:#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([^)]{1,80}\)|[a-z][a-z0-9 -]{0,30})$/i;
 const SAFE_CLASS = /^[A-Za-z0-9 _-]{0,200}$/;
+const SAFE_DATA_NAME = /^data-[a-z][a-z0-9._-]{0,60}$/;
+const THEMES: Theme[] = ['light', 'dark', 'system'];
 
 export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => ({
@@ -41,6 +43,19 @@ function safeStyle(style: LoaderConfig['style']): Record<string, string> {
   return result;
 }
 
+/** `data-*` config keys are emitted as attributes; anything else is rejected. */
+function safeDataAttributes(input: LoaderConfig): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(input)) {
+    if (!key.startsWith('data-') || value === undefined) continue;
+    if (!SAFE_DATA_NAME.test(key)) throw new LoaderConfigurationError(`Invalid data attribute name: ${key}`);
+    const stringValue = String(value);
+    if (/[\u0000-\u001f]/.test(stringValue)) throw new LoaderConfigurationError(`Invalid data attribute value for ${key}`);
+    result[key] = stringValue;
+  }
+  return result;
+}
+
 function duration(value: number | string | undefined, speed: number): string {
   if (value === undefined) return `${1 / speed}s`;
   if (typeof value === 'number') {
@@ -51,12 +66,7 @@ function duration(value: number | string | undefined, speed: number): string {
   return value;
 }
 
-export function normalizeConfig(input: LoaderConfig, knownType: string, fallbackType = 'pulse'): NormalizedLoaderConfig {
-  const type = input.type ?? knownType;
-  const isKnown = type === knownType;
-  if (!isKnown) {
-    throw new LoaderConfigurationError(`Unknown loader type "${type}".`);
-  }
+export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   const className = input.className ?? '';
   if (!SAFE_CLASS.test(className)) throw new LoaderConfigurationError('className contains unsupported characters.');
   const speed = input.speed ?? 1;
@@ -68,9 +78,9 @@ export function normalizeConfig(input: LoaderConfig, knownType: string, fallback
   if (input.strokeWidth !== undefined && (!Number.isFinite(input.strokeWidth) || input.strokeWidth <= 0 || input.strokeWidth > 100)) throw new LoaderConfigurationError('strokeWidth must be between 0 and 100.');
   if (input.direction !== undefined && !['normal', 'reverse'].includes(input.direction)) throw new LoaderConfigurationError('direction must be normal or reverse.');
   if (input.reducedMotion !== undefined && !['auto', 'always', 'never'].includes(input.reducedMotion)) throw new LoaderConfigurationError('reducedMotion must be auto, always, or never.');
+  if (input.theme !== undefined && !THEMES.includes(input.theme)) throw new LoaderConfigurationError('theme must be light, dark, or system.');
   return {
     ...input,
-    type: isKnown ? type : fallbackType,
     size: dimension(input.size, '2.5rem'),
     width: dimension(input.width, dimension(input.size, '2.5rem')),
     height: dimension(input.height, dimension(input.size, '2.5rem')),
@@ -80,8 +90,10 @@ export function normalizeConfig(input: LoaderConfig, knownType: string, fallback
     duration: duration(input.duration, speed),
     speed,
     strokeWidth: input.strokeWidth ?? 3,
+    theme: input.theme ?? 'light',
     max,
     value,
-    style: safeStyle(input.style)
-  };
+    style: safeStyle(input.style),
+    dataAttributes: safeDataAttributes(input)
+  } as NormalizedLoaderConfig;
 }

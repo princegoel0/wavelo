@@ -1,35 +1,41 @@
-import { renderLoader } from '@wavelo/core';
-import type { LoaderConfig } from '@wavelo/core';
+import { configFromAttributes, ensureStyles, loaderAttributes, renderLoader } from '@wavelo/core';
 
-const attributes = ['type', 'size', 'width', 'height', 'color', 'secondary-color', 'background-color', 'speed', 'duration', 'label', 'paused', 'value', 'max', 'reduced-motion'];
+// Attribute names are configuration keys in kebab case, plus any `data-*` the
+// element carries. Declared statically so `attributeChangedCallback` fires.
+const observedAttributes = [...loaderAttributes];
+
 const HTMLElementBase: typeof HTMLElement = typeof HTMLElement === 'undefined'
-  ? class {} as typeof HTMLElement
+  ? class {} as unknown as typeof HTMLElement
   : HTMLElement;
 
+/**
+ * `<wavelo-loader type="ring" label="Loading">`. The stylesheet slice is added
+ * to the document head once, so any number of elements shares it.
+ */
 export class WaveloLoaderElement extends HTMLElementBase {
-  static observedAttributes = attributes;
-  private styleElement?: HTMLStyleElement;
-  connectedCallback(): void { this.render(); }
-  attributeChangedCallback(): void { if (this.isConnected) this.render(); }
-  disconnectedCallback(): void { this.replaceChildren(); this.styleElement = undefined; }
+  static observedAttributes = observedAttributes;
+
+  connectedCallback(): void {
+    this.render();
+  }
+
+  attributeChangedCallback(): void {
+    if (this.isConnected) this.render();
+  }
+
+  disconnectedCallback(): void {
+    this.replaceChildren();
+  }
+
   private render(): void {
-    const config: LoaderConfig = {};
-    for (const attribute of attributes) {
-      const value = this.getAttribute(attribute);
-      if (value === null) continue;
-      const key = attribute.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase()) as keyof LoaderConfig;
-      if (key === 'size' || key === 'width' || key === 'height' || key === 'value' || key === 'max') (config as Record<string, unknown>)[key] = Number(value);
-      else if (key === 'speed') config.speed = Number(value);
-      else if (key === 'paused') config.paused = value !== 'false';
-      else if (key === 'reducedMotion') config.reducedMotion = value as LoaderConfig['reducedMotion'];
-      else (config as Record<string, unknown>)[key] = value;
+    const values: Record<string, string | undefined> = {};
+    for (const attribute of observedAttributes) values[attribute] = this.getAttribute(attribute) ?? undefined;
+    for (const attribute of this.attributes) {
+      if (attribute.name.startsWith('data-')) values[attribute.name] = attribute.value;
     }
-    const result = renderLoader(config);
+    const result = renderLoader(configFromAttributes(values));
+    ensureStyles(result.css);
     this.innerHTML = result.html;
-    this.styleElement?.remove();
-    this.styleElement = document.createElement('style');
-    this.styleElement.textContent = result.css;
-    this.appendChild(this.styleElement);
   }
 }
 

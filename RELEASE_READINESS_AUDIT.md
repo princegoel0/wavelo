@@ -1,6 +1,6 @@
 # Wavelo release readiness audit
 
-Audit date: 2026-10-27  
+Audit date: 2026-10-27, re-audited 2026-10-28 after a full library review
 Audited branch: `dev`  
 Repository: `princegoel0/wavelo`  
 Decision: **BLOCKED**
@@ -11,8 +11,12 @@ The local implementation and package checks pass, and the release workflow was
 hardened without publishing or changing npm settings. GitHub repository
 safeguards are now configured: protected `main`, required CI/review controls,
 and a protected `npm` environment with owner approval. The release is still
-blocked because npm trusted publishing and final interactive visual acceptance
-remain unverified.
+blocked because npm trusted publishing remains unverified.
+
+The 2026-10-28 review found that several documented options did not behave in a
+browser and that documentation claimed more than the code delivered. All of it is
+now fixed in the code and the documentation was regenerated against the fixed
+build; see "Library review findings" below.
 
 The original workflow had release-critical defects:
 
@@ -32,6 +36,28 @@ The original workflow had release-critical defects:
 These were corrected and pushed to `dev`. No changes were merged to `main`,
 tagged, published, or enabled for release.
 
+## Library review findings (2026-10-28)
+
+Each finding was reproduced in Chromium before being fixed, and each fix is now
+covered by a test that fails if it regresses. The probe was checked in both
+directions: reintroducing the `paused` defect made the browser suite fail, and
+drifting a generated loader made catalog validation fail.
+
+| Severity | Finding | Evidence and impact | Status |
+|---|---|---|---|
+| HIGH | `paused` and `direction` did nothing | Every per-kind rule used the `animation:` shorthand, which resets `animation-direction`, `animation-play-state` and delay. Computed styles reported `running`/`normal` for ring, dots and bars regardless of configuration. | Fixed: controls are carried inside the shorthand as `var(--wavelo-direction)`/`var(--wavelo-play-state)`. Asserted by computed style **and** `document.getAnimations()` play-state. |
+| HIGH | `reducedMotion: 'always'` equalled `'auto'` | The only motion rule sat inside `@media (prefers-reduced-motion:reduce)` and merely excluded `never`, so nothing forced reduction. Contradicted `PRD.md`. | Fixed: an out-of-media-query rule keyed to `data-wavelo-motion="always"`. Covered for both OS settings. |
+| HIGH | Tests asserted strings, not behaviour | `tests/core.test.mjs` matched `--wavelo-play-state:paused` in the HTML, so both defects above passed green; CI ran no browser suite. | Fixed: `tests/browser.test.mjs` now covers computed styles, injection counts, slice isolation, the custom element and axe, and CI runs it in a dedicated `verify-browser` job on every push and PR. |
+| HIGH | "Modular" cost 78% of a single-design bundle | One imported loader shipped 20,629 B of the 26,556 B minified bundle as CSS for all 81 designs. | Fixed: styles are split into a shared base plus 11 render-kind slices. One design now ships 3,617 B gzipped (budget tightened from 7,168 to 4,096), and every design is re-rendered in the browser using only its own slice to prove the slices are complete. |
+| HIGH | Stylesheets were duplicated per instance | `mountLoader` tagged its `<style>` with `data-wavelo-style` but nothing ever queried it; twelve loaders meant twelve copies. Measured 201.7 KB of duplicate CSS and 1,810 parsed rules in the DOM. | Fixed: `ensureStyles` injects each distinct slice into the head once. No adapter inlines CSS any more. |
+| MEDIUM | Three sources of truth for the catalog | The alias map was duplicated in `registry.ts` and `render.ts`; 86 loader modules hand-copied their metadata; five modules (`orbit`, `pulse`, `spinner`, `skeleton`, `progress`) used IDs absent from the registry, so `import { orbit }` rendered orbiting-dots while `renderLoader({ type: 'orbit' })` rendered inline. | Fixed: `src/catalog.ts` is the only authored source; entry points, the barrel and the `LoaderId` union are generated, the phantom modules are gone, and `npm run catalog` diffs generated content against the committed files. |
+| MEDIUM | Dead options | `theme`, `variant` and the `data-*` index signature were typed and documented but never used; `normalizeConfig`'s unknown-type branch and `getLoaderDefinition`'s `'pulse'` default were unreachable. | Fixed: `theme` drives the skeleton palette, `data-*` is emitted, `variant` is removed from the type and the PRD, and the dead branches are gone. A test renders all 20 keys and asserts each reaches the element. |
+| MEDIUM | Adapters accepted 7 of 20 keys | Vue, Svelte and Angular declared seven props each while `docs/COMPATIBILITY.md` promised "the same serializable core configuration". | Fixed: every adapter takes the full surface, derived from `loaderConfigKeys` in core, with parity asserted per adapter. |
+| MEDIUM | Stylesheet accretion | 28 selectors were defined more than once, including `.wavelo--dotted-circle` eleven times with dead earlier declarations, and alias-only rules that could never match. | Fixed: rules live in one file per render kind; the dead duplicates and unreachable alias rules were removed, with computed-style equality re-verified per design. |
+| LOW | Missing npm metadata and stale build output risk | No `repository`, `bugs`, `homepage` or `keywords` on any package; `dist` was never cleaned, so a deleted design could ship as a stale module. | Fixed: metadata added to all seven manifests, the core build cleans `dist`, and catalog validation fails when `dist/loaders` and the registry disagree. |
+| LOW | CI ran no browser check | `npm test` excludes the browser suite and `ci.yml` never invoked it. | Fixed as part of the HIGH test finding above. |
+| INFO | Orphaned script | `scripts/measure.mjs` was referenced by nothing and duplicated `bundle.mjs`. | Removed. |
+
 ## Files inspected
 
 - `.github/workflows/ci.yml`
@@ -50,14 +76,34 @@ tagged, published, or enabled for release.
 
 ## Files changed locally
 
+Release-workflow hardening (2026-10-27):
+
 - `.github/workflows/release.yml`
 - `package.json`
 - `scripts/validate-release.mjs`
 - `release-audit/catalog-corrected-contact-sheet.png` (regenerated by the
   visual audit)
-- This report
 
-No unrelated source or public API changes were made.
+Library review remediation (2026-10-28):
+
+- `packages/core/src/` — new `catalog.ts`, `config.ts`, `styles.ts`, `css/`
+  slices; rewritten `render.ts`, `registry.ts`, `types.ts`, `validation.ts`,
+  `dom.ts`, `render-catalog.ts`; regenerated `loaders/` and `ids.ts`
+- `packages/{react,vue,svelte,angular,web-components,vanilla}/src/` and every
+  package `package.json`
+- `.github/workflows/ci.yml` — added the `verify-browser` job and `docs:check`
+- `scripts/` — `catalog-artifacts.mjs`, `generate-catalog.mjs`,
+  `emit-stylesheet.mjs`, `clean.mjs`, `style-fidelity.mjs`,
+  `validate-docs.mjs`; rewritten `validate-catalog.mjs` and `bundle.mjs`;
+  deleted the orphaned `measure.mjs`
+- `tests/` — rewritten `core.test.mjs`, `framework.test.mjs`, `browser.test.mjs`
+- `.gitattributes` — generated modules are compared byte-for-byte, so their line
+  endings must not depend on the checkout
+- Documentation: `README.md`, `CHANGELOG.md`, `PRD.md` (configuration table),
+  `RELEASE_CHECKLIST.md`, this report, `docs/{COMPATIBILITY,FRAMEWORKS,RELEASE,
+  BUNDLE_SIZE,FINAL_DELIVERY_REPORT,IMPLEMENTATION_PLAN,PRD_AUDIT,
+  VISUAL_CATALOG_AUDIT,LOADER_VISUAL_CORRECTNESS_AUDIT}.md`, and all seven
+  package READMEs
 
 ## Findings and remediation
 
@@ -72,7 +118,7 @@ No unrelated source or public API changes were made.
 | MEDIUM | Browser dependency was implicit | Release workflow ran Playwright without installing Chromium. | Fixed with `npx playwright install --with-deps chromium`. |
 | MEDIUM | Seven-package publication is non-atomic | npm can partially publish before a later package fails. | Documented recovery plan below; exact validated tarballs reduce incompatibility risk. |
 | LOW | Action references use mutable major tags | Actions use `@v4`; this is common but not immutable SHA pinning. | Owner may pin reviewed SHAs before production release. |
-| INFO | Visual acceptance remains limited | Automated contracts and screenshots pass, but static screenshots cannot prove every animation's subjective quality. | Release-blocking owner review remains required. |
+| INFO | Visual acceptance remains limited | Each design's animations are now sampled through `document.getAnimations()` twice, 250ms apart, so "it animates" is measured rather than inferred; axe and computed-style checks run in Chromium. A screenshot still cannot prove subjective quality, and Firefox and Safari are not exercised. | Owner's interactive browser review remains the stated release condition; automated evidence no longer claims to substitute for it. |
 
 ## Release workflow after remediation
 
@@ -169,10 +215,13 @@ No npm login, token creation, account change, or registry mutation was done.
 
 | Command | Result |
 |---|---|
-| `npm run check` | Passed: build, strict typecheck, 17 tests, catalog, bundle budgets |
+| `npm run check` | Passed: build with catalog generation, strict typecheck, 25 unit tests, catalog drift check, documentation sync, bundle budgets |
+| `npm run catalog` | Passed: 81 public IDs, 69 active designs, 116 presets, 11 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: gallery and axe/accessibility checks |
-| `npm run audit:visual:correctness` | Passed: 69 active designs and 12 aliases |
+| `npm run test:browser` | Passed: 10 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes, slice injection counts, per-design slice isolation for 81 designs, custom element re-render, data attributes, gallery + axe |
+| `npm run audit:visual` | Passed: 81 designs, contact sheet regenerated |
+| `npm run audit:visual:correctness` | Passed: 69 active designs (62 animating, 7 static by design) and 12 aliases |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
@@ -181,15 +230,18 @@ No npm login, token creation, account change, or registry mutation was done.
 | GitHub Actions workflow execution | Not run locally; requires GitHub |
 | npm trusted publishing/provenance | Not verifiable without owner configuration and publication |
 
-The latest bundle measurements remain within budgets:
+The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
 
-- Individual loader: 5,782 B gzip
-- Core renderer: 7,670 B gzip
-- Full catalog: 7,676 B gzip
-- React: 7,781 B gzip
-- Vue: 7,806 B gzip
-- Angular: 8,687 B gzip
-- Svelte: 7,672 B gzip
+- Individual design entry point: 3,617 B gzip (two designs: 4,007 B)
+- Core renderer (runtime-selected design): 8,268 B gzip
+- Full catalog: 8,276 B gzip
+- React: 8,487 B gzip
+- Vue: 8,795 B gzip
+- Angular: 9,578 B gzip
+- Svelte: 8,269 B gzip
+- Web Components: 8,867 B gzip
+- Vanilla: 8,423 B gzip
+- `@wavelo/core/styles.css`, the whole catalog sheet: 3,570 B gzip
 
 ## Gate scenario assessment
 
@@ -232,8 +284,9 @@ fails after earlier packages publish:
 
 **BLOCKED**
 
-The local code, package graph, tarball checks, release-version validation, and
-automated visual/browser checks are ready. Public release must remain blocked
-until the owner verifies npm trusted publishing, the protected GitHub
-environment, branch protection, package ownership/access, provenance policy,
-and the remaining interactive visual acceptance of the loader catalog.
+The library defects found in the 2026-10-28 review are fixed and covered by
+tests that fail if they regress; the code, documentation, package surface,
+tarball checks and release-version validation are ready. Public release must
+remain blocked until the owner verifies npm trusted publishing, the protected
+GitHub environment, branch protection, package ownership/access, provenance
+policy, and completes the interactive visual acceptance pass in a real browser.

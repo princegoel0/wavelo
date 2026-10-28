@@ -1,16 +1,18 @@
 import { renderLoader } from './render-catalog.js';
-import { LoaderConfig } from './types.js';
+import { ensureStyles } from './styles.js';
+import type { LoaderConfig } from './types.js';
 
+/**
+ * Renders a design into `element` and returns its detach function. The design's
+ * stylesheet slice is added to the document head once, no matter how many
+ * loaders share it.
+ */
 export function mountLoader(element: HTMLElement, config: LoaderConfig = {}): () => void {
   const result = renderLoader(config);
-  element.innerHTML = `${result.html}`;
-  const style = document.createElement('style');
-  style.setAttribute('data-wavelo-style', '');
-  style.textContent = result.css;
-  element.appendChild(style);
+  ensureStyles(result.css);
+  element.innerHTML = result.html;
   return () => {
     element.replaceChildren();
-    style.remove();
   };
 }
 

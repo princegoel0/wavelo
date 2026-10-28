@@ -1,5 +1,14 @@
 # Wavelo PRD audit
 
+Status: decisions taken before the first implementation pass, kept as history.
+Two rows no longer describe the shipped code and were corrected in the
+2026-10-28 review: nothing renders SVG (every design is CSS boxes, gradients and
+`clip-path`), and styles are no longer carried inside component output — see
+[docs/COMPATIBILITY.md](COMPATIBILITY.md) and
+[docs/BUNDLE_SIZE.md](BUNDLE_SIZE.md) for the current contract. The `variant`
+option listed in the PRD configuration table was removed rather than
+implemented: alternate looks are separate designs or named presets.
+
 ## Scope
 
 The root `PRD.md` is the authoritative product specification. It is coherent and
@@ -12,7 +21,7 @@ decisions without weakening the v1 acceptance criteria.
 | Area | Gap | Resolution |
 | --- | --- | --- |
 | Distribution | The PRD names packages but does not define the initial publish boundary. | The repository is an npm workspace with a publishable `@wavelo/core` package and adapter packages whose source and exports are tested. Each adapter is dependency-free at runtime; framework peer dependencies are optional integration concerns. |
-| Rendering | A framework-independent rendering contract is implied but not explicit. | Core exposes `renderLoader(config): RenderResult`, a serializable model with HTML/SVG markup, scoped styles, ARIA attributes, and cleanup. DOM mounting is a separate vanilla helper. |
+| Rendering | A framework-independent rendering contract is implied but not explicit. | Core exposes `renderLoader(config): RenderResult`, a serializable model with escaped HTML markup, ARIA attributes, and the stylesheet slice the design needs. Styles are injected into the document head rather than carried in the markup. DOM mounting is a separate vanilla helper. |
 | Loader identity | `type` and registry behavior are specified, but unknown-type behavior is not deterministic. | Unknown types throw a typed `LoaderConfigurationError` in development and resolve to the documented `pulse` fallback in production. The fallback is observable through the returned metadata. |
 | Accessibility | Requirements prohibit incorrect announcements but do not define defaults. | Loaders are decorative by default when no label is supplied. A label adds `role="status"` and an accessible name; determinate progress uses `role="progressbar"` and validated `aria-valuenow`. |
 | Reduced motion | Both user preference and an explicit option are required, but precedence is unstated. | `reducedMotion: 'auto' | 'always' | 'never'`, with `always` taking priority, `never` opting out, and `auto` following CSS `prefers-reduced-motion`. |

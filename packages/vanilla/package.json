@@ -4,12 +4,30 @@
   "description": "Vanilla DOM helpers for Wavelo",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/princegoel0/wavelo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/princegoel0/wavelo/issues"
+  },
+  "homepage": "https://github.com/princegoel0/wavelo#readme",
+  "keywords": [
+    "loading",
+    "spinner",
+    "loader",
+    "dom",
+    "animation",
+    "accessible"
+  ],
   "dependencies": {
     "@wavelo/core": "0.1.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -1,14 +1,71 @@
 # @wavelo/core
 
 Framework-independent loading animations with typed configuration, accessible
-semantics, reduced-motion support, modular registry metadata, and a small DOM helper.
+semantics, reduced-motion support, a generated modular catalog, and a small DOM
+helper. No runtime dependencies.
 
 ```ts
 import { renderLoader } from '@wavelo/core';
 
-const result = renderLoader({ type: 'orbit', label: 'Loading data', size: 48 });
-document.body.innerHTML = result.html;
+const result = renderLoader({ type: 'ring', label: 'Loading data', size: 48 });
+
+result.html;      // <span class="wavelo wavelo--ring wavelo--ring" …>
+result.css;       // the stylesheet slice this design needs
+result.styleKey;  // identity of that slice, for injection dedupe
+result.fallback;  // true when the requested type was not a catalog ID
 ```
 
-The core has no runtime dependencies. Use the `@wavelo/core/loaders/<id>` entry
-points for individual loader metadata without importing the full registry.
+## Choosing a design at build time
+
+`renderLoader` resolves the design from a string at runtime, so it carries every
+slice. When the design is known, import its own module:
+
+```ts
+import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
+
+const result = orbitingDots({ label: 'Loading data' });
+```
+
+The catalog holds 81 public IDs across 11 render kinds, and `src/loaders/*.ts`,
+`src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
+Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
+
+## Styles
+
+Nothing inlines CSS into the rendered markup. Add a slice to the document head
+once, and every loader sharing it reuses that element:
+
+```ts
+import { ensureStyles, renderStylesheets, mountLoader } from '@wavelo/core';
+
+ensureStyles(result.css);
+const detach = mountLoader(document.querySelector('#slot'), { type: 'ring', label: 'Loading' });
+```
+
+For server rendering, put the sheet in the head yourself — import
+`@wavelo/core/styles.css`, or emit the slices you rendered:
+
+```ts
+import { renderStylesheets } from '@wavelo/core/styles';
+
+head(renderStylesheets(pages.map((page) => page.css)));
+```
+
+## Entry points
+
+| Path | Contents |
+| --- | --- |
+| `@wavelo/core` | types, registry, renderer, DOM helpers, style injection |
+| `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
+| `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
+| `@wavelo/core/loaders` | barrel over all 81 designs |
+| `@wavelo/core/css` | `kindStyles`, `baseCss`, `allStyles`, `designStyles` |
+| `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
+| `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |
+
+## Accessibility
+
+A labelled design renders `role="status"` (or `role="progressbar"` with
+`aria-valuenow` when the design supports progress and `value` is set). An
+unlabelled design renders `aria-hidden="true"`, so it can never announce nothing.
+Skeleton surfaces stay hidden from assistive technology in both cases.

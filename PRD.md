@@ -474,15 +474,21 @@ The following API is the proposed baseline:
 | `speed` | Adjust animation speed |
 | `duration` | Set animation duration where appropriate |
 | `strokeWidth` | Configure line thickness |
-| `theme` | Select light, dark or system theme |
-| `direction` | Configure animation direction |
-| `paused` | Pause animation where supported |
+| `theme` | Select the light, dark or system palette for skeleton surfaces |
+| `direction` | Reverse the animation on the element that animates |
+| `paused` | Pause the animation |
 | `label` | Supply an accessible description |
-| `className` | Add custom classes in framework adapters |
+| `className` | Add custom classes to the rendered element |
 | `style` | Apply supported inline styles |
 | `reducedMotion` | Control reduced-motion behavior |
-| `variant` | Select a documented variant |
-| `data-testid` | Support test identification where appropriate |
+| `data-testid` | Support test identification |
+| `value` | Set a determinate progress value |
+| `max` | Set the progress maximum |
+
+Any `data-*` key is emitted as an attribute on the rendered element, so test and
+analytics hooks need no library change. There is no `variant` option: alternate
+looks are separate catalog designs or named presets, never a mode switch on an
+existing one.
 
 The final API must use one documented naming convention. Aliases should not be added without a demonstrated compatibility need.
 

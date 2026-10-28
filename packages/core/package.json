@@ -1,9 +1,28 @@
 {
   "name": "@wavelo/core",
   "version": "0.1.0",
-  "description": "Framework-independent Wavelo loading animation core",
+  "description": "Framework-independent loading animation core",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/princegoel0/wavelo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/princegoel0/wavelo/issues"
+  },
+  "homepage": "https://github.com/princegoel0/wavelo#readme",
+  "keywords": [
+    "loading",
+    "spinner",
+    "loader",
+    "skeleton",
+    "progress",
+    "animation",
+    "css",
+    "accessible",
+    "reduced-motion"
+  ],
   "sideEffects": [
     "*.css"
   ],
@@ -23,10 +42,32 @@
       "types": "./dist/dom.d.ts",
       "import": "./dist/dom.js"
     },
+    "./styles": {
+      "types": "./dist/styles.d.ts",
+      "import": "./dist/styles.js"
+    },
+    "./css": {
+      "types": "./dist/css/index.d.ts",
+      "import": "./dist/css/index.js"
+    },
+    "./css/base": {
+      "types": "./dist/css/base.d.ts",
+      "import": "./dist/css/base.js"
+    },
+    "./css/kinds/*": {
+      "types": "./dist/css/kinds/*.d.ts",
+      "import": "./dist/css/kinds/*.js"
+    },
+    "./loaders": {
+      "types": "./dist/loaders/index.d.ts",
+      "import": "./dist/loaders/index.js"
+    },
     "./loaders/*": {
       "types": "./dist/loaders/*.d.ts",
       "import": "./dist/loaders/*.js"
-    }
+    },
+    "./styles.css": "./dist/wavelo.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
@@ -34,6 +75,6 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs"
   }
 }
