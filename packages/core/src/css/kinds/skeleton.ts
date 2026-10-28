@@ -1,3 +1,5 @@
+import { css as shimmerFrames } from '../keyframes/shimmer.js';
+
 export const skeletonCss = `
 .wavelo--skeleton{display:block;width:var(--wavelo-width);height:var(--wavelo-height);border-radius:var(--wavelo-radius, .4rem);background:linear-gradient(90deg,var(--wavelo-skeleton-base),var(--wavelo-skeleton-highlight),var(--wavelo-skeleton-base));background-size:200% 100%;animation:wavelo-shimmer var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--skeleton-card,.wavelo--skeleton-table,.wavelo--skeleton-dashboard{display:grid;grid-template-columns:minmax(0,1fr);align-content:center;gap:6px;padding:8px;min-width:10rem;min-height:6rem;background:transparent;animation:none}
@@ -13,4 +15,4 @@ export const skeletonCss = `
 .wavelo--skeleton-avatar{border-radius:50%}
 .wavelo--skeleton-line{min-width:10rem;max-height:.75rem;border-radius:.2rem}
 .wavelo--image-placeholder{min-width:10rem;min-height:7.5rem;background:linear-gradient(110deg,var(--wavelo-skeleton-base) 30%,var(--wavelo-skeleton-highlight) 45%,var(--wavelo-skeleton-base) 60%);background-size:250% 100%}
-`;
+${shimmerFrames}`;

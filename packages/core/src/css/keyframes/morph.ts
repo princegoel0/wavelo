@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-morph{0%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}33%{clip-path:polygon(50% 0,100% 100%,50% 100%,0 100%)}66%{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}100%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}`;

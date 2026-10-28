@@ -9,8 +9,9 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 81 public IDs: 69 active designs and 12 deprecated aliases. Each alias renders
-  its canonical design byte-for-byte, verified by test.
+- 81 public IDs, each with its own implementation and no deprecated aliases. A
+  browser test asserts that no two designs render identically, and that designs
+  whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - 11 render kinds and 11 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.
@@ -37,8 +38,16 @@ Not yet published.
   render pixel-identical to `progress-bar`, and `page-transition` exposes
   `progressbar` semantics because determinate behaviour now follows the render
   kind rather than the catalog category.
+- Colours that are not set are no longer emitted as self-referencing custom
+  properties, which CSS resolves to nothing: the default palette, the gradient
+  designs and the overlay scrim now paint, and a page-level `--wavelo-color`
+  override reaches the designs that inherit it.
+- Skeleton `card`, `table` and `dashboard` presets paint their parts: percentage
+  widths inside an auto-sized grid track resolved to zero, so the shimmer had
+  nothing to show. The tracks are now sized with `minmax(0, 1fr)` and the presets
+  carry a usable minimum box.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
-- Test suites: unit (markup, validation, catalog, aliases, entry points),
+- Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style
   injection, accessibility). Bundle budgets and catalog/doc drift are enforced
   in CI.

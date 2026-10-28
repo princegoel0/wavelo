@@ -30,9 +30,9 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 ## What the library is
 
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
-  81 public IDs: 69 active designs, 12 deprecated aliases that render their
-  canonical design identically.
-- 11 render kinds, 11 stylesheet slices, 20 configuration keys, 37 `@keyframes`.
+  81 public IDs, each with its own implementation; the catalog has no deprecated
+  aliases.
+- 11 render kinds, 11 stylesheet slices, 20 configuration keys, 43 `@keyframes`.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from
   it by `scripts/generate-catalog.mjs`; `npm run catalog` fails on drift.
@@ -45,14 +45,14 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | --- | --- |
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
-| `npm test` | Passed: 25 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 81 IDs / 69 active / 116 presets / 11 slices, plus drift, alias-metadata and slice-ownership checks |
-| `npm run measure` | Passed: 10 entry points inside budget; single design 3,617 B gzip |
+| `npm test` | Passed: 30 tests across core, adapters, Angular TestBed and Angular SSR |
+| `npm run catalog` | Passed: 81 IDs / 81 active / 116 presets / 11 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run measure` | Passed: 10 entry points inside budget; single design 3,542 B gzip |
 | `npm run docs:build` | Passed |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
-| `npm run test:browser` | Passed: 10 Chromium tests (see below) |
+| `npm run test:browser` | Passed: 16 Chromium tests (see below) |
 | `npm run audit:visual` | Passed: 81-card contact sheet, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 69 active designs — 62 with animations sampled as advancing, 7 static determinate-progress designs checked for value binding — and 12 aliases |
+| `npm run audit:visual:correctness` | Passed: 81 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
@@ -74,7 +74,7 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
   OS; `'never'` opts out when the OS asks for reduction.
 - `theme` keeps the light skeleton palette by default, switches to the dark one
   for `dark`, and follows `prefers-color-scheme` only for `system`.
-- Twelve loaders across four kinds produce four `<style>` elements in the head and
+- Twelve loaders across five kinds produce five `<style>` elements in the head and
   none inside a host.
 - Every one of the 81 designs renders identically when given only the stylesheet
   slice its own entry point ships, checked against the combined sheet with
@@ -83,6 +83,12 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
   `role="progressbar"` with `aria-valuenow`, and defines once without error.
 - `data-testid` and arbitrary `data-*` values survive to the DOM, including
   values containing quotes.
+- Every determinate design reflects its configured `value` in the browser.
+- The default palette, the gradient designs and the overlay scrim actually paint,
+  measured from rendered pixels rather than declared properties.
+- Every design paints something visible, each one renders what its name says
+  (part counts, border geometry, gradients), and no two designs render
+  identically at any of four frozen animation frames.
 - The gallery shows 81 cards, has zero axe violations, and logs no console or page
   errors.
 
@@ -94,23 +100,31 @@ something.
 ## Packed-artifact verification
 
 All seven tarballs were packed, installed into a fresh consumer project with
-`npm install --ignore-scripts`, and exercised there (scratch directory, since
-removed):
+`npm install --ignore-scripts --legacy-peer-deps`, and exercised there (scratch
+directory, since removed):
 
 - Public subpaths resolve: `@wavelo/core`, `/registry`, `/dom`, `/styles`, `/css`,
   `/css/base`, `/css/kinds/ring`, `/loaders/ring`, `/styles.css`,
-  `@wavelo/svelte/WaveloLoader.svelte`, and each adapter's root.
-- `dist/wavelo.css` ships and contains the catalog rules.
-- The design's slice equals `baseCss + ringCss`; `circular()` renders byte-identical
-  markup to `ring()`; `renderLoader({ type: 'ring' })` matches its own entry point.
+  `@wavelo/svelte/WaveloLoader.svelte`, and each adapter's root. `@wavelo/react`,
+  `/vue` and `/angular` resolve only once their peers are installed, which is the
+  point: the frameworks are declared as peers, never bundled.
+- `dist/wavelo.css` ships, and its body under the banner comment equals
+  `allStyles` exactly.
+- The design's slice equals `baseCss + ringCss`, and `renderLoader({ type: 'ring' })`
+  returns both the markup and the slice that the `ring` entry point returns.
+- All 81 entry points import, render their own `wavelo--<id>` class, resolve to
+  their own definition, and produce 81 distinct markup strings — no ID borrows
+  another design's appearance.
 - React and Vue SSR output carries the configuration and contains no `<style>`
   element, as documented.
 - `@wavelo/core` installs once — no nested copy under the adapters.
 - A strict `tsc --noEmit --target ES2022 --module NodeNext` consumer compiled, and
-  assigning a non-catalog string to `LoaderId` was correctly rejected.
+  assigning a non-catalog string to `LoaderId` was correctly rejected with the
+  81-member union in the error.
 
-Numbers from that run: 81 designs, 11 slices, 20 config keys, base slice 4,435 B,
-ring slice 1,072 B, combined sheet 23,371 B.
+Numbers from that run: 81 designs, 11 render kinds, 11 slices, 20 config keys,
+base slice 1,552 B, ring slice 1,983 B, combined sheet 30,475 B (30,550 B as
+shipped, with its banner comment).
 
 ## Visual correctness history
 

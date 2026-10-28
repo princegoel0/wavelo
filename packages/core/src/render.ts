@@ -11,6 +11,31 @@ export function styleKey(css: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
+/** The one design that renders real SVG rather than CSS boxes. */
+const SVG_STAR =
+  '<svg class="wavelo__part" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.36 1.4 6.66L12 16.9 6.05 20l1.4-6.66L2.5 8.98l6.6-.72z"/></svg>';
+
+/** Part count for designs whose name promises a specific number of elements. */
+const PART_COUNTS: Record<string, number> = {
+  'three-dots': 3,
+  'four-dots': 4,
+  'five-dots': 5,
+  'dot-matrix': 9,
+  'grid-pulse': 4,
+  'expanding-dot': 1,
+  'audio-waveform': 7,
+  'dotted-circle': 8,
+  infinity: 2,
+  triangles: 3,
+  'ripple-circles': 3,
+  'expanding-circles': 3,
+  'nested-squares': 3,
+  'concentric-pulse': 3,
+  helix: 6
+};
+
+const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
+
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
@@ -33,16 +58,9 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
     }
     return part;
   }
-  if (type === 'dotted-circle') return many(8);
-  if (type === 'infinity') return many(2);
-  if (type === 'triangles') return many(3);
-  if (type === 'ripple-circles' || type === 'expanding-circles' || type === 'nested-squares' || type === 'concentric-pulse') return many(3);
-  if (type === 'helix') return many(6);
-  if (kind === 'bars' || kind === 'wave') return many(5);
-  if (kind === 'dots') return many(type === 'three-dots' ? 3 : 5);
-  if (kind === 'orbit') return many(5);
-  if (kind === 'pulse') return many(3);
-  return part;
+  if (type === 'svg-star') return SVG_STAR;
+  if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
+  return many(KIND_COUNTS[kind] ?? 1);
 }
 
 type Attributes = Record<string, string>;

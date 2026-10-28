@@ -33,7 +33,11 @@ export const kindStyles: Record<RenderKind, string> = {
   overlay: overlayCss
 };
 
-/** Every kind, for callers that select a design at runtime. */
+/**
+ * Every kind, for callers that select a design at runtime. Keyframes used by
+ * more than one kind live in `baseCss` rather than in the kinds that animate
+ * with them, so each frame appears exactly once in this concatenation.
+ */
 export const allStyles = baseCss + Object.values(kindStyles).join('');
 
 /** Stylesheet for one design: the shared base plus its own render kind. */

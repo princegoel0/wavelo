@@ -30,7 +30,9 @@ const budgets = {
   vue: 10 * 1024,
   angular: 11 * 1024,
   svelte: 10 * 1024,
-  'web-components': 10 * 1024,
+  // Custom-element registration adds the attribute table on top of the same
+  // runtime-selected catalog every other adapter carries.
+  'web-components': 11 * 1024,
   vanilla: 10 * 1024
 };
 

@@ -1,3 +1,9 @@
+import { css as rippleFrames } from '../keyframes/ripple.js';
+import { css as expandRingFrames } from '../keyframes/expand-ring.js';
+import { css as infinityFrames } from '../keyframes/infinity.js';
+import { css as squareSpinFrames } from '../keyframes/square-spin.js';
+import { css as concentricFrames } from '../keyframes/concentric.js';
+
 export const ringsCss = `
 .wavelo--rings:before,.wavelo--rings:after{content:"";position:absolute;border:var(--wavelo-stroke) solid currentColor;border-radius:50%;border-right-color:transparent;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--rings:before{inset:10%}
@@ -19,4 +25,9 @@ export const ringsCss = `
 .wavelo--concentric-pulse .wavelo__part{border-radius:50%;inset:12%;animation:wavelo-concentric var(--wavelo-duration) ease-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--concentric-pulse .wavelo__part:nth-child(2){inset:28%;animation-delay:calc(var(--wavelo-duration) / -3)}
 .wavelo--concentric-pulse .wavelo__part:nth-child(3){inset:44%;animation-delay:calc(var(--wavelo-duration) * -2 / 3)}
-`;
+.wavelo--multi-arc{border:var(--wavelo-stroke) solid transparent;border-top-color:currentColor;border-radius:50%;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
+.wavelo--multi-arc:before{inset:18%;border-top-color:transparent;border-right-color:currentColor}
+.wavelo--multi-arc:after{inset:34%;border-top-color:transparent;border-bottom-color:currentColor;animation-direction:normal}
+.wavelo--ripple-dot:before{inset:42%;border:0;border-radius:50%;background:currentColor;animation:wavelo-pulse var(--wavelo-duration) ease-in-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
+.wavelo--ripple-dot:after{inset:0;border:var(--wavelo-stroke) solid currentColor;border-right-color:currentColor;border-radius:50%;opacity:1;animation:wavelo-ripple var(--wavelo-duration) ease-out infinite var(--wavelo-direction) var(--wavelo-play-state)}
+${rippleFrames}${expandRingFrames}${infinityFrames}${squareSpinFrames}${concentricFrames}`;

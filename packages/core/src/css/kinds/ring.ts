@@ -1,8 +1,17 @@
+import { css as radarFrames } from '../keyframes/radar.js';
+
 export const ringCss = `
 .wavelo--ring{border:var(--wavelo-stroke) solid currentColor;border-right-color:transparent;border-radius:50%;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--gradient-ring{border-image:linear-gradient(currentColor,var(--wavelo-secondary-color,#a5b4fc)) 1;border-radius:50%}
-.wavelo--half-circle{border-bottom-color:transparent;border-left-color:transparent}
+.wavelo--half-circle{border-bottom-color:transparent}
 .wavelo--ellipse{width:var(--wavelo-width);height:calc(var(--wavelo-height) / 2)}
 .wavelo--radar{border:var(--wavelo-stroke) solid currentColor;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 300deg,currentColor 355deg,transparent);animation:wavelo-radar var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
 .wavelo--spiral{background:conic-gradient(transparent 0 20deg,currentColor 25deg 35deg,transparent 40deg 80deg,currentColor 85deg 95deg,transparent 100deg);border-radius:50%;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
-`;
+.wavelo--circular{border-color:currentColor}
+.wavelo--circular:before{content:"";position:absolute;inset:calc(var(--wavelo-stroke) * -1);border:var(--wavelo-stroke) solid transparent;border-top-color:var(--wavelo-secondary-color,#a5b4fc);border-radius:50%;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
+.wavelo--thin-line{border-width:1px}
+.wavelo--thick-stroke{border-width:calc(var(--wavelo-stroke) * 2.5)}
+.wavelo--arc{border-color:transparent;border-top-color:currentColor}
+.wavelo--segmented-ring{border-style:dashed;border-right-color:currentColor}
+.wavelo--monochrome{border:0;background:conic-gradient(currentColor 0 50%,color-mix(in srgb,currentColor 22%,transparent) 50% 100%);border-radius:50%;animation:wavelo-spin var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
+${radarFrames}`;
