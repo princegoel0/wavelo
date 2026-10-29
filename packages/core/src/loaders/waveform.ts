@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "waveform", name: "Waveform", category: "bars", kind: "wave", description: "Waveform animation", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "waveform" };
+const definition: LoaderDefinition = { id: "waveform", name: "Waveform", category: "bars", kind: "wave", description: "Waveform animation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "waveform" };
 const styles = `${baseCss}${waveCss}`;
 
 export const waveform = (config: Omit<LoaderConfig, 'type'> = {}) =>

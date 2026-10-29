@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "folding-squares", name: "Folding squares", category: "creative", kind: "shape", description: "Folding square motion", options: ["className","color","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "folding-squares" };
+const definition: LoaderDefinition = { id: "folding-squares", name: "Folding squares", category: "creative", kind: "shape", description: "Folding square motion", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "folding-squares" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const foldingSquares = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -7,8 +7,8 @@ import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import '@angular/compiler';
 import { loaderAttributes, loaderConfigKeys, renderLoader } from '../packages/core/dist/index.js';
-import { Loader as ReactLoader, renderReactLoader } from '../packages/react/dist/index.js';
-import { Loader as VueLoader } from '../packages/vue/dist/index.js';
+import { Loader as ReactLoader, loaderFor as reactLoaderFor, renderReactLoader } from '../packages/react/dist/index.js';
+import { Loader as VueLoader, loaderFor as vueLoaderFor } from '../packages/vue/dist/index.js';
 import { LoaderComponent } from '../packages/angular/dist/index.js';
 import { compile } from 'svelte/compiler';
 
@@ -33,6 +33,8 @@ const fullConfig = {
   'data-testid': 'adapter',
   value: 30,
   max: 60,
+  loading: true,
+  inline: true,
   'data-analytics': 'adapter-section'
 };
 
@@ -55,6 +57,7 @@ const expectedMarkers = [
   'data-testid="adapter"',
   'aria-valuenow="30"',
   'aria-valuemax="60"',
+  'wavelo-inline',
   'data-analytics="adapter-section"'
 ];
 
@@ -79,9 +82,50 @@ test('React server helper returns the design slice for head injection', () => {
   assert.doesNotMatch(result.css, /\.wavelo--skeleton-card/);
 });
 
+test('a loader that is not loading renders nothing through the components', async () => {
+  assert.equal(renderToStaticMarkup(createElement(ReactLoader, { ...fullConfig, loading: false })), '');
+  const vue = await renderToString(createSSRApp(VueLoader, { ...fullConfig, loading: false }));
+  assert.ok(!vue.includes('wavelo-host'), `Vue emitted markup for a hidden loader: ${vue}`);
+});
+
+test('count and inline reach the markup through the components', () => {
+  const counted = renderToStaticMarkup(createElement(ReactLoader, { type: 'skeleton-line', count: 3 }));
+  assert.equal((counted.match(/wavelo__part/g) ?? []).length, 3);
+  assert.match(counted, /wavelo-stacked/);
+  const inlined = renderToStaticMarkup(createElement(ReactLoader, { type: 'skeleton-line', inline: true }));
+  assert.match(inlined, /wavelo-inline/);
+});
+
+test('loaderFor binds a design and its house options once', () => {
+  const ButtonSpinner = reactLoaderFor('ring', { size: 16, color: '#ffffff' });
+  const html = renderToStaticMarkup(createElement(ButtonSpinner, { label: 'Saving' }));
+  assert.match(html, /wavelo--ring/, 'the bound design must render');
+  assert.match(html, /--wavelo-size:16px/, 'the bound option must apply');
+  assert.match(html, /--wavelo-color:#ffffff/);
+  assert.equal(ButtonSpinner.displayName, 'WaveloRing');
+  // A call-site option still wins over the bound one.
+  assert.match(renderToStaticMarkup(createElement(ButtonSpinner, { size: 40 })), /--wavelo-size:40px/);
+  const Lines = reactLoaderFor('skeleton-line', { count: 3 });
+  assert.match(renderToStaticMarkup(createElement(Lines, {})), /wavelo-stacked/);
+  assert.equal(renderToStaticMarkup(createElement(Lines, { loading: false })), '');
+});
+
 test('Vue component declares the full configuration surface', () => {
   const expected = loaderConfigKeys.filter((key) => !key.startsWith('data-')).sort();
   assert.deepEqual(Object.keys(VueLoader.props).sort(), expected);
+});
+
+test('Vue loaderFor binds a design and its house options once', async () => {
+  const ButtonSpinner = vueLoaderFor('ring', { size: 16 });
+  const html = await renderToString(createSSRApp(ButtonSpinner, { label: 'Saving' }));
+  assert.match(html, /wavelo--ring/);
+  assert.match(html, /--wavelo-size:16px/);
+  assert.match(html, /wavelo-host/, 'Vue keeps its host element while it renders');
+  assert.match(await renderToString(createSSRApp(vueLoaderFor('skeleton-card', { theme: 'dark' }))), /data-wavelo-theme="dark"/);
+  // A boolean option the call site never passed must stay absent: Vue casts an
+  // absent Boolean prop to false, which would silently override a bound default.
+  const Paused = vueLoaderFor('ring', { paused: true });
+  assert.match(await renderToString(createSSRApp(Paused, {})), /--wavelo-play-state:paused/);
 });
 
 test('Vue component renders every configuration key without inlining styles', async () => {
@@ -112,8 +156,45 @@ test('Svelte component compiles for client and server without legacy syntax', as
   // The component forwards its props object to the core renderer, so it accepts
   // every key by construction rather than by an enumerated list.
   assert.match(source, /const config: LoaderConfig = \$props\(\)/);
-  assert.match(source, /renderLoader\(config\)/);
+  assert.match(source, /renderLoader\(mergeWaveloConfig\(defaults, config\)\)/);
   assert.match(source, /ensureStyles\(rendered\.css\)/);
+  // The component inlines the context key because a consumer's bundler resolves
+  // only package imports from the shipped source; it must stay the exported one.
+  const svelte = await import('../packages/svelte/dist/index.js');
+  assert.equal(source.includes(`'${svelte.WAVELO_DEFAULTS_KEY}'`), true, 'the Svelte context key drifted from the exported constant');
+});
+
+test('registered defaults apply underneath a loader and lose to its own options', async () => {
+  const { createWavelo } = await import('../packages/core/dist/index.js');
+  const { renderReactLoader } = await import('../packages/react/dist/index.js');
+  const { renderVueLoader } = await import('../packages/vue/dist/index.js');
+  const { renderSvelteLoader } = await import('../packages/svelte/dist/index.js');
+  const { renderAngularLoader } = await import('../packages/angular/dist/index.js');
+  const defaults = { color: '#ff0000', size: 64, speed: 0.5, label: 'Loading', reducedMotion: 'never' };
+
+  // The same defaults, applied through each documented entry point, must produce
+  // the same markup.
+  const expected = createWavelo(defaults).render({ type: 'ring' }).html;
+  for (const [name, html] of Object.entries({
+    core: expected,
+    react: renderReactLoader({ type: 'ring' }, defaults).html,
+    vue: renderVueLoader({ type: 'ring' }, defaults).html,
+    svelte: renderSvelteLoader({ type: 'ring' }, defaults).html,
+    angular: renderAngularLoader({ type: 'ring' }, defaults).html
+  })) {
+    assert.equal(html, expected, `${name} did not apply the registered defaults`);
+  }
+  assert.match(expected, /--wavelo-color:#ff0000/);
+  assert.match(expected, /--wavelo-size:64px/);
+  assert.match(expected, /--wavelo-duration:2s/);
+  assert.match(expected, /aria-label="Loading"/);
+  assert.match(expected, /data-wavelo-motion="never"/);
+
+  // An option on the loader itself wins, and an `undefined` in its config must not
+  // erase a default.
+  const overridden = createWavelo(defaults).render({ type: 'ring', size: 20, color: undefined });
+  assert.match(overridden.html, /--wavelo-size:20px/);
+  assert.match(overridden.html, /--wavelo-color:#ff0000/, 'an explicit undefined must not clear a default colour');
 });
 
 test('the custom element observes every configuration attribute', async () => {

@@ -4,17 +4,18 @@ import { resolveCatalogEntry } from './registry.js';
 import type { LoaderConfig, RenderResult } from './types.js';
 
 /**
- * Renders any catalog design by ID. An unknown ID falls back to the default
- * design and sets `fallback: true`. Because the design is chosen at runtime this
- * entry point carries every stylesheet slice; `@wavelo/core/loaders/<id>`
- * imports only the slice its own design needs.
+ * Renders any catalog design by ID. A pattern preset ID renders the design it
+ * names (`resolution: 'preset'`); an unknown ID falls back to the default design
+ * with `fallback: true`. Because the design is chosen at runtime this entry point
+ * carries every stylesheet slice; `@wavelo/core/loaders/<id>` imports only the
+ * slice its own design needs.
  */
 export function renderLoader(input: LoaderConfig = {}): RenderResult {
   const resolution = resolveCatalogEntry(input.type);
-  const result = renderLoaderWithDefinition(
+  return renderLoaderWithDefinition(
     { ...input, type: resolution.id },
     resolution.definition,
-    designStyles(resolution.definition.kind)
+    designStyles(resolution.definition.kind),
+    resolution.source
   );
-  return resolution.source === 'default' ? { ...result, fallback: true } : result;
 }

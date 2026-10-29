@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "cube", name: "Cube rotation", category: "creative", kind: "shape", description: "Cube rotation", options: ["className","color","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "cube" };
+const definition: LoaderDefinition = { id: "cube", name: "Cube rotation", category: "creative", kind: "shape", description: "Cube rotation", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "cube" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const cube = (config: Omit<LoaderConfig, 'type'> = {}) =>

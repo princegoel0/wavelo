@@ -5,4 +5,8 @@ export * from './validation.js';
 export { renderLoaderWithDefinition, styleKey } from './render.js';
 export { renderLoader } from './render-catalog.js';
 export { ensureStyles, renderStylesheets, stylesheetMarkup } from './styles.js';
+export type { StyleOptions } from './styles.js';
 export { createLoaderElement, mountLoader } from './dom.js';
+export { createRouteProgress } from './route-progress.js';
+export type { RouteProgress, RouteProgressOptions } from './route-progress.js';
+export { createWavelo, mergeWaveloConfig } from './defaults.js';

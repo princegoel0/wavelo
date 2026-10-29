@@ -2,16 +2,24 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  InjectionToken,
   inject,
   OnChanges,
   OnDestroy,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import { ensureStyles, renderLoader } from '@wavelo/core';
-import type { LoaderConfig, RenderResult } from '@wavelo/core';
+import { ensureStyles, mergeWaveloConfig, renderLoader } from '@wavelo/core';
+import type { LoaderConfig, RenderResult, WaveloDefaults } from '@wavelo/core';
 
 export type WaveloInputs = LoaderConfig;
+
+/**
+ * Options every `wavelo-loader` in this injector's tree inherits:
+ * `providers: [{ provide: WAVELO_DEFAULTS, useValue: { color: '#6366f1', speed: 0.5 } }]`.
+ * An input on the component itself always wins.
+ */
+export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAULTS');
 
 /**
  * Renders a design into the host element. `style` is bound as `waveloStyle`
@@ -28,7 +36,8 @@ export type WaveloInputs = LoaderConfig;
   inputs: [
     'type', 'size', 'width', 'height', 'color', 'secondaryColor', 'backgroundColor',
     'speed', 'duration', 'strokeWidth', 'theme', 'direction', 'paused', 'label',
-    'className', 'waveloStyle: style', 'reducedMotion', 'data-testid', 'value', 'max'
+    'className', 'waveloStyle: style', 'reducedMotion', 'data-testid', 'value', 'max',
+    'labelledBy', 'describedBy', 'valueText', 'decorative', 'loading', 'count', 'inline'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -53,9 +62,17 @@ export class LoaderComponent implements OnChanges, OnDestroy {
   'data-testid'?: string;
   value?: number;
   max?: number;
+  labelledBy?: string;
+  describedBy?: string;
+  valueText?: string;
+  decorative?: boolean;
+  loading?: boolean;
+  count?: number;
+  inline?: boolean;
 
   private readonly element = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
+  private readonly defaults = inject(WAVELO_DEFAULTS, { optional: true });
 
   ngOnChanges(_changes: SimpleChanges): void {
     const config: LoaderConfig = {
@@ -78,9 +95,16 @@ export class LoaderComponent implements OnChanges, OnDestroy {
       reducedMotion: this.reducedMotion,
       'data-testid': this['data-testid'],
       value: this.value,
-      max: this.max
+      max: this.max,
+      labelledBy: this.labelledBy,
+      describedBy: this.describedBy,
+      valueText: this.valueText,
+      decorative: this.decorative,
+      loading: this.loading,
+      count: this.count,
+      inline: this.inline
     };
-    const result = renderLoader(this.withHostDataAttributes(config));
+    const result = renderLoader(mergeWaveloConfig(this.defaults, this.withHostDataAttributes(config)));
     ensureStyles(result.css);
     this.renderer.setProperty(this.element.nativeElement, 'innerHTML', result.html);
   }
@@ -101,6 +125,6 @@ export class LoaderComponent implements OnChanges, OnDestroy {
 }
 
 /** The render result without Angular, for server rendering and tests. */
-export function renderAngularLoader(inputs: WaveloInputs = {}): RenderResult {
-  return renderLoader(inputs);
+export function renderAngularLoader(inputs: WaveloInputs = {}, defaults?: WaveloDefaults): RenderResult {
+  return renderLoader(mergeWaveloConfig(defaults, inputs));
 }

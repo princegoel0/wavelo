@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "gradient-bars", name: "Gradient bars", category: "bars", kind: "bars", description: "Gradient-filled equalizer bars", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "gradient-bars" };
+const definition: LoaderDefinition = { id: "gradient-bars", name: "Gradient bars", category: "bars", kind: "bars", description: "Gradient-filled equalizer bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "gradient-bars" };
 const styles = `${baseCss}${barsCss}`;
 
 export const gradientBars = (config: Omit<LoaderConfig, 'type'> = {}) =>

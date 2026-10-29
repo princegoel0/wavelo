@@ -1,5 +1,5 @@
 import { escapeHtml, normalizeConfig } from './validation.js';
-import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult } from './types.js';
+import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult, ResolutionSource } from './types.js';
 
 /** FNV-1a, used to identify a stylesheet slice so it is injected only once. */
 export function styleKey(css: string): string {
@@ -40,16 +40,18 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
-    // Line, avatar and image placeholders are painted by the element itself;
-    // only the composite layouts need child tracks.
-    if (type === 'skeleton-line' || type === 'skeleton-avatar' || type === 'image-placeholder') return '';
-    return many(type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
+    // Line, avatar and image placeholders are painted by the element itself; only
+    // the composite layouts have child tracks. A line with a `count` becomes a
+    // stack of tracks, because that is what a block of placeholder text is.
+    if (type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    if (type === 'skeleton-line') return config.count && config.count > 1 ? many(config.count) : '';
+    return many(config.count ?? (type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5));
   }
   if (kind === 'progress') {
     if (type === 'progress-steps') {
       // Steps are discrete: a value fills whole steps, and the same 35% default
       // used for `--wavelo-progress` decides the fill when no value is given.
-      const steps = 5;
+      const steps = config.count ?? 5;
       const filled = Math.ceil(((config.value ?? 35) / config.max) * steps);
       return Array.from(
         { length: steps },
@@ -70,45 +72,73 @@ function attributes(config: Attributes): string {
   return entries.map(([name, value]) => ` ${name}="${escapeHtml(value)}"`).join('');
 }
 
-export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string): RenderResult {
-  const requested = input.type ?? definition.id;
+export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact'): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
+  // A loader that is not loading costs nothing: no markup, and no stylesheet slice
+  // to inject, so a page full of `loading={false}` adds no bytes to the document.
+  if (!config.loading) return { html: '', css: '', styleKey: styleKey(''), config, definition, resolution, fallback: resolution === 'default' };
   const progressValue = definition.supportsProgress && config.value !== undefined;
-  const labelled = config.label !== undefined && config.label !== '';
-  const attrs: Attributes = labelled
-    ? { 'aria-label': config.label as string, role: progressValue ? 'progressbar' : 'status' }
-    : { 'aria-hidden': 'true' };
-  if (progressValue && labelled) {
+  // Named either by its own label or by a reference to visible text. `decorative`
+  // hides the loader from assistive technology even when it is named, for the case
+  // where a caption or a sibling status already says the same thing.
+  const named = Boolean(config.label) || Boolean(config.labelledBy);
+  const attrs: Attributes =
+    config.decorative || !named
+      ? { 'aria-hidden': 'true' }
+      : {
+          ...(config.label ? { 'aria-label': config.label } : {}),
+          ...(config.labelledBy ? { 'aria-labelledby': config.labelledBy } : {}),
+          ...(config.describedBy ? { 'aria-describedby': config.describedBy } : {}),
+          role: progressValue ? 'progressbar' : 'status'
+        };
+  if (progressValue && named && !config.decorative) {
     attrs['aria-valuemin'] = '0';
     attrs['aria-valuemax'] = String(config.max);
     attrs['aria-valuenow'] = String(config.value);
+    if (config.valueText) attrs['aria-valuetext'] = config.valueText;
   }
+  // Only what the caller chose is written inline. Every token the stylesheets read
+  // has a default in the rule that consumes it, so an ancestor or a class can set
+  // `--wavelo-size`, `--wavelo-duration` or `--wavelo-stroke` once and have it
+  // apply — an inline default used to beat any of them.
+  const chosen = (key: keyof LoaderConfig) => input[key] !== undefined;
   const inline = [
-    `--wavelo-size:${config.size}`,
-    `--wavelo-width:${config.width}`,
-    `--wavelo-height:${config.height}`,
-    // Only the colours the caller chose are set here. An inline
-    // `--wavelo-color: var(--wavelo-color, #6366f1)` is a self-reference, which
-    // resolves to nothing and would leave every design inheriting the page
-    // colour; setting `--wavelo-background` would also defeat the per-design
-    // fallbacks, such as the section overlay's own scrim.
+    chosen('size') ? `--wavelo-size:${config.size}` : '',
+    chosen('width') ? `--wavelo-width:${config.width}` : '',
+    chosen('height') ? `--wavelo-height:${config.height}` : '',
+    // An inline `--wavelo-color: var(--wavelo-color, #6366f1)` is a
+    // self-reference, which CSS resolves as invalid at computed-value time; and
+    // setting `--wavelo-background` would defeat per-design fallbacks such as the
+    // section overlay's own scrim.
     config.color === undefined ? '' : `--wavelo-color:${config.color}`,
     config.secondaryColor === undefined ? '' : `--wavelo-secondary-color:${config.secondaryColor}`,
     config.backgroundColor === undefined ? '' : `--wavelo-background:${config.backgroundColor}`,
-    `--wavelo-duration:${config.duration}`,
-    `--wavelo-stroke:${config.strokeWidth}px`,
-    `--wavelo-direction:${config.direction ?? 'normal'}`,
-    `--wavelo-play-state:${config.paused ? 'paused' : 'running'}`,
-    `--wavelo-progress:${config.value === undefined ? '35%' : `${(config.value / config.max) * 100}%`}`,
+    chosen('duration') || chosen('speed') ? `--wavelo-duration:${config.duration}` : '',
+    chosen('strokeWidth') ? `--wavelo-stroke:${config.strokeWidth}px` : '',
+    chosen('direction') ? `--wavelo-direction:${config.direction}` : '',
+    chosen('paused') ? `--wavelo-play-state:${config.paused ? 'paused' : 'running'}` : '',
+    chosen('value') ? `--wavelo-progress:${(config.value! / config.max) * 100}%` : '',
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
   ]
     .filter(Boolean)
     .join(';');
-  const classes = ['wavelo', `wavelo--${definition.kind}`, `wavelo--${definition.id}`, config.className].filter(Boolean).join(' ');
+  // `wavelo-inline`/`wavelo-stacked` are single-dash classes on purpose: the
+  // stylesheet-slice check reserves `wavelo--<name>` for a render kind or a design.
+  const stacked = definition.kind === 'skeleton' && definition.id === 'skeleton-line' && (config.count ?? 1) > 1;
+  const classes = [
+    'wavelo',
+    `wavelo--${definition.kind}`,
+    `wavelo--${definition.id}`,
+    config.className,
+    config.inline ? 'wavelo-inline' : '',
+    stacked ? 'wavelo-stacked' : ''
+  ]
+    .filter(Boolean)
+    .join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));
   const html =
-    `<span class="${escapeHtml(classes)}" style="${escapeHtml(inline)}"` +
+    `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +
     attributes(dataAttributes) +
     attributes(attrs) +
@@ -119,6 +149,9 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     styleKey: styleKey(css),
     config,
     definition,
-    fallback: requested !== definition.id
+    resolution,
+    // `resolution` says exactly what happened; `fallback` stays the blunt signal
+    // that the request was not understood at all.
+    fallback: resolution === 'default'
   };
 }

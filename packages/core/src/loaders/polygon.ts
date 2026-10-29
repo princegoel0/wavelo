@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "polygon", name: "Rotating polygon", category: "creative", kind: "shape", description: "Rotating polygon", options: ["className","color","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "polygon" };
+const definition: LoaderDefinition = { id: "polygon", name: "Rotating polygon", category: "creative", kind: "shape", description: "Rotating polygon", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "polygon" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const polygon = (config: Omit<LoaderConfig, 'type'> = {}) =>

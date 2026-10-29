@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "rotating-dots", name: "Rotating dots", category: "dots", kind: "orbit", description: "Rotating dots", options: ["className","color","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-dots" };
+const definition: LoaderDefinition = { id: "rotating-dots", name: "Rotating dots", category: "dots", kind: "orbit", description: "Rotating dots", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-dots" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const rotatingDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

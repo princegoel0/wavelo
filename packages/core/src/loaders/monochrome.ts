@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "monochrome", name: "Monochrome", category: "spinner", kind: "ring", description: "Half-filled rotating disc", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "monochrome" };
+const definition: LoaderDefinition = { id: "monochrome", name: "Monochrome", category: "spinner", kind: "ring", description: "Half-filled rotating disc", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "monochrome" };
 const styles = `${baseCss}${ringCss}`;
 
 export const monochrome = (config: Omit<LoaderConfig, 'type'> = {}) =>

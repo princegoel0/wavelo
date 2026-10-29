@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "horizontal-pulse-bars", name: "Horizontal pulse bars", category: "bars", kind: "wave", description: "Horizontal pulse bars", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "horizontal-pulse-bars" };
+const definition: LoaderDefinition = { id: "horizontal-pulse-bars", name: "Horizontal pulse bars", category: "bars", kind: "wave", description: "Horizontal pulse bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "horizontal-pulse-bars" };
 const styles = `${baseCss}${waveCss}`;
 
 export const horizontalPulseBars = (config: Omit<LoaderConfig, 'type'> = {}) =>

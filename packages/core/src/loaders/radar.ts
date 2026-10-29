@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "radar", name: "Radar sweep", category: "creative", kind: "ring", description: "Circular radar sweep", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "radar" };
+const definition: LoaderDefinition = { id: "radar", name: "Radar sweep", category: "creative", kind: "ring", description: "Circular radar sweep", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "radar" };
 const styles = `${baseCss}${ringCss}`;
 
 export const radar = (config: Omit<LoaderConfig, 'type'> = {}) =>

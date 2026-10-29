@@ -25,7 +25,14 @@ const declaredKeys = [
   'reducedMotion',
   'data-testid',
   'value',
-  'max'
+  'max',
+  'labelledBy',
+  'describedBy',
+  'valueText',
+  'decorative',
+  'loading',
+  'count',
+  'inline'
 ] as const satisfies readonly (keyof LoaderConfig)[];
 
 type Unlisted = Exclude<keyof LoaderConfig, (typeof declaredKeys)[number] | `data-${string}`>;
@@ -51,11 +58,26 @@ export function configFromAttributes(values: Record<string, string | undefined>)
   return config as LoaderConfig;
 }
 
-const NUMERIC_ONLY = new Set(['strokeWidth', 'speed', 'value', 'max']);
+const NUMERIC_ONLY = new Set(['strokeWidth', 'speed', 'value', 'max', 'count']);
 const LENGTH_OR_NUMBER = new Set(['size', 'width', 'height']);
-const BOOLEAN = new Set(['paused']);
+const BOOLEAN = new Set(['paused', 'decorative', 'loading', 'inline']);
+
+/**
+ * The `style` attribute is read as configuration only for `--wavelo-*` custom
+ * properties. Anything else in it is left to the browser as ordinary host
+ * styling — `<wavelo-loader style="margin-top:1rem">` must keep working — while
+ * the JS `style` key is strict, because there it is configuration.
+ */
+const WAVELO_CUSTOM_PROPERTY = /(--wavelo-[a-z0-9-]+)\s*:\s*([^;]+)/gi;
+
+function parseStyleAttribute(value: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [, property, declaration] of value.matchAll(WAVELO_CUSTOM_PROPERTY)) result[property] = declaration.trim();
+  return result;
+}
 
 function coerce(key: string, value: string): unknown {
+  if (key === 'style') return parseStyleAttribute(value);
   if (LENGTH_OR_NUMBER.has(key)) return /^\d+(?:\.\d+)?$/.test(value) ? Number(value) : value;
   if (NUMERIC_ONLY.has(key)) return Number(value);
   if (BOOLEAN.has(key)) return value !== 'false' && value !== '0';

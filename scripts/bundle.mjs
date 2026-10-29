@@ -19,19 +19,33 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 // The number that backs the "modular catalog" claim is `individual-loader`: a
 // design chosen at build time must not carry the rest of the catalog, so its
 // budget does not move when the catalog grows. Adapters and `renderLoader` select
-// by string at runtime, so they carry every stylesheet slice and grow with each
-// design added (~220 B gzipped at the time of writing); their budgets are set
-// from that reality with ~10% headroom rather than pretending to be per-design.
-const runtime = 11 * 1024;
+// by string at runtime, so they carry every stylesheet slice, the registry and the
+// measured option table, and they grow with each design added (~220 B gzipped at
+// the time of writing); their budgets are set from that reality with ~10% headroom
+// rather than pretending to be per-design.
+const runtime = 13.5 * 1024;
 const budgets = {
-  'individual-loader': 4 * 1024,
-  'two-loaders': 5 * 1024,
+  // A design chosen at build time carries its slice plus the token defaults that
+  // used to be written inline on every element, so ancestor and class-level
+  // theming can reach it: 3,542 B before that change, 4,612 B after, 5,018 B with
+  // the visibility, track-count and inline options. The saving lands per page
+  // instead — a default loader now carries no `style` attribute at all, where it
+  // used to carry about 180 bytes of tokens, and a loader with `loading: false`
+  // carries nothing.
+  //
+  // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
+  // and are re-based deliberately when a feature adds surface: a configuration key
+  // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
+  // keys cost a single design 407 B and why the styling tokens cost more than that —
+  // they are new rules in every slice, not new reads of existing ones.
+  'individual-loader': 5.5 * 1024,
+  'two-loaders': 6.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 12 * 1024,
+  angular: 15.5 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

@@ -26,10 +26,12 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run catalog
+      - run: npm run packages:check
       - run: npm run measure
       - run: npm run docs:build
       - run: npm run docs:check
       - run: npm run pack:check
+      - run: npm run pack:verify
 
   # Computed styles, style injection and axe can only be checked in a real
   # browser, so this runs on every push and pull request as well.
@@ -46,3 +48,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build
       - run: npm run test:browser
+      - name: Verify the advertised options still match the render
+        run: npm run audit:customization
+      - name: Layout cost per frame
+        run: npm run audit:layout

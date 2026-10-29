@@ -1,6 +1,9 @@
 # Wavelo release checklist
 
-Audit date: 2026-10-27, re-run 2026-10-28 after the library review
+Audit date: 2026-10-27, re-run 2026-10-28 after the library review, and re-run
+2026-10-29 after the Phases B–J work (measured options, global configuration,
+accessibility surface, ergonomics, styling tokens, view timelines, distribution
+trust and per-frame cost).
 Audited version: `0.1.0`
 
 ## Completed
@@ -30,7 +33,7 @@ Audited version: `0.1.0`
 - [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
   Chromium through computed styles and `document.getAnimations()` play-states,
   and confirmed the assertions fail if the CSS defect is reintroduced.
-- [x] Verified each of the 82 designs renders identically from only its own
+- [x] Verified each of the 83 designs renders identically from only its own
   stylesheet slice, so the modular entry points are complete.
 - [x] Verified style slices are injected once per document (12 loaders across
   five render kinds produce five head elements, none inside a host).
@@ -43,25 +46,77 @@ Audited version: `0.1.0`
 - [x] Merged `dev` into `main` as `603ecfc` through pull request #6; the release
   workflow ran there with `Validate release` green and `Publish npm packages`
   skipped, because `RELEASE_ENABLED` is `false`.
-- [x] Ran `npm run check`: passed; build with catalog generation, strict
-  typecheck, 30 unit tests, catalog drift check, documentation sync, and bundle
-  budgets.
-- [x] Ran `npm run test:browser`: passed; 18 tests in Chromium.
+- [x] Ran `npm run check`: passed; build with catalog generation, strict typecheck,
+  45 unit tests, catalog drift check, package metadata check, documentation sync, and
+  bundle budgets.
+- [x] Ran `npm run test:browser`: passed; 30 tests in Chromium.
+- [x] Verified the accessibility options end to end: `labelledBy`, `describedBy`,
+  `valueText` and `decorative` work from the config object and from element
+  attributes, and foreign `aria-*`/`role` keys throw instead of being dropped.
+- [x] Verified a determinate value animates: `--wavelo-progress` is registered with
+  `@property`, and a 10% → 90% change is measured passing through an intermediate
+  value in Chromium.
+- [x] Ran `npm run audit:customization`: passed; what each of the 83 designs
+  advertises is measured in Chromium, not maintained by hand, so an option that
+  changes nothing cannot be advertised.
+- [x] Verified the custom element survives an invalid attribute value: it keeps its
+  last valid render, sets `data-wavelo-error`, logs exactly one console error, and
+  throws nothing out of its lifecycle callback.
 - [x] Ran `npm run docs:build`: passed.
 - [x] Ran `npm run docs:check`: passed; documented counts and bundle figures are
   read from the build, so a stale document fails the pipeline.
 - [x] Ran `npm run pack:check`: passed.
 - [x] Ran `npm run audit:visual`: passed.
-- [x] Ran `npm run audit:visual:correctness`: passed; 82 active designs, 76 with
+- [x] Ran `npm run audit:visual:correctness`: passed; 83 active designs, 76 with
   animations sampled as advancing in Chromium, 5 determinate-progress designs
-  verified through value binding, and `progress-scroll` verified to run on a
-  `ScrollTimeline` rather than the document clock. Every public ID has its own
-  implementation, so no design borrows another name.
+  verified through value binding, and 2 timeline-driven designs verified by their
+  timeline type — a `ScrollTimeline` for `progress-scroll` and a `ViewTimeline` for
+  `progress-view`. Every public ID has its own implementation, so no design borrows
+  another name.
 - [x] Verified the scroll-driven design by measurement, not by inspection: the
   fill is 0px at the top of the page, half the track at 50% of the scroll range
   and the full track at 100%, and it keeps working inside an `overflow: hidden`
   wrapper because the timeline is `scroll(root block)`. Rebinding it to `auto`
   fails the test.
+- [x] Verified the ergonomics options end to end: `loading: false` emits no markup and
+  no stylesheet and the adapters emit no element; `count` stacks skeleton tracks that
+  each paint and shimmer; `inline` puts a line on the text line at text metrics; and
+  `loaderFor` binds a design and its house options in React and Vue with precedence
+  registered defaults → bound options → call-site props.
+- [x] Verified registered defaults work on every bridge and cannot leak: each is per
+  render tree, never a module singleton, and an absent Vue boolean prop stays absent
+  rather than resolving to `false`.
+- [x] Verified that a configured size is kept: the `min-width`/`min-height` floors and
+  `max-height` ceilings became defaults, and `height` is now measured as honoured on 15
+  more designs while `width` reaches `dot-matrix` and `grid-pulse`.
+- [x] Verified the styling tokens reach the rules that draw them: `--wavelo-radius`,
+  `--wavelo-ease`, `--wavelo-gap`, `--wavelo-z-index`, `--wavelo-scrim` and
+  `--wavelo-timeline`, with `npm run docs:check` failing if the sheet reads a property
+  that `WaveloTokens` does not declare or the README table does not document.
+- [x] Verified container-query sizing in Chromium: `size: '25cqi'` and an ancestor's
+  `--wavelo-size: 10cqi` resolve against the loader's own query container.
+- [x] Verified a page served with `style-src 'nonce-…'` and no `'unsafe-inline'`
+  renders styled through the nonce in `<meta name="wavelo-csp-nonce">`, and that the
+  same page without it is unstyled.
+- [x] Verified `createRouteProgress` in the browser: it creeps toward its ceiling,
+  accepts a real percentage, fills and removes itself, injects one stylesheet for all
+  its renders, and is inert on a server.
+- [x] Ran `npm run packages:check`: passed; the seven manifests carry author,
+  `engines.node`, repository directory, keywords, `sideEffects`, peers and a public
+  publish config, and every path their `exports` maps name exists in the build with
+  its declaration beside it.
+- [x] Ran `npm run pack:verify`: passed; the tarballs install into a fresh project
+  that renders through them, type checks a `--strict` consumer against the packed
+  declarations, and finds a licence and README in every package.
+- [x] Ran `npm run audit:layout`: passed; 80 of 83 designs cost no layout per frame,
+  and the three that do are each recorded with the reason a transform would take away.
+  Four bar designs were moved from `height` to `scaleY` on that measurement, with the
+  geometry compared at three points of the cycle before the change was kept.
+- [x] Reviewed the documentation set for the new surface: `docs/RECIPES.md` (server
+  rendering per framework, CSP, Tailwind v4, dark mode, container queries),
+  `docs/MIGRATION.md` (react-spinners, loaders.css, react-content-loader, MUI, Chakra
+  and NProgress, with the `speed` and `isLoaded` inversions called out),
+  `docs/PERFORMANCE.md`, and the gallery's option chips and configuration playground.
 - [ ] Human interactive review of motion quality in a real browser remains an
   owner decision; automated evidence proves each design animates, not that each
   animation looks right.
@@ -94,8 +149,9 @@ Re-checked against GitHub and the npm registry on 2026-10-28.
   publishing is authorized. It is currently `false`, and after the `dev` → `main`
   merge the release workflow ran with `Publish npm packages` **skipped**.
 - [ ] Approve the `npm` environment deployment when the gated run asks for it.
-- [ ] After `0.1.0`: configure npm trusted publishing per package, restore
-  `--provenance`, and delete the `NPM_TOKEN` secret.
+- [ ] After `0.1.0`: configure npm trusted publishing per package, set the
+  `RELEASE_PROVENANCE` repository variable to `true`, and delete the `NPM_TOKEN`
+  secret.
 - [ ] Tag the release (for example `v0.1.0`) after publication. The repository
   has no tags and `release.yml` does not create one.
 
@@ -108,9 +164,12 @@ npm run check
 npm run test:browser
 npm run docs:build
 npm run docs:check
+npm run audit:customization
+npm run audit:layout
 npm run audit:visual
 npm run audit:visual:correctness
 npm run pack:check
+npm run pack:verify
 npm pack --workspaces --pack-destination .\release-audit\approved-tarballs
 ```
 
@@ -150,15 +209,17 @@ audit.
 ## Automatic release workflow
 
 `.github/workflows/release.yml` runs validation on every push to `main` and on
-manual dispatch. Publishing is gated by the `RELEASE_ENABLED` repository
-variable, the protected `npm` environment approval, and `github.ref ==
-refs/heads/main`. When enabled it verifies all seven package versions are
-consistent and not already on npm, packs and uploads the tarballs, then publishes
-them in a fixed order with `--access public` using the `NPM_TOKEN` secret.
+manual dispatch — build, check, browser suite, the customization, layout and visual
+audits, package metadata, `pack:check` and `pack:verify` — and publishes only when the
+`RELEASE_ENABLED` repository variable is `true`, the protected `npm` environment
+approves, and `github.ref == refs/heads/main`. When enabled it verifies all seven
+package versions are consistent and not already on npm, packs and uploads the
+tarballs, then publishes them in a fixed order with `--access public` using the
+`NPM_TOKEN` secret.
 
 `@wavelo/core` publishes first and the loop stops at the first failure, so a bad
 credential or scope cannot leave the six dependent packages half-published.
-`--provenance` is intentionally absent for the first release: npm creates
-provenance only for a package with a configured trusted publisher, which cannot
-exist before the package does. Restore it per package for `0.1.x` and delete the
-secret at that point.
+`--provenance` is off for the first release: npm creates provenance only for a package
+with a configured trusted publisher, which cannot exist before the package does. Once
+trusted publishing is configured for all seven, set `RELEASE_PROVENANCE=true` and the
+same step publishes with provenance; delete `NPM_TOKEN` at that point.

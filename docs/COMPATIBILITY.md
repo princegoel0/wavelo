@@ -22,31 +22,80 @@ CI. Firefox and Safari have not been exercised by this suite; the versions above
 are the requirement implied by the CSS features used, not a claim that they were
 tested.
 
+## Where a value comes from
+
+A rendered loader writes only what its caller chose. Everything else resolves in
+CSS, in this order:
+
+1. the loader's own option, written inline on the element;
+2. a registered default (`WaveloProvider`, `provideWaveloDefaults`,
+   `WAVELO_DEFAULTS`, `createWavelo({...})`), merged into the config before the
+   loader's own options;
+3. a `--wavelo-*` custom property on any ancestor, or on the element through
+   `className`;
+4. the fallback in the rule that reads the token.
+
+Inline always beats inherited, which is exactly why unset options are not written
+inline any more: a page that sets `--wavelo-size` on `:root` would otherwise lose to
+the renderer's own default. Registration is per render tree rather than a module
+global, so a server that renders many requests in one process cannot leak one
+caller's theme into another's markup.
+
 ## Configuration surface
 
-The catalog holds 82 public IDs, each with its own implementation, built from
+The catalog holds 83 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
-same 20 configuration keys — `type`, `size`, `width`, `height`, `color`,
+same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
-`data-testid`, `value`, `max` — plus arbitrary `data-*` values. `tests/framework.test.mjs`
-renders every key through every adapter and asserts each one reaches the
-element, so a bridge that falls behind the core fails the build.
+`data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
+`decorative`, `loading`, `count`, `inline` — plus arbitrary `data-*` values.
+`tests/framework.test.mjs` renders every key through every adapter and asserts each
+one reaches the element, so a bridge that falls behind the core fails the build.
 
 | Integration | How the surface is reached |
 | --- | --- |
 | `@wavelo/core` | `renderLoader(config)`; `type` is the typed `LoaderId` union with a `string` escape hatch for runtime values |
 | `@wavelo/core/loaders/<id>` | one design, config minus `type`; ships only that design's slice |
 | `@wavelo/react` | the whole props object is passed to the core |
-| `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config |
-| `@wavelo/angular` | 20 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
+| `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config. The boolean keys are declared without a type: Vue casts an absent `Boolean` prop to `false`, which would override a registered default and hide a loader nobody asked to hide |
+| `@wavelo/angular` | 27 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
 | `@wavelo/svelte` | `$props()` is forwarded to the core whole, so any key reaches it |
 | `@wavelo/web-components` | one attribute per key in kebab case (`stroke-width`, `secondary-color`, `reduced-motion`), plus any `data-*` |
-| `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement` and the style helpers |
+| `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement`, `createWavelo` and the style helpers |
 
-Boolean options (`paused`) need binding syntax in Vue and Svelte
-(`:paused="true"`, `paused={true}`); a bare attribute reads as a string there.
-On the custom element, `paused=""` is true and `paused="false"` is false.
+Boolean options (`paused`, `decorative`, `loading`, `inline`) need binding syntax in
+Vue and Svelte (`:paused="true"`, `paused={true}`); a bare attribute reads as a
+string there. On the custom element, `paused=""` is true and `paused="false"` is
+false — and the same strings in a JavaScript config object mean the same thing, so
+the two paths cannot disagree.
+
+## Value grammar and measured options
+
+Colours accept hex, CSS colour keywords and any colour function — `rgb()`, `hsl()`,
+`oklch()`, `lab()`, `hwb()`, `color-mix()` — and reject anything containing a
+character that could end a declaration or start a block, so a value cannot escape
+the inline style it lands in.
+
+Sizes accept `auto`, a number with a unit of up to five letters (`px`, `rem`, `%`,
+`ch`, `cqi`, `svh`, `q` …), and the functions `calc()`, `min()`, `max()`, `clamp()`,
+`env()` and `var(--wavelo-*)`. Numbers passed as strings on an attribute are
+coerced; strings that are not valid CSS are rejected with a message naming the key.
+
+`style` carries custom properties and **throws** on a key it cannot apply, because a
+silently discarded option is the failure mode this library exists to remove.
+
+`LoaderDefinition.options` is not a hand-maintained list. `scripts/honoured-options.mjs`
+renders every design in Chromium with each key set and unset and records which keys
+changed the render; `npm run audit:customization` repeats that measurement in CI and
+fails if the committed table drifts. A design therefore cannot advertise an option
+that does nothing: `skeleton-card` has no `strokeWidth`, `ring` has no
+`secondaryColor`, `progress-bar` has no `duration`, `progress-scroll` has no
+`speed` because its fill follows the scroll position rather than the clock,
+`three-dots` has no `count` because three dots are three dots, and `fullscreen` has
+no `inline` because a fixed overlay sits on nobody's line of text. The class name a
+key switches on is left out of the comparison, so what is measured is the effect,
+not the mechanism.
 
 ## Determinate progress
 
@@ -81,6 +130,37 @@ were rendered with `renderStylesheets`. A page that skips this step renders
 correct markup with no styling. This is the trade for not shipping one copy of
 the stylesheet per component instance.
 
+The loader renders into the **light DOM**, and there is no shadow-DOM mode. A shadow
+root would isolate the loader from exactly the things this library asks a page to do
+with it: set `--wavelo-*` on an ancestor, style `.wavelo__part` from a class rule,
+target `wavelo--<id>` from a theme, or let a global sheet apply. `::part()` would
+restore some of that behind a second, narrower API and a second render path. The
+escape hatch for a page that genuinely needs isolation is the one CSS already
+offers — mount the loader inside an iframe, or use the static sheet rather than
+injected styles — so the surface stays single.
+
+## Content security policy
+
+A `style-src` policy without `'unsafe-inline'` rejects a stylesheet that carries no
+nonce, and an injected slice is exactly that — so the loader renders as unstyled
+markup. Wavelo stamps the page's nonce on every slice it injects:
+
+```html
+<head><meta name="wavelo-csp-nonce" content="{per-response nonce}"></head>
+```
+
+Nothing else changes: `ensureStyles`, `mountLoader` and every adapter read that meta
+element when they create a `<style>`. A caller who injects styles from code that
+already knows the nonce can pass it directly — `ensureStyles(css, { nonce })`,
+`mountLoader(element, config, { nonce })`, `renderStylesheets(slices, { nonce })` —
+and the SSR markup path takes the same option.
+
+The nonce is read per injection rather than stored in a module, because a server that
+renders many responses in one process must not stamp one response's nonce onto
+another. `tests/browser.test.mjs` serves a page with
+`style-src 'nonce-…'` and no `'unsafe-inline'` and asserts the ring is actually
+styled — and that the same page without the meta element is not.
+
 ## Framework versions
 
 Peer ranges are deliberately limited to the versions this repository exercises:
@@ -101,11 +181,13 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   `tests/framework.test.mjs`, part of `npm test` and CI.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 82
+  `theme`, style-slice injection counts, per-design slice isolation for all 83
   IDs, the scroll-driven fill measured against the document's scroll position and
-  its clock-driven fallback, custom-element attribute re-rendering, and axe over
-  the whole gallery —
+  its clock-driven fallback, custom-element attribute re-rendering, the element's
+  behaviour on an invalid attribute value, and axe over the whole gallery —
   `tests/browser.test.mjs`, run by `npm run test:browser` in a dedicated CI job.
+- The measured option table above, re-measured by `npm run audit:customization` in
+  the same CI job.
 - Hydration is not configured or advertised by these adapters; they render
   markup into a container rather than reconciling it.
 - No adapter touches browser globals during module evaluation, so all of them
@@ -128,3 +210,18 @@ with it) stays in the registry for future renames, and `npm run catalog` rejects
 an alias whose metadata disagrees with its target; the catalog currently has zero
 aliases. Two browser tests guard the property that matters: no two designs may
 render identically, and every design must paint something visible.
+
+### Presets and resolution
+
+`renderLoader` reports how the requested `type` became the design that rendered:
+
+| `resolution` | meaning | `fallback` |
+| --- | --- | --- |
+| `'exact'` | a catalog ID, rendered as itself | `false` |
+| `'preset'` | a pattern preset such as `download-progress`, rendering the design it names | `false` |
+| `'alias'` | a deprecated ID, rendering its canonical design | `false` |
+| `'default'` | an ID that matches nothing, rendering `inline` | `true` |
+
+`fallback` therefore means exactly "your request was not understood", and a preset
+hit is never reported as one. All 35 pattern presets resolve to the design they
+declare; a unit test walks the whole table.

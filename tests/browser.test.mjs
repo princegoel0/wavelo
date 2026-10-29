@@ -177,15 +177,25 @@ test('the same slice requested twice adds no element', async () => {
 });
 
 test('a design renders the same with only the stylesheet slice its entry point ships', async () => {
-  const properties = ['animationName', 'animationDuration', 'animationTimingFunction', 'animationDelay', 'width', 'height', 'borderRadius', 'borderTopWidth', 'borderRightColor', 'backgroundImage', 'transform', 'opacity', 'display', 'position', 'gap'];
+  const properties = ['animationName', 'animationDuration', 'animationTimingFunction', 'animationDelay', 'animationTimeline', 'width', 'height', 'borderRadius', 'borderTopWidth', 'borderRightColor', 'backgroundImage', 'transform', 'opacity', 'display', 'position', 'gap'];
+  // A view-timeline design takes its fill from where the element sits in the
+  // viewport, which is not the same thing on a page of 83 designs and a page of
+  // one. What this test claims is that the shipped slice carries the same rules, so
+  // the properties a timeline drives are left out for those designs while the
+  // bindings that produce them - including which timeline is named - are compared.
+  const positionDriven = { 'progress-scroll': ['width'], 'progress-view': ['width', 'transform'] };
   const script = `(() => {
     // A scroll-driven animation reads its progress from its timeline, and
     // assigning it a numeric currentTime throws; pausing holds it where it is.
     for (const animation of document.getAnimations()) { animation.pause(); if (animation.timeline === document.timeline) animation.currentTime = 0; }
-    const read = (element) => ${JSON.stringify(properties)}.map((property) => getComputedStyle(element)[property]).join('|');
-    const shape = (root) => ({ root: read(root), parts: [...root.querySelectorAll('.wavelo__part')].map(read).join('||') });
-    const scopes = [...document.querySelectorAll('[data-design] .wavelo')];
-    return scopes.map(shape);
+    const shape = (wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const skip = ${JSON.stringify(positionDriven)}[wrap.dataset.design] ?? [];
+      const list = ${JSON.stringify(properties)}.filter((property) => !skip.includes(property));
+      const read = (element) => list.map((property) => getComputedStyle(element)[property]).join('|');
+      return { root: read(root), parts: [...root.querySelectorAll('.wavelo__part')].map(read).join('||') };
+    };
+    return [...document.querySelectorAll('[data-design]')].map(shape);
   })()`;
 
   await setContentPage(loaderRegistry.map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`).join(''));
@@ -386,29 +396,35 @@ test('the scroll-driven bar follows the document scroll position without JavaScr
   assert.equal(rows[0].bar.valuenow, null);
 });
 
-test('where scroll timelines are unsupported the same keyframes sweep on the clock', async () => {
-  const result = renderLoader({ type: 'progress-scroll', label: 'Reading progress' });
-  // The fallback is what a browser without `animation-timeline` sees: the same
-  // slice with the progressive-enhancement block removed.
-  const fallback = result.css.replace(/@supports \(animation-timeline:scroll\(\)\)\{[\s\S]*?\}\s*\}/, '');
-  assert.ok(fallback.length < result.css.length, 'the slice declares no scroll-timeline enhancement to fall back from');
-  assert.ok(!fallback.includes('animation-timeline'), 'the fallback still binds a scroll timeline');
-  assert.ok(fallback.includes('@keyframes wavelo-scroll-fill'), 'the fallback lost its keyframes');
+test('where scroll and view timelines are unsupported the same keyframes sweep on the clock', async () => {
+  const cases = [
+    { type: 'progress-scroll', selector: '#bar .wavelo__part', frame: 'wavelo-scroll-fill' },
+    { type: 'progress-view', selector: '#bar .wavelo__part', frame: 'wavelo-view-fill' }
+  ];
+  for (const testCase of cases) {
+    const result = renderLoader({ type: testCase.type, label: 'Reading progress' });
+    // The fallback is what a browser without `animation-timeline` sees: the same
+    // slice with the progressive-enhancement blocks removed.
+    const fallback = result.css.replace(/@supports \(animation-timeline:[^{]*\)\{[\s\S]*?\}\s*\}/g, '');
+    assert.ok(fallback.length < result.css.length, `${testCase.type} declares no timeline enhancement to fall back from`);
+    assert.ok(!fallback.includes('animation-timeline'), `${testCase.type} still binds a timeline outside @supports`);
+    assert.ok(fallback.includes(`@keyframes ${testCase.frame}`), `${testCase.type} lost its keyframes`);
 
-  await setContentPage(`<div id="bar">${result.html}</div>`, `<style>${fallback}</style>`);
-  const sample = () =>
-    page.evaluate(() => {
-      const part = document.querySelector('#bar .wavelo__part');
-      const animation = document.getAnimations().find((entry) => entry.effect?.target === part);
-      return { name: getComputedStyle(part).animationName, clockDriven: animation?.timeline === document.timeline, time: Number(animation?.currentTime) };
-    });
-  const first = await sample();
-  await page.waitForTimeout(250);
-  const second = await sample();
+    await setContentPage(`<div id="bar">${result.html}</div>`, `<style>${fallback}</style>`);
+    const sample = () =>
+      page.evaluate((selector) => {
+        const element = document.querySelector(selector);
+        const animation = document.getAnimations().find((entry) => entry.effect?.target === element);
+        return { name: getComputedStyle(element).animationName, clockDriven: animation?.timeline === document.timeline, time: Number(animation?.currentTime) };
+      }, testCase.selector);
+    const first = await sample();
+    await page.waitForTimeout(250);
+    const second = await sample();
 
-  assert.equal(first.name, 'wavelo-scroll-fill');
-  assert.equal(first.clockDriven, true, 'without a scroll timeline the sweep must run on the document clock');
-  assert.ok(second.time > first.time, `the fallback sweep did not advance: ${first.time} -> ${second.time}`);
+    assert.equal(first.name, testCase.frame, `${testCase.type} fallback animation`);
+    assert.equal(first.clockDriven, true, `${testCase.type} must run on the document clock without a timeline`);
+    assert.ok(second.time > first.time, `${testCase.type} fallback sweep did not advance: ${first.time} -> ${second.time}`);
+  }
 });
 
 test('the gallery keeps its top-of-page bar inside the preview card', async () => {
@@ -675,7 +691,10 @@ test('documentation gallery renders and has no axe violations', async () => {
   galleryPage.on('pageerror', (error) => pageErrors.push(error.message));
   await galleryPage.goto(`http://127.0.0.1:${address.port}`);
   assert.equal(await galleryPage.locator('.card').count(), loaderRegistry.length);
-  assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length);
+  // The playground stages a live clone of the selected design, so the page holds one
+  // loader more than the catalog has cards.
+  assert.equal(await galleryPage.locator('.card .wavelo').count(), loaderRegistry.length);
+  assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length + 1);
   await galleryPage.emulateMedia({ reducedMotion: 'reduce' });
   const reducedDuration = await galleryPage.locator('.card .wavelo').first().evaluate((element) => getComputedStyle(element).animationDuration);
   assert.ok(Number.parseFloat(reducedDuration) <= 0.000001, `unexpected reduced-motion duration: ${reducedDuration}`);
@@ -683,8 +702,466 @@ test('documentation gallery renders and has no axe violations', async () => {
   await galleryPage.addScriptTag({ content: axe });
   const report = await galleryPage.evaluate(async () => await window.axe.run());
   assert.deepEqual(report.violations, []);
+  // The playground writes tokens on the box around the loader, so driving it proves
+  // the same path a page's own CSS takes.
+  await galleryPage.selectOption('#design', 'ring');
+  await galleryPage.locator('#size').evaluate((element) => {
+    element.value = '96';
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await galleryPage.locator('#dark').evaluate((element) => {
+    element.checked = true;
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const staged = await galleryPage.evaluate(() => {
+    const loader = document.querySelector('#stage .wavelo');
+    return {
+      width: Math.round(loader.getBoundingClientRect().width),
+      theme: loader.getAttribute('data-wavelo-theme'),
+      token: document.querySelector('#stage').style.getPropertyValue('--wavelo-size'),
+      code: document.querySelector('#code').textContent
+    };
+  });
+  assert.equal(staged.width, 96, 'the size control reaches the staged loader');
+  assert.equal(staged.token, '96px', 'it gets there through the token, not an inline width');
+  assert.equal(staged.theme, 'dark', 'the dark-surface switch is the theme option');
+  assert.match(staged.code, /"type": "ring"/);
+  assert.match(staged.code, /"size": 96/);
+  assert.match(staged.code, /"theme": "dark"/);
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(pageErrors, []);
   await galleryPage.close();
   server.close();
+});
+
+test('a bad attribute value keeps the last good loader on screen', async () => {
+  const scoped = await browser.newPage();
+  const consoleErrors = [];
+  const pageErrors = [];
+  scoped.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
+  scoped.on('pageerror', (error) => pageErrors.push(error.message));
+  await scoped.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body><wavelo-loader id="el" type="ring" label="Loading"></wavelo-loader></body></html>`);
+  await scoped.addScriptTag({ content: coreBundle });
+  const first = await scoped.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    return document.querySelector('#el .wavelo')?.className ?? null;
+  });
+  assert.match(first, /wavelo--ring/, 'the element must render before the bad value arrives');
+
+  const after = await scoped.evaluate(() => {
+    const element = document.getElementById('el');
+    element.setAttribute('size', 'giant');
+    return {
+      rendered: Boolean(element.querySelector('.wavelo')),
+      className: element.querySelector('.wavelo')?.className ?? null,
+      error: element.getAttribute('data-wavelo-error')
+    };
+  });
+  assert.equal(after.rendered, true, 'an invalid attribute value must not blank the loader');
+  assert.match(after.className, /wavelo--ring/, 'the loader must keep showing its last valid render');
+  assert.match(after.error, /Invalid dimension/, `expected a diagnostic, got ${after.error}`);
+  assert.equal(pageErrors.length, 0, `the element must not throw out of its callback: ${pageErrors.join('; ')}`);
+  assert.equal(consoleErrors.length, 1, `expected exactly one console error, got ${consoleErrors.length}`);
+  assert.match(consoleErrors[0], /Invalid dimension/);
+
+  // And it recovers: a corrected value replaces the diagnostic.
+  const recovered = await scoped.evaluate(() => {
+    const element = document.getElementById('el');
+    element.setAttribute('size', '48');
+    return { style: element.querySelector('.wavelo').getAttribute('style'), error: element.getAttribute('data-wavelo-error') };
+  });
+  assert.match(recovered.style, /--wavelo-size:48px/);
+  assert.equal(recovered.error, null, 'the diagnostic attribute must clear once the value is valid');
+  await scoped.close();
+});
+
+test('the style attribute configures custom properties without stealing host styling', async () => {
+  const scoped = await browser.newPage();
+  await scoped.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body>
+    <wavelo-loader id="token" type="skeleton-line" label="Loading" style="--wavelo-radius:2px"></wavelo-loader>
+    <wavelo-loader id="host" type="skeleton-line" label="Loading" style="margin-top:1rem"></wavelo-loader>
+  </body></html>`);
+  await scoped.addScriptTag({ content: coreBundle });
+  const read = await scoped.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const token = document.getElementById('token');
+    const host = document.getElementById('host');
+    return {
+      tokenOnInner: (token.querySelector('.wavelo').getAttribute('style') ?? '').includes('--wavelo-radius:2px'),
+      hostMargin: getComputedStyle(host).marginTop,
+      // A host property that is not a --wavelo-* token stays host styling and is
+      // not fed to the renderer, where it would be rejected.
+      hostInnerHasMargin: (host.querySelector('.wavelo').getAttribute('style') ?? '').includes('margin'),
+      hostHasStyleAttribute: host.querySelector('.wavelo').hasAttribute('style')
+    };
+  });
+  assert.equal(read.tokenOnInner, true, 'a --wavelo-* property in the attribute must reach the rendered element');
+  assert.equal(read.hostMargin, '16px', 'ordinary host styling in the same attribute must still apply');
+  assert.equal(read.hostInnerHasMargin, false, 'non-token declarations must not be treated as configuration');
+  assert.equal(read.hostHasStyleAttribute, false, 'a loader with nothing configured must not carry a style attribute');
+  await scoped.close();
+});
+
+test('a determinate value animates because the progress token is registered', async () => {
+  await setContentPage(
+    `<div id="before">${renderLoader({ type: 'progress-bar', label: 'Working', value: 10 }).html}</div>` +
+    `<div id="moving">${renderLoader({ type: 'progress-bar', label: 'Working', value: 10 }).html}</div>`
+  );
+  const transitioned = await page.evaluate(() => {
+    // The library registers the property; the transition it declares is what a
+    // value change animates through.
+    return getComputedStyle(document.querySelector('#before .wavelo')).transitionProperty.includes('--wavelo-progress');
+  });
+  assert.equal(transitioned, true, 'the base sheet must transition --wavelo-progress');
+
+  const samples = await page.evaluate(async () => {
+    const element = document.querySelector('#moving .wavelo');
+    const read = () => Number.parseFloat(getComputedStyle(element).getPropertyValue('--wavelo-progress'));
+    element.style.setProperty('transition', '--wavelo-progress 800ms linear');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const start = read();
+    element.style.setProperty('--wavelo-progress', '90%');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    const middle = read();
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    return { start, middle, end: read() };
+  });
+  assert.ok(Math.abs(samples.start - 10) < 1, `expected to start at 10%, saw ${samples.start}`);
+  assert.ok(samples.middle > 15 && samples.middle < 85, `the value did not interpolate: ${samples.middle}`);
+  assert.ok(samples.end > 89, `the value never reached the target: ${samples.end}`);
+});
+
+test('the accessibility options work through element attributes', async () => {
+  await setContentPage(
+    '<p id="caption">Uploading your archive</p>' +
+    '<wavelo-loader id="named" type="progress-bar" labelled-by="caption" described-by="caption" value="70" max="100" value-text="70 of 100 MB"></wavelo-loader>' +
+    '<wavelo-loader id="quiet" type="ring" label="Loading" decorative></wavelo-loader>'
+  );
+  const read = await page.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const named = document.getElementById('named').querySelector('.wavelo');
+    const quiet = document.getElementById('quiet').querySelector('.wavelo');
+    const pick = (element) => ['role', 'aria-labelledby', 'aria-describedby', 'aria-valuenow', 'aria-valuetext', 'aria-label', 'aria-hidden'].reduce((all, name) => {
+      const value = element.getAttribute(name);
+      if (value !== null) all[name] = value;
+      return all;
+    }, {});
+    return { named: pick(named), quiet: pick(quiet), captionText: document.getElementById('caption').textContent };
+  });
+  assert.equal(read.named.role, 'progressbar');
+  assert.equal(read.named['aria-labelledby'], 'caption', 'a referenced caption names the bar');
+  assert.equal(read.named['aria-describedby'], 'caption');
+  assert.equal(read.named['aria-valuenow'], '70');
+  assert.equal(read.named['aria-valuetext'], '70 of 100 MB', 'the reading must survive the attribute path');
+  assert.equal(read.named['aria-label'], undefined);
+  assert.deepEqual(read.quiet, { 'aria-hidden': 'true' }, 'a decorative loader exposes nothing else');
+  assert.equal(read.captionText, 'Uploading your archive');
+});
+
+test('a counted skeleton line becomes a stack of tracks that each paint', async () => {
+  await setContentPage(
+    '<div id="stack">' + renderLoader({ type: 'skeleton-line', count: 3, label: 'Loading' }).html + '</div>' +
+    '<div id="plain">' + renderLoader({ type: 'skeleton-line', label: 'Loading' }).html + '</div>' +
+    '<div id="spinner">' + renderLoader({ type: 'ring', inline: true, label: 'Loading' }).html + '</div>' +
+    '<div id="inline-line">' + renderLoader({ type: 'skeleton-line', inline: true, label: 'Loading' }).html + '</div>'
+  );
+  const read = await page.evaluate(() => {
+    const box = (id) => {
+      const element = document.querySelector(`#${id} .wavelo`);
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return {
+        display: style.display,
+        verticalAlign: style.verticalAlign,
+        width: Math.round(rect.width),
+        height: Math.round(rect.height)
+      };
+    };
+    const tracks = [...document.querySelectorAll('#stack .wavelo__part')].map((part) => {
+      const style = getComputedStyle(part);
+      const rect = part.getBoundingClientRect();
+      return {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        gradient: style.backgroundImage.includes('linear-gradient'),
+        animates: style.animationName !== 'none'
+      };
+    });
+    return { stack: box('stack'), tracks, plain: box('plain'), spinner: box('spinner'), inlineLine: box('inline-line') };
+  });
+  assert.equal(read.stack.display, 'grid', 'a counted line stacks its tracks');
+  assert.equal(read.tracks.length, 3);
+  for (const track of read.tracks) {
+    assert.ok(track.gradient, 'a track must paint the skeleton gradient itself');
+    assert.ok(track.animates, 'a track must shimmer');
+    assert.equal(track.height, 12, 'each track is the height of the line it replaces');
+  }
+  assert.ok(read.tracks[2].width < read.tracks[0].width, 'the last line ends the block short');
+  assert.equal(read.plain.display, 'block', 'one line is still the painted box itself');
+  assert.equal(read.plain.height, 12);
+  assert.equal(read.spinner.verticalAlign, 'middle', 'a spinner in a sentence sits on the line');
+  assert.equal(read.inlineLine.display, 'inline-block');
+  assert.ok(read.inlineLine.width <= 100 && read.inlineLine.height <= 17, `an inline line must be text-sized, saw ${read.inlineLine.width}x${read.inlineLine.height}`);
+});
+
+test('a loader that is not loading adds nothing to the document', async () => {
+  await setContentPage('<div id="hidden"></div><div id="shown"></div>');
+  const read = await page.evaluate(() => {
+    const sheets = () => document.querySelectorAll('style[data-wavelo-style]').length;
+    const before = sheets();
+    window.Wavelo.mountLoader(document.getElementById('hidden'), { type: 'ring', label: 'Loading', loading: false });
+    const afterHidden = sheets();
+    window.Wavelo.mountLoader(document.getElementById('shown'), { type: 'ring', label: 'Loading' });
+    return {
+      hiddenHtml: document.getElementById('hidden').innerHTML,
+      hiddenSheets: afterHidden - before,
+      shownHtml: document.getElementById('shown').innerHTML,
+      sheets: sheets() - before,
+      emptySheet: document.querySelector('style[data-wavelo-style="811c9dc5"]') !== null
+    };
+  });
+  assert.equal(read.hiddenHtml, '', 'nothing is mounted for a loader that is not loading');
+  assert.equal(read.hiddenSheets, 0, 'a hidden loader must not add a stylesheet');
+  assert.equal(read.sheets, 1, 'the visible loader still gets its one slice');
+  assert.match(read.shownHtml, /wavelo--ring/);
+  assert.equal(read.emptySheet, false, 'the empty slice must never be injected');
+});
+
+test('the custom element reads loading, count and inline from attributes', async () => {
+  await setContentPage('<wavelo-loader id="line" type="skeleton-line" count="4" inline></wavelo-loader>');
+  const read = await page.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const element = document.getElementById('line');
+    const tracks = () => element.querySelectorAll('.wavelo__part').length;
+    const shown = {
+      tracks: tracks(),
+      inline: element.querySelector('.wavelo').classList.contains('wavelo-inline'),
+      display: getComputedStyle(element.querySelector('.wavelo')).display
+    };
+    element.setAttribute('loading', 'false');
+    const hidden = { tracks: tracks(), html: element.innerHTML, emptySlices: document.querySelectorAll('style[data-wavelo-style="811c9dc5"]').length };
+    element.removeAttribute('loading');
+    return { shown, hidden, restored: tracks() };
+  });
+  assert.equal(read.shown.tracks, 4, 'the count attribute must set the track count');
+  assert.equal(read.shown.inline, true);
+  assert.equal(read.shown.display, 'inline-grid', 'an inline stack stays inline and keeps its rows');
+  assert.equal(read.hidden.tracks, 0);
+  assert.equal(read.hidden.html, '');
+  assert.equal(read.hidden.emptySlices, 0, 'hiding through the attribute must not inject the empty slice');
+  assert.equal(read.restored, 4, 'removing the attribute brings the loader back');
+});
+
+test('a configured size is kept, and the new tokens reach the rules that read them', async () => {
+  await setContentPage(
+    '<div id="tall">' + renderLoader({ type: 'progress-bar', label: 'Loading', height: 32, value: 50 }).html + '</div>' +
+    '<div id="styled">' + renderLoader({ type: 'progress-bar', label: 'Loading', style: { '--wavelo-radius': '2px' } }).html + '</div>' +
+    '<div id="paced">' + renderLoader({ type: 'ring', label: 'Loading', style: { '--wavelo-ease': 'steps(4, end)' } }).html + '</div>' +
+    '<div id="layered">' + renderLoader({ type: 'progress-top', label: 'Loading', style: { '--wavelo-height': '9px', '--wavelo-z-index': '3' } }).html + '</div>' +
+    '<div id="plain-top">' + renderLoader({ type: 'progress-top', label: 'Loading' }).html + '</div>' +
+    '<div id="dark">' + renderLoader({ type: 'ring', label: 'Loading', theme: 'dark' }).html + '</div>' +
+    '<div id="light">' + renderLoader({ type: 'ring', label: 'Loading' }).html + '</div>' +
+    '<div id="dark-scrim">' + renderLoader({ type: 'overlay', label: 'Loading', theme: 'dark' }).html + '</div>' +
+    '<div id="light-scrim">' + renderLoader({ type: 'overlay', label: 'Loading' }).html + '</div>'
+  );
+  const read = await page.evaluate(() => {
+    const at = (id) => {
+      const element = document.querySelector(`#${id} .wavelo`);
+      const style = getComputedStyle(element);
+      const part = element.querySelector('.wavelo__part');
+      return {
+        height: Math.round(element.getBoundingClientRect().height),
+        radius: style.borderTopLeftRadius,
+        ease: style.animationTimingFunction,
+        z: style.zIndex,
+        color: style.color,
+        paint: style.backgroundImage + '|' + style.backgroundColor,
+        fill: part ? Math.round(part.getBoundingClientRect().width) : null
+      };
+    };
+    return Object.fromEntries(['tall', 'styled', 'paced', 'layered', 'plain-top', 'dark', 'light', 'dark-scrim', 'light-scrim'].map((id) => [id, at(id)]));
+  });
+  assert.equal(read.tall.height, 32, 'a 32-pixel bar is 32 pixels, not a capped 16');
+  assert.equal(read.tall.fill, 64, 'the half-filled track fills half of the real width');
+  assert.equal(read.styled.radius, '2px', 'a squared bar takes the radius');
+  assert.match(read.paced.ease, /steps\(4/, 'the timing function is the page’s to choose');
+  assert.equal(read.layered.height, 9, 'the top bar takes a configured thickness');
+  assert.equal(read.layered.z, '3', 'a page can layer it under its own chrome');
+  assert.equal(read['plain-top'].z, '9999', 'and it covers the page by default');
+  assert.equal(read.dark.color, 'rgb(165, 180, 252)', 'a dark theme picks a colour that reads on dark');
+  assert.equal(read.light.color, 'rgb(99, 102, 241)', 'the light default is unchanged');
+  assert.notEqual(read['dark-scrim'].paint, read['light-scrim'].paint, 'the overlay scrim follows the theme');
+  assert.notEqual(read['light-scrim'].paint, 'none|rgba(0, 0, 0, 0)', 'the overlay still draws a scrim in light');
+});
+
+const nextFrame = () => page.evaluate(() => new Promise((resolveFrame) => requestAnimationFrame(() => requestAnimationFrame(resolveFrame))));
+
+test('progress-view fills as its own element travels through the viewport', async () => {
+  const bar = renderLoader({ type: 'progress-view', label: 'Section progress' }).html;
+  await setContentPage(
+    '<div style="height:300vh"></div>' + `<section style="height:120vh">${bar}</section>` + '<div style="height:300vh"></div>'
+  );
+  const read = () =>
+    page.evaluate(() => {
+      const root = document.querySelector('.wavelo--progress-view');
+      const part = root.querySelector('.wavelo__part');
+      const animation = document.getAnimations().find((candidate) => candidate.effect?.target === part);
+      return {
+        width: Math.round(part.getBoundingClientRect().width),
+        track: Math.round(root.getBoundingClientRect().width),
+        timeline: animation ? (animation.timeline === document.timeline ? 'document' : 'view') : 'none'
+      };
+    });
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await nextFrame();
+  const below = await read();
+  assert.equal(below.timeline, 'view', 'the bar must be driven by a view timeline, not the clock');
+  assert.ok(below.width <= 2, `a bar below the viewport is empty, saw ${below.width}px`);
+
+  await page.evaluate(() => document.querySelector('.wavelo--progress-view').scrollIntoView({ block: 'center' }));
+  await nextFrame();
+  const middle = await read();
+  assert.ok(middle.width > middle.track * 0.05 && middle.width < middle.track * 0.95, `mid-travel fill should be partway, saw ${middle.width}/${middle.track}`);
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await nextFrame();
+  const past = await read();
+  assert.ok(past.width >= past.track - 1, `a bar scrolled past should be full, saw ${past.width}/${past.track}`);
+});
+
+test('the route progress bar creeps, takes a value, finishes and removes itself', async () => {
+  await setContentPage('<p>the application</p>');
+  const read = await page.evaluate(async () => {
+    const { createRouteProgress } = window.Wavelo;
+    const bar = createRouteProgress({}, { trickle: 20, ceiling: 90, hold: 60 });
+    const percent = () => Number.parseFloat((bar.element.querySelector('.wavelo').getAttribute('style') ?? '').match(/--wavelo-progress:([\d.]+)%/)?.[1] ?? -1);
+    const sheets = () => document.querySelectorAll('style[data-wavelo-style]').length;
+
+    bar.start();
+    const start = {
+      connected: bar.visible,
+      design: bar.element.querySelector('.wavelo').className,
+      percent: percent(),
+      announced: bar.element.querySelector('.wavelo').getAttribute('aria-hidden'),
+      sheets: sheets()
+    };
+    await new Promise((resolveWait) => setTimeout(resolveWait, 150));
+    const creeping = percent();
+    bar.set(42);
+    const pinned = percent();
+    bar.done();
+    const filled = percent();
+    const stillUp = bar.visible;
+    await new Promise((resolveWait) => setTimeout(resolveWait, 120));
+    const after = { visible: bar.visible, inDocument: document.querySelector('[data-wavelo-route-progress]') !== null, sheets: sheets() };
+    bar.destroy();
+
+    const named = createRouteProgress({ label: 'Loading page' }, {});
+    named.start();
+    const announced = named.element.querySelector('.wavelo');
+    const role = announced.getAttribute('role');
+    const valueAnnounced = announced.getAttribute('aria-valuenow');
+    named.destroy();
+    return { start, creeping, pinned, filled, stillUp, after, role, valueAnnounced };
+  });
+  assert.equal(read.start.connected, true, 'start() puts the bar on the page');
+  assert.match(read.start.design, /wavelo--progress-top/, 'the route bar is the top-of-page design');
+  assert.equal(read.start.percent, 0);
+  assert.equal(read.start.announced, 'true', 'a route change is announced by the page, not by the bar');
+  assert.equal(read.start.sheets, 1, 'one slice, however many renders the bar makes');
+  assert.ok(read.creeping > 0 && read.creeping < 90, `the bar should creep toward the ceiling, saw ${read.creeping}`);
+  assert.equal(read.pinned, 42, 'a router that reports progress is believed');
+  assert.equal(read.filled, 100);
+  assert.equal(read.stillUp, true, 'the completed bar holds briefly');
+  assert.equal(read.after.visible, false, 'then it is gone');
+  assert.equal(read.after.inDocument, false, 'and no element is left in the document');
+  assert.equal(read.after.sheets, 1, 'finishing does not add a second stylesheet');
+  assert.equal(read.role, 'progressbar', 'a labelled bar with a value is a progressbar');
+  assert.equal(read.valueAnnounced, '0', 'and it reports the real percentage, not a guess');
+});
+
+test('a container-query size resolves against the loader’s own container', async () => {
+  await setContentPage(
+    '<div id="narrow" style="container-type:inline-size;width:200px">' + renderLoader({ type: 'ring', label: 'Loading', size: '25cqi' }).html + '</div>' +
+    '<div id="wide" style="container-type:inline-size;width:600px">' + renderLoader({ type: 'ring', label: 'Loading', size: '25cqi' }).html + '</div>' +
+    '<div id="themed" style="container-type:inline-size;width:400px"><div style="--wavelo-size:10cqi">' + renderLoader({ type: 'ring', label: 'Loading' }).html + '</div></div>'
+  );
+  // A container query resolves on the layout pass that follows insertion, so measure
+  // after a frame: on a loaded CI runner the first read can answer from before it.
+  await nextFrame();
+  const widths = await page.evaluate(() => {
+    const read = (id) => {
+      const container = document.querySelector(`#${id}`);
+      const element = container.querySelector('.wavelo');
+      const style = getComputedStyle(element);
+      return {
+        // The used width, not the bounding rect: a spinning ring's rect is the box
+        // that contains its rotation, which grows and shrinks with the angle.
+        loader: Math.round(Number.parseFloat(style.width)),
+        container: Math.round(container.getBoundingClientRect().width),
+        computed: style.width,
+        size: style.getPropertyValue('--wavelo-size').trim(),
+        type: getComputedStyle(container).containerType
+      };
+    };
+    return { narrow: read('narrow'), wide: read('wide'), themed: read('themed') };
+  });
+  // The message carries the container's own measurement, because a size that is a
+  // percentage of a container is only meaningful next to the container it saw.
+  const show = (entry) => `${entry.loader}px (container ${entry.container}px, container-type ${entry.type}, --wavelo-size ${entry.size}, width ${entry.computed})`;
+  assert.equal(widths.narrow.loader, 50, `25cqi of a 200-pixel container, saw ${show(widths.narrow)}`);
+  assert.equal(widths.wide.loader, 150, `the same option in a 600-pixel container, saw ${show(widths.wide)}`);
+  assert.equal(widths.themed.loader, 40, `a container unit set on an ancestor, saw ${show(widths.themed)}`);
+});
+
+test('a page under a style-src CSP gets a nonce on every injected slice', async () => {
+  const nonce = 'wavelo-test-nonce';
+  const html =
+    `<!doctype html><html><head><meta name="wavelo-csp-nonce" content="${nonce}"></head><body>` +
+    `<div id="slot"></div>` +
+    `<script nonce="${nonce}" src="/bundle.js"></script>` +
+    `<script nonce="${nonce}">window.Wavelo.mountLoader(document.getElementById('slot'), { type: 'ring', label: 'Loading' });</script>` +
+    `</body></html>`;
+  const server = createServer((request, response) => {
+    if (request.url === '/bundle.js') {
+      response.writeHead(200, { 'content-type': 'text/javascript' });
+      response.end(coreBundle);
+      return;
+    }
+    response.writeHead(200, {
+      'content-type': 'text/html',
+      // No 'unsafe-inline': the only way a stylesheet can be applied is a nonce, so
+      // an injected slice without one would leave the loader unstyled.
+      'content-security-policy': `style-src 'nonce-${nonce}'; script-src 'nonce-${nonce}'`
+    });
+    response.end(html);
+  });
+  await new Promise((resolveListen) => server.listen(0, resolveListen));
+  const cspPage = await browser.newPage();
+  const blocked = [];
+  cspPage.on('console', (message) => {
+    if (message.type() === 'error' && /Content Security Policy/.test(message.text())) blocked.push(message.text());
+  });
+  await cspPage.goto(`http://127.0.0.1:${server.address().port}`);
+  const read = await cspPage.evaluate(() => {
+    const style = document.querySelector('style[data-wavelo-style]');
+    const element = document.querySelector('#slot .wavelo');
+    return {
+      stamped: style?.hasAttribute('nonce') ?? false,
+      border: getComputedStyle(element).borderTopWidth,
+      display: getComputedStyle(element).display
+    };
+  });
+  await cspPage.close();
+  server.close();
+  // The browser consumes the nonce value as it inserts the element, so the test asks
+  // whether the attribute was stamped and - the claim that matters - whether a
+  // page with no 'unsafe-inline' actually applied the injected sheet.
+  assert.equal(read.stamped, true, 'the injected slice must carry the page nonce');
+  assert.equal(read.border, '3px', 'the CSP must accept the injected stylesheet, or the ring is unstyled');
+  assert.equal(read.display, 'inline-flex');
+  assert.deepEqual(blocked, [], 'the page reported a CSP violation');
 });

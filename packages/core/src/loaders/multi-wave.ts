@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "multi-wave", name: "Multi-wave", category: "bars", kind: "wave", description: "Multiple wave layers", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "multi-wave" };
+const definition: LoaderDefinition = { id: "multi-wave", name: "Multi-wave", category: "bars", kind: "wave", description: "Multiple wave layers", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "multi-wave" };
 const styles = `${baseCss}${waveCss}`;
 
 export const multiWave = (config: Omit<LoaderConfig, 'type'> = {}) =>

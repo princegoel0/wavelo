@@ -15,9 +15,24 @@ import { LoaderComponent } from '@wavelo/angular';
 export class Screen {}
 ```
 
-Inputs cover all 20 configuration keys. Two names need care: `style` binds as
+Inputs cover all 27 configuration keys. Two names need care: `style` binds as
 `waveloStyle`, because Angular already owns `[style]`, and `data-*` attributes on
-the host are read into the configuration. `paused` takes a boolean binding.
+the host are read into the configuration. `paused`, `loading`, `inline` and
+`decorative` take a boolean binding, and a bare attribute (`paused`, `loading`) is
+true the way HTML means it.
+
+Defaults for a whole tree are a provider, not a global:
+
+```ts
+providers: [{ provide: WAVELO_DEFAULTS, useValue: { color: '#6366f1', size: 32 } }]
+```
+
+```html
+<wavelo-loader type="ring" [loading]="busy" [count]="3" inline />
+```
+
+`[loading]="false"` renders no markup and injects no stylesheet; the host element
+(`display: contents`) stays empty.
 
 The host element is `display: contents`, change detection is `OnPush`, and the
 rendered content is cleared on destroy. Only markup is written into the host;

@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-card", name: "Skeleton card", category: "skeleton", kind: "skeleton", description: "Card placeholder", options: ["className","color","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-card" };
+const definition: LoaderDefinition = { id: "skeleton-card", name: "Skeleton card", category: "skeleton", kind: "skeleton", description: "Card placeholder", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-card" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonCard = (config: Omit<LoaderConfig, 'type'> = {}) =>

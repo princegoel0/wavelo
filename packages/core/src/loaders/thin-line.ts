@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "thin-line", name: "Thin line", category: "spinner", kind: "ring", description: "Minimal hairline ring", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "thin-line" };
+const definition: LoaderDefinition = { id: "thin-line", name: "Thin line", category: "spinner", kind: "ring", description: "Minimal hairline ring", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "thin-line" };
 const styles = `${baseCss}${ringCss}`;
 
 export const thinLine = (config: Omit<LoaderConfig, 'type'> = {}) =>

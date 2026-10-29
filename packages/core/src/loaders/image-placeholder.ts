@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "image-placeholder", name: "Image placeholder", category: "application", kind: "skeleton", description: "Image loading placeholder", options: ["className","color","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "image-placeholder" };
+const definition: LoaderDefinition = { id: "image-placeholder", name: "Image placeholder", category: "application", kind: "skeleton", description: "Image loading placeholder", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "image-placeholder" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const imagePlaceholder = (config: Omit<LoaderConfig, 'type'> = {}) =>
