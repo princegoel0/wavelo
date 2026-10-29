@@ -48,11 +48,11 @@ drifting a generated loader made catalog validation fail.
 | HIGH | `paused` and `direction` did nothing | Every per-kind rule used the `animation:` shorthand, which resets `animation-direction`, `animation-play-state` and delay. Computed styles reported `running`/`normal` for ring, dots and bars regardless of configuration. | Fixed: controls are carried inside the shorthand as `var(--wavelo-direction)`/`var(--wavelo-play-state)`. Asserted by computed style **and** `document.getAnimations()` play-state. |
 | HIGH | `reducedMotion: 'always'` equalled `'auto'` | The only motion rule sat inside `@media (prefers-reduced-motion:reduce)` and merely excluded `never`, so nothing forced reduction. Contradicted `PRD.md`. | Fixed: an out-of-media-query rule keyed to `data-wavelo-motion="always"`. Covered for both OS settings. |
 | HIGH | Tests asserted strings, not behaviour | `tests/core.test.mjs` matched `--wavelo-play-state:paused` in the HTML, so both defects above passed green; CI ran no browser suite. | Fixed: `tests/browser.test.mjs` now covers computed styles, injection counts, slice isolation, the custom element and axe, and CI runs it in a dedicated `verify-browser` job on every push and PR. |
-| HIGH | "Modular" cost 78% of a single-design bundle | One imported loader shipped 20,629 B of the 26,556 B minified bundle as CSS for all 82 designs. | Fixed: styles are split into a shared base plus 12 render-kind slices. One design now ships 4,612 B gzipped (budget tightened from 7,168 to 4,096), and every design is re-rendered in the browser using only its own slice to prove the slices are complete. |
+| HIGH | "Modular" cost 78% of a single-design bundle | One imported loader shipped 20,629 B of the 26,556 B minified bundle as CSS for all 82 designs. | Fixed: styles are split into a shared base plus 12 render-kind slices. One design now ships 5,018 B gzipped against a 5,632 B budget, and every design is re-rendered in the browser using only its own slice to prove the slices are complete. |
 | HIGH | Stylesheets were duplicated per instance | `mountLoader` tagged its `<style>` with `data-wavelo-style` but nothing ever queried it; twelve loaders meant twelve copies. Measured 201.7 KB of duplicate CSS and 1,810 parsed rules in the DOM. | Fixed: `ensureStyles` injects each distinct slice into the head once. No adapter inlines CSS any more. |
 | MEDIUM | Three sources of truth for the catalog | The alias map was duplicated in `registry.ts` and `render.ts`; 86 loader modules hand-copied their metadata; five modules (`orbit`, `pulse`, `spinner`, `skeleton`, `progress`) used IDs absent from the registry, so `import { orbit }` rendered orbiting-dots while `renderLoader({ type: 'orbit' })` rendered inline. | Fixed: `src/catalog.ts` is the only authored source; entry points, the barrel and the `LoaderId` union are generated, the phantom modules are gone, and `npm run catalog` diffs generated content against the committed files. |
-| MEDIUM | Dead options | `theme`, `variant` and the `data-*` index signature were typed and documented but never used; `normalizeConfig`'s unknown-type branch and `getLoaderDefinition`'s `'pulse'` default were unreachable. | Fixed: `theme` drives the skeleton palette, `data-*` is emitted, `variant` is removed from the type and the PRD, and the dead branches are gone. A test renders all 20 keys and asserts each reaches the element. |
-| MEDIUM | Adapters accepted 7 of 20 keys | Vue, Svelte and Angular declared seven props each while `docs/COMPATIBILITY.md` promised "the same serializable core configuration". | Fixed: every adapter takes the full surface, derived from `loaderConfigKeys` in core, with parity asserted per adapter. |
+| MEDIUM | Dead options | `theme`, `variant` and the `data-*` index signature were typed and documented but never used; `normalizeConfig`'s unknown-type branch and `getLoaderDefinition`'s `'pulse'` default were unreachable. | Fixed: `theme` drives the skeleton palette, `data-*` is emitted, `variant` is removed from the type and the PRD, and the dead branches are gone. A test renders all 27 keys and asserts each reaches the element. |
+| MEDIUM | Adapters accepted 7 of the then-20 keys | Vue, Svelte and Angular declared seven props each while `docs/COMPATIBILITY.md` promised "the same serializable core configuration". | Fixed: every adapter takes the full surface, derived from `loaderConfigKeys` in core, with parity asserted per adapter. |
 | MEDIUM | Stylesheet accretion | 28 selectors were defined more than once, including `.wavelo--dotted-circle` eleven times with dead earlier declarations, and alias-only rules that could never match. | Fixed: rules live in one file per render kind; the dead duplicates and unreachable alias rules were removed, with computed-style equality re-verified per design. |
 | LOW | Missing npm metadata and stale build output risk | No `repository`, `bugs`, `homepage` or `keywords` on any package; `dist` was never cleaned, so a deleted design could ship as a stale module. | Fixed: metadata added to all seven manifests, the core build cleans `dist`, and catalog validation fails when `dist/loaders` and the registry disagree. |
 | LOW | CI ran no browser check | `npm test` excludes the browser suite and `ci.yml` never invoked it. | Fixed as part of the HIGH test finding above. |
@@ -249,36 +249,41 @@ been run.
 
 ## Validation commands and observed results
 
+Re-run 2026-10-29 against the current build, after the Phases B–J work.
+
 | Command | Result |
 |---|---|
-| `npm run check` | Passed: build with catalog generation, strict typecheck, 38 unit tests, catalog drift check, documentation sync, bundle budgets |
-| `npm run catalog` | Passed: 82 public IDs, 82 active designs, 117 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
-| `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
+| `npm run check` | Passed: build with catalog generation, strict typecheck, 45 unit tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
+| `npm run catalog` | Passed: 83 public IDs, 83 active designs, 120 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
+| `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages, across 12 documents |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: 22 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes, slice injection counts, per-design slice isolation for 82 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, the scroll-driven fill at 0/50/100% of the scroll range inside and outside an `overflow: hidden` wrapper plus its clock-driven fallback, painted pixels for the palette/gradients/scrim, visibility for all 82 designs, the name contract, distinctness of all 82 designs, gallery + axe |
-| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 82 designs |
-| `npm run audit:visual` | Passed: 82 designs, contact sheet regenerated |
-| `npm run audit:visual:correctness` | Passed: 82 active designs (76 animating, 5 static by design, 1 scroll-driven verified by timeline type); no aliases remain |
+| `npm run test:browser` | Passed: 30 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 83 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 83 designs, the name contract, distinctness of all 83 designs, gallery with option chips and playground + axe |
+| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 83 designs |
+| `npm run audit:layout` | Passed: 80 of 83 designs cost no layout per frame; the three that do are each recorded with a reason |
+| `npm run audit:visual` | Passed: 83 designs, contact sheet regenerated |
+| `npm run audit:visual:correctness` | Passed: 83 active designs (76 animating, 5 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
+| `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
 | `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
-| GitHub Actions workflow execution | Passed on GitHub for `dev` at `19cffe1` (push run and pull-request run) and for `main` at `603ecfc`: `verify` and `verify-browser` both green, including the Playwright install on a clean runner. Not run locally. |
-| npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer |
+| GitHub Actions workflow execution | Passed on GitHub for `dev` at `19cffe1` (push run and pull-request run) and for `main` at `603ecfc`: `verify` and `verify-browser` both green, including the Playwright install on a clean runner. The Phases B–J work is verified by the pull request opened for it. Not run locally. |
+| npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer. `RELEASE_PROVENANCE=true` now switches the publish step to `--provenance` once trusted publishing is configured per package. |
 
 The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
 
-- Individual design entry point: 4,612 B gzip (two designs: 5,098 B)
-- Core renderer (runtime-selected design): 11,457 B gzip
-- Full catalog: 11,463 B gzip
-- React: 11,786 B gzip
-- Vue: 12,131 B gzip
-- Angular: 13,025 B gzip
-- Svelte: 11,558 B gzip
-- Web Components: 12,248 B gzip
-- Vanilla: 11,628 B gzip
-- `@wavelo/core/styles.css`, the whole catalog sheet: 4,863 B gzip
+- Individual design entry point: 5,018 B gzip (two designs: 5,782 B)
+- Core renderer (runtime-selected design): 12,692 B gzip
+- Full catalog: 12,702 B gzip
+- React: 13,101 B gzip
+- Vue: 13,532 B gzip
+- Angular: 14,357 B gzip
+- Svelte: 12,789 B gzip
+- Web Components: 13,575 B gzip
+- Vanilla: 12,942 B gzip
+- `@wavelo/core/styles.css`, the whole catalog sheet: 5,897 B gzip
 
 ## Gate scenario assessment
 

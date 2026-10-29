@@ -95,7 +95,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 | `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults, `createRouteProgress` |
 | `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
 | `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
-| `@wavelo/core/loaders` | barrel over all 82 designs |
+| `@wavelo/core/loaders` | barrel over all 83 designs |
 | `@wavelo/core/css` | `kindStyles`, `baseCss`, `allStyles`, `designStyles` |
 | `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
 | `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |

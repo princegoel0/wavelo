@@ -28,6 +28,7 @@
     "release:validate": "node scripts/validate-release.mjs",
     "docs:build": "npm run build --workspace @wavelo/docs",
     "pack:check": "npm pack --dry-run --workspaces --if-present",
+    "pack:verify": "node scripts/verify-packed.mjs",
     "test:browser": "node tests/browser.test.mjs"
   },
   "devDependencies": {

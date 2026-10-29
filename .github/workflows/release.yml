@@ -31,8 +31,11 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - run: npm run audit:customization
+      - run: npm run audit:layout
       - run: npm run audit:visual:correctness
+      - run: npm run packages:check
       - run: npm run pack:check
+      - run: npm run pack:verify
       - name: Check release gate
         id: gate
         shell: bash
@@ -86,12 +89,16 @@ jobs:
           path: release-tarballs
       - name: Publish packages
         shell: bash
+        env:
+          # Trusted publishing is configured on npm per package, by the owner. Until
+          # every @wavelo package has a publisher for this repository, workflow and
+          # environment, `--provenance` would fail the publish, so the flag is a
+          # repository variable and the granular token remains the default.
+          RELEASE_PROVENANCE: ${{ vars.RELEASE_PROVENANCE }}
         run: |
           set -euo pipefail
-          # Provenance requires npm trusted publishing, which is configured per
-          # existing package, so the first release publishes with a granular
-          # token and `--provenance` returns once trusted publishing is set up
-          # for each @wavelo package.
+          provenance=()
+          if [[ "$RELEASE_PROVENANCE" == "true" ]]; then provenance=(--provenance); fi
           for package in \
             wavelo-core \
             wavelo-vanilla \
@@ -101,5 +108,5 @@ jobs:
             wavelo-svelte \
             wavelo-angular
           do
-            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public
+            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public ${provenance[@]+"${provenance[@]}"}
           done
