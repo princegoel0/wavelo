@@ -84,6 +84,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "progress-top": "1e17e76",
    "progress-upload": "3edfff6",
    "progress-scroll": "261bef6",
+   "progress-view": "261bef6",
    "inline": "26dbff7",
    "button": "26dbff7",
    "overlay": "26dbff7",

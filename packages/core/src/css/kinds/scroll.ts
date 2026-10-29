@@ -1,8 +1,10 @@
 import { css as scrollFillFrames } from '../keyframes/scroll-fill.js';
+import { css as viewFillFrames } from '../keyframes/view-fill.js';
 
 /**
  * Reading progress with no JavaScript: the fill is a scroll-driven animation, so
- * the browser maps the document's scroll position onto the bar.
+ * the browser maps a scroll or view position onto the bar. Two designs live here -
+ * `progress-scroll` follows the document, `progress-view` follows the element.
  *
  * The timeline is `scroll(root block)`, not `scroll(nearest block)`. A `nearest`
  * timeline binds to the closest ancestor scroll container, and `overflow:hidden`
@@ -23,4 +25,15 @@ export const scrollCss = `
 @supports (animation-timeline:scroll()){
 .wavelo--scroll .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:scroll(root block)}
 }
-${scrollFillFrames}`;
+/* "progress-view" follows the element it sits on rather than the document: a view
+   timeline takes the animated element as its subject, so this bar fills as the bar
+   travels through the scrollport. To make a different element the subject, declare
+   "view-timeline: --name block" on it and set "--wavelo-timeline: --name" here.
+   Without view timelines the same frames run on the document clock, so the bar
+   shows activity instead of an empty track. */
+.wavelo--progress-view{animation:wavelo-view-fill var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--progress-view .wavelo__part{width:var(--wavelo-progress,0%);animation:none}
+@supports (animation-timeline:view()){
+.wavelo--progress-view{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:var(--wavelo-timeline,view(block))}
+}
+${scrollFillFrames}${viewFillFrames}`;

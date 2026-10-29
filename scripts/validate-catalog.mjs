@@ -21,7 +21,7 @@ check(signatures.every(Boolean) && new Set(signatures).size === signatures.lengt
 
 for (const loader of loaderRegistry) {
   check(Boolean(loader.description && loader.kind && loader.category), `Incomplete metadata for ${loader.id}`);
-  check(loader.options.length > 0, `${loader.id} declares no options`);
+  check(loader.options.length > 0, `${loader.id} honours no option at all; run npm run catalog:generate to measure it`);
   check(ids.has(loader.visualSignature), `${loader.id} points at unknown visual signature ${loader.visualSignature}`);
   if (loader.deprecated) {
     check(Boolean(loader.aliasOf) && ids.has(loader.aliasOf), `Invalid alias for ${loader.id}`);

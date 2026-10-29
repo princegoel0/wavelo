@@ -13,7 +13,8 @@ const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
 // scroll timeline, which the audit checks by name instead of by elapsed time.
 // Anything else in the catalog must be sampled as advancing.
 const staticTypes = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top']);
-const scrollTypes = new Set(['progress-scroll']);
+/** Designs whose fill comes from a timeline the browser drives, not the clock. */
+const timelineTypes = new Map([['progress-scroll', 'ScrollTimeline'], ['progress-view', 'ViewTimeline']]);
 
 function expectedBehavior(loader) {
   const descriptions = {
@@ -161,10 +162,10 @@ const rows = active.map((loader) => {
   const actual = byId.get(loader.id);
   const motion = staticTypes.has(loader.id)
     ? 'static by design'
-    : scrollTypes.has(loader.id)
-      ? actual.timelines.length > 0 && actual.timelines.every((timeline) => timeline === 'ScrollTimeline')
-        ? `scroll-driven (${actual.timelines.length} ScrollTimeline animation(s), no document clock)`
-        : `MISMATCH: expected a ScrollTimeline, found ${actual.timelines.join(', ') || 'no animation'}`
+    : timelineTypes.has(loader.id)
+      ? actual.timelines.length > 0 && actual.timelines.every((timeline) => timeline === timelineTypes.get(loader.id))
+        ? `${timelineTypes.get(loader.id)}-driven (${actual.timelines.length} animation(s), no document clock)`
+        : `MISMATCH: expected a ${timelineTypes.get(loader.id)}, found ${actual.timelines.join(', ') || 'no animation'}`
       : actual.advancing
         ? `animating (${actual.playStates.length} CSS animation(s) advancing)`
         : actual.animations.length > 0
@@ -179,7 +180,7 @@ const failures = active.filter((loader) => {
   const actual = byId.get(loader.id);
   if (!actual) return true;
   if (staticTypes.has(loader.id)) return false;
-  if (scrollTypes.has(loader.id)) return actual.timelines.length === 0 || !actual.timelines.every((timeline) => timeline === 'ScrollTimeline');
+  if (timelineTypes.has(loader.id)) return actual.timelines.length === 0 || !actual.timelines.every((timeline) => timeline === timelineTypes.get(loader.id));
   return !actual.advancing;
 });
 if (failures.length > 0) throw new Error(`Visual contracts not met in the browser: ${failures.map((loader) => loader.id).join(', ')}`);
@@ -218,10 +219,10 @@ their alias definitions instead of the canonical implementation.
 ## Results
 
 All ${active.length} active designs render their own ID-specific geometry in the browser.
-${active.length - staticTypes.size - scrollTypes.size} were sampled animating through \`document.getAnimations()\`;
+${active.length - staticTypes.size - timelineTypes.size} were sampled animating through \`document.getAnimations()\`;
 the ${staticTypes.size} determinate progress designs are static by design, because their fill is
-bound to the configured value rather than to a clock; and ${[...scrollTypes].map((id) => `\`${id}\``).join(' and ')}
-runs on a scroll timeline, which is verified by the timeline's own type rather than by elapsed time.
+bound to the configured value rather than to a clock; and ${[...timelineTypes.keys()].map((id) => `\`${id}\``).join(' and ')}
+run on a timeline the browser drives, which is verified by the timeline's own type rather than by elapsed time.
 ${aliases ? `${aliases} deprecated aliases resolve to their canonical definitions while preserving their public imports.` : 'Every public ID has its own implementation, so no design borrows another name.'}
 The gallery embeds the complete stylesheet once. Separately,
 \`tests/browser.test.mjs\` re-renders every design using only the slice its own
@@ -238,8 +239,8 @@ ${rows}
 
 The sampled play-state evidence proves each animating design advances in Chromium
 with the default configuration, the static designs bind their fill to the
-configured value instead, and the scroll-driven design reports a ScrollTimeline
-rather than the document clock. It does not prove subjective quality, nor does it cover
+configured value instead, and the two timeline-driven designs report a ScrollTimeline
+and a ViewTimeline rather than the document clock. It does not prove subjective quality, nor does it cover
 \`paused\`, \`direction\` and \`reducedMotion\` behaviour — those have their own
 computed-style assertions in \`tests/browser.test.mjs\`, which runs in CI.
 Per-design stylesheet slices are checked by rendering each design alone with only
@@ -247,4 +248,4 @@ its own slice; see the same suite. Future visual review should keep using real
 browser playback rather than metadata or unique IDs alone.
 `, 'utf8');
 
-console.log(`Audited ${active.length} active designs: ${active.length - staticTypes.size - scrollTypes.size} animating, ${staticTypes.size} static by design, ${scrollTypes.size} scroll-driven${aliases ? `, ${aliases} deprecated aliases` : ''}`);
+console.log(`Audited ${active.length} active designs: ${active.length - staticTypes.size - timelineTypes.size} animating, ${staticTypes.size} static by design, ${timelineTypes.size} timeline-driven${aliases ? `, ${aliases} deprecated aliases` : ''}`);

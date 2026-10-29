@@ -9,7 +9,7 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 82 public IDs, each with its own implementation and no deprecated aliases. A
+- 83 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
@@ -144,10 +144,29 @@ Not yet published.
 - `theme` is the page's palette rather than only the skeleton's. `dark` also sets the
   colour a design falls back to (`#a5b4fc`) and the overlay scrim (`#0f172a`),
   `system` follows `prefers-color-scheme`, and an explicit `color` or
-  `backgroundColor` still wins — so `theme` moved from 6 designs to all 82.
+  `backgroundColor` still wins — so `theme` moved from 6 designs to every design in the catalog.
 - `npm run docs:check` now compares the custom properties three ways: what the sheet
   reads, what `WaveloTokens` declares and what the README table documents. A token in
   only one of those places fails the build.
+- `progress-view`: a bar driven by a CSS **view** timeline, so it fills as the
+  element it sits in travels through the viewport - the per-section and
+  scroll-reveal case that `progress-scroll` (document scroll) cannot express. It
+  tracks its own element by default; `--wavelo-timeline` names another subject
+  declared with `view-timeline`, and where view timelines are missing the same
+  keyframes sweep on the document clock. Its options are measured like everyone
+  else's, so it advertises no `duration`, no `speed` and no `value`.
+- `createRouteProgress()`: the top-of-page bar for route changes, which creeps
+  toward a ceiling while a navigation is in flight, takes a real percentage from a
+  router that has one, and removes itself after `done()` - with no label, because a
+  page announces a route change through focus movement. It is inert during server
+  rendering, and it mounts the `progress-top` design through the same renderer as
+  everything else.
+- Container-query sizing is documented and tested end to end: `size: '12cqi'` and an
+  ancestor's `--wavelo-size: 25cqi` both resolve against the loader's query
+  container, in a browser, not just in the type.
+- A design missing from the measured option table now renders with no options and
+  fails `npm run catalog` by name, instead of throwing when the registry is
+  imported - which made it impossible to measure a catalog that had just grown.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

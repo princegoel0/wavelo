@@ -43,7 +43,7 @@ caller's theme into another's markup.
 
 ## Configuration surface
 
-The catalog holds 82 public IDs, each with its own implementation, built from
+The catalog holds 83 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
@@ -130,6 +130,15 @@ were rendered with `renderStylesheets`. A page that skips this step renders
 correct markup with no styling. This is the trade for not shipping one copy of
 the stylesheet per component instance.
 
+The loader renders into the **light DOM**, and there is no shadow-DOM mode. A shadow
+root would isolate the loader from exactly the things this library asks a page to do
+with it: set `--wavelo-*` on an ancestor, style `.wavelo__part` from a class rule,
+target `wavelo--<id>` from a theme, or let a global sheet apply. `::part()` would
+restore some of that behind a second, narrower API and a second render path. The
+escape hatch for a page that genuinely needs isolation is the one CSS already
+offers — mount the loader inside an iframe, or use the static sheet rather than
+injected styles — so the surface stays single.
+
 ## Framework versions
 
 Peer ranges are deliberately limited to the versions this repository exercises:
@@ -150,7 +159,7 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   `tests/framework.test.mjs`, part of `npm test` and CI.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 82
+  `theme`, style-slice injection counts, per-design slice isolation for all 83
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —

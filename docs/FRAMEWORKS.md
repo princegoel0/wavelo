@@ -196,6 +196,50 @@ wavelo.render({ type: 'orbiting-dots' });      // house style, other design
 wavelo.merge({ loading: panel.isOpen });       // a config object for mountLoader
 ```
 
+## Route progress
+
+`createRouteProgress` comes from the core, so every bridge uses it the same way —
+start it on the navigation, finish it when the new view is there:
+
+```tsx
+// React: one bar for the layout, started where a route suspends or fetches
+function useRouteBar() {
+  const bar = useMemo(() => createRouteProgress(), []);
+  useEffect(() => () => bar.destroy(), []);
+  return bar;
+}
+
+function Profile({ id }) {
+  const bar = useRouteBar();
+  useEffect(() => {
+    bar.start();
+    return () => bar.done();
+  }, [id]);
+  return <Loader type="skeleton-line" count={4} loading={!profile} />;
+}
+```
+
+```ts
+// Vue Router
+const bar = createRouteProgress();
+router.beforeEach(() => bar.start());
+router.afterEach(() => bar.done());
+```
+
+```ts
+// Angular router events
+ngOnInit() {
+  const bar = createRouteProgress();
+  this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => bar.start());
+  this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => bar.done());
+}
+```
+
+The bar is the `progress-top` design, so `color`, `height` and `--wavelo-*` options
+apply to it like any other loader, and `set(60)` reports a real percentage when the
+router has one. It is inert during server rendering, so creating one at module scope
+is safe.
+
 ## Host styling, and Wavelo styling
 
 A loader is one element, and two channels reach it. Ordinary CSS on the host — the

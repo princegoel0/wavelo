@@ -8,15 +8,15 @@ fails the build rather than getting documented.
 | --- | --- | --- | --- |
 | `@wavelo/core/loaders/ring` — one design, chosen at build time | 13,106 | 4.9 KB (5,018 B) | 5,632 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 17,426 | 5,782 | 6,656 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 58,284 | 12.0 KB (12,325 B) | 13,824 |
-| `@wavelo/core` + registry walk over all 82 designs | 58,287 | 12,333 | 13,824 |
-| `@wavelo/react` | 58,925 | 12,659 | 13,824 |
-| `@wavelo/vue` | 59,910 | 13,094 | 13,824 |
-| `@wavelo/angular` | 61,869 | 13,923 | 15,872 |
-| `@wavelo/svelte` | 58,476 | 12,424 | 13,824 |
-| `@wavelo/web-components` | 60,352 | 13,135 | 13,824 |
-| `@wavelo/vanilla` | 58,608 | 12,497 | 13,824 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 38,315 raw | 5,573 | — |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 59,410 | 12.3 KB (12,632 B) | 13,824 |
+| `@wavelo/core` + registry walk over all 83 designs | 59,413 | 12,642 | 13,824 |
+| `@wavelo/react` | 60,051 | 12,964 | 13,824 |
+| `@wavelo/vue` | 61,036 | 13,398 | 13,824 |
+| `@wavelo/angular` | 62,995 | 14,226 | 15,872 |
+| `@wavelo/svelte` | 59,602 | 12,729 | 13,824 |
+| `@wavelo/web-components` | 61,478 | 13,438 | 13,824 |
+| `@wavelo/vanilla` | 59,734 | 12,798 | 13,824 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 39,289 raw | 5,842 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a
 design chosen at build time must not carry the rest of the catalog, so it does not
@@ -32,7 +32,7 @@ trade — configuration that a page can set once instead of per loader:
   `npm run audit:customization`) rather than a hand-written kind guess.
 - The colour and dimension grammar got wider.
 
-Runtime bundles additionally carry the registry and the 82-entry bitset those lists
+Runtime bundles additionally carry the registry and the 83-entry bitset those lists
 are decoded from, which is why their budget is 13.5 KiB (15.5 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow by
 roughly 220 B per design added. Budgets sit about 12% above the measured value,
@@ -47,6 +47,10 @@ and `--wavelo-radius` are inserted into the declarations of the slices that draw
 them. A design that is not a skeleton does not load the stack rules at all, and the
 cost of the tokens is what an ancestor rule could not previously reach.
 
+`createRouteProgress` is not in any of the rows above, because nothing imports it
+unless a page asks for it: adding it to a runtime bundle costs 539 B gzipped, and a
+page that renders loaders without a route bar pays nothing.
+
 ## Why the numbers look like this
 
 Styles and markup are separate. A design's stylesheet slice is `baseCss` plus the
@@ -59,7 +63,7 @@ design never pays for a frame it cannot run. `npm run catalog` fails if a slice
 animates with a frame nobody imports, or re-imports one the base already ships.
 
 - Importing one design costs its slice: the `ring` entry point ships 2.2 KB of
-  ring rules rather than the 38 KB sheet for all 82 designs.
+  ring rules rather than the 39 KB sheet for all 83 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can
   render every design; it is paid once per page, not once per loader.

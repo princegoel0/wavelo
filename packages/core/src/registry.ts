@@ -7,10 +7,15 @@ import type { LoaderDefinition, ResolutionSource } from './types.js';
  * stylesheet by `scripts/honoured-options.mjs` and stored as a hex bitset. This is
  * what the docs, the gallery and the adapter prop tables advertise, so an option
  * that changes nothing cannot be listed.
+ *
+ * A design missing from the table yields no options rather than throwing: the
+ * measurement script itself renders every design, so it must be able to run against
+ * a catalog that has just grown. `npm run catalog` fails on the empty list instead,
+ * with the design's name, and `npm run catalog:generate` is what fixes it.
  */
 function optionsFor(definition: LoaderDefinition): string[] {
   const bits = honouredOptions[definition.id];
-  if (!bits) throw new Error(`honoured-options.ts has no entry for "${definition.id}"; run npm run catalog:generate`);
+  if (!bits) return [];
   const keys: string[] = [];
   for (let index = 0; index < honouredKeyNames.length; index++) {
     const digit = Number.parseInt(bits[bits.length - 1 - Math.floor(index / 4)], 16);

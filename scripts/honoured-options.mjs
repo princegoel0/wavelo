@@ -81,6 +81,13 @@ const SELF_CHECKS = [
   ['progress-scroll', 'speed', false],
   ['progress-scroll', 'paused', true],
   ['progress-scroll', 'direction', true],
+  // The view-driven bar belongs to neither the clock nor a caller-supplied value:
+  // the browser decides from the element's own travel through the scrollport.
+  ['progress-view', 'duration', false],
+  ['progress-view', 'speed', false],
+  ['progress-view', 'value', false],
+  ['progress-view', 'paused', true],
+  ['progress-view', 'direction', true],
   ['progress-bar', 'value', true],
   ['progress-bar', 'duration', false],
   ['dot-matrix', 'size', true],

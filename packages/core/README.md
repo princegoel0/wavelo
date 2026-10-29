@@ -27,7 +27,7 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 const result = orbitingDots({ label: 'Loading data' });
 ```
 
-The catalog holds 82 public IDs across 12 render kinds, and `src/loaders/*.ts`,
+The catalog holds 83 public IDs across 12 render kinds, and `src/loaders/*.ts`,
 `src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
 Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
 
@@ -92,7 +92,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 
 | Path | Contents |
 | --- | --- |
-| `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults |
+| `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults, `createRouteProgress` |
 | `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
 | `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
 | `@wavelo/core/loaders` | barrel over all 82 designs |
@@ -109,6 +109,23 @@ still wins. The properties it drives — `--wavelo-color`, `--wavelo-scrim`,
 `--wavelo-skeleton-base` and `--wavelo-skeleton-highlight` — can be set directly when
 a page wants a palette of its own, and `--wavelo-radius`, `--wavelo-ease`,
 `--wavelo-gap` and `--wavelo-z-index` reach the styling a config key does not cover.
+
+## Route progress
+
+```ts
+import { createRouteProgress } from '@wavelo/core';
+
+const bar = createRouteProgress({ color: '#6366f1' }, { trickle: 300, ceiling: 90, hold: 250 });
+bar.start();          // on the navigation
+bar.set(60);          // or report a real percentage
+bar.done();           // fill, hold, then take it out
+```
+
+The bar is the `progress-top` design mounted into a `display: contents` wrapper, so
+it adds no box of its own; `destroy()` takes it out immediately. It carries no label
+unless you give it one, because the page already announces a route change through
+focus movement. On a server nothing is scheduled or appended and every method is a
+no-op, so a component can create one unconditionally.
 
 ## Accessibility
 

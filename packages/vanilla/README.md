@@ -32,5 +32,15 @@ wavelo.render({ type: 'orbiting-dots' }); // same style, different design
 mountLoader(slot, wavelo.merge({ loading: busy }));
 ```
 
+`createRouteProgress` is the top-of-page bar for a router, mounted through the same
+renderer as everything else:
+
+```ts
+import { createRouteProgress } from '@wavelo/vanilla';
+
+const bar = createRouteProgress();
+window.addEventListener('hashchange', () => { bar.start(); render().then(() => bar.done()); });
+```
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

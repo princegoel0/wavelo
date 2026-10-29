@@ -5,7 +5,7 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 82 designs, each visually distinct, built from 12
+The catalog holds 83 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 
@@ -50,25 +50,64 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 const loading = orbitingDots({ label: 'Loading data' });
 ```
 
-## Scroll progress without JavaScript
+## Scroll and view progress without JavaScript
 
 `progress-scroll` is a reading-progress bar driven by a CSS scroll timeline: the
 browser maps the document's scroll position onto the fill, with no scroll
-listener, no state and no re-render.
+listener, no state and no re-render. `progress-view` is the same idea on a view
+timeline: the bar fills as the element it sits in travels through the viewport,
+which is what a per-section or scroll-reveal indicator needs.
 
 ```ts
 import { progressScroll } from '@wavelo/core/loaders/progress-scroll';
+import { progressView } from '@wavelo/core/loaders/progress-view';
 
-const bar = progressScroll({ label: 'Reading progress' });
+const page = progressScroll({ label: 'Reading progress' });
+const section = progressView({ label: 'Section progress' });
 ```
 
-It takes no `value`, because the percentage belongs to the page and the markup
-does not invent one: labelled, it renders `role="status"` rather than a
-`progressbar` carrying a fabricated `aria-valuenow`. It tracks the document
-(`scroll(root block)`), which keeps working inside `overflow: hidden` wrappers;
-set `animation-timeline` yourself to drive it from an inner scroll container.
-Where scroll timelines are unsupported the same keyframes sweep on the document
-clock, so the bar shows activity instead of an empty track.
+Neither takes a `value`, because the percentage belongs to the page and the markup
+does not invent one: labelled, they render `role="status"` rather than a
+`progressbar` carrying a fabricated `aria-valuenow`. `progress-scroll` tracks the
+document (`scroll(root block)`), which keeps working inside `overflow: hidden`
+wrappers. `progress-view` tracks its own element by default; to follow a different
+one, declare `view-timeline: --article block` on it and set
+`style={{ '--wavelo-timeline': '--article' }}`. Where these timelines are
+unsupported the same keyframes sweep on the document clock, so a bar shows
+activity instead of an empty track.
+
+## Route changes
+
+`createRouteProgress` is the top-of-page bar every app writes for itself: it creeps
+toward a ceiling while a route is loading, never claiming it is nearly finished, and
+takes itself out when told.
+
+```ts
+import { createRouteProgress } from '@wavelo/core';
+
+const bar = createRouteProgress();
+router.beforeEach(() => bar.start());
+router.afterEach(() => bar.done());
+```
+
+It carries no label by default, because a page announces a route change through its
+own focus movement; pass `{ label: 'Loading page' }` to say it anyway. `set(42)` pins
+the bar for a router that reports real progress, and nothing is scheduled or appended
+during server rendering.
+
+## Sizing that follows the page
+
+Every dimension accepts container and viewport units, so a loader can size itself to
+the box it is in rather than to a number chosen per call site:
+
+```ts
+renderLoader({ type: 'ring', size: '12cqi' }); // 12% of its query container
+```
+
+```css
+.card { container-type: inline-size }
+.card wavelo-loader { --wavelo-size: 25cqi }
+```
 
 ## Configure it once, then just use it
 
@@ -91,6 +130,7 @@ overrides that one loader:
 | `--wavelo-scrim` | the translucent layer of `overlay` and `fullscreen`, normally via `theme` | `#fff`, or `#0f172a` on a dark theme |
 | `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
 | `--wavelo-ease` | the timing function of each design's animation | the timing that design was authored with |
+| `--wavelo-timeline` | the named scroll or view timeline `progress-view` follows | the bar's own `view(block)` |
 | `--wavelo-stroke` | `strokeWidth` | `3px` |
 | `--wavelo-direction` | `direction` | `normal` |
 | `--wavelo-play-state` | `paused` | `running` |

@@ -77,6 +77,7 @@ const designDecisions = new Map([
   ['skeleton-dashboard', 'Application-role variant of skeleton; retain with documented dimensions.'],
   ['progress-steps', 'Progress-specific structure; retain and verify multiple step segments interactively.'],
   ['progress-scroll', 'Scroll-driven fill with no JavaScript; retain, and note it is Chromium-only today with a clock-driven sweep as the fallback.'],
+  ['progress-view', 'View-timeline fill with no JavaScript: the bar tracks its own travel through the viewport, and `--wavelo-timeline` names another subject. Same clock-driven sweep where view timelines are missing.'],
   ['inline', 'Application-role variant; retain because placement semantics differ.'],
   ['button', 'Application-role variant; retain because placement semantics differ.'],
   ['overlay', 'Application-role variant; retain because overlay semantics differ.'],

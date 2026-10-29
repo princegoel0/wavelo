@@ -28,6 +28,13 @@ const PROPS = [
 ];
 const VARS = ['--wavelo-size', '--wavelo-duration', '--wavelo-stroke', '--wavelo-direction', '--wavelo-play-state', '--wavelo-progress', '--wavelo-radius', '--wavelo-theme'];
 
+/**
+ * Designs whose fill comes from a scroll or view timeline, and the properties that
+ * makes position-derived rather than sheet-derived.
+ */
+const positionDriven = ['width', 'transform-origin', '--wavelo-progress'];
+const timelineDriven = new Map([['progress-scroll', positionDriven], ['progress-view', positionDriven]]);
+
 const [command, file] = process.argv.slice(2);
 const mode = process.argv.includes('--sliced') ? 'sliced' : 'full';
 const ids = loaderRegistry.map((loader) => loader.id);
@@ -138,6 +145,11 @@ if (command === 'isolated') {
         continue;
       }
       for (const [property, value] of Object.entries(reference)) {
+        // A fill the browser drives from the element's position is not a fact about
+        // the stylesheet: it differs between a page of every design and a page of
+        // one, for the same rules. The bindings that produce it - including which
+        // timeline `animation-timeline` names - are still compared.
+        if (timelineDriven.has(design) && timelineDriven.get(design).includes(property)) continue;
         if (row.style[property] !== value) mismatches.push(`${key} ${property}: ${JSON.stringify(value)} -> ${JSON.stringify(row.style[property])}`);
       }
     }
