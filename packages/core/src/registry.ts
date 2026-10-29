@@ -64,6 +64,12 @@ for (const definition of loaderRegistry) {
   definition.options = [...canonical.options];
 }
 
+/**
+ * Every design by public ID, including aliases. Resolving a `type` happens on each
+ * render, so it is a lookup rather than a scan of the catalog.
+ */
+const definitionsById = new Map(loaderRegistry.map((loader) => [loader.id, loader]));
+
 export const presetRegistry = [
   ...loaderRegistry.map((loader) => ({ id: loader.id, name: loader.name, type: loader.aliasOf ?? loader.id })),
   ...patternPresets.map(([id, type]) => ({ id, name: id.replace(/-/g, ' '), type }))
@@ -87,7 +93,7 @@ export interface ResolvedCatalogEntry {
 }
 
 function byId(id: string): LoaderDefinition | undefined {
-  return loaderRegistry.find((loader) => loader.id === id);
+  return definitionsById.get(id);
 }
 
 /** The design rendered for a catalog ID or a pattern preset, following aliases. */

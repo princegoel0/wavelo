@@ -113,6 +113,10 @@ const sheet = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/
 assert.ok(sheet.includes('.wavelo--ring') && sheet.includes('.wavelo--skeleton-card'), 'the shipped sheet is missing designs');
 assert.ok(sheet.includes('prefers-reduced-motion'), 'the shipped sheet lost the reduced-motion rules');
 
+const tokens = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/tokens.css'), 'utf8');
+assert.ok(tokens.includes(':root{') && tokens.includes('--wavelo-color:'), 'the tokens sheet does not declare the defaults');
+assert.ok(!tokens.includes('--wavelo-radius:'), 'tokens.css declares a property the designs do not agree on');
+
 const vanilla = await import('@wavelo/vanilla');
 assert.equal(typeof vanilla.mountLoader, 'function');
 assert.match(vanilla.createWavelo({ type: 'ring' }).render().html, /wavelo--ring/, 'registered defaults did not reach the render');

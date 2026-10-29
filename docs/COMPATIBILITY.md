@@ -17,10 +17,16 @@ The library does not render SVG, does not use JavaScript animation, and does not
 depend on the Web Animations API at runtime — the custom element and DOM helpers
 only read `document.head` and create elements.
 
-**Verified engine:** Chromium, through Playwright, in `npm run test:browser` and in
-CI. Firefox and Safari have not been exercised by this suite; the versions above
-are the requirement implied by the CSS features used, not a claim that they were
-tested.
+**Verified engines:** Chromium is exercised fully — computed styles, injection,
+accessibility, every design — by `npm run test:browser` and in CI. Firefox is
+exercised by a smoke suite (`npm run test:browser:firefox`, also in CI): that the
+sheet applies and the geometry, stroke, palette, `paused`, `direction`,
+`reducedMotion` and ancestor tokens all reach Gecko, that every design paints, and
+that the timeline designs run on the document clock there. Measured on Firefox 157:
+`animation-timeline: scroll()` and `view()` are **not** supported, so the documented
+fallback is what that engine actually gets. Safari has not been exercised; the
+versions above are the requirement implied by the CSS features used, not a claim that
+they were tested.
 
 ## Where a value comes from
 
@@ -40,6 +46,14 @@ inline any more: a page that sets `--wavelo-size` on `:root` would otherwise los
 the renderer's own default. Registration is per render tree rather than a module
 global, so a server that renders many requests in one process cannot leak one
 caller's theme into another's markup.
+
+A `type` that matched no design is reported the same way the value is: the result
+carries `resolution: 'default'` and `fallback: true`, and the element carries
+`data-wavelo-fallback="<what was asked for>"` next to the default design's own
+classes. A typo in a config object or an attribute is therefore visible in the
+inspector rather than something the page has to log. A preset that resolved
+(`resolution: 'preset'`) and an absent `type` carry no such attribute, because
+neither is a mistake.
 
 ## Configuration surface
 
@@ -186,6 +200,11 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —
   `tests/browser.test.mjs`, run by `npm run test:browser` in a dedicated CI job.
+- A Gecko smoke suite — sheet applied, geometry and stroke, the dark palette,
+  `paused`/`direction`/`reducedMotion`, ancestor tokens reaching the loader, every
+  design painting something, the custom element re-rendering, and the timeline
+  designs running on the document clock — `tests/browser-firefox.test.mjs`, run by
+  `npm run test:browser:firefox` in the same CI job.
 - The measured option table above, re-measured by `npm run audit:customization` in
   the same CI job.
 - Hydration is not configured or advertised by these adapters; they render

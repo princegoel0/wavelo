@@ -1165,3 +1165,59 @@ test('a page under a style-src CSP gets a nonce on every injected slice', async 
   assert.equal(read.display, 'inline-flex');
   assert.deepEqual(blocked, [], 'the page reported a CSP violation');
 });
+
+test('an unknown type on the element reports what was asked for', async () => {
+  await setContentPage(
+    '<wavelo-loader id="typo" type="rng" label="Loading"></wavelo-loader>' +
+    '<wavelo-loader id="preset" type="download-progress" label="Loading"></wavelo-loader>' +
+    '<wavelo-loader id="plain" label="Loading"></wavelo-loader>'
+  );
+  const read = await page.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const at = (id) => {
+      const element = document.getElementById(id).querySelector('.wavelo');
+      return { fallback: element.getAttribute('data-wavelo-fallback'), classes: element.className, label: element.getAttribute('aria-label') };
+    };
+    return { typo: at('typo'), preset: at('preset'), plain: at('plain') };
+  });
+  assert.equal(read.typo.fallback, 'rng', 'a mistyped attribute must be readable in the inspector');
+  assert.match(read.typo.classes, /wavelo--inline/, 'the default design renders in its place');
+  assert.equal(read.typo.label, 'Loading', 'the rest of the configuration still applies');
+  assert.equal(read.preset.fallback, null, 'a preset that resolved is not a mistake');
+  assert.match(read.preset.classes, /wavelo--progress-upload/);
+  assert.equal(read.plain.fallback, null, 'asking for no design is not a mistake either');
+});
+
+test('tokens.css declares the defaults without changing any design', async () => {
+  const ids = ['ring', 'three-dots', 'equalizer', 'gradient-bars', 'dot-matrix', 'skeleton-card', 'skeleton-line', 'progress-bar', 'progress-ring', 'progress-top', 'progress-scroll', 'overlay', 'fullscreen'];
+  const body = ids.map((id) => `<div data-id="${id}">${renderLoader({ type: id, label: id }).html}</div>`).join('');
+  const tokens = await readFile(resolve('packages/core/dist/tokens.css'), 'utf8');
+  const properties = ['width', 'height', 'borderTopWidth', 'borderRadius', 'color', 'backgroundColor', 'backgroundImage', 'animationDuration', 'animationPlayState', 'animationDirection', 'animationTimingFunction', 'zIndex', 'opacity', 'transform'];
+  const read = async (head) => {
+    await setContentPage(body, head);
+    await nextFrame();
+    return page.evaluate(({ ids, propertyList }) => {
+      for (const animation of document.getAnimations()) {
+        animation.pause();
+        if (animation.timeline === document.timeline) animation.currentTime = 0;
+      }
+      return ids.map((id) => {
+        const style = getComputedStyle(document.querySelector(`[data-id="${id}"] .wavelo`));
+        return propertyList.map((property) => `${property}:${style[property]}`).join(';');
+      });
+    }, { ids, propertyList: properties });
+  };
+
+  const plain = await read(`<style>${allStyles}</style>`);
+  const withTokens = await read(`<style>${allStyles}</style><style>${tokens}</style>`);
+  for (const [index, id] of ids.entries()) {
+    assert.equal(withTokens[index], plain[index], `${id} renders differently with tokens.css loaded`);
+  }
+
+  // The point of declaring them is that a page can change them: one :root override
+  // reaches every design that did not choose its own colour.
+  const themed = await read(`<style>${allStyles}</style><style>${tokens}:root{--wavelo-color:#123456}</style>`);
+  const colorOf = (row) => /color:([^;]*)/.exec(row)[1];
+  assert.equal(colorOf(themed[ids.indexOf('ring')]), 'rgb(18, 52, 86)', 'a :root token override must reach an unconfigured loader');
+  assert.notEqual(colorOf(plain[ids.indexOf('ring')]), 'rgb(18, 52, 86)');
+});

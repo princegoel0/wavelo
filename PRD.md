@@ -200,9 +200,9 @@ The proposed stack is:
 - CSS animations and transforms.
 - SVG for suitable vector-based animations.
 - Web Components for native browser integration.
-- pnpm workspaces.
+- npm workspaces.
 - A modern library build tool with explicit entry points and TypeScript declarations.
-- Vitest for unit tests.
+- Node's built-in test runner for unit and adapter tests.
 - Playwright for browser integration tests.
 - A documentation framework supporting interactive examples.
 - GitHub Actions or an equivalent CI system.
@@ -1097,8 +1097,7 @@ wavelo/
 │   └── workflows/
 ├── AGENTS.md
 ├── package.json
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
+├── tsconfig.json
 └── README.md
 ```
 
@@ -1134,6 +1133,14 @@ Follow semantic versioning.
 - Major: breaking API changes.
 
 Use prereleases for integration testing.
+
+Until `1.0.0` the whole surface is still being found, so a minor version (`0.x`) may
+change configuration keys, option meanings or entry points, and each such change is
+recorded in `CHANGELOG.md` under a `Breaking` line and in the migration guide. What
+`0.x` never does is leave a caller guessing: an option that stops applying is
+removed and reported, never silently ignored. From `1.0.0` the rules above apply in
+full, and the measured option table plus the browser suites are what make a
+"compatible" claim checkable.
 
 Each package must have an accurate version, dependency declaration, changelog and compatibility statement.
 

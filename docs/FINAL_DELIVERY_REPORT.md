@@ -24,8 +24,10 @@ No package was published to npm and no registry setting was changed.
   domino `2.1.8`
 
 Peer ranges are declared in [COMPATIBILITY.md](COMPATIBILITY.md). One version per
-declared range was tested; that does not prove compatibility across the whole range,
-and only Chromium was exercised — Firefox and Safari are untested here.
+declared range was tested; that does not prove compatibility across the whole range.
+Chromium is exercised fully; Firefox 157 by a smoke suite (sheet applied, geometry,
+palette, motion options, ancestor tokens, every design painting, the custom element,
+and the timeline designs on the document clock). Safari is not exercised here.
 
 ## What the library is
 
@@ -62,7 +64,8 @@ and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
 | `npm run docs:check` | Passed: 83 designs, 27 configuration keys, 19 custom properties and every bundle figure match the built packages, in 12 documents |
 | `npm run measure` | Passed: 10 entry points inside budget; single design 5,018 B gzip, runtime renderer 12,692 B |
-| `npm run test:browser` | Passed: 30 Chromium tests (see below) |
+| `npm run test:browser` | Passed: 32 Chromium tests (see below) |
+| `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 83 designs |
 | `npm run audit:layout` | Passed: 80 of 83 designs cost no layout per frame; the three that do are each accounted for |
 | `npm run audit:visual` | Passed: 83-card contact sheet, desktop and 375px mobile |
@@ -185,9 +188,12 @@ describes the pre-remediation renderer and is kept as history.
    for each package.
 2. `RELEASE_ENABLED` is `false`, so the publish job is skipped on every run. Flipping
    it is the owner's decision and has not been made here.
-3. Only Chromium is exercised. Safari and Firefox are untested, and the documented
-   engine floor is inferred from the CSS features used — notably CSS scroll-driven
-   animations, which the timeline designs fall back from on the document clock.
+3. Firefox is exercised by a smoke suite, not the full one: 6 tests covering the
+   sheet applying, the motion and theme options, ancestor tokens, visibility of every
+   design, the custom element and the timeline fallbacks. Safari remains untested, and
+   the documented engine floor is inferred from the CSS features used — notably CSS
+   scroll-driven animations, which were measured as unsupported in Firefox 157, where
+   the timeline designs run on the document clock instead.
 4. Framework compatibility is demonstrated at one version per declared peer range.
 5. Hydration is not implemented or claimed by the adapters.
 6. Subjective motion quality still needs a human pass in a browser; the automated

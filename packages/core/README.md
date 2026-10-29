@@ -99,6 +99,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 | `@wavelo/core/css` | `kindStyles`, `baseCss`, `allStyles`, `designStyles` |
 | `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
 | `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |
+| `@wavelo/core/tokens.css` | the `--wavelo-*` defaults as a `:root` block, for a page that wants them declared rather than inherited |
 
 ## Theme
 
