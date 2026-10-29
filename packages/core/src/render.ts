@@ -37,7 +37,8 @@ const PART_COUNTS: Record<string, number> = {
   'thinking-glow': 1,
   'stream-cursor': 1,
   'neural-grid': 9,
-  'comet-orbit': 1
+  'comet-orbit': 1,
+  'progress-ai-generate': 1
 };
 
 /**
@@ -56,6 +57,33 @@ const SKELETON_TRACKS: Record<string, number> = {
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
 
+/** Designs that fill in whole units, so each one carries its own filled or empty state. */
+const DISCRETE_PROGRESS = ['progress-steps', 'progress-dots-fill', 'progress-multi-step', 'progress-orbit-fill'];
+const DEFAULT_STEPS: Record<string, number> = { 'progress-orbit-fill': 6 };
+
+/**
+ * The parts of a determinate design. A single bar is one track; a design that counts
+ * in units needs each unit marked, because CSS cannot compare a value against an
+ * index, and a queue gives every file its own fraction of the same value.
+ */
+function progressParts(type: string, config: NormalizedLoaderConfig): string {
+  const part = (extra: string) => `<span class="wavelo__part" aria-hidden="true"${extra}></span>`;
+  if (type === 'progress-upload-multi') {
+    const files = config.count ?? 3;
+    const filled = ((config.value ?? 35) / config.max) * files;
+    return Array.from({ length: files }, (_, index) => {
+      const level = Math.round(Math.max(0, Math.min(1, filled - index)) * 100);
+      return part(` style="--wavelo-progress:${level}%"`);
+    }).join('');
+  }
+  if (DISCRETE_PROGRESS.includes(type)) {
+    const steps = config.count ?? DEFAULT_STEPS[type] ?? 5;
+    const done = Math.ceil(((config.value ?? 35) / config.max) * steps);
+    return Array.from({ length: steps }, (_, index) => part(` data-wavelo-step="${index < done ? 'filled' : 'empty'}"`)).join('');
+  }
+  return part('');
+}
+
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
@@ -67,19 +95,7 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
     if (type === 'skeleton-line') return config.count && config.count > 1 ? many(config.count) : '';
     return many(config.count ?? SKELETON_TRACKS[type] ?? 5);
   }
-  if (kind === 'progress') {
-    if (type === 'progress-steps') {
-      // Steps are discrete: a value fills whole steps, and the same 35% default
-      // used for `--wavelo-progress` decides the fill when no value is given.
-      const steps = config.count ?? 5;
-      const filled = Math.ceil(((config.value ?? 35) / config.max) * steps);
-      return Array.from(
-        { length: steps },
-        (_, index) => `<span class="wavelo__part" aria-hidden="true" data-wavelo-step="${index < filled ? 'filled' : 'empty'}"></span>`
-      ).join('');
-    }
-    return part;
-  }
+  if (kind === 'progress') return progressParts(type, config);
   if (type === 'svg-star') return SVG_STAR;
   if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
   return many(KIND_COUNTS[kind] ?? 1);
@@ -138,6 +154,10 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     chosen('direction') ? `--wavelo-direction:${config.direction}` : '',
     chosen('paused') ? `--wavelo-play-state:${config.paused ? 'paused' : 'running'}` : '',
     chosen('value') ? `--wavelo-progress:${(config.value! / config.max) * 100}%` : '',
+    // The same value twice, once as a fraction to fill to and once as the whole
+    // percentage to print. Only determinate designs pay for it, and it is the
+    // percentage rather than `value` because a bar at 40 of 80 reads 50%.
+    progressValue ? `--wavelo-count:${Math.round((config.value! / config.max) * 100)}` : '',
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
   ]
     .filter(Boolean)
@@ -163,11 +183,15 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
   // costs nothing when the type resolves.
   const diagnostics: Attributes =
     resolution === 'default' && typeof requestedType === 'string' && requestedType ? { 'data-wavelo-fallback': requestedType } : {};
+  // `attr()` is how a value description reaches a pseudo-element's content, so the
+  // label a design prints is the same string the assistive technology is told.
+  const valueLabel: Attributes = config.valueText ? { 'data-wavelo-value-text': config.valueText } : {};
   const html =
     `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +
     attributes(dataAttributes) +
     attributes(attrs) +
+    attributes(valueLabel) +
     attributes(diagnostics) +
     `>${parts(definition.kind, definition.id, config)}</span>`;
   return {

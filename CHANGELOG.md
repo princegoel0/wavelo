@@ -9,7 +9,7 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 98 public IDs, each with its own implementation and no deprecated aliases. A
+- 111 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,
@@ -23,6 +23,18 @@ Not yet published.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.
+- Thirteen determinate progress designs, because a level is not a spinner: `battery`,
+  `half-ring`, `wave-fill`, `count`, `dots-fill`, `label-inline`, `gradient-ring`,
+  `multi-step`, `upload-multi`, `ai-generate`, `skill`, `timer` and `orbit-fill`. Two of
+  them are the interesting ones. `count` prints its own percentage with a CSS counter
+  over a registered `<integer>` property, so the number animates to its new value with no
+  timer, no JavaScript and no re-render; `label-inline` prints the caller's `valueText`
+  through `attr()`, which is the same string `aria-valuetext` carries, so the label and the
+  announcement cannot drift apart. A queue of files divides one value across its tracks,
+  and the renderer decides which units are filled because CSS cannot compare a value
+  against an index.
+- `--wavelo-count`, the twentieth custom property: the same determinate value as a whole
+  percentage, written only for the designs that can draw a value.
 - `progress-scroll`: a reading-progress bar driven by a CSS scroll timeline
   (`animation-timeline: scroll(root block)`), so the document's scroll position
   fills the bar with no JavaScript, no scroll listener and no re-render. It takes

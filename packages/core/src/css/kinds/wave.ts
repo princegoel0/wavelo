@@ -7,6 +7,7 @@ import { css as horizontalPulseFrames } from '../keyframes/horizontal-pulse.js';
 import { css as helixFrames } from '../keyframes/helix.js';
 import { css as helixLineFrames } from '../keyframes/helix-line.js';
 import { css as tokenFrames } from '../keyframes/token.js';
+import { css as generateFrames } from '../keyframes/generate.js';
 
 export const waveCss = `
 .wavelo--wave{gap:var(--wavelo-gap,3px)}
@@ -38,4 +39,9 @@ export const waveCss = `
 .wavelo--token-stream .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.64)}
 .wavelo--token-stream .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.96)}
 .wavelo--token-stream .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -1.28)}
-${highlightFrames}${stripeFrames}${waveFrames}${waveformFrames}${waveformReverseFrames}${horizontalPulseFrames}${helixFrames}${helixLineFrames}${tokenFrames}`;
+/* Generation has no percentage to show, so it says so: a bright band travels an empty
+   track. Indeterminate on purpose, which is why it is a wave-kind design rather than a
+   progress one — it must not advertise a value it cannot draw. */
+.wavelo--progress-ai-generate{width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 15%,transparent);overflow:hidden}
+.wavelo--progress-ai-generate .wavelo__part{width:45%;height:100%;border-radius:inherit;background:linear-gradient(90deg,transparent,var(--wavelo-secondary-color,#a5b4fc),currentColor,var(--wavelo-secondary-color,#a5b4fc),transparent);animation:wavelo-generate calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${highlightFrames}${stripeFrames}${waveFrames}${waveformFrames}${waveformReverseFrames}${horizontalPulseFrames}${helixFrames}${helixLineFrames}${tokenFrames}${generateFrames}`;

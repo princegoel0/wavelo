@@ -4,9 +4,10 @@ import { readFile } from 'node:fs/promises';
 
 const entries = {
   'individual-loader': "import { ring } from '@wavelo/core/loaders/ring'; console.log(ring({ label: 'Loading' }));",
-  // The most crowded kind decides what "one design" costs, so it is sampled too:
-  // the skeleton slice now carries six composite layouts, and `ring` cannot show that.
-  'busiest-loader': "import { skeletonCard } from '@wavelo/core/loaders/skeleton-card'; console.log(skeletonCard());",
+  // The most crowded kind decides what "one design" costs, so it is sampled too. It
+  // moved with the progress tranche: twelve determinate designs made `progress` the
+  // largest slice in the library, above the six composite layouts in `skeleton`.
+  'busiest-loader': "import { progressBattery } from '@wavelo/core/loaders/progress-battery'; console.log(progressBattery());",
   'two-loaders': "import { ring } from '@wavelo/core/loaders/ring'; import { skeletonCard } from '@wavelo/core/loaders/skeleton-card'; console.log(ring(), skeletonCard());",
   'core-renderer': "import { renderLoader } from '@wavelo/core'; console.log(renderLoader({ type: 'orbiting-dots' }));",
   'full-catalog': "import { loaderRegistry, renderLoader } from '@wavelo/core'; console.log(loaderRegistry.map(({ id }) => renderLoader({ type: id })));",
@@ -19,24 +20,31 @@ const entries = {
 };
 
 const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
-// The number that backs the "modular catalog" claim is `individual-loader`: a design
-// chosen at build time carries the shared base plus exactly one render-kind slice, and
-// never another kind's rules. It is not per-design: the rules of every design that
-// shares that kind ship with it, so a design's cost moves when a sibling joins its kind.
-// The streaming tranche measured that: two new ring designs took `ring` from 5,054 B to
-// 5,482 B, and four composite skeletons took `ring + skeleton-card` from 5,820 B to
-// 7,053 B. Adapters and `renderLoader` select by string at runtime, so they carry every
-// slice, the registry and the measured option table, and they grow with each design
-// added (~220 B gzipped at the time of writing); their budgets are set from that reality
-// with ~12% headroom rather than pretending to be per-design.
-const runtime = 18.5 * 1024;
+// Two separate growth mechanisms show up in these numbers, and conflating them is how
+// the last set of comments ended up claiming something false.
+//
+// 1. A design chosen at build time carries the shared base, the renderer, and exactly
+//    one render-kind slice — never another kind's rules. Two things still move it:
+//    a sibling joining its kind (the two ring designs took `ring` from 5,054 B to
+//    5,482 B), and the renderer itself, because `render.ts` is in every bundle. The
+//    progress tranche proved the second: thirteen designs whose level comes from a
+//    value needed per-part state in the renderer, and that cost every design ~227 B
+//    gzipped, including a ring, which uses none of it.
+// 2. Adapters and `renderLoader` select by string at runtime, so they carry every
+//    slice, the registry and the measured option table, and grow by roughly 220 B
+//    gzipped per design added (13 designs: 17,013 B to 19,872 B).
+//
+// Budgets are set from those two realities with ~12% headroom, not from a per-design
+// ideal.
+const runtime = 22 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
   // reach it: 3,542 B before that change, 4,612 B after, 5,018 B with the visibility,
   // track-count and inline options, 5,482 B once the conic and neon rings joined the ring
-  // slice. The saving lands per page instead — a default loader now carries no `style`
-  // attribute at all, where it used to carry about 180 bytes of tokens, and a loader with
+  // slice, 5,709 B once the renderer learned to fill a design from a value. The saving
+  // lands per page instead — a default loader now carries no `style` attribute at all,
+  // where it used to carry about 180 bytes of tokens, and a loader with
   // `loading: false` carries nothing.
   //
   // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
@@ -44,15 +52,15 @@ const budgets = {
   // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
   // keys cost a single design 407 B and why the styling tokens cost more than that —
   // they are new rules in every slice, not new reads of existing ones.
-  'individual-loader': 6 * 1024,
-  'busiest-loader': 7 * 1024,
-  'two-loaders': 8 * 1024,
+  'individual-loader': 6.5 * 1024,
+  'busiest-loader': 8.5 * 1024,
+  'two-loaders': 8.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 19.5 * 1024,
+  angular: 23 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

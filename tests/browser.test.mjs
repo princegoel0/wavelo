@@ -261,7 +261,7 @@ test('every determinate design reflects its value in the browser', async () => {
   const ids = loaderRegistry.filter((loader) => loader.kind === 'progress').map((loader) => loader.id);
   const values = [0, 50, 100];
   const body = ids
-    .flatMap((id) => values.map((value) => `<div data-key="${id}@${value}">${renderLoader({ type: id, value, max: 100, label: 'Working' }).html}</div>`))
+    .flatMap((id) => values.map((value) => `<div data-key="${id}@${value}">${renderLoader({ type: id, value, max: 100, label: 'Working', valueText: `${value}% done` }).html}</div>`))
     .join('');
   await setContentPage(body);
 
@@ -285,6 +285,11 @@ test('every determinate design reflects its value in the browser', async () => {
         backgroundImage: rootStyle.backgroundImage,
         partCount: parts.length,
         partWidth: parts.length ? parts[0].getBoundingClientRect().width : 0,
+        partWidths: parts.map((part) => part.getBoundingClientRect().width),
+        partAfterWidths: parts.map((part) => Number.parseFloat(getComputedStyle(part, '::after').width)),
+        partHeight: parts.length ? parts[0].getBoundingClientRect().height : 0,
+        counterReset: rootStyle.counterReset,
+        afterContent: getComputedStyle(root, '::after').content,
         filled: parts.filter((part) => part.dataset.waveloStep === 'filled').length,
         animation: getComputedStyle(animated).animationName,
         playState: live ? live.playState : 'none'
@@ -338,6 +343,50 @@ test('every determinate design reflects its value in the browser', async () => {
   assert.equal(top.position, 'fixed');
   assert.equal(top.rootWidth, top.viewport, 'progress-top must span the viewport');
   assert.ok(Math.abs(top.partWidth - top.viewport / 2) <= 1, `progress-top at 50 fills ${top.partWidth}px of ${top.viewport}px`);
+
+  // The tranche. Every one of these is exempt from "must be animating" in the visual
+  // audit, because a level that reports 40% should sit still — so the level itself is
+  // what has to be measured here, or the exemption would be a free pass.
+  for (const id of ['progress-battery', 'progress-skill', 'progress-label-inline', 'progress-count']) {
+    const widths = values.map((value) => at(id, value).partWidth);
+    const track = at(id, 100).partWidth;
+    assert.ok(widths[0] < widths[1] && widths[1] < widths[2], `${id} level is not monotonic in value: ${widths}`);
+    assert.ok(Math.abs(widths[1] - track / 2) <= 1, `${id} at 50 fills ${widths[1]}px of a ${track}px track`);
+  }
+  // A countdown reads the same value backwards: more elapsed, less drawn.
+  const timer = values.map((value) => at('progress-timer', value).partWidth);
+  assert.ok(timer[0] > timer[1] && timer[1] > timer[2], `countdown does not empty as the value climbs: ${timer}`);
+  // A liquid level is a height rather than a width.
+  const heights = values.map((value) => at('progress-wave-fill', value).partHeight);
+  assert.ok(heights[0] < heights[1] && heights[1] < heights[2], `wave fill is not monotonic: ${heights}`);
+  // A gauge and a gradient ring each sweep half a turn, so the stop is half the value.
+  for (const value of values) {
+    for (const id of ['progress-half-ring', 'progress-gradient-ring']) {
+      const image = at(id, value).backgroundImage;
+      assert.ok(image.includes('conic-gradient'), `${id}@${value} has no conic fill: ${image}`);
+      assert.ok(image.includes(`${value / 2}%`), `${id}@${value} does not sweep ${value / 2}% of a turn: ${image}`);
+    }
+  }
+  // Discrete units, counted.
+  const discrete = {
+    'progress-dots-fill': { 0: 0, 50: 3, 100: 5 },
+    'progress-multi-step': { 0: 0, 50: 3, 100: 5 },
+    'progress-orbit-fill': { 0: 0, 50: 3, 100: 6 }
+  };
+  for (const [id, expected] of Object.entries(discrete)) {
+    for (const value of values) {
+      assert.equal(at(id, value).filled, expected[value], `${id}@${value} filled ${at(id, value).filled}`);
+    }
+  }
+  // A queue divides one value: at half of three files, one is done, one is half, one waits.
+  const queue = at('progress-upload-multi', 50).partAfterWidths;
+  assert.ok(Math.abs(queue[1] - queue[0] / 2) <= 1, `the second file at 50% of a queue is ${queue[1]}px against ${queue[0]}px`);
+  assert.equal(queue[2], 0, 'a file the value has not reached must be empty');
+  // The counted bar prints the percentage; the labelled bar prints the caller's text.
+  for (const value of values) {
+    assert.match(at('progress-count', value).counterReset, new RegExp(`wavelo-count ${value}$`), `counter at ${value}: ${at('progress-count', value).counterReset}`);
+  }
+  assert.match(at('progress-label-inline', 50).afterContent, /50% done/, 'the printed label is not the value text');
 });
 
 test('the scroll-driven bar follows the document scroll position without JavaScript', async () => {
@@ -523,11 +572,18 @@ test('each design renders what its name says', async () => {
     'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
-    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit'
+    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit',
+    'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
+    'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
+    'progress-skill', 'progress-timer', 'progress-orbit-fill'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
     .join('');
-  await setContentPage(body);
+  // The label design only has something to print when the caller supplies the text, so
+  // it is rendered a second way here rather than changing the configuration every other
+  // design is rendered with.
+  const labelled = `<div data-case="labelled">${renderLoader({ type: 'progress-label-inline', value: 60, max: 100, label: 'Uploading', valueText: '60% done' }).html}</div>`;
+  await setContentPage(`${body}${labelled}`);
 
   const rows = await page.evaluate(() =>
     [...document.querySelectorAll('[data-case]')].map((wrap) => {
@@ -543,7 +599,7 @@ test('each design renders what its name says', async () => {
       const partStyle = parts.length ? getComputedStyle(parts[0]) : null;
       const pseudo = (which) => {
         const s = getComputedStyle(root, which);
-        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth, mask: `${s.maskImage} ${s.webkitMaskImage}` };
+        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth, mask: `${s.maskImage} ${s.webkitMaskImage}`, content: s.content };
       };
       return {
         id: wrap.dataset.case,
@@ -565,6 +621,10 @@ test('each design renders what its name says', async () => {
         partRadius: partStyle ? partStyle.borderRadius : '-',
         partBorderWidth: partStyle ? partStyle.borderTopWidth : '-',
         partRightColor: partStyle ? partStyle.borderRightColor : '-',
+        counterReset: style.counterReset,
+        partCounter: partStyle ? partStyle.counterIncrement : '-',
+        partAfterContent: partStyle ? getComputedStyle(parts[0], '::after').content : '-',
+        partTransforms: parts.map((part) => getComputedStyle(part).transform),
         partDelays: parts.map((part) => getComputedStyle(part).animationDelay),
         partAnimations: [...new Set(parts.map((part) => getComputedStyle(part).animationName))],
         before: pseudo('::before'),
@@ -678,6 +738,34 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('trip-orbit').partAnimations, ['wavelo-trip']);
   assert.ok(Number.parseFloat(at('trip-orbit').partBorderWidth) > 0, 'an arc is drawn with a border');
   assert.equal(at('trip-orbit').partRightColor, 'rgba(0, 0, 0, 0)', 'one side of an arc is open');
+
+  // The progress tranche. Each of these promises a mechanism in its description, so the
+  // mechanism is what gets checked: a mask that carves a band, a counter that stands in
+  // for JavaScript, a crest that rolls on the compositor.
+  assert.equal(at('progress-battery').parts, 1);
+  assert.ok(at('progress-battery').after, 'a battery must draw its terminal');
+  assert.ok(Number.parseFloat(at('progress-battery').borderWidth) > 0, 'the shell is a border, not a fill');
+  assert.match(at('progress-half-ring').mask, /radial-gradient/, 'the gauge must be carved to a band');
+  assert.match(at('progress-half-ring').backgroundImage, /conic-gradient/);
+  assert.deepEqual(at('progress-wave-fill').partAnimations, ['wavelo-wave-roll'], 'the crest must roll on the water itself');
+  assert.match(at('progress-count').counterReset, /^wavelo-count/, 'the number is a CSS counter, not a timer');
+  assert.ok(at('labelled').after, 'the label needs somewhere to be printed');
+  assert.match(at('labelled').after.content, /60% done/, 'the label is the same string aria-valuetext carries');
+  assert.equal(at('progress-dots-fill').parts, 5);
+  assert.equal(at('progress-dots-fill').partRadius, '50%', 'units drawn as dots');
+  assert.match(at('progress-gradient-ring').mask, /radial-gradient/);
+  assert.match(at('progress-gradient-ring').backgroundImage, /conic-gradient/);
+  assert.equal(at('progress-multi-step').parts, 5);
+  assert.equal(at('progress-multi-step').partCounter, 'wavelo-step 1', 'each step counts itself');
+  assert.match(at('progress-multi-step').partAfterContent, /counter\(wavelo-step\)/, 'each step labels itself');
+  assert.equal(at('progress-upload-multi').parts, 3, 'a queue shows one track per file');
+  assert.equal(at('progress-ai-generate').parts, 1, 'an indeterminate band is one element');
+  assert.deepEqual(at('progress-ai-generate').partAnimations, ['wavelo-generate']);
+  assert.match(at('progress-ai-generate').partBackground, /linear-gradient/);
+  assert.equal(at('progress-skill').parts, 1);
+  assert.equal(at('progress-timer').parts, 1);
+  assert.equal(at('progress-orbit-fill').parts, 6, 'six stations around the ring');
+  assert.equal(new Set(at('progress-orbit-fill').partTransforms).size, 6, 'each station sits at its own angle');
 });
 
 test('no two designs in the catalog render identically', async () => {

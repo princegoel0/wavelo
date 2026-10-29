@@ -59,7 +59,7 @@ const PROPS = [
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderTopStyle', 'borderTopColor',
   'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderImageSource', 'borderRadius', 'backgroundImage',
   'backgroundColor', 'color', 'fill', 'opacity', 'transform', 'inset', 'clipPath', 'boxShadow', 'content',
-  'verticalAlign', 'WebkitMaskImage', 'maskImage',
+  'verticalAlign', 'WebkitMaskImage', 'maskImage', 'counterReset', 'counterIncrement',
   'animationName', 'animationDuration', 'animationDirection', 'animationPlayState', 'animationDelay', 'animationIterationCount', 'animationTimeline'
 ];
 
@@ -133,7 +133,29 @@ const SELF_CHECKS = [
   ['ai-shimmer', 'count', false],
   ['skeleton-inbox', 'count', true],
   ['skeleton-inbox', 'height', false],
-  ['skeleton-code', 'strokeWidth', false]
+  ['skeleton-code', 'strokeWidth', false],
+  // The progress tranche. A counted bar is the interesting case: its number is drawn by
+  // a CSS counter, whose computed `content` never resolves, so the probe reads the
+  // counter-reset that consumes the registered integer instead — which only a design
+  // that actually uses the token can report.
+  ['progress-count', 'value', true],
+  ['progress-label-inline', 'valueText', true],
+  ['progress-ai-generate', 'value', false],
+  ['progress-ai-generate', 'duration', true],
+  ['progress-battery', 'duration', false],
+  ['progress-battery', 'strokeWidth', true],
+  ['progress-half-ring', 'strokeWidth', true],
+  ['progress-half-ring', 'value', true],
+  ['progress-gradient-ring', 'secondaryColor', true],
+  ['progress-gradient-ring', 'value', true],
+  ['progress-wave-fill', 'value', true],
+  ['progress-wave-fill', 'duration', true],
+  ['progress-dots-fill', 'count', true],
+  ['progress-multi-step', 'count', true],
+  ['progress-upload-multi', 'count', true],
+  ['progress-orbit-fill', 'count', true],
+  ['progress-timer', 'value', true],
+  ['progress-skill', 'value', true]
 ];
 
 async function fingerprintPage(browser, overrides) {
