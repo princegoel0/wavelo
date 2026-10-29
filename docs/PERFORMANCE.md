@@ -67,18 +67,18 @@ Gzipped together, as shipped — the cheapest design in each kind:
 | `overlay` | 1,322 | `orbit` | 1,766 |
 | `bars` | 1,499 | `ring` | 1,773 |
 | `progress` | 1,511 | `shape` | 1,841 |
-| `pulse` | 1,677 | `wave` | 1,898 |
-| `scroll` | 1,678 | `dots` | 2,111 |
+| `pulse` | 1,677 | `wave` | 1,903 |
+| `scroll` | 1,678 | `dots` | 2,159 |
 | `rings` | 1,717 | `skeleton` | 2,557 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,025 bytes of that. The whole catalog
-sheet is 8,289 bytes gzipped, loaded once, for all 98 designs.
+sheet is 8,343 bytes gzipped, loaded once, for all 98 designs.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
 design in that kind, which is why the five new skeleton designs took `skeleton` from
 1,747 to 2,557 bytes and the three new dot-based designs took `dots` from 1,602 to
-2,111. A design in a crowded kind costs more than a design in a quiet one, whatever
+2,159. A design in a crowded kind costs more than a design in a quiet one, whatever
 its own rules.
 
 Importing one design's entry point costs the renderer, validation and that slice:

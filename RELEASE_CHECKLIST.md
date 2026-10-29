@@ -44,7 +44,11 @@ Audited version: `0.1.0`
   sampled while frames render, so two identical pages could freeze at different
   transforms and credit a key no rule reads. It now settles two frames from the same
   scroll offset before reading, and compares the mask, so a stroke that carves a ring is
-  measured rather than assumed.
+  measured rather than assumed. `npm run audit:layout` had the same class of bug: it
+  stacked 150 copies in normal flow, so most were off screen, Chromium did not animate
+  them, and one design measured 120 layouts on a run and 0 on the next — which the
+  audit read as "this design stopped costing layout". It now keeps every copy inside the
+  viewport, and three consecutive runs agree to within 5%.
 - [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
   Chromium through computed styles and `document.getAnimations()` play-states,
   and confirmed the assertions fail if the CSS defect is reintroduced.

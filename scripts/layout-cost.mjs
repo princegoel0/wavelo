@@ -30,8 +30,15 @@ try {
   for (const design of loaderRegistry) {
     if (design.deprecated) continue;
     const body = Array.from({ length: copies }, () => renderLoader({ type: design.id, label: design.name }).html).join('');
+    // Every copy has to be on screen while the window is measured. Chromium does not
+    // animate boxes it cannot see, so 150 copies stacked in normal flow put about 18 of
+    // them in the viewport and the rest contribute nothing: the same design then
+    // measures 120 layouts on one run and 0 on another, and a 0 reads as "no longer
+    // costs layout". A fixed grid the size of the viewport keeps all of them painted.
+    const cols = Math.ceil(Math.sqrt(copies));
+    const stage = `<div style="position:fixed;inset:0;display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));grid-auto-rows:minmax(0,1fr);align-items:center;justify-items:center;overflow:hidden">${body}</div>`;
     const page = await browser.newPage();
-    await page.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body><div>${body}</div></body></html>`);
+    await page.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body>${stage}</body></html>`);
     // A scroll-driven animation only advances when the page moves, so measuring it
     // still would report no cost at all. Give the document something to scroll and
     // keep it moving for the whole window.
@@ -65,8 +72,11 @@ try {
   await browser.close();
 }
 
-const costly = rows.filter((row) => row.layouts > copies / 10).sort((a, b) => b.layouts - a.layouts);
-console.log(`${copies} copies of ${rows.length} designs, ${seconds}s each:`);
+// A design that re-lays-out on every frame measures about 60 layouts per second of the
+// window (120 across two), because one layout pass covers all 150 copies. Anything above
+// a sixth of that is not noise; anything below is a design that does not dirty layout.
+const costly = rows.filter((row) => row.layouts > seconds * 10).sort((a, b) => b.layouts - a.layouts);
+console.log(`${copies} copies of ${rows.length} designs, ${seconds}s each, all copies in the viewport:`);
 for (const row of costly) {
   const note = accepted[row.id] ? `accepted: ${accepted[row.id]}` : 'NOT FREE';
   console.log(`  ${row.id}: ${row.layouts} layouts, ${row.styles} style recalculations (${note})`);

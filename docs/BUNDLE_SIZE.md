@@ -9,15 +9,15 @@ fails the build rather than getting documented.
 | `@wavelo/core/loaders/ring` — one design, chosen at build time | 14,894 | 5.4 KB (5,482 B) | 6,144 |
 | `@wavelo/core/loaders/skeleton-card` — the busiest kind | 19,159 | 6,248 | 7,168 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 23,383 | 7,053 | 8,192 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 75,554 | 15.7 KB (16,057 B) | 18,944 |
-| `@wavelo/core` + registry walk over all 98 designs | 75,557 | 16,067 | 18,944 |
-| `@wavelo/react` | 76,386 | 16,477 | 18,944 |
-| `@wavelo/vue` | 77,371 | 16,913 | 18,944 |
-| `@wavelo/angular` | 79,328 | 17,741 | 19,968 |
-| `@wavelo/svelte` | 75,746 | 16,156 | 18,944 |
-| `@wavelo/web-components` | 77,813 | 16,963 | 18,944 |
-| `@wavelo/vanilla` | 76,076 | 16,313 | 18,944 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 52,693 raw | 8,289 | — |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 75,808 | 15.7 KB (16,105 B) | 18,944 |
+| `@wavelo/core` + registry walk over all 98 designs | 75,811 | 16,115 | 18,944 |
+| `@wavelo/react` | 76,640 | 16,526 | 18,944 |
+| `@wavelo/vue` | 77,625 | 16,959 | 18,944 |
+| `@wavelo/angular` | 79,582 | 17,789 | 19,968 |
+| `@wavelo/svelte` | 76,000 | 16,205 | 18,944 |
+| `@wavelo/web-components` | 78,067 | 17,013 | 18,944 |
+| `@wavelo/vanilla` | 76,330 | 16,360 | 18,944 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 52,947 raw | 8,343 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -69,7 +69,7 @@ design never pays for a frame it cannot run. `npm run catalog` fails if a slice
 animates with a frame nobody imports, or re-imports one the base already ships.
 
 - Importing one design costs its slice: the `ring` entry point ships 3.7 KB of ring
-  rules (1.8 KB gzipped together with the base) rather than the 52.7 KB sheet for all
+  rules (1.8 KB gzipped together with the base) rather than the 52.9 KB sheet for all
   98 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can

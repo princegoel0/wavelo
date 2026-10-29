@@ -64,7 +64,7 @@ and the timeline designs on the document clock). Safari is not exercised here.
 | `npm run catalog` | Passed: 98 IDs / 98 active / 143 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
 | `npm run docs:check` | Passed: 98 designs, 27 configuration keys, 19 custom properties and every bundle figure match the built packages, in 12 documents |
-| `npm run measure` | Passed: 11 entry points inside budget; `ring` 5,482 B gzip (budget 6,144), the busiest kind `skeleton-card` 6,248 B (budget 7,168), runtime renderer 16,057 B (budget 18,944) |
+| `npm run measure` | Passed: 11 entry points inside budget; `ring` 5,482 B gzip (budget 6,144), the busiest kind `skeleton-card` 6,248 B (budget 7,168), runtime renderer 16,105 B (budget 18,944) |
 | `npm run test:browser` | Passed: 32 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 98 designs |

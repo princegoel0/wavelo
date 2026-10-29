@@ -37,8 +37,9 @@ export const dotsCss = `
 .wavelo--typing-dots .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 6);height:calc(var(--wavelo-size,2.5rem) / 6);animation:wavelo-typing-dot calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--typing-dots .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * .18)}
 .wavelo--typing-dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * .36)}
-/* Three small arcs on the same sweep, one third of a turn apart. */
-.wavelo--trip-orbit .wavelo__part{position:absolute;left:50%;top:50%;width:18%;height:18%;margin:calc(var(--wavelo-size,2.5rem) * -.09);border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;background:transparent;transform-origin:50% 50%;animation:wavelo-trip var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* Three arcs on the same circle, a third of a turn apart. The turn is in the
+   keyframes, so the arcs travel the ring instead of spinning where they stand. */
+.wavelo--trip-orbit .wavelo__part{position:absolute;left:50%;top:50%;width:22%;height:22%;margin:calc(var(--wavelo-size,2.5rem) * -.11);border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;background:transparent;transform-origin:50% 50%;animation:wavelo-trip var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--trip-orbit .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--trip-orbit .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 /* Nine nodes pulsing along a diagonal, the way activity is drawn across a network. */

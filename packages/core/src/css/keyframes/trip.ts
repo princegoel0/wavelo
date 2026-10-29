@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-trip{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(.5)}100%{transform:rotate(360deg) scale(1)}}`;
+export const css = `@keyframes wavelo-trip{0%{transform:rotate(0deg) translateY(calc(var(--wavelo-size,2.5rem) * -.32)) scale(1)}50%{transform:rotate(180deg) translateY(calc(var(--wavelo-size,2.5rem) * -.32)) scale(.62)}100%{transform:rotate(360deg) translateY(calc(var(--wavelo-size,2.5rem) * -.32)) scale(1)}}`;

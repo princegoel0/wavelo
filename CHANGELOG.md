@@ -47,7 +47,10 @@ Not yet published.
   before it reads, because a scroll- or view-driven animation is sampled while frames
   render and the frozen transform differed between two identical pages; the mask is one
   of the properties it compares, so a stroke that carves a ring rather than drawing a
-  border is measured as honoured.
+  border is measured as honoured. `npm run audit:layout` keeps every copy it measures
+  inside the viewport for the same reason: Chromium does not animate boxes it cannot
+  see, so 150 copies stacked in normal flow let one design report 120 layouts on a run
+  and 0 on the next, and the 0 looked like a design that had stopped costing layout.
 - Pattern presets resolve: `renderLoader({ type: 'download-progress' })` renders
   `progress-upload`, reports `resolution: 'preset'`, and is not a fallback. An
   unknown ID reports `resolution: 'default'` with `fallback: true`, which is now the

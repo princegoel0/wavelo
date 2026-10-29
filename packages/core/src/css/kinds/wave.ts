@@ -33,7 +33,7 @@ export const waveCss = `
 /* Tokens arriving: five short dashes light up at the left, travel right and dim, each
    a fifth of a cycle behind the last, so the row reads as output being appended. */
 .wavelo--token-stream{gap:var(--wavelo-gap,3px);justify-content:flex-start}
-.wavelo--token-stream .wavelo__part{width:16%;height:var(--wavelo-stroke,3px);border-radius:var(--wavelo-radius,1px);animation:wavelo-token calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--token-stream .wavelo__part{width:18%;height:calc(var(--wavelo-stroke,3px) * 1.5);border-radius:var(--wavelo-radius,1px);animation:wavelo-token calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--token-stream .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.32)}
 .wavelo--token-stream .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.64)}
 .wavelo--token-stream .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.96)}

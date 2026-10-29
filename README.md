@@ -23,6 +23,7 @@ npm run check          # build, typecheck, unit tests, catalog drift, documentat
 npm run test:browser   # Chromium suite: computed styles, style injection, axe, gallery
 npm run test:browser:firefox   # Gecko smoke suite: the sheet applies, fallbacks hold
 npm run docs:build
+npm run docs:verify    # the built gallery holds every design and embeds its stylesheet
 ```
 
 The package is not published by these commands. See [docs/RELEASE.md](docs/RELEASE.md)
