@@ -60,9 +60,15 @@ Audited version: `0.1.0`
   checks only; it does not publish or mutate npm.
 - [x] Added a `verify-browser` CI job so computed-style and axe checks run on
   every push and pull request, not only in the release workflow.
-- [x] Confirmed on GitHub that both jobs are green for `dev` at `279677a` and for
-  `main` at `f1c47a0`, including the Playwright install step for both engines on a
+- [x] Confirmed on GitHub that both jobs are green for `dev` at `8dac440` and for
+  `main` at `f3e6dd7`, including the Playwright install step for both engines on a
   clean runner.
+- [x] Merged the streaming tranche as `f3e6dd7` through pull request #14 after `verify`
+  and `verify-browser` passed on both the push and pull-request runs; on `main` the
+  `CI` workflow passed, the `Release packages` workflow ran `Validate release`
+  successfully and **skipped** `Publish npm packages` (`RELEASE_ENABLED` is `false`),
+  and the new `Gallery` workflow **skipped** both jobs because `GALLERY_ENABLED` is
+  unset — so the deploy path is merged but has never run, and nothing was published.
 - [x] Merged the Tier 1 gap work as `f1c47a0` through pull request #12 after `verify`
   and `verify-browser` passed on both the push and pull-request runs; on `main` the
   `CI` workflow passed and the `Release packages` workflow ran `Validate release`

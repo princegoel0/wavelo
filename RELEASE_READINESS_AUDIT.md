@@ -270,7 +270,7 @@ Re-run 2026-10-29 against the current build, after the Phases B–J work.
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
-| GitHub Actions workflow execution | Passed on GitHub for `dev` at `279677a` (push run and pull-request run) and for `main` at `f1c47a0`: `verify` and `verify-browser` both green, including `npx playwright install --with-deps chromium firefox` on a clean runner, and `Release packages` on `main` validating with its publish job skipped. Not run locally. |
+| GitHub Actions workflow execution | Passed on GitHub for `dev` at `8dac440` (push run and pull-request run) and for `main` at `f3e6dd7`: `verify` and `verify-browser` both green, including `npx playwright install --with-deps chromium firefox` on a clean runner, `Release packages` validating with its publish job skipped, and the `Gallery` workflow skipping both jobs while `GALLERY_ENABLED` is unset. Not run locally. |
 | npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer. `RELEASE_PROVENANCE=true` now switches the publish step to `--provenance` once trusted publishing is configured per package. |
 
 The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
