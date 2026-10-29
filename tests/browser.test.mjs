@@ -1089,14 +1089,29 @@ test('a container-query size resolves against the loader’s own container', asy
     '<div id="wide" style="container-type:inline-size;width:600px">' + renderLoader({ type: 'ring', label: 'Loading', size: '25cqi' }).html + '</div>' +
     '<div id="themed" style="container-type:inline-size;width:400px"><div style="--wavelo-size:10cqi">' + renderLoader({ type: 'ring', label: 'Loading' }).html + '</div></div>'
   );
-  const widths = await page.evaluate(() => ({
-    narrow: Math.round(document.querySelector('#narrow .wavelo').getBoundingClientRect().width),
-    wide: Math.round(document.querySelector('#wide .wavelo').getBoundingClientRect().width),
-    themed: Math.round(document.querySelector('#themed .wavelo').getBoundingClientRect().width)
-  }));
-  assert.equal(widths.narrow, 50, '25cqi of a 200-pixel container');
-  assert.equal(widths.wide, 150, 'the same option in a 600-pixel container');
-  assert.equal(widths.themed, 40, 'a container unit set on an ancestor resolves the same way');
+  // A container query resolves on the layout pass that follows insertion, so measure
+  // after a frame: on a loaded CI runner the first read can answer from before it.
+  await nextFrame();
+  const widths = await page.evaluate(() => {
+    const read = (id) => {
+      const container = document.querySelector(`#${id}`);
+      const element = container.querySelector('.wavelo');
+      return {
+        loader: Math.round(element.getBoundingClientRect().width),
+        container: Math.round(container.getBoundingClientRect().width),
+        computed: getComputedStyle(element).width,
+        size: getComputedStyle(element).getPropertyValue('--wavelo-size').trim(),
+        type: getComputedStyle(container).containerType
+      };
+    };
+    return { narrow: read('narrow'), wide: read('wide'), themed: read('themed') };
+  });
+  // The message carries the container's own measurement, because a size that is a
+  // percentage of a container is only meaningful next to the container it saw.
+  const show = (entry) => `${entry.loader}px (container ${entry.container}px, container-type ${entry.type}, --wavelo-size ${entry.size}, width ${entry.computed})`;
+  assert.equal(widths.narrow.loader, 50, `25cqi of a 200-pixel container, saw ${show(widths.narrow)}`);
+  assert.equal(widths.wide.loader, 150, `the same option in a 600-pixel container, saw ${show(widths.wide)}`);
+  assert.equal(widths.themed.loader, 40, `a container unit set on an ancestor, saw ${show(widths.themed)}`);
 });
 
 test('a page under a style-src CSP gets a nonce on every injected slice', async () => {
