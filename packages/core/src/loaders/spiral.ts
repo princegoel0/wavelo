@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "spiral", name: "Spiral", category: "creative", kind: "ring", description: "Spiral sweep", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "spiral" };
+const definition: LoaderDefinition = { id: "spiral", name: "Spiral", category: "creative", kind: "ring", description: "Spiral sweep", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "spiral" };
 const styles = `${baseCss}${ringCss}`;
 
 export const spiral = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -1,9 +1,28 @@
 # Framework usage
 
-Every bridge renders the same core markup contract and accepts the same 20
+Every bridge renders the same core markup contract and accepts the same 27
 configuration keys; only the lifecycle plumbing differs. None of them inline CSS
 — `ensureStyles` puts each stylesheet slice in the document head once, and for
 server rendering you include the sheet yourself.
+
+## Set it once, then use it
+
+Each bridge has one place to register the options a page or subtree shares, and each
+is scoped to a render tree rather than a module, so server rendering cannot leak one
+request's settings into another:
+
+| Bridge | Registered defaults | Design bound once |
+| --- | --- | --- |
+| React | `<WaveloProvider defaults={…}>` | `loaderFor(type, defaults)` |
+| Vue | `provideWaveloDefaults(…)` in a parent's setup | `loaderFor(type, defaults)` |
+| Svelte | `provideWaveloDefaults(…)` during init | `<WaveloLoader>` with the context's defaults |
+| Angular | `providers: [{ provide: WAVELO_DEFAULTS, useValue: … }]` | a component that sets the inputs |
+| Web Components | CSS custom properties on an ancestor | — |
+| Core and vanilla | `createWavelo(defaults)` | `createWavelo({ type: … })` |
+
+Precedence is always the same, outward to inward: registered defaults, then a bound
+component's own options, then what the call site passes. Defaults may name a design
+(`{ type: 'ring' }`), so an app can choose its loader once and never repeat it.
 
 ## React
 
@@ -22,8 +41,26 @@ client. For SSR, import the sheet once in your entry:
 import '@wavelo/core/styles.css';
 ```
 
-`renderReactLoader(props)` returns the core result (`html`, `css`, `styleKey`)
-when you need to place the markup yourself.
+`renderReactLoader(props, defaults)` returns the core result (`html`, `css`,
+`styleKey`) when you need to place the markup yourself. A component that always
+shows one design is worth making once:
+
+```tsx
+import { WaveloProvider, loaderFor } from '@wavelo/react';
+
+const ButtonSpinner = loaderFor('ring', { size: 16, color: '#ffffff', label: 'Saving' });
+
+export function SaveButton({ busy }) {
+  return (
+    <WaveloProvider defaults={{ reducedMotion: 'auto' }}>
+      <ButtonSpinner loading={busy} />
+    </WaveloProvider>
+  );
+}
+```
+
+`loading={false}` renders no element at all — no markup, no stylesheet, no empty
+host left behind.
 
 ## Angular
 
@@ -49,7 +86,12 @@ already owns `[style]`:
 `data-*` attributes on the host are read into the configuration. The component
 uses `OnPush`, updates on input changes, clears its content on destroy, and the
 host element is `display: contents` so it does not affect layout. For SSR add
-`@wavelo/core/styles.css` to the server bundle's styles.
+`@wavelo/core/styles.css` to the server bundle's styles. Defaults for a whole tree
+are a provider:
+
+```ts
+providers: [{ provide: WAVELO_DEFAULTS, useValue: { color: '#6366f1', size: 32 } }]
+```
 
 ## Vue
 
@@ -65,9 +107,25 @@ createApp({
 ```
 
 The component declares every key except `data-*`, which arrive as fallthrough
-attributes and are merged into the configuration. Use binding syntax for
-booleans (`:paused="true"`); a bare `paused` attribute is a string.
-`inheritAttrs` is off, so only `data-*` attributes reach the core.
+attributes and are merged into the configuration. `inheritAttrs` is off, so only
+`data-*` attributes reach the core.
+
+The boolean options (`paused`, `decorative`, `loading`, `inline`) are declared
+without a type. Vue casts an absent `Boolean` prop to `false`, which would erase a
+registered default and hide a loader nobody asked to hide, so an absent prop stays
+absent here; `<Loader paused>` and `:paused="true"` both pause, `:paused="false"`
+runs. A bound component reads the same way:
+
+```ts
+import { provideWaveloDefaults, loaderFor } from '@wavelo/vue';
+
+provideWaveloDefaults({ color: '#6366f1' });      // in a parent's setup
+const ButtonSpinner = loaderFor('ring', { size: 16 });
+```
+
+```html
+<ButtonSpinner :loading="busy" />
+```
 
 ## Svelte
 
@@ -83,6 +141,15 @@ The component forwards its `$props()` object straight to `renderLoader`, so any
 configuration key reaches the core, and an `$effect` calls `ensureStyles`. It
 ships as source, so the consumer's build needs `vitePreprocess`. In SSR, add
 `@wavelo/core/styles.css` to the head once.
+
+```svelte
+<script>
+  import { provideWaveloDefaults } from '@wavelo/svelte';
+  provideWaveloDefaults({ size: 32, reducedMotion: 'auto' });
+</script>
+
+<WaveloLoader type="ring" loading={busy} />
+```
 
 ## Web Components
 
@@ -117,7 +184,44 @@ const detach = mountLoader(document.querySelector('#slot'), { type: 'ring', labe
 ```
 
 `mountLoader` injects the slice and returns a detach function that clears the
-container without removing a stylesheet other loaders may be using.
+container without removing a stylesheet other loaders may be using. To configure a
+whole app once, bind the defaults:
+
+```ts
+import { createWavelo } from '@wavelo/vanilla';
+
+const wavelo = createWavelo({ type: 'ring', color: '#6366f1', size: 32 });
+wavelo.render();                               // house ring
+wavelo.render({ type: 'orbiting-dots' });      // house style, other design
+wavelo.merge({ loading: panel.isOpen });       // a config object for mountLoader
+```
+
+## Host styling, and Wavelo styling
+
+A loader is one element, and two channels reach it. Ordinary CSS on the host — the
+wrapper you put around it, or a framework component's own element — controls layout:
+`display`, `margin`, `flex`, `gap`, `text-align`. Wavelo never reads those, and its
+own rules never set them; the adapter host is `display: contents`, so it adds no box
+of its own and your wrapper is the box you are styling.
+
+`--wavelo-*` custom properties are configuration. They can be set in `style` on the
+loader, on any ancestor, or in a class rule, and the loader reads the nearest one:
+
+```html
+<style>
+  .panel { padding: 1rem }                              /* host layout */
+  .panel wavelo-loader { --wavelo-color: #94a3b8 }      /* loader configuration */
+</style>
+
+<div class="panel">
+  <wavelo-loader type="ring" style="--wavelo-size:2rem"></wavelo-loader>
+</div>
+```
+
+On the custom element the same `style` attribute carries both kinds: the
+`--wavelo-*` declarations are read as configuration and everything else stays
+ordinary styling. `inline` is the option for a loader that belongs to a line of text
+rather than to a block of its own.
 
 ## Choosing a design at build time
 

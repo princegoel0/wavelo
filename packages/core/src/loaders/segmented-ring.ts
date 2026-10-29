@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "segmented-ring", name: "Segmented ring", category: "spinner", kind: "ring", description: "Dashed circular indicator", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "segmented-ring" };
+const definition: LoaderDefinition = { id: "segmented-ring", name: "Segmented ring", category: "spinner", kind: "ring", description: "Dashed circular indicator", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "segmented-ring" };
 const styles = `${baseCss}${ringCss}`;
 
 export const segmentedRing = (config: Omit<LoaderConfig, 'type'> = {}) =>

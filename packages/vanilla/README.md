@@ -20,5 +20,17 @@ callers that render markup themselves. To use the full catalog sheet in a
 stylesheet pipeline, import `@wavelo/core/styles.css` instead of calling
 `ensureStyles`.
 
+`createWavelo` binds a set of defaults once, so the call sites pass only what
+changes:
+
+```ts
+import { createWavelo } from '@wavelo/vanilla';
+
+const wavelo = createWavelo({ type: 'ring', color: '#6366f1', size: 32 });
+wavelo.render();                    // the ring, in the house style
+wavelo.render({ type: 'orbiting-dots' }); // same style, different design
+mountLoader(slot, wavelo.merge({ loading: busy }));
+```
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

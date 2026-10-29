@@ -18,6 +18,7 @@ export interface WaveloTokens {
   '--wavelo-duration'?: string;
   '--wavelo-stroke'?: string | number;
   '--wavelo-radius'?: string;
+  '--wavelo-gap'?: string;
   '--wavelo-progress'?: string;
   '--wavelo-skeleton-base'?: string;
   '--wavelo-skeleton-highlight'?: string;
@@ -32,10 +33,11 @@ export interface WaveloTokens {
 export type LoaderStyle = WaveloTokens & Record<string, string | number>;
 
 /**
- * Defaults registered once for a subtree, page or app. Anything a caller passes on
- * the individual loader wins over these.
+ * Defaults registered once for a subtree, page or app. They may name a design, in
+ * which case a loader that chooses none gets it. Anything set on the individual
+ * loader wins over these.
  */
-export type WaveloDefaults = Omit<LoaderConfig, 'type'>;
+export type WaveloDefaults = LoaderConfig;
 
 export type LoaderCategory =
   | 'spinner'
@@ -92,6 +94,24 @@ export interface LoaderConfig {
    * case where a visible caption or a sibling status already announces it.
    */
   decorative?: boolean;
+  /**
+   * Bind visibility to a value instead of mounting and unmounting the component:
+   * `loading={busy}`. `false` renders no markup and loads no stylesheet, so a
+   * hidden loader costs nothing. Absent means `true`.
+   */
+  loading?: boolean;
+  /**
+   * How many repeated tracks the design draws — text lines, table rows, steps.
+   * Only the designs that are built from repeating tracks honour it, and the
+   * catalog lists exactly which those are.
+   */
+  count?: number;
+  /**
+   * Sit on the surrounding text line instead of starting a block of its own: a
+   * spinner inside a button, a skeleton replacing one word. For a skeleton line it
+   * also drops the paragraph width so the placeholder is the size you give it.
+   */
+  inline?: boolean;
   className?: string;
   style?: LoaderStyle;
   reducedMotion?: ReducedMotion;
@@ -101,7 +121,7 @@ export interface LoaderConfig {
   [key: DataAttribute]: string | undefined;
 }
 
-export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'paused' | 'decorative' | 'value' | 'max' | DataAttribute> {
+export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'paused' | 'decorative' | 'loading' | 'inline' | 'count' | 'value' | 'max' | DataAttribute> {
   type: string;
   size: string;
   width: string;
@@ -113,6 +133,10 @@ export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'wid
   /** Always a boolean after validation, whatever form the caller used. */
   paused?: boolean;
   decorative?: boolean;
+  /** Resolved to a boolean; `false` is the only value that renders nothing. */
+  loading: boolean;
+  inline?: boolean;
+  count?: number;
   value?: number;
   max: number;
   /** Only `--wavelo-*` custom properties survive validation. */

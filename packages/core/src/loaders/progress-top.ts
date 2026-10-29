@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-top", name: "Top progress", category: "progress", kind: "progress", description: "Top-of-page progress", options: ["className","color","data-testid","decorative","describedBy","label","labelledBy","max","reducedMotion","style","value","valueText"], supportsProgress: true, stability: "stable", visualSignature: "progress-top" };
+const definition: LoaderDefinition = { id: "progress-top", name: "Top progress", category: "progress", kind: "progress", description: "Top-of-page progress", options: ["className","color","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","style","value","valueText"], supportsProgress: true, stability: "stable", visualSignature: "progress-top" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressTop = (config: Omit<LoaderConfig, 'type'> = {}) =>

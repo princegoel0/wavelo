@@ -164,6 +164,13 @@ function number(value: number | undefined, bounds: [number, number], label: stri
   return parsed;
 }
 
+/** A count of repeated tracks; fractional track counts are a mistake, not a shape. */
+function trackCount(value: number | undefined): number | undefined {
+  const count = number(value, [1, 12], 'count');
+  if (count !== undefined && !Number.isInteger(count)) throw new LoaderConfigurationError('count must be a whole number of tracks.');
+  return count;
+}
+
 export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   rejectForeignAccessibility(input);
   const className = input.className ?? '';
@@ -172,6 +179,7 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   const max = number(input.max, [0, Number.MAX_SAFE_INTEGER], 'max', true) ?? 100;
   const value = number(input.value, [0, max], 'value');
   const strokeWidth = number(input.strokeWidth, [0, 100], 'strokeWidth', true) ?? 3;
+  const count = trackCount(input.count);
   if (input.direction !== undefined && !['normal', 'reverse'].includes(input.direction)) throw new LoaderConfigurationError('direction must be normal or reverse.');
   if (input.reducedMotion !== undefined && !['auto', 'always', 'never'].includes(input.reducedMotion)) throw new LoaderConfigurationError('reducedMotion must be auto, always, or never.');
   if (input.theme !== undefined && !THEMES.includes(input.theme)) throw new LoaderConfigurationError('theme must be light, dark, or system.');
@@ -189,6 +197,9 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
     theme: input.theme ?? 'light',
     paused: optionalBoolean(input.paused),
     decorative: optionalBoolean(input.decorative),
+    loading: optionalBoolean(input.loading) ?? true,
+    inline: optionalBoolean(input.inline),
+    count,
     label: textValue(input.label, 'label', 200),
     labelledBy: identifierList(input.labelledBy, 'labelledBy'),
     describedBy: identifierList(input.describedBy, 'describedBy'),

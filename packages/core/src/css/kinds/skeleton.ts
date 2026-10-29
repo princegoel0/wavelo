@@ -14,5 +14,18 @@ export const skeletonCss = `
 .wavelo--skeleton-dashboard .wavelo__part:nth-child(1){grid-column:span 2;height:10px}
 .wavelo--skeleton-avatar{border-radius:50%}
 .wavelo--skeleton-line{min-width:10rem;max-height:.75rem;border-radius:.2rem}
+/* "inline" puts a placeholder on the text line: the box becomes inline-level, and a
+   line drops the paragraph defaults so the width and height you give it are the
+   ones you get. */
+.wavelo--skeleton.wavelo-inline{display:inline-block}
+.wavelo--skeleton-card.wavelo-inline,.wavelo--skeleton-table.wavelo-inline,.wavelo--skeleton-dashboard.wavelo-inline{display:inline-grid}
+.wavelo--skeleton-line.wavelo-inline{width:var(--wavelo-width,var(--wavelo-size,6em));height:var(--wavelo-height,1em);min-width:0;max-height:none}
 .wavelo--image-placeholder{min-width:10rem;min-height:7.5rem;background:linear-gradient(110deg,var(--wavelo-skeleton-base) 30%,var(--wavelo-skeleton-highlight) 45%,var(--wavelo-skeleton-base) 60%);background-size:250% 100%}
+/* A counted line is a stack of tracks rather than one painted box, so the element
+   stops painting and each track shimmers on its own; the last one is short, because
+   that is how a block of text ends. */
+.wavelo--skeleton.wavelo-stacked{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:min-content;gap:var(--wavelo-gap,.5rem);height:auto;max-height:none;background:transparent;animation:none}
+.wavelo--skeleton.wavelo-stacked .wavelo__part{display:block;width:100%;height:var(--wavelo-height,.75rem);border-radius:var(--wavelo-radius,.2rem);background:linear-gradient(90deg,var(--wavelo-skeleton-base),var(--wavelo-skeleton-highlight),var(--wavelo-skeleton-base));background-size:200% 100%;animation:wavelo-shimmer var(--wavelo-duration,1s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--skeleton-line.wavelo-stacked .wavelo__part:last-child{width:65%}
+.wavelo--skeleton.wavelo-stacked.wavelo-inline{display:inline-grid}
 ${shimmerFrames}`;

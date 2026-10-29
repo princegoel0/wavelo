@@ -7,7 +7,7 @@ documentation gallery.
 
 The catalog holds 82 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
-24 configuration keys.
+27 configuration keys.
 
 ## Development
 
@@ -95,6 +95,7 @@ overrides that one loader:
 | `--wavelo-progress` | `value` / `max` on the determinate designs | `35%`, and it interpolates |
 | `--wavelo-skeleton-base` / `--wavelo-skeleton-highlight` | the shimmer, normally via `theme` | light or dark palette |
 | `--wavelo-radius` | skeleton/placeholder corner radius | `.4rem` |
+| `--wavelo-gap` | the space between the tracks of a `count`ed skeleton | `.5rem` |
 
 For defaults that are configuration rather than styling — label, reduced-motion
 policy, design choice — register them for a subtree. Each is per render tree, never
@@ -115,6 +116,62 @@ import { WaveloProvider, Loader } from '@wavelo/react';
 // Angular: providers: [{ provide: WAVELO_DEFAULTS, useValue: { size: 32 } }]
 // Core and vanilla: createWavelo({ size: 32 }).render({ type: 'ring' })
 ```
+
+### Bind a design once, use it everywhere
+
+A component that always shows the same design with the same house options is worth
+making once, so a call site says what changed rather than repeating a configuration:
+
+```tsx
+import { loaderFor } from '@wavelo/react';
+
+const ButtonSpinner = loaderFor('ring', { size: 16, color: '#ffffff', label: 'Saving' });
+
+// later, in any component:
+<ButtonSpinner loading={busy} />
+```
+
+```ts
+// Vue: const ButtonSpinner = loaderFor('ring', { size: 16 }); <ButtonSpinner :loading="busy" />
+// Core: const w = createWavelo({ type: 'ring', size: 16 }); w.render({ loading: busy });
+```
+
+Precedence runs outward to inward: registered defaults, then the bound component's
+own options, then the props at the call site.
+
+`loading` is the option that makes this work in one place. `false` renders no markup
+and asks for no stylesheet, so a loader that is hidden costs nothing — you bind
+visibility instead of mounting and unmounting a component, and the hidden state
+leaves no empty element behind.
+
+### Styling the box, and styling around it
+
+Wavelo renders one element. Two channels reach it, and each has its own job:
+
+```html
+<style>
+  .toolbar { display: flex; gap: .5rem; margin: 1rem 0 } /* host: layout and spacing */
+  .toolbar wavelo-loader { --wavelo-size: 2rem }         /* loader: configuration     */
+</style>
+
+<div class="toolbar">
+  <wavelo-loader type="ring" style="--wavelo-duration:2s"></wavelo-loader>
+  <wavelo-loader type="three-dots"></wavelo-loader>
+</div>
+```
+
+* The **host** — the wrapper you put around it, or the framework component's own
+  element — takes ordinary CSS: `display`, `margin`, `flex`, `text-align`. Wavelo
+  never reads those, and its styles never set them (`display:contents` on the
+  adapter host means the host adds no box of its own).
+* **`--wavelo-*` custom properties** configure the loader. Set them on the host, an
+  ancestor, a class rule or `style`, and the loader reads them; the same names are
+  configuration in `style` and in the custom element's `style` attribute, where
+  every other declaration there stays ordinary styling.
+
+Use `inline` when the loader belongs to a line of text: it aligns the box to the
+middle of the line, and gives a block or grid design an inline twin, so a skeleton
+line can replace one word rather than a paragraph.
 
 ## Stylesheets
 
@@ -143,19 +200,25 @@ Every adapter package documents the same rule. See
 
 ## What the configuration does
 
-These 24 keys are the whole surface, and a test asserts each one reaches the
+These 27 keys are the whole surface, and a test asserts each one reaches the
 rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
 `paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`,
-`max`, `labelledBy`, `describedBy`, `valueText` and `decorative`, plus arbitrary
-`data-*` attributes.
+`max`, `labelledBy`, `describedBy`, `valueText`, `decorative`, `loading`, `count`,
+`inline`, plus arbitrary `data-*` attributes.
+
+`loading` decides whether there is a loader at all. `count` sets the number of
+tracks in the designs that are built from repeating tracks — a stack of skeleton
+lines, the rows of a skeleton table, the steps of a progress bar — and a design that
+draws something else does not advertise it. `inline` puts the box on the text line.
 
 Which of them a given design actually uses is measured rather than claimed.
 `npm run audit:customization` renders every design in Chromium with each key set
 and unset, and `loader.options` is built from what changed the render — so `ring`
 reports `strokeWidth` but not `secondaryColor`, `skeleton-card` reports neither,
-and a static `progress-bar` reports no `duration`, because none of those would do
-anything.
+a static `progress-bar` reports no `duration`, `three-dots` reports no `count`
+because three dots are three dots, and `fullscreen` reports no `inline` because a
+fixed overlay is not on anybody's line of text.
 
 `direction` and `paused` drive the CSS animation controls; `reducedMotion:
 'always'` reduces motion without waiting for the operating system, and `'never'`

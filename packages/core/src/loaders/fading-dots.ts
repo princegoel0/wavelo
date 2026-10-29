@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "fading-dots", name: "Fading dots", category: "dots", kind: "dots", description: "Fading dot sequence", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "fading-dots" };
+const definition: LoaderDefinition = { id: "fading-dots", name: "Fading dots", category: "dots", kind: "dots", description: "Fading dot sequence", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "fading-dots" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const fadingDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

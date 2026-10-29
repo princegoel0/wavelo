@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "vertical-pulse-bars", name: "Vertical pulse bars", category: "bars", kind: "bars", description: "Vertical pulse bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "vertical-pulse-bars" };
+const definition: LoaderDefinition = { id: "vertical-pulse-bars", name: "Vertical pulse bars", category: "bars", kind: "bars", description: "Vertical pulse bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "vertical-pulse-bars" };
 const styles = `${baseCss}${barsCss}`;
 
 export const verticalPulseBars = (config: Omit<LoaderConfig, 'type'> = {}) =>

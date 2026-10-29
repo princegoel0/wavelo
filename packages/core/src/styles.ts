@@ -11,7 +11,9 @@ export function stylesheetMarkup(css: string): string {
  * slice is identified by its own content rather than by the design using it.
  */
 export function ensureStyles(css: string): void {
-  if (typeof document === 'undefined') return;
+  // A loader that renders nothing asks for no stylesheet, and an empty slice would
+  // otherwise add a `<style>` element to every document that hides one.
+  if (!css || typeof document === 'undefined') return;
   const key = styleKey(css);
   if (document.head.querySelector(`style[data-wavelo-style="${key}"]`)) return;
   const style = document.createElement('style');
@@ -27,6 +29,7 @@ export function ensureStyles(css: string): void {
 export function renderStylesheets(slices: Iterable<string>): string {
   const seen = new Map<string, string>();
   for (const css of slices) {
+    if (!css) continue;
     const key = styleKey(css);
     if (!seen.has(key)) seen.set(key, css);
   }

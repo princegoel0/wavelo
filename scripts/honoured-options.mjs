@@ -25,10 +25,11 @@ const CONTROL_KEYS = ['paused', 'direction'];
  * are true for every design and are not measured: `label` writes `aria-label`,
  * `className` writes `class`, `data-testid` writes an attribute, `reducedMotion`
  * writes `data-wavelo-motion` (its effect depends on the operating-system
- * preference, which the earlier browser suite covers for all three modes), and
+ * preference, which the earlier browser suite covers for all three modes),
+ * `loading` removes the element and its stylesheet whatever the design, and
  * `style` is the general custom-property escape hatch.
  */
-const STRUCTURAL = ['label', 'className', 'style', 'data-testid', 'reducedMotion'];
+const STRUCTURAL = ['label', 'className', 'style', 'data-testid', 'reducedMotion', 'loading'];
 
 const PROBES = {
   size: { size: 300 },
@@ -48,7 +49,9 @@ const PROBES = {
   labelledBy: { labelledBy: 'caption' },
   describedBy: { describedBy: 'hint' },
   valueText: { value: 70, max: 100, valueText: '70% done' },
-  decorative: { decorative: true }
+  decorative: { decorative: true },
+  count: { count: 4 },
+  inline: { inline: true }
 };
 
 const PROPS = [
@@ -56,6 +59,7 @@ const PROPS = [
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderTopStyle', 'borderTopColor',
   'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderImageSource', 'borderRadius', 'backgroundImage',
   'backgroundColor', 'color', 'fill', 'opacity', 'transform', 'inset', 'clipPath', 'boxShadow', 'content',
+  'verticalAlign',
   'animationName', 'animationDuration', 'animationDirection', 'animationPlayState', 'animationDelay', 'animationIterationCount', 'animationTimeline'
 ];
 
@@ -84,7 +88,21 @@ const SELF_CHECKS = [
   ['ring', 'labelledBy', true],
   ['ring', 'decorative', true],
   ['ring', 'valueText', false],
-  ['progress-bar', 'valueText', true]
+  ['progress-bar', 'valueText', true],
+  // `count` only reaches the designs built from repeating tracks.
+  ['skeleton-line', 'count', true],
+  ['skeleton-card', 'count', true],
+  ['progress-steps', 'count', true],
+  ['skeleton-avatar', 'count', false],
+  ['image-placeholder', 'count', false],
+  ['ring', 'count', false],
+  // `inline` aligns an inline-level box and gives a block or grid box an inline
+  // twin; a fixed overlay is on nobody's text line, so it changes nothing there.
+  ['ring', 'inline', true],
+  ['skeleton-line', 'inline', true],
+  ['skeleton-card', 'inline', true],
+  ['progress-scroll', 'inline', true],
+  ['fullscreen', 'inline', false]
 ];
 
 async function fingerprintPage(browser, overrides) {
@@ -127,10 +145,11 @@ async function fingerprintPage(browser, overrides) {
         cells[wrap.dataset.id] = {
           render: elements.map(([element, pseudo]) => read(element, pseudo)).join('##'),
           // Attributes the key can genuinely change. `style` echoes every token the
-          // renderer was handed whether or not anything reads it, and
-          // `data-wavelo-theme`/`data-wavelo-motion` are mechanism, not effect.
+          // renderer was handed whether or not anything reads it, `class` names the
+          // mechanism a key switches on (its effect is still caught by the computed
+          // styles), and `data-wavelo-theme`/`data-wavelo-motion` are mechanism too.
           attributes: [...root.attributes]
-            .filter((attribute) => attribute.name !== 'style' && !attribute.name.startsWith('data-wavelo-'))
+            .filter((attribute) => attribute.name !== 'style' && attribute.name !== 'class' && !attribute.name.startsWith('data-wavelo-'))
             .map((attribute) => `${attribute.name}=${attribute.value}`)
             .sort()
             .join(' '),

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir } from 'node:fs/promises';
-import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, LoaderConfigurationError } from '../packages/core/dist/index.js';
+import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, renderStylesheets, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
 test('catalog has distinct metadata and required categories', () => {
   assert.ok(new Set(loaderRegistry.map((loader) => loader.id)).size >= 60);
@@ -132,15 +132,18 @@ test('every supported configuration key reaches the rendered element', () => {
 
 test('loaderConfigKeys covers the whole documented configuration surface', () => {
   assert.deepEqual([...loaderConfigKeys].sort(), [
-    'backgroundColor', 'className', 'color', 'data-testid', 'decorative', 'describedBy', 'direction', 'duration',
-    'height', 'label', 'labelledBy', 'max', 'paused', 'reducedMotion', 'secondaryColor', 'size', 'speed',
-    'strokeWidth', 'style', 'theme', 'type', 'value', 'valueText', 'width'
+    'backgroundColor', 'className', 'color', 'count', 'data-testid', 'decorative', 'describedBy', 'direction',
+    'duration', 'height', 'inline', 'label', 'labelledBy', 'loading', 'max', 'paused', 'reducedMotion',
+    'secondaryColor', 'size', 'speed', 'strokeWidth', 'style', 'theme', 'type', 'value', 'valueText', 'width'
   ]);
   assert.equal(loaderAttributes.length, loaderConfigKeys.length);
   assert.ok(loaderAttributes.includes('secondary-color'));
   assert.ok(loaderAttributes.includes('data-testid'));
   assert.ok(loaderAttributes.includes('labelled-by'), 'the accessibility keys need attribute forms');
   assert.ok(loaderAttributes.includes('value-text'));
+  assert.ok(loaderAttributes.includes('loading'), 'visibility binding needs an attribute form');
+  assert.ok(loaderAttributes.includes('count'));
+  assert.ok(loaderAttributes.includes('inline'));
 });
 
 test('an unknown type renders the default design and reports the substitution', () => {
@@ -355,4 +358,62 @@ test('the accessibility options reach the markup, and foreign aria keys are refu
   assert.throws(() => renderLoader({ type: 'ring', 'aria-label': 'sneaky' }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'ring', role: 'progressbar' }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'ring', labelledBy: 'id; background:url(x)' }), LoaderConfigurationError);
+});
+
+test('loading binds visibility, and a loader that is not loading costs nothing', () => {
+  const hidden = renderLoader({ type: 'ring', label: 'Loading', loading: false });
+  assert.equal(hidden.html, '', 'a hidden loader must emit no markup');
+  assert.equal(hidden.css, '', 'a hidden loader must not ask for a stylesheet');
+  assert.equal(hidden.config.loading, false);
+  // The design and how it was resolved survive, so a caller can still report a typo.
+  assert.equal(hidden.definition.id, 'ring');
+  assert.equal(renderLoader({ type: 'no-such-design', loading: false }).fallback, true);
+  assert.equal(renderLoader({ type: 'ring', loading: true }).config.loading, true);
+  assert.equal(renderLoader({ type: 'ring' }).config.loading, true, 'absent means loading');
+  for (const value of ['false', '0', false]) {
+    assert.equal(renderLoader({ type: 'ring', loading: value }).config.loading, false, `loading ${JSON.stringify(value)}`);
+  }
+  for (const value of ['', true, 'true']) {
+    assert.equal(renderLoader({ type: 'ring', loading: value }).config.loading, true, `loading ${JSON.stringify(value)}`);
+  }
+  assert.equal(configFromAttributes({ loading: '' }).loading, true);
+  assert.equal(configFromAttributes({ loading: 'false' }).loading, false);
+  assert.equal(renderStylesheets(['']), '', 'the empty slice must not reach the document head');
+});
+
+test('count repeats the tracks of the designs that are built from them', () => {
+  const tracks = (config) => (renderLoader(config).html.match(/wavelo__part/g) ?? []).length;
+  assert.equal(tracks({ type: 'skeleton-line' }), 0, 'a single line is painted by the element itself');
+  assert.equal(tracks({ type: 'skeleton-line', count: 3 }), 3);
+  assert.match(renderLoader({ type: 'skeleton-line', count: 3 }).html, /wavelo-stacked/);
+  assert.doesNotMatch(renderLoader({ type: 'skeleton-line', count: 1 }).html, /wavelo-stacked/, 'one line needs no stack');
+  assert.equal(tracks({ type: 'skeleton-table' }), 6, 'the design keeps its own track count');
+  assert.equal(tracks({ type: 'skeleton-table', count: 2 }), 2);
+  assert.equal(tracks({ type: 'skeleton-card', count: 1 }), 1);
+  assert.equal(tracks({ type: 'progress-steps', count: 4 }), 4);
+  assert.equal(tracks({ type: 'ring', count: 4 }), 1, 'a ring is not a row of tracks');
+  const options = (id) => loaderRegistry.find((loader) => loader.id === id).options;
+  for (const id of ['ring', 'skeleton-avatar', 'image-placeholder', 'three-dots', 'dot-matrix']) {
+    assert.ok(!options(id).includes('count'), `${id} advertises a count of tracks it cannot draw`);
+  }
+  for (const id of ['skeleton-line', 'skeleton-card', 'skeleton-table', 'skeleton-dashboard', 'progress-steps']) {
+    assert.ok(options(id).includes('count'), `${id} lost its track count`);
+  }
+  assert.throws(() => renderLoader({ type: 'skeleton-line', count: 2.5 }), LoaderConfigurationError, 'half a track is a mistake');
+  assert.throws(() => renderLoader({ type: 'skeleton-line', count: 0 }), LoaderConfigurationError);
+});
+
+test('inline puts the box on the text line where a text line exists', () => {
+  const html = (config) => renderLoader(config).html;
+  assert.match(html({ type: 'skeleton-line', inline: true }), /wavelo-inline/);
+  assert.doesNotMatch(html({ type: 'skeleton-line' }), /wavelo-inline/);
+  assert.match(html({ type: 'skeleton-line', inline: true, count: 2 }), /wavelo-inline wavelo-stacked/);
+  assert.equal(configFromAttributes({ inline: '' }).inline, true);
+  assert.equal(configFromAttributes({ inline: 'false' }).inline, false);
+  const options = (id) => loaderRegistry.find((loader) => loader.id === id).options;
+  // A fixed overlay is not on anybody's text line, and the measured table has to say so.
+  assert.ok(!options('fullscreen').includes('inline'), 'fullscreen advertises an inline it cannot use');
+  for (const id of ['ring', 'skeleton-card', 'progress-scroll']) {
+    assert.ok(options(id).includes('inline'), `${id} lost its inline alignment`);
+  }
 });

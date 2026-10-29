@@ -45,30 +45,30 @@ caller's theme into another's markup.
 
 The catalog holds 82 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
-same 24 configuration keys — `type`, `size`, `width`, `height`, `color`,
+same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
-`data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText` and
-`decorative` — plus arbitrary `data-*` values. `tests/framework.test.mjs`
-renders every key through every adapter and asserts each one reaches the
-element, so a bridge that falls behind the core fails the build.
+`data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
+`decorative`, `loading`, `count`, `inline` — plus arbitrary `data-*` values.
+`tests/framework.test.mjs` renders every key through every adapter and asserts each
+one reaches the element, so a bridge that falls behind the core fails the build.
 
 | Integration | How the surface is reached |
 | --- | --- |
 | `@wavelo/core` | `renderLoader(config)`; `type` is the typed `LoaderId` union with a `string` escape hatch for runtime values |
 | `@wavelo/core/loaders/<id>` | one design, config minus `type`; ships only that design's slice |
 | `@wavelo/react` | the whole props object is passed to the core |
-| `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config |
-| `@wavelo/angular` | 20 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
+| `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config. The boolean keys are declared without a type: Vue casts an absent `Boolean` prop to `false`, which would override a registered default and hide a loader nobody asked to hide |
+| `@wavelo/angular` | 27 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
 | `@wavelo/svelte` | `$props()` is forwarded to the core whole, so any key reaches it |
 | `@wavelo/web-components` | one attribute per key in kebab case (`stroke-width`, `secondary-color`, `reduced-motion`), plus any `data-*` |
-| `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement` and the style helpers |
+| `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement`, `createWavelo` and the style helpers |
 
-Boolean options (`paused`) need binding syntax in Vue and Svelte
-(`:paused="true"`, `paused={true}`); a bare attribute reads as a string there.
-On the custom element, `paused=""` is true and `paused="false"` is false — and the
-same strings in a JavaScript config object mean the same thing, so the two paths
-cannot disagree.
+Boolean options (`paused`, `decorative`, `loading`, `inline`) need binding syntax in
+Vue and Svelte (`:paused="true"`, `paused={true}`); a bare attribute reads as a
+string there. On the custom element, `paused=""` is true and `paused="false"` is
+false — and the same strings in a JavaScript config object mean the same thing, so
+the two paths cannot disagree.
 
 ## Value grammar and measured options
 
@@ -90,8 +90,12 @@ renders every design in Chromium with each key set and unset and records which k
 changed the render; `npm run audit:customization` repeats that measurement in CI and
 fails if the committed table drifts. A design therefore cannot advertise an option
 that does nothing: `skeleton-card` has no `strokeWidth`, `ring` has no
-`secondaryColor`, `progress-bar` has no `duration`, and `progress-scroll` has no
-`speed` because its fill follows the scroll position rather than the clock.
+`secondaryColor`, `progress-bar` has no `duration`, `progress-scroll` has no
+`speed` because its fill follows the scroll position rather than the clock,
+`three-dots` has no `count` because three dots are three dots, and `fullscreen` has
+no `inline` because a fixed overlay sits on nobody's line of text. The class name a
+key switches on is left out of the comparison, so what is measured is the effect,
+not the mechanism.
 
 ## Determinate progress
 

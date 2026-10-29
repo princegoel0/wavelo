@@ -37,10 +37,35 @@ Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
 render: `scripts/honoured-options.mjs` draws every design in Chromium with each key
 set and unset and keeps the keys that made a difference, as a hex bitset decoded by
 the registry. So `skeleton-card` advertises no `strokeWidth`, `ring` advertises no
-`secondaryColor`, `progress-bar` advertises no `duration`, and `progress-scroll`
-advertises no `speed` — its fill follows the scroll position, not the clock.
+`secondaryColor`, `progress-bar` advertises no `duration`, `progress-scroll`
+advertises no `speed` — its fill follows the scroll position, not the clock —
+`three-dots` advertises no `count`, and `fullscreen` advertises no `inline`.
 `npm run audit:customization` re-measures the table and fails when it drifts, so an
-option that does nothing cannot be documented as one.
+option that does nothing cannot be documented as one. The comparison ignores the
+element's own `class`, so a key is credited for what it changes on screen, not for
+switching a mechanism on.
+
+## Visibility, repetition and flow
+
+Three options cover the shape of a loader rather than its look:
+
+```ts
+renderLoader({ type: 'ring', label: 'Loading', loading: false });
+// { html: '', css: '', … } — nothing to mount and no slice to inject
+
+renderLoader({ type: 'skeleton-line', count: 3 });
+// a stack of three tracks; the last one ends short, like a paragraph does
+
+renderLoader({ type: 'skeleton-line', inline: true });
+// sized by `width`/`height`, on the text line, instead of a 10-rem block
+```
+
+`loading: false` is the only value that hides a loader, and it hides it completely:
+the returned `html` and `css` are empty, the adapters emit no element, and
+`ensureStyles` ignores the empty slice. `count` applies to the designs that are
+authored as repeating tracks — the skeleton line, card, table and dashboard, and
+`progress-steps` — and is validated as a whole number between 1 and 12. `inline`
+aligns an inline-level box and gives a block or grid design its inline twin.
 
 ## Styles
 
@@ -67,7 +92,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 
 | Path | Contents |
 | --- | --- |
-| `@wavelo/core` | types, registry, renderer, DOM helpers, style injection |
+| `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults |
 | `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
 | `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
 | `@wavelo/core/loaders` | barrel over all 82 designs |

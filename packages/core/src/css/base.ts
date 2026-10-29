@@ -11,6 +11,9 @@ export const baseCss = `
 @property --wavelo-progress{syntax:"<percentage>";inherits:true;initial-value:35%}
 .wavelo{display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);transition:--wavelo-progress .2s ease;animation-duration:var(--wavelo-duration,1s);animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
 .wavelo__part{box-sizing:border-box;background:currentColor}
+/* "inline" aligns an inline-level box with its text line; block and grid designs
+   get an inline twin in their own slice. */
+.wavelo-inline{vertical-align:middle}
 .wavelo-host{display:contents}
 .wavelo,.wavelo[data-wavelo-theme="light"]{--wavelo-skeleton-base:#e5e7eb;--wavelo-skeleton-highlight:#f9fafb}
 .wavelo[data-wavelo-theme="dark"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563}

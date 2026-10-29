@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "nested-squares", name: "Nested squares", category: "creative", kind: "rings", description: "Nested square rotation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "nested-squares" };
+const definition: LoaderDefinition = { id: "nested-squares", name: "Nested squares", category: "creative", kind: "rings", description: "Nested square rotation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "nested-squares" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const nestedSquares = (config: Omit<LoaderConfig, 'type'> = {}) =>

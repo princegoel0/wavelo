@@ -24,11 +24,11 @@ Not yet published.
   the scroll range.
 - Stylesheets are injected into the document head once per distinct slice rather
   than inlined into every component instance.
-- 24 configuration keys: `type`, `size`, `width`, `height`, `color`,
+- 27 configuration keys: `type`, `size`, `width`, `height`, `color`,
   `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
   `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
-  `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText` and
-  `decorative`, plus arbitrary `data-*` attributes.
+  `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
+  `decorative`, `loading`, `count`, `inline`, plus arbitrary `data-*` attributes.
 - Each design advertises only the keys it actually honours.
   `scripts/honoured-options.mjs` renders every design in Chromium with each key set
   and unset, and the measurement becomes `LoaderDefinition.options`, the gallery's
@@ -96,7 +96,35 @@ Not yet published.
   `useWaveloDefaults` in React, `provideWaveloDefaults` in Vue and Svelte, the
   `WAVELO_DEFAULTS` injection token in Angular, and `createWavelo()` in the core and
   vanilla packages. Nothing lives in a module singleton, because a shared default
-  would leak one request's theme into the next under server rendering.
+  would leak one request's theme into the next under server rendering. Registered
+  defaults may also name a design, so an app chooses its loader once.
+- `loaderFor(type, defaults)` in React and Vue returns a component bound to one
+  design and its house options, so a call site reads `<ButtonSpinner loading={busy} />`
+  instead of repeating a configuration. Precedence runs outward to inward: registered
+  defaults, the bound component's own options, then the call site.
+- `loading` binds visibility to a value instead of mounting and unmounting a
+  component: `false` returns empty `html` and empty `css`, `ensureStyles` ignores an
+  empty slice, and the adapters emit no element, so a hidden loader costs nothing and
+  leaves nothing behind.
+- `count` repeats the tracks of the designs that are authored from them — a stack of
+  skeleton lines (the last one short, as a paragraph ends), table rows, dashboard
+  tiles, card text lines, progress steps — validated as a whole number of 1 to 12.
+  A single counted line stacks inside an auto-sized grid track whose percentage
+  children resolve to zero width, so the stack declares its own `minmax(0, 1fr)`.
+- `inline` puts a loader on the text line: middle alignment for an inline-level box,
+  and an inline twin (`inline-block`/`inline-grid`) for every design authored as a
+  block or a grid, so a skeleton line can replace one word rather than a paragraph.
+  A fixed overlay advertises neither, because there it changes nothing.
+- Vue declared `paused`, `decorative`, `loading` and `inline` as `Boolean` props,
+  which Vue resolves to `false` when the call site passes nothing: a registered
+  default was erased, and a loader nobody asked to hide was hidden. They are now
+  declared without a type, so an absent prop stays absent and the core's single
+  boolean rule (`''` and `'true'` mean true; `false`, `'false'` and `'0'` mean
+  false) applies on every path.
+- The measured option table now ignores the element's own `class` when deciding
+  whether a key did something, so a key is credited for the effect it has on screen
+  rather than for switching a mechanism on. That is what makes `fullscreen` report no
+  `inline` while `ring` reports it.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

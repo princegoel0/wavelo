@@ -814,3 +814,97 @@ test('the accessibility options work through element attributes', async () => {
   assert.deepEqual(read.quiet, { 'aria-hidden': 'true' }, 'a decorative loader exposes nothing else');
   assert.equal(read.captionText, 'Uploading your archive');
 });
+
+test('a counted skeleton line becomes a stack of tracks that each paint', async () => {
+  await setContentPage(
+    '<div id="stack">' + renderLoader({ type: 'skeleton-line', count: 3, label: 'Loading' }).html + '</div>' +
+    '<div id="plain">' + renderLoader({ type: 'skeleton-line', label: 'Loading' }).html + '</div>' +
+    '<div id="spinner">' + renderLoader({ type: 'ring', inline: true, label: 'Loading' }).html + '</div>' +
+    '<div id="inline-line">' + renderLoader({ type: 'skeleton-line', inline: true, label: 'Loading' }).html + '</div>'
+  );
+  const read = await page.evaluate(() => {
+    const box = (id) => {
+      const element = document.querySelector(`#${id} .wavelo`);
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return {
+        display: style.display,
+        verticalAlign: style.verticalAlign,
+        width: Math.round(rect.width),
+        height: Math.round(rect.height)
+      };
+    };
+    const tracks = [...document.querySelectorAll('#stack .wavelo__part')].map((part) => {
+      const style = getComputedStyle(part);
+      const rect = part.getBoundingClientRect();
+      return {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        gradient: style.backgroundImage.includes('linear-gradient'),
+        animates: style.animationName !== 'none'
+      };
+    });
+    return { stack: box('stack'), tracks, plain: box('plain'), spinner: box('spinner'), inlineLine: box('inline-line') };
+  });
+  assert.equal(read.stack.display, 'grid', 'a counted line stacks its tracks');
+  assert.equal(read.tracks.length, 3);
+  for (const track of read.tracks) {
+    assert.ok(track.gradient, 'a track must paint the skeleton gradient itself');
+    assert.ok(track.animates, 'a track must shimmer');
+    assert.equal(track.height, 12, 'each track is the height of the line it replaces');
+  }
+  assert.ok(read.tracks[2].width < read.tracks[0].width, 'the last line ends the block short');
+  assert.equal(read.plain.display, 'block', 'one line is still the painted box itself');
+  assert.equal(read.plain.height, 12);
+  assert.equal(read.spinner.verticalAlign, 'middle', 'a spinner in a sentence sits on the line');
+  assert.equal(read.inlineLine.display, 'inline-block');
+  assert.ok(read.inlineLine.width <= 100 && read.inlineLine.height <= 17, `an inline line must be text-sized, saw ${read.inlineLine.width}x${read.inlineLine.height}`);
+});
+
+test('a loader that is not loading adds nothing to the document', async () => {
+  await setContentPage('<div id="hidden"></div><div id="shown"></div>');
+  const read = await page.evaluate(() => {
+    const sheets = () => document.querySelectorAll('style[data-wavelo-style]').length;
+    const before = sheets();
+    window.Wavelo.mountLoader(document.getElementById('hidden'), { type: 'ring', label: 'Loading', loading: false });
+    const afterHidden = sheets();
+    window.Wavelo.mountLoader(document.getElementById('shown'), { type: 'ring', label: 'Loading' });
+    return {
+      hiddenHtml: document.getElementById('hidden').innerHTML,
+      hiddenSheets: afterHidden - before,
+      shownHtml: document.getElementById('shown').innerHTML,
+      sheets: sheets() - before,
+      emptySheet: document.querySelector('style[data-wavelo-style="811c9dc5"]') !== null
+    };
+  });
+  assert.equal(read.hiddenHtml, '', 'nothing is mounted for a loader that is not loading');
+  assert.equal(read.hiddenSheets, 0, 'a hidden loader must not add a stylesheet');
+  assert.equal(read.sheets, 1, 'the visible loader still gets its one slice');
+  assert.match(read.shownHtml, /wavelo--ring/);
+  assert.equal(read.emptySheet, false, 'the empty slice must never be injected');
+});
+
+test('the custom element reads loading, count and inline from attributes', async () => {
+  await setContentPage('<wavelo-loader id="line" type="skeleton-line" count="4" inline></wavelo-loader>');
+  const read = await page.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const element = document.getElementById('line');
+    const tracks = () => element.querySelectorAll('.wavelo__part').length;
+    const shown = {
+      tracks: tracks(),
+      inline: element.querySelector('.wavelo').classList.contains('wavelo-inline'),
+      display: getComputedStyle(element.querySelector('.wavelo')).display
+    };
+    element.setAttribute('loading', 'false');
+    const hidden = { tracks: tracks(), html: element.innerHTML, emptySlices: document.querySelectorAll('style[data-wavelo-style="811c9dc5"]').length };
+    element.removeAttribute('loading');
+    return { shown, hidden, restored: tracks() };
+  });
+  assert.equal(read.shown.tracks, 4, 'the count attribute must set the track count');
+  assert.equal(read.shown.inline, true);
+  assert.equal(read.shown.display, 'inline-grid', 'an inline stack stays inline and keeps its rows');
+  assert.equal(read.hidden.tracks, 0);
+  assert.equal(read.hidden.html, '');
+  assert.equal(read.hidden.emptySlices, 0, 'hiding through the attribute must not inject the empty slice');
+  assert.equal(read.restored, 4, 'removing the attribute brings the loader back');
+});

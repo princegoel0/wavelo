@@ -5,6 +5,7 @@ export const orbitCss = `
 .wavelo--orbit .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--orbit .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--orbit{display:block;background:transparent}
+.wavelo--orbit.wavelo-inline{display:inline-block}
 .wavelo--orbit .wavelo__part{position:absolute;left:50%;top:50%;width:18%;height:18%;transform-origin:0 0;animation:wavelo-orbit var(--wavelo-duration,1s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--orbit .wavelo__part:nth-child(1){--orbit-angle:0deg}
 .wavelo--orbit .wavelo__part:nth-child(2){--orbit-angle:72deg}

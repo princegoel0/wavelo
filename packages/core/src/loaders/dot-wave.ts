@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "dot-wave", name: "Dot wave", category: "dots", kind: "wave", description: "Wave of dots", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "dot-wave" };
+const definition: LoaderDefinition = { id: "dot-wave", name: "Dot wave", category: "dots", kind: "wave", description: "Wave of dots", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "dot-wave" };
 const styles = `${baseCss}${waveCss}`;
 
 export const dotWave = (config: Omit<LoaderConfig, 'type'> = {}) =>

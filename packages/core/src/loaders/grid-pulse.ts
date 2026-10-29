@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "grid-pulse", name: "Grid pulse", category: "dots", kind: "pulse", description: "Two-by-two pulsing grid", options: ["className","color","data-testid","decorative","describedBy","direction","duration","label","labelledBy","paused","reducedMotion","size","speed","style"], supportsProgress: false, stability: "stable", visualSignature: "grid-pulse" };
+const definition: LoaderDefinition = { id: "grid-pulse", name: "Grid pulse", category: "dots", kind: "pulse", description: "Two-by-two pulsing grid", options: ["className","color","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style"], supportsProgress: false, stability: "stable", visualSignature: "grid-pulse" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const gridPulse = (config: Omit<LoaderConfig, 'type'> = {}) =>

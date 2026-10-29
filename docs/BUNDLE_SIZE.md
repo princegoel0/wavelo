@@ -6,17 +6,17 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 12,022 | 4.5 KB (4,612 B) | 5,632 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 14,566 | 5,098 | 6,144 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 53,132 | 11.2 KB (11,457 B) | 13,824 |
-| `@wavelo/core` + registry walk over all 82 designs | 53,135 | 11,463 | 13,824 |
-| `@wavelo/react` | 53,757 | 11,786 | 13,824 |
-| `@wavelo/vue` | 54,592 | 12,131 | 13,824 |
-| `@wavelo/angular` | 56,631 | 13,025 | 14,848 |
-| `@wavelo/svelte` | 53,324 | 11,558 | 13,824 |
-| `@wavelo/web-components` | 55,142 | 12,248 | 13,824 |
-| `@wavelo/vanilla` | 53,452 | 11,628 | 13,824 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 33,763 raw | 4,863 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 12,697 | 4.8 KB (4,877 B) | 5,632 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 16,776 | 5,693 | 6,144 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 55,844 | 11.9 KB (12,162 B) | 13,824 |
+| `@wavelo/core` + registry walk over all 82 designs | 55,847 | 12,170 | 13,824 |
+| `@wavelo/react` | 56,485 | 12,496 | 13,824 |
+| `@wavelo/vue` | 57,470 | 12,927 | 13,824 |
+| `@wavelo/angular` | 59,429 | 13,760 | 14,848 |
+| `@wavelo/svelte` | 56,036 | 12,258 | 13,824 |
+| `@wavelo/web-components` | 57,912 | 12,970 | 13,824 |
+| `@wavelo/vanilla` | 56,168 | 12,334 | 13,824 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 35,875 raw | 5,384 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a
 design chosen at build time must not carry the rest of the catalog, so it does not
@@ -38,21 +38,25 @@ and `renderLoader` choose by string at runtime, so they carry every slice and gr
 roughly 220 B per design added. Budgets sit about 12% above the measured value,
 rounded up to the next 512 B, and are re-based on purpose: a configuration key costs
 20-30 B gzipped in every bundle, which is what the four accessibility options cost a
-single design (4,205 → 4,612 B).
+single design (4,205 → 4,612 B). The three ergonomics options (`loading`, `count`,
+`inline`) cost a single design 265 B, more than the rule predicts, because two of
+them are new CSS rules rather than new reads of existing ones: `inline` needs a
+twin rule for every design that is authored as a block or a grid, and `count` needs
+the stack rules. A design that is not a skeleton does not load those rules at all.
 
 ## Why the numbers look like this
 
 Styles and markup are separate. A design's stylesheet slice is `baseCss` plus the
 one render-kind slice it uses. The shared base carries the layout shell, the
 reduced-motion and theme rules, and the four `@keyframes` blocks that more than
-one kind animates with (2.0 KB, listed once for the whole catalog rather than
+one kind animates with (2.2 KB, listed once for the whole catalog rather than
 repeated per kind). The other 40 frames each live in their own module under
 `css/keyframes/`, imported only by the kinds that animate with them, so a single
 design never pays for a frame it cannot run. `npm run catalog` fails if a slice
 animates with a frame nobody imports, or re-imports one the base already ships.
 
 - Importing one design costs its slice: the `ring` entry point ships 2.1 KB of
-  ring rules rather than the 34 KB sheet for all 82 designs.
+  ring rules rather than the 36 KB sheet for all 82 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can
   render every design; it is paid once per page, not once per loader.

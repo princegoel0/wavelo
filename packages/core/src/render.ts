@@ -40,16 +40,18 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
-    // Line, avatar and image placeholders are painted by the element itself;
-    // only the composite layouts need child tracks.
-    if (type === 'skeleton-line' || type === 'skeleton-avatar' || type === 'image-placeholder') return '';
-    return many(type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5);
+    // Line, avatar and image placeholders are painted by the element itself; only
+    // the composite layouts have child tracks. A line with a `count` becomes a
+    // stack of tracks, because that is what a block of placeholder text is.
+    if (type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    if (type === 'skeleton-line') return config.count && config.count > 1 ? many(config.count) : '';
+    return many(config.count ?? (type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5));
   }
   if (kind === 'progress') {
     if (type === 'progress-steps') {
       // Steps are discrete: a value fills whole steps, and the same 35% default
       // used for `--wavelo-progress` decides the fill when no value is given.
-      const steps = 5;
+      const steps = config.count ?? 5;
       const filled = Math.ceil(((config.value ?? 35) / config.max) * steps);
       return Array.from(
         { length: steps },
@@ -72,6 +74,9 @@ function attributes(config: Attributes): string {
 
 export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact'): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
+  // A loader that is not loading costs nothing: no markup, and no stylesheet slice
+  // to inject, so a page full of `loading={false}` adds no bytes to the document.
+  if (!config.loading) return { html: '', css: '', styleKey: styleKey(''), config, definition, resolution, fallback: resolution === 'default' };
   const progressValue = definition.supportsProgress && config.value !== undefined;
   // Named either by its own label or by a reference to visible text. `decorative`
   // hides the loader from assistive technology even when it is named, for the case
@@ -117,7 +122,19 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
   ]
     .filter(Boolean)
     .join(';');
-  const classes = ['wavelo', `wavelo--${definition.kind}`, `wavelo--${definition.id}`, config.className].filter(Boolean).join(' ');
+  // `wavelo-inline`/`wavelo-stacked` are single-dash classes on purpose: the
+  // stylesheet-slice check reserves `wavelo--<name>` for a render kind or a design.
+  const stacked = definition.kind === 'skeleton' && definition.id === 'skeleton-line' && (config.count ?? 1) > 1;
+  const classes = [
+    'wavelo',
+    `wavelo--${definition.kind}`,
+    `wavelo--${definition.id}`,
+    config.className,
+    config.inline ? 'wavelo-inline' : '',
+    stacked ? 'wavelo-stacked' : ''
+  ]
+    .filter(Boolean)
+    .join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));
   const html =
