@@ -43,6 +43,10 @@ Audited version: `0.1.0`
   every push and pull request, not only in the release workflow.
 - [x] Confirmed on GitHub that both jobs are green for `dev` at `19cffe1` and for
   `main` at `603ecfc`, including the Playwright install step on a clean runner.
+- [x] Merged the Phases B–J work as `5dcbdf2` through pull request #10 after both
+  required checks passed on the pull request; on `main` the `CI` workflow passed and
+  the `Release packages` workflow ran `Validate release` successfully and **skipped**
+  `Publish npm packages`, because `RELEASE_ENABLED` is `false`.
 - [x] Merged `dev` into `main` as `603ecfc` through pull request #6; the release
   workflow ran there with `Validate release` green and `Publish npm packages`
   skipped, because `RELEASE_ENABLED` is `false`.
