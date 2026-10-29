@@ -75,9 +75,9 @@ and the timeline designs on the document clock). Safari is not exercised here.
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
-| GitHub Actions, pull request #10 head at `f1a2c11` | Passed: `verify` and `verify-browser` green on the push and pull-request runs, including the new `packages:check`, `audit:layout` and `pack:verify` steps |
-| `dev` → `main` merge | Done as merge commit `5dcbdf2` through pull request #10, which carried Phases B–J; the earlier pass landed as `603ecfc` through pull request #6 |
-| GitHub Actions, `main` at `5dcbdf2` | `CI` passed; `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
+| GitHub Actions, pull request #12 head at `279677a` | Passed: `verify` and `verify-browser` green on both the push and pull-request runs, now including `npx playwright install --with-deps chromium firefox` and the Gecko smoke suite on a clean runner |
+| `dev` → `main` merge | Done as merge commit `f1c47a0` through pull request #12, which carried the Tier 1 gaps (fallback trace, `tokens.css`, Map lookup, PRD corrections, Gecko suite); earlier passes landed as `138b1f1` (#11), `5dcbdf2` (#10, Phases B–J) and `603ecfc` (#6) |
+| GitHub Actions, `main` at `f1c47a0` | `CI` passed (`verify`, `verify-browser`); `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
 | npm registry state | `0.1.0` not present for any of the seven names (`npm view @wavelo/core version` returns a 404) |
 
 ## Browser evidence

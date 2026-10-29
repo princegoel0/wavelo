@@ -1030,6 +1030,12 @@ Use Playwright or equivalent tooling to test:
 - Console errors.
 - Real usage examples.
 
+Two engines run in CI. Chromium carries the full suite; Firefox runs a smoke suite
+(`npm run test:browser:firefox`) covering sheet application, option and ancestor-token
+inheritance, painting for every design, the custom element, and the timeline fallbacks.
+Safari is not exercised: the supported-version floor there is implied by the CSS features
+used, not measured.
+
 ## 13.4 Package Installation Tests
 
 The release pipeline must test actual packed packages.
