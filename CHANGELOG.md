@@ -73,6 +73,23 @@ Not yet published.
   widths inside an auto-sized grid track resolved to zero, so the shimmer had
   nothing to show. The tracks are now sized with `minmax(0, 1fr)` and the presets
   carry a usable minimum box.
+- Global defaults now work. A value the caller did not choose is no longer written
+  into every element's `style` attribute; each token's default lives in the rule that
+  reads it, so `--wavelo-size`, `--wavelo-duration`, `--wavelo-stroke`,
+  `--wavelo-direction`, `--wavelo-play-state` and the colours can be set once on
+  `:root` or a class and reach every loader inside, with a loader's own options
+  winning. An unconfigured loader renders with no `style` attribute at all.
+- `style` carries any CSS declaration — `position`, `marginTop`, camelCase or
+  kebab-case — not just `--wavelo-*`, and the token names are a typed `WaveloTokens`
+  interface, so they autocomplete instead of being guessed.
+- `--wavelo-progress` is registered with `@property`, so a determinate value
+  animates between readings instead of jumping, including the conic ring where a
+  width transition cannot help.
+- Defaults can be registered for a subtree without a global: `WaveloProvider` and
+  `useWaveloDefaults` in React, `provideWaveloDefaults` in Vue and Svelte, the
+  `WAVELO_DEFAULTS` injection token in Angular, and `createWavelo()` in the core and
+  vanilla packages. Nothing lives in a module singleton, because a shared default
+  would leak one request's theme into the next under server rendering.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

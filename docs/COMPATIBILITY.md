@@ -22,6 +22,25 @@ CI. Firefox and Safari have not been exercised by this suite; the versions above
 are the requirement implied by the CSS features used, not a claim that they were
 tested.
 
+## Where a value comes from
+
+A rendered loader writes only what its caller chose. Everything else resolves in
+CSS, in this order:
+
+1. the loader's own option, written inline on the element;
+2. a registered default (`WaveloProvider`, `provideWaveloDefaults`,
+   `WAVELO_DEFAULTS`, `createWavelo({...})`), merged into the config before the
+   loader's own options;
+3. a `--wavelo-*` custom property on any ancestor, or on the element through
+   `className`;
+4. the fallback in the rule that reads the token.
+
+Inline always beats inherited, which is exactly why unset options are not written
+inline any more: a page that sets `--wavelo-size` on `:root` would otherwise lose to
+the renderer's own default. Registration is per render tree rather than a module
+global, so a server that renders many requests in one process cannot leak one
+caller's theme into another's markup.
+
 ## Configuration surface
 
 The catalog holds 82 public IDs, each with its own implementation, built from

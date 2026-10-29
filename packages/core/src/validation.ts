@@ -58,21 +58,25 @@ function optionalColor(value: string | undefined): string | undefined {
 }
 
 /**
- * `style` carries CSS custom properties. A key that cannot be applied is
- * rejected instead of dropped: a silently discarded option is exactly the
- * failure this library is meant to remove.
+ * `style` carries any CSS declaration, so size, radius or easing can be overridden
+ * from the config object without leaving it — the escape hatch a raw `style` prop
+ * gives a React component. A key that is not a property name, or a value that could
+ * end a declaration or open a block, is rejected rather than dropped: a silently
+ * discarded option is exactly the failure this library exists to remove.
  */
+const CSS_PROPERTY = /^(?:--[a-z0-9_-]+|[a-z][a-z0-9-]*)$/i;
+
 function safeStyle(style: LoaderConfig['style']): Record<string, string> {
   if (style === undefined) return {};
-  if (typeof style !== 'object' || Array.isArray(style)) throw new LoaderConfigurationError('style must be an object of CSS custom properties.');
+  if (typeof style !== 'object' || Array.isArray(style)) throw new LoaderConfigurationError('style must be an object of CSS properties.');
   const result: Record<string, string> = {};
   for (const [key, value] of Object.entries(style)) {
-    if (!/^--wavelo-[a-z0-9-]+$/.test(key)) {
-      throw new LoaderConfigurationError(`Unsupported style key: ${key}. Style keys must be --wavelo-* custom properties.`);
-    }
+    // camelCase arrives from JSX and template bindings; CSS wants kebab-case.
+    const property = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    if (!CSS_PROPERTY.test(property)) throw new LoaderConfigurationError(`Unsupported style key: ${key}`);
     const stringValue = String(value);
-    if (/[\u0000-\u001f<>"'`{};]/.test(stringValue)) throw new LoaderConfigurationError(`Invalid CSS variable value for ${key}`);
-    result[key] = stringValue;
+    if (/[\u0000-\u001f<>"'`{};\\@]|url\s*\(/i.test(stringValue)) throw new LoaderConfigurationError(`Invalid CSS value for ${key}`);
+    result[property] = stringValue;
   }
   return result;
 }

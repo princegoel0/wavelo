@@ -2,6 +2,41 @@ import type { LoaderId } from './ids.js';
 
 export type { LoaderId };
 
+/**
+ * The CSS custom properties Wavelo's stylesheets read. Setting one in `style`, on
+ * an ancestor, or in a class rule configures every loader it contains; each key
+ * below is the token-level twin of a config option, and the ones with no twin
+ * (`--wavelo-radius`, the skeleton palette) are reachable only this way.
+ */
+export interface WaveloTokens {
+  '--wavelo-size'?: string | number;
+  '--wavelo-width'?: string | number;
+  '--wavelo-height'?: string | number;
+  '--wavelo-color'?: string;
+  '--wavelo-secondary-color'?: string;
+  '--wavelo-background'?: string;
+  '--wavelo-duration'?: string;
+  '--wavelo-stroke'?: string | number;
+  '--wavelo-radius'?: string;
+  '--wavelo-progress'?: string;
+  '--wavelo-skeleton-base'?: string;
+  '--wavelo-skeleton-highlight'?: string;
+  '--wavelo-direction'?: 'normal' | 'reverse';
+  '--wavelo-play-state'?: 'running' | 'paused';
+}
+
+/**
+ * `style` accepts the typed Wavelo tokens plus any other CSS declaration, so
+ * `marginTop` or `position` work the way they would on a plain element.
+ */
+export type LoaderStyle = WaveloTokens & Record<string, string | number>;
+
+/**
+ * Defaults registered once for a subtree, page or app. Anything a caller passes on
+ * the individual loader wins over these.
+ */
+export type WaveloDefaults = Omit<LoaderConfig, 'type'>;
+
 export type LoaderCategory =
   | 'spinner'
   | 'dots'
@@ -43,7 +78,7 @@ export interface LoaderConfig {
   paused?: boolean | 'true' | 'false' | '0' | '';
   label?: string;
   className?: string;
-  style?: Record<string, string | number>;
+  style?: LoaderStyle;
   reducedMotion?: ReducedMotion;
   'data-testid'?: string;
   value?: number;

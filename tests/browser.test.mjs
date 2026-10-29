@@ -744,15 +744,46 @@ test('the style attribute configures custom properties without stealing host sty
     const token = document.getElementById('token');
     const host = document.getElementById('host');
     return {
-      tokenOnInner: token.querySelector('.wavelo').getAttribute('style').includes('--wavelo-radius:2px'),
+      tokenOnInner: (token.querySelector('.wavelo').getAttribute('style') ?? '').includes('--wavelo-radius:2px'),
       hostMargin: getComputedStyle(host).marginTop,
       // A host property that is not a --wavelo-* token stays host styling and is
       // not fed to the renderer, where it would be rejected.
-      hostInnerHasMargin: host.querySelector('.wavelo').getAttribute('style').includes('margin')
+      hostInnerHasMargin: (host.querySelector('.wavelo').getAttribute('style') ?? '').includes('margin'),
+      hostHasStyleAttribute: host.querySelector('.wavelo').hasAttribute('style')
     };
   });
   assert.equal(read.tokenOnInner, true, 'a --wavelo-* property in the attribute must reach the rendered element');
   assert.equal(read.hostMargin, '16px', 'ordinary host styling in the same attribute must still apply');
   assert.equal(read.hostInnerHasMargin, false, 'non-token declarations must not be treated as configuration');
+  assert.equal(read.hostHasStyleAttribute, false, 'a loader with nothing configured must not carry a style attribute');
   await scoped.close();
+});
+
+test('a determinate value animates because the progress token is registered', async () => {
+  await setContentPage(
+    `<div id="before">${renderLoader({ type: 'progress-bar', label: 'Working', value: 10 }).html}</div>` +
+    `<div id="moving">${renderLoader({ type: 'progress-bar', label: 'Working', value: 10 }).html}</div>`
+  );
+  const transitioned = await page.evaluate(() => {
+    // The library registers the property; the transition it declares is what a
+    // value change animates through.
+    return getComputedStyle(document.querySelector('#before .wavelo')).transitionProperty.includes('--wavelo-progress');
+  });
+  assert.equal(transitioned, true, 'the base sheet must transition --wavelo-progress');
+
+  const samples = await page.evaluate(async () => {
+    const element = document.querySelector('#moving .wavelo');
+    const read = () => Number.parseFloat(getComputedStyle(element).getPropertyValue('--wavelo-progress'));
+    element.style.setProperty('transition', '--wavelo-progress 800ms linear');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const start = read();
+    element.style.setProperty('--wavelo-progress', '90%');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    const middle = read();
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    return { start, middle, end: read() };
+  });
+  assert.ok(Math.abs(samples.start - 10) < 1, `expected to start at 10%, saw ${samples.start}`);
+  assert.ok(samples.middle > 15 && samples.middle < 85, `the value did not interpolate: ${samples.middle}`);
+  assert.ok(samples.end > 89, `the value never reached the target: ${samples.end}`);
 });

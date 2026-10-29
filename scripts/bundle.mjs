@@ -25,8 +25,13 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 // rather than pretending to be per-design.
 const runtime = 12 * 1024;
 const budgets = {
-  'individual-loader': 4 * 1024,
-  'two-loaders': 5 * 1024,
+  // A design chosen at build time carries its slice plus the token defaults that
+  // used to be written inline on every element, so ancestor and class-level
+  // theming can reach it: 3,542 B before the change, 4,205 B after. The saving
+  // lands per page instead — a default loader now carries no `style` attribute at
+  // all, where it used to carry about 180 bytes of tokens.
+  'individual-loader': 4.5 * 1024,
+  'two-loaders': 5.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,

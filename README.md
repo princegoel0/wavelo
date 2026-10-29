@@ -70,6 +70,52 @@ set `animation-timeline` yourself to drive it from an inner scroll container.
 Where scroll timelines are unsupported the same keyframes sweep on the document
 clock, so the bar shows activity instead of an empty track.
 
+## Configure it once, then just use it
+
+Every token below can be set on any ancestor — `:root`, a layout wrapper, a
+component class — and every loader inside inherits it. A value passed to one loader
+overrides that one loader:
+
+```css
+:root{--wavelo-color:#6366f1;--wavelo-size:1.5rem;--wavelo-duration:1.2s;--wavelo-stroke:3px}
+.dark-surface{--wavelo-color:#e0e7ff;--wavelo-skeleton-base:#1f2937;--wavelo-skeleton-highlight:#374151}
+```
+
+| token | config key it backs | default |
+| --- | --- | --- |
+| `--wavelo-size` | `size` (and `width`/`height` when they are unset) | `2.5rem` |
+| `--wavelo-width` / `--wavelo-height` | `width` / `height` | falls back to `--wavelo-size` |
+| `--wavelo-color` | `color`, and everything painted through `currentColor` | `#6366f1` |
+| `--wavelo-secondary-color` | `secondaryColor`, on the designs that layer a second colour | `#a5b4fc` |
+| `--wavelo-background` | `backgroundColor` | `transparent` (the overlay keeps its own scrim) |
+| `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
+| `--wavelo-stroke` | `strokeWidth` | `3px` |
+| `--wavelo-direction` | `direction` | `normal` |
+| `--wavelo-play-state` | `paused` | `running` |
+| `--wavelo-progress` | `value` / `max` on the determinate designs | `35%`, and it interpolates |
+| `--wavelo-skeleton-base` / `--wavelo-skeleton-highlight` | the shimmer, normally via `theme` | light or dark palette |
+| `--wavelo-radius` | skeleton/placeholder corner radius | `.4rem` |
+
+For defaults that are configuration rather than styling — label, reduced-motion
+policy, design choice — register them for a subtree. Each is per render tree, never
+a global, so server rendering cannot leak one request's settings into another:
+
+```tsx
+import { WaveloProvider, Loader } from '@wavelo/react';
+
+<WaveloProvider defaults={{ color: '#6366f1', size: 32, reducedMotion: 'auto', label: 'Loading' }}>
+  <Loader type="ring" />            {/* inherits */}
+  <Loader type="ring" size={64} />  {/* overrides */}
+</WaveloProvider>
+```
+
+```ts
+// Vue: provideWaveloDefaults({ size: 32 }) in a parent's setup
+// Svelte: provideWaveloDefaults({ size: 32 }) during init; WaveloLoader reads it
+// Angular: providers: [{ provide: WAVELO_DEFAULTS, useValue: { size: 32 } }]
+// Core and vanilla: createWavelo({ size: 32 }).render({ type: 'ring' })
+```
+
 ## Stylesheets
 
 Styles never travel inside component markup. A design's slice is added to the

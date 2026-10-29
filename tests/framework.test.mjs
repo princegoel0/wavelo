@@ -112,8 +112,45 @@ test('Svelte component compiles for client and server without legacy syntax', as
   // The component forwards its props object to the core renderer, so it accepts
   // every key by construction rather than by an enumerated list.
   assert.match(source, /const config: LoaderConfig = \$props\(\)/);
-  assert.match(source, /renderLoader\(config\)/);
+  assert.match(source, /renderLoader\(mergeWaveloConfig\(defaults, config\)\)/);
   assert.match(source, /ensureStyles\(rendered\.css\)/);
+  // The component inlines the context key because a consumer's bundler resolves
+  // only package imports from the shipped source; it must stay the exported one.
+  const svelte = await import('../packages/svelte/dist/index.js');
+  assert.equal(source.includes(`'${svelte.WAVELO_DEFAULTS_KEY}'`), true, 'the Svelte context key drifted from the exported constant');
+});
+
+test('registered defaults apply underneath a loader and lose to its own options', async () => {
+  const { createWavelo } = await import('../packages/core/dist/index.js');
+  const { renderReactLoader } = await import('../packages/react/dist/index.js');
+  const { renderVueLoader } = await import('../packages/vue/dist/index.js');
+  const { renderSvelteLoader } = await import('../packages/svelte/dist/index.js');
+  const { renderAngularLoader } = await import('../packages/angular/dist/index.js');
+  const defaults = { color: '#ff0000', size: 64, speed: 0.5, label: 'Loading', reducedMotion: 'never' };
+
+  // The same defaults, applied through each documented entry point, must produce
+  // the same markup.
+  const expected = createWavelo(defaults).render({ type: 'ring' }).html;
+  for (const [name, html] of Object.entries({
+    core: expected,
+    react: renderReactLoader({ type: 'ring' }, defaults).html,
+    vue: renderVueLoader({ type: 'ring' }, defaults).html,
+    svelte: renderSvelteLoader({ type: 'ring' }, defaults).html,
+    angular: renderAngularLoader({ type: 'ring' }, defaults).html
+  })) {
+    assert.equal(html, expected, `${name} did not apply the registered defaults`);
+  }
+  assert.match(expected, /--wavelo-color:#ff0000/);
+  assert.match(expected, /--wavelo-size:64px/);
+  assert.match(expected, /--wavelo-duration:2s/);
+  assert.match(expected, /aria-label="Loading"/);
+  assert.match(expected, /data-wavelo-motion="never"/);
+
+  // An option on the loader itself wins, and an `undefined` in its config must not
+  // erase a default.
+  const overridden = createWavelo(defaults).render({ type: 'ring', size: 20, color: undefined });
+  assert.match(overridden.html, /--wavelo-size:20px/);
+  assert.match(overridden.html, /--wavelo-color:#ff0000/, 'an explicit undefined must not clear a default colour');
 });
 
 test('the custom element observes every configuration attribute', async () => {

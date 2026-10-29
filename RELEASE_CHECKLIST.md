@@ -44,9 +44,9 @@ Audited version: `0.1.0`
   workflow ran there with `Validate release` green and `Publish npm packages`
   skipped, because `RELEASE_ENABLED` is `false`.
 - [x] Ran `npm run check`: passed; build with catalog generation, strict
-  typecheck, 36 unit tests, catalog drift check, documentation sync, and bundle
+  typecheck, 37 unit tests, catalog drift check, documentation sync, and bundle
   budgets.
-- [x] Ran `npm run test:browser`: passed; 20 tests in Chromium.
+- [x] Ran `npm run test:browser`: passed; 21 tests in Chromium.
 - [x] Ran `npm run audit:customization`: passed; what each of the 82 designs
   advertises is measured in Chromium, not maintained by hand, so an option that
   changes nothing cannot be advertised.

@@ -1,8 +1,16 @@
-import { computed, defineComponent, h, useAttrs, watchEffect, type PropType } from 'vue';
-import { ensureStyles, loaderConfigKeys, renderLoader } from '@wavelo/core';
-import type { LoaderConfig, RenderResult } from '@wavelo/core';
+import { computed, defineComponent, h, inject, provide, useAttrs, watchEffect, type InjectionKey, type PropType } from 'vue';
+import { ensureStyles, loaderConfigKeys, mergeWaveloConfig, renderLoader } from '@wavelo/core';
+import type { LoaderConfig, RenderResult, WaveloDefaults } from '@wavelo/core';
 
 export type WaveloProps = LoaderConfig;
+
+/** Injection key for the defaults every `<Loader>` in this subtree inherits. */
+export const waveloDefaultsKey: InjectionKey<WaveloDefaults> = Symbol('wavelo-defaults');
+
+/** Call in a parent's `setup` to set colour, size, speed and the rest once. */
+export function provideWaveloDefaults(defaults: WaveloDefaults): void {
+  provide(waveloDefaultsKey, defaults);
+}
 
 // `data-*` keys arrive as fallthrough attributes rather than declared props.
 const declaredKeys = loaderConfigKeys.filter((key) => !key.startsWith('data-'));
@@ -27,12 +35,13 @@ export const Loader = defineComponent({
   inheritAttrs: false,
   setup(source) {
     const attrs = useAttrs();
+    const defaults = inject(waveloDefaultsKey, null);
     const result = computed(() => {
       const dataAttributes: Record<string, string> = {};
       for (const [name, value] of Object.entries(attrs)) {
         if (name.startsWith('data-') && typeof value === 'string') dataAttributes[name] = value;
       }
-      return renderLoader({ ...source, ...dataAttributes } as LoaderConfig);
+      return renderLoader(mergeWaveloConfig(defaults, { ...source, ...dataAttributes } as LoaderConfig));
     });
     watchEffect(() => ensureStyles(result.value.css));
     return () => h('span', { class: 'wavelo-host', innerHTML: result.value.html });
@@ -40,6 +49,6 @@ export const Loader = defineComponent({
 });
 
 /** The render result without Vue, for server rendering and tests. */
-export function renderVueLoader(props: WaveloProps = {}): RenderResult {
-  return renderLoader(props);
+export function renderVueLoader(props: WaveloProps = {}, defaults?: WaveloDefaults): RenderResult {
+  return renderLoader(mergeWaveloConfig(defaults, props));
 }

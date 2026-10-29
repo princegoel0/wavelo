@@ -82,23 +82,27 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     attrs['aria-valuemax'] = String(config.max);
     attrs['aria-valuenow'] = String(config.value);
   }
+  // Only what the caller chose is written inline. Every token the stylesheets read
+  // has a default in the rule that consumes it, so an ancestor or a class can set
+  // `--wavelo-size`, `--wavelo-duration` or `--wavelo-stroke` once and have it
+  // apply — an inline default used to beat any of them.
+  const chosen = (key: keyof LoaderConfig) => input[key] !== undefined;
   const inline = [
-    `--wavelo-size:${config.size}`,
-    `--wavelo-width:${config.width}`,
-    `--wavelo-height:${config.height}`,
-    // Only the colours the caller chose are set here. An inline
-    // `--wavelo-color: var(--wavelo-color, #6366f1)` is a self-reference, which
-    // resolves to nothing and would leave every design inheriting the page
-    // colour; setting `--wavelo-background` would also defeat the per-design
-    // fallbacks, such as the section overlay's own scrim.
+    chosen('size') ? `--wavelo-size:${config.size}` : '',
+    chosen('width') ? `--wavelo-width:${config.width}` : '',
+    chosen('height') ? `--wavelo-height:${config.height}` : '',
+    // An inline `--wavelo-color: var(--wavelo-color, #6366f1)` is a
+    // self-reference, which CSS resolves as invalid at computed-value time; and
+    // setting `--wavelo-background` would defeat per-design fallbacks such as the
+    // section overlay's own scrim.
     config.color === undefined ? '' : `--wavelo-color:${config.color}`,
     config.secondaryColor === undefined ? '' : `--wavelo-secondary-color:${config.secondaryColor}`,
     config.backgroundColor === undefined ? '' : `--wavelo-background:${config.backgroundColor}`,
-    `--wavelo-duration:${config.duration}`,
-    `--wavelo-stroke:${config.strokeWidth}px`,
-    `--wavelo-direction:${config.direction ?? 'normal'}`,
-    `--wavelo-play-state:${config.paused ? 'paused' : 'running'}`,
-    `--wavelo-progress:${config.value === undefined ? '35%' : `${(config.value / config.max) * 100}%`}`,
+    chosen('duration') || chosen('speed') ? `--wavelo-duration:${config.duration}` : '',
+    chosen('strokeWidth') ? `--wavelo-stroke:${config.strokeWidth}px` : '',
+    chosen('direction') ? `--wavelo-direction:${config.direction}` : '',
+    chosen('paused') ? `--wavelo-play-state:${config.paused ? 'paused' : 'running'}` : '',
+    chosen('value') ? `--wavelo-progress:${(config.value! / config.max) * 100}%` : '',
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
   ]
     .filter(Boolean)
@@ -107,7 +111,7 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));
   const html =
-    `<span class="${escapeHtml(classes)}" style="${escapeHtml(inline)}"` +
+    `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +
     attributes(dataAttributes) +
     attributes(attrs) +

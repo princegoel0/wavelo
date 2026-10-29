@@ -16,8 +16,8 @@ import { css as scrollFillFrames } from '../keyframes/scroll-fill.js';
  * empty track.
  */
 export const scrollCss = `
-.wavelo--scroll{display:block;width:var(--wavelo-width);height:var(--wavelo-height);min-width:6rem;max-height:.5rem;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent)}
-.wavelo--scroll .wavelo__part{display:block;position:relative;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,currentColor 45%,transparent),currentColor);animation:wavelo-scroll-fill var(--wavelo-duration) linear infinite var(--wavelo-direction) var(--wavelo-play-state)}
+.wavelo--scroll{display:block;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));min-width:6rem;max-height:.5rem;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent)}
+.wavelo--scroll .wavelo__part{display:block;position:relative;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,currentColor 45%,transparent),currentColor);animation:wavelo-scroll-fill var(--wavelo-duration,1s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--progress-scroll .wavelo__part:after{content:"";position:absolute;left:100%;top:50%;height:220%;aspect-ratio:1;border-radius:50%;background:currentColor;transform:translate(-50%,-50%)}
 @supports (animation-timeline:scroll()){
 .wavelo--scroll .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:scroll(root block)}

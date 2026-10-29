@@ -48,7 +48,7 @@ drifting a generated loader made catalog validation fail.
 | HIGH | `paused` and `direction` did nothing | Every per-kind rule used the `animation:` shorthand, which resets `animation-direction`, `animation-play-state` and delay. Computed styles reported `running`/`normal` for ring, dots and bars regardless of configuration. | Fixed: controls are carried inside the shorthand as `var(--wavelo-direction)`/`var(--wavelo-play-state)`. Asserted by computed style **and** `document.getAnimations()` play-state. |
 | HIGH | `reducedMotion: 'always'` equalled `'auto'` | The only motion rule sat inside `@media (prefers-reduced-motion:reduce)` and merely excluded `never`, so nothing forced reduction. Contradicted `PRD.md`. | Fixed: an out-of-media-query rule keyed to `data-wavelo-motion="always"`. Covered for both OS settings. |
 | HIGH | Tests asserted strings, not behaviour | `tests/core.test.mjs` matched `--wavelo-play-state:paused` in the HTML, so both defects above passed green; CI ran no browser suite. | Fixed: `tests/browser.test.mjs` now covers computed styles, injection counts, slice isolation, the custom element and axe, and CI runs it in a dedicated `verify-browser` job on every push and PR. |
-| HIGH | "Modular" cost 78% of a single-design bundle | One imported loader shipped 20,629 B of the 26,556 B minified bundle as CSS for all 82 designs. | Fixed: styles are split into a shared base plus 12 render-kind slices. One design now ships 3,880 B gzipped (budget tightened from 7,168 to 4,096), and every design is re-rendered in the browser using only its own slice to prove the slices are complete. |
+| HIGH | "Modular" cost 78% of a single-design bundle | One imported loader shipped 20,629 B of the 26,556 B minified bundle as CSS for all 82 designs. | Fixed: styles are split into a shared base plus 12 render-kind slices. One design now ships 4,205 B gzipped (budget tightened from 7,168 to 4,096), and every design is re-rendered in the browser using only its own slice to prove the slices are complete. |
 | HIGH | Stylesheets were duplicated per instance | `mountLoader` tagged its `<style>` with `data-wavelo-style` but nothing ever queried it; twelve loaders meant twelve copies. Measured 201.7 KB of duplicate CSS and 1,810 parsed rules in the DOM. | Fixed: `ensureStyles` injects each distinct slice into the head once. No adapter inlines CSS any more. |
 | MEDIUM | Three sources of truth for the catalog | The alias map was duplicated in `registry.ts` and `render.ts`; 86 loader modules hand-copied their metadata; five modules (`orbit`, `pulse`, `spinner`, `skeleton`, `progress`) used IDs absent from the registry, so `import { orbit }` rendered orbiting-dots while `renderLoader({ type: 'orbit' })` rendered inline. | Fixed: `src/catalog.ts` is the only authored source; entry points, the barrel and the `LoaderId` union are generated, the phantom modules are gone, and `npm run catalog` diffs generated content against the committed files. |
 | MEDIUM | Dead options | `theme`, `variant` and the `data-*` index signature were typed and documented but never used; `normalizeConfig`'s unknown-type branch and `getLoaderDefinition`'s `'pulse'` default were unreachable. | Fixed: `theme` drives the skeleton palette, `data-*` is emitted, `variant` is removed from the type and the PRD, and the dead branches are gone. A test renders all 20 keys and asserts each reaches the element. |
@@ -251,11 +251,11 @@ been run.
 
 | Command | Result |
 |---|---|
-| `npm run check` | Passed: build with catalog generation, strict typecheck, 36 unit tests, catalog drift check, documentation sync, bundle budgets |
+| `npm run check` | Passed: build with catalog generation, strict typecheck, 37 unit tests, catalog drift check, documentation sync, bundle budgets |
 | `npm run catalog` | Passed: 82 public IDs, 82 active designs, 117 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: 20 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes, slice injection counts, per-design slice isolation for 82 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, the scroll-driven fill at 0/50/100% of the scroll range inside and outside an `overflow: hidden` wrapper plus its clock-driven fallback, painted pixels for the palette/gradients/scrim, visibility for all 82 designs, the name contract, distinctness of all 82 designs, gallery + axe |
+| `npm run test:browser` | Passed: 21 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes, slice injection counts, per-design slice isolation for 82 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, the scroll-driven fill at 0/50/100% of the scroll range inside and outside an `overflow: hidden` wrapper plus its clock-driven fallback, painted pixels for the palette/gradients/scrim, visibility for all 82 designs, the name contract, distinctness of all 82 designs, gallery + axe |
 | `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 82 designs |
 | `npm run audit:visual` | Passed: 82 designs, contact sheet regenerated |
 | `npm run audit:visual:correctness` | Passed: 82 active designs (76 animating, 5 static by design, 1 scroll-driven verified by timeline type); no aliases remain |
@@ -269,16 +269,16 @@ been run.
 
 The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
 
-- Individual design entry point: 3,880 B gzip (two designs: 4,365 B)
-- Core renderer (runtime-selected design): 10,705 B gzip
-- Full catalog: 10,713 B gzip
-- React: 10,938 B gzip
-- Vue: 11,307 B gzip
-- Angular: 12,117 B gzip
-- Svelte: 10,707 B gzip
-- Web Components: 11,526 B gzip
-- Vanilla: 10,874 B gzip
-- `@wavelo/core/styles.css`, the whole catalog sheet: 4,581 B gzip
+- Individual design entry point: 4,205 B gzip (two designs: 4,694 B)
+- Core renderer (runtime-selected design): 11,051 B gzip
+- Full catalog: 11,059 B gzip
+- React: 11,388 B gzip
+- Vue: 11,730 B gzip
+- Angular: 12,574 B gzip
+- Svelte: 11,152 B gzip
+- Web Components: 11,850 B gzip
+- Vanilla: 11,219 B gzip
+- `@wavelo/core/styles.css`, the whole catalog sheet: 4,863 B gzip
 
 ## Gate scenario assessment
 

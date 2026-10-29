@@ -47,12 +47,12 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | --- | --- |
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
-| `npm test` | Passed: 36 tests across core, adapters, Angular TestBed and Angular SSR |
+| `npm test` | Passed: 37 tests across core, adapters, Angular TestBed and Angular SSR |
 | `npm run catalog` | Passed: 82 IDs / 82 active / 117 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
-| `npm run measure` | Passed: 10 entry points inside budget; single design 3,880 B gzip |
+| `npm run measure` | Passed: 10 entry points inside budget; single design 4,205 B gzip |
 | `npm run docs:build` | Passed |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
-| `npm run test:browser` | Passed: 20 Chromium tests (see below) |
+| `npm run test:browser` | Passed: 21 Chromium tests (see below) |
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 82 designs |
 | `npm run audit:visual` | Passed: 82-card contact sheet, desktop and 375px mobile |
 | `npm run audit:visual:correctness` | Passed: 82 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding, and 1 scroll-driven design checked by its timeline type |
@@ -141,8 +141,8 @@ directory, since removed):
   `LoaderId` was correctly rejected against the 82-member union.
 
 Numbers from that run: 82 designs, 12 render kinds, 12 slices, 20 config keys,
-base slice 1,552 B, ring slice 1,983 B, scroll slice 930 B, combined sheet 31,405 B
-(31,480 B as shipped, with its banner comment).
+base slice 2,050 B, ring slice 2,145 B, scroll slice 1,000 B, combined sheet 33,688 B
+(33,763 B as shipped, with its banner comment).
 
 ## Visual correctness history
 

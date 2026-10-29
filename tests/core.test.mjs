@@ -294,10 +294,15 @@ test('the advertised options are what the design actually reads', () => {
   }
 });
 
-test('style rejects a key it cannot apply instead of dropping it', () => {
-  assert.throws(() => renderLoader({ type: 'ring', style: { position: 'fixed' } }), LoaderConfigurationError);
-  assert.throws(() => renderLoader({ type: 'ring', style: { '--color': 'red' } }), LoaderConfigurationError);
-  assert.equal(renderLoader({ type: 'ring', style: { '--wavelo-radius': '2px' } }).config.style['--wavelo-radius'], '2px');
+test('style carries any CSS declaration and rejects what it cannot apply', () => {
+  const raw = renderLoader({ type: 'ring', label: 'Loading', style: { position: 'fixed', marginTop: '1rem' } });
+  assert.match(raw.html, /position:fixed/, 'a plain CSS property must reach the element');
+  assert.match(raw.html, /margin-top:1rem/, 'camelCase keys are kebab-cased for CSS');
+  assert.match(renderLoader({ type: 'ring', label: 'Loading', style: { '--wavelo-radius': '2px' } }).html, /--wavelo-radius:2px/);
+  assert.equal(renderLoader({ type: 'ring', label: 'Loading', style: { '--wavelo-size': '3rem' } }).config.style['--wavelo-size'], '3rem');
+  assert.throws(() => renderLoader({ type: 'ring', style: { 'not a property': 'x' } }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'ring', style: { color: 'red;color:blue' } }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'ring', style: { background: 'url(https://example.com/x.png)' } }), LoaderConfigurationError);
 });
 
 test('colours and dimensions accept the grammar developers actually reach for', () => {

@@ -2,16 +2,24 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  InjectionToken,
   inject,
   OnChanges,
   OnDestroy,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import { ensureStyles, renderLoader } from '@wavelo/core';
-import type { LoaderConfig, RenderResult } from '@wavelo/core';
+import { ensureStyles, mergeWaveloConfig, renderLoader } from '@wavelo/core';
+import type { LoaderConfig, RenderResult, WaveloDefaults } from '@wavelo/core';
 
 export type WaveloInputs = LoaderConfig;
+
+/**
+ * Options every `wavelo-loader` in this injector's tree inherits:
+ * `providers: [{ provide: WAVELO_DEFAULTS, useValue: { color: '#6366f1', speed: 0.5 } }]`.
+ * An input on the component itself always wins.
+ */
+export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAULTS');
 
 /**
  * Renders a design into the host element. `style` is bound as `waveloStyle`
@@ -56,6 +64,7 @@ export class LoaderComponent implements OnChanges, OnDestroy {
 
   private readonly element = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
+  private readonly defaults = inject(WAVELO_DEFAULTS, { optional: true });
 
   ngOnChanges(_changes: SimpleChanges): void {
     const config: LoaderConfig = {
@@ -80,7 +89,7 @@ export class LoaderComponent implements OnChanges, OnDestroy {
       value: this.value,
       max: this.max
     };
-    const result = renderLoader(this.withHostDataAttributes(config));
+    const result = renderLoader(mergeWaveloConfig(this.defaults, this.withHostDataAttributes(config)));
     ensureStyles(result.css);
     this.renderer.setProperty(this.element.nativeElement, 'innerHTML', result.html);
   }
@@ -101,6 +110,6 @@ export class LoaderComponent implements OnChanges, OnDestroy {
 }
 
 /** The render result without Angular, for server rendering and tests. */
-export function renderAngularLoader(inputs: WaveloInputs = {}): RenderResult {
-  return renderLoader(inputs);
+export function renderAngularLoader(inputs: WaveloInputs = {}, defaults?: WaveloDefaults): RenderResult {
+  return renderLoader(mergeWaveloConfig(defaults, inputs));
 }
