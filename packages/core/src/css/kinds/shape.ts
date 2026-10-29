@@ -6,6 +6,7 @@ import { css as foldFrames } from '../keyframes/fold.js';
 import { css as triangleOrbitFrames } from '../keyframes/triangle-orbit.js';
 import { css as diamondFrames } from '../keyframes/diamond.js';
 import { css as morphFrames } from '../keyframes/morph.js';
+import { css as blobFrames } from '../keyframes/blob.js';
 import { css as starFrames } from '../keyframes/star.js';
 
 export const shapeCss = `
@@ -23,4 +24,7 @@ export const shapeCss = `
 .wavelo--triangles .wavelo__part:nth-child(1){transform:translateY(-45%)}
 .wavelo--triangles .wavelo__part:nth-child(2){transform:rotate(120deg) translateY(-45%);animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--triangles .wavelo__part:nth-child(3){transform:rotate(240deg) translateY(-45%);animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
-${shapeFrames}${cubeFrames}${polygonFrames}${triangleFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}`;
+/* The shape never moves; only its corners keep changing their radii, which is what
+   makes it read as a liquid rather than a rotating box. */
+.wavelo--liquid-blob{border-radius:58% 42% 55% 45%/48% 56% 44% 52%;animation:wavelo-blob calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${shapeFrames}${cubeFrames}${polygonFrames}${triangleFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}${blobFrames}`;

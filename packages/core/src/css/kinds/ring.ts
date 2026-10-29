@@ -1,4 +1,5 @@
 import { css as radarFrames } from '../keyframes/radar.js';
+import { css as glowFrames } from '../keyframes/glow.js';
 
 export const ringCss = `
 .wavelo--ring{border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -14,4 +15,10 @@ export const ringCss = `
 .wavelo--arc{border-color:transparent;border-top-color:currentColor}
 .wavelo--segmented-ring{border-style:dashed;border-right-color:currentColor}
 .wavelo--monochrome{border:0;background:conic-gradient(currentColor 0 50%,color-mix(in srgb,currentColor 22%,transparent) 50% 100%);border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${radarFrames}`;
+/* A conic sweep carved into a ring by a radial mask, so the stroke width is the ring
+   and the gradient is the motion. No border is drawn here. The prefixed mask is for
+   the declared floor: the unprefixed mask shorthand landed after Chrome 111. */
+.wavelo--conic-ring{border:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 55%,color-mix(in srgb,currentColor 28%,transparent) 70%,currentColor 92%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* The same ring, but lit: it turns and throws a glow that swells and fades. */
+.wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${radarFrames}${glowFrames}`;

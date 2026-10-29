@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-token{0%,78%,100%{opacity:.2;transform:translateX(0) scaleX(.4)}26%{opacity:1;transform:translateX(12%) scaleX(1)}60%{opacity:.25;transform:translateX(45%) scaleX(1)}}`;

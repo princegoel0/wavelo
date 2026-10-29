@@ -30,10 +30,25 @@ Audited version: `0.1.0`
   identically at four animation frames, every design paints something visible,
   and designs whose names promise a count or a stroke weight render it.
 - [x] Verified presets target catalog IDs.
+- [x] Verified the streaming tranche (six `ai` designs, four composite skeletons, five
+  single-box designs) against the same gates the existing catalog passes: no two render
+  identically, every design animates or is exempt by name, each renders what its name
+  says, and 95 of the 98 cost no layout per frame.
+- [x] Re-based the bundle budgets from the measurement rather than the aspiration, and
+  added a `busiest-loader` case for `skeleton-card`: the skeleton slice carries five new
+  designs, so the sampled `ring` bundle could no longer show what a crowded kind costs.
+  The claim that a build-time design "does not move when the catalog grows" was corrected
+  in `scripts/bundle.mjs` and `docs/BUNDLE_SIZE.md` — it moves when a sibling joins its
+  kind, and now fails a gate when it does.
+- [x] Fixed a race in the customization probe: a scroll- or view-driven animation is
+  sampled while frames render, so two identical pages could freeze at different
+  transforms and credit a key no rule reads. It now settles two frames from the same
+  scroll offset before reading, and compares the mask, so a stroke that carves a ring is
+  measured rather than assumed.
 - [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
   Chromium through computed styles and `document.getAnimations()` play-states,
   and confirmed the assertions fail if the CSS defect is reintroduced.
-- [x] Verified each of the 83 designs renders identically from only its own
+- [x] Verified each of the 98 designs renders identically from only its own
   stylesheet slice, so the modular entry points are complete.
 - [x] Verified style slices are injected once per document (12 loaders across
   five render kinds produce five head elements, none inside a host).
@@ -82,7 +97,7 @@ Audited version: `0.1.0`
 - [x] Verified a determinate value animates: `--wavelo-progress` is registered with
   `@property`, and a 10% → 90% change is measured passing through an intermediate
   value in Chromium.
-- [x] Ran `npm run audit:customization`: passed; what each of the 83 designs
+- [x] Ran `npm run audit:customization`: passed; what each of the 98 designs
   advertises is measured in Chromium, not maintained by hand, so an option that
   changes nothing cannot be advertised.
 - [x] Verified the custom element survives an invalid attribute value: it keeps its
@@ -93,7 +108,7 @@ Audited version: `0.1.0`
   read from the build, so a stale document fails the pipeline.
 - [x] Ran `npm run pack:check`: passed.
 - [x] Ran `npm run audit:visual`: passed.
-- [x] Ran `npm run audit:visual:correctness`: passed; 83 active designs, 76 with
+- [x] Ran `npm run audit:visual:correctness`: passed; 98 active designs, 91 with
   animations sampled as advancing in Chromium, 5 determinate-progress designs
   verified through value binding, and 2 timeline-driven designs verified by their
   timeline type — a `ScrollTimeline` for `progress-scroll` and a `ViewTimeline` for
@@ -134,7 +149,7 @@ Audited version: `0.1.0`
 - [x] Ran `npm run pack:verify`: passed; the tarballs install into a fresh project
   that renders through them, type checks a `--strict` consumer against the packed
   declarations, and finds a licence and README in every package.
-- [x] Ran `npm run audit:layout`: passed; 80 of 83 designs cost no layout per frame,
+- [x] Ran `npm run audit:layout`: passed; 95 of 98 designs cost no layout per frame,
   and the three that do are each recorded with the reason a transform would take away.
   Four bar designs were moved from `height` to `scaleY` on that measurement, with the
   geometry compared at three points of the cycle before the change was kept.

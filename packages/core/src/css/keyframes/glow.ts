@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-glow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,currentColor 45%,transparent)}50%{box-shadow:0 0 calc(var(--wavelo-size,2.5rem) * .24) calc(var(--wavelo-size,2.5rem) * .05) color-mix(in srgb,currentColor 85%,transparent)}}`;

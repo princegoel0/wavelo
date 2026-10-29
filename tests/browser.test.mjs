@@ -518,10 +518,12 @@ test('every design paints something visible', async () => {
 
 test('each design renders what its name says', async () => {
   const body = [
-    'thin-line', 'thick-stroke', 'ring', 'arc', 'half-circle', 'circular', 'segmented-ring', 'monochrome',
-    'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots', 'four-dots', 'five-dots',
+    'thin-line', 'thick-stroke', 'ring', 'arc', 'half-circle', 'circular', 'segmented-ring', 'monochrome',    'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots', 'four-dots', 'five-dots',
     'dot-matrix', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation', 'audio-waveform',
-    'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star'
+    'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
+    'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
+    'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
+    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
     .join('');
@@ -538,9 +540,10 @@ test('each design renders what its name says', async () => {
         const width = Number.parseFloat(style[`border${side}Width`]);
         return width > 0 && style[`border${side}Style`] !== 'none' && style[`border${side}Color`] !== 'rgba(0, 0, 0, 0)';
       });
+      const partStyle = parts.length ? getComputedStyle(parts[0]) : null;
       const pseudo = (which) => {
         const s = getComputedStyle(root, which);
-        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth };
+        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth, mask: `${s.maskImage} ${s.webkitMaskImage}` };
       };
       return {
         id: wrap.dataset.case,
@@ -550,13 +553,18 @@ test('each design renders what its name says', async () => {
         sideNames: sides.join(''),
         borderWidth: style.borderTopWidth,
         borderStyle: style.borderTopStyle,
+        radius: style.borderRadius,
         borderImage: style.borderImageSource,
         backgroundImage: style.backgroundImage,
         gridColumns: style.gridTemplateColumns,
         animation: style.animationName,
         clipPath: style.clipPath,
+        mask: `${style.maskImage} ${style.webkitMaskImage}`,
         partBackground: parts.length ? getComputedStyle(parts[0]).backgroundImage : 'none',
         partFill: parts.length ? getComputedStyle(parts[0]).fill : '-',
+        partRadius: partStyle ? partStyle.borderRadius : '-',
+        partBorderWidth: partStyle ? partStyle.borderTopWidth : '-',
+        partRightColor: partStyle ? partStyle.borderRightColor : '-',
         partDelays: parts.map((part) => getComputedStyle(part).animationDelay),
         partAnimations: [...new Set(parts.map((part) => getComputedStyle(part).animationName))],
         before: pseudo('::before'),
@@ -630,6 +638,46 @@ test('each design renders what its name says', async () => {
   assert.equal(at('svg-star').svg, 1, 'svg-star must render an <svg> element');
   assert.equal(at('svg-star').parts, 1);
   assert.notEqual(at('svg-star').partFill, 'none');
+
+  // The streaming lane. Each of these promises something in its name that the sheet
+  // either delivers or does not, so the same contract the older designs answer to
+  // applies to the new ones rather than stopping at the list written before them.
+  assert.equal(at('typing-dots').parts, 3, 'typing-dots must be three dots');
+  assert.equal(at('typing-dots').partRadius, '50%', 'typing-dots must draw dots');
+  assert.deepEqual(at('typing-dots').partAnimations, ['wavelo-typing-dot']);
+  assert.equal(new Set(at('typing-dots').partDelays).size, 3, 'typing-dots must lift them in sequence');
+  assert.equal(at('neural-grid').parts, 9, 'a neural grid is nine nodes');
+  assert.equal(at('neural-grid').gridColumns.split(' ').length, 3, 'neural-grid must be three columns');
+  assert.equal(at('thinking-glow').parts, 1, 'thinking-glow is one orb');
+  assert.equal(at('thinking-glow').before.animation, 'wavelo-think-halo', 'the halo leaves the orb');
+  assert.equal(at('stream-cursor').parts, 1);
+  assert.deepEqual(at('stream-cursor').partAnimations, ['wavelo-blink']);
+  assert.notEqual(at('stream-cursor').partRadius, '50%', 'a block cursor is a block, not a dot');
+  assert.equal(at('token-stream').parts, 5);
+  assert.deepEqual(at('token-stream').partAnimations, ['wavelo-token']);
+  assert.equal(new Set(at('token-stream').partDelays).size, 5, 'tokens must arrive one after another');
+  assert.equal(at('ai-shimmer').parts, 0, 'the response block paints itself');
+  assert.equal(at('ai-shimmer').animation, 'wavelo-response-shimmer');
+  assert.match(at('ai-shimmer').backgroundImage, /linear-gradient/);
+  assert.equal(at('skeleton-inbox').parts, 6, 'three inbox rows of avatar and subject');
+  assert.equal(at('skeleton-inbox').gridColumns.split(' ').length, 2, 'an inbox row is avatar plus text');
+  assert.equal(at('skeleton-inbox').partRadius, '50%', 'the first track of a row is an avatar');
+  assert.equal(at('skeleton-chat').parts, 3, 'a thread defaults to three bubbles');
+  assert.notEqual(at('skeleton-chat').partRadius, '50%', 'a bubble is a rounded rectangle, not a dot');
+  assert.ok(at('skeleton-code').before, 'skeleton-code must draw a gutter beside the lines');
+  assert.equal(at('skeleton-code').parts, 6);
+  assert.equal(at('skeleton-metric').parts, 3, 'number, label and trend chip');
+  assert.match(at('conic-ring').mask, /radial-gradient/, 'conic-ring must be carved by a mask');
+  assert.match(at('conic-ring').backgroundImage, /conic-gradient/);
+  assert.match(at('comet-orbit').before.mask, /radial-gradient/, 'the tail must be a ring, not a disc');
+  assert.match(at('comet-orbit').before.background, /conic-gradient/);
+  assert.match(at('neon-ring').animation, /wavelo-glow/, 'neon-ring must glow while it turns');
+  assert.match(at('liquid-blob').radius, /%/, 'a blob is its corner radii');
+  assert.ok(at('liquid-blob').radius.includes('/'), 'a blob sets horizontal and vertical radii apart');
+  assert.equal(at('trip-orbit').parts, 3, 'trip-orbit is three arcs');
+  assert.deepEqual(at('trip-orbit').partAnimations, ['wavelo-trip']);
+  assert.ok(Number.parseFloat(at('trip-orbit').partBorderWidth) > 0, 'an arc is drawn with a border');
+  assert.equal(at('trip-orbit').partRightColor, 'rgba(0, 0, 0, 0)', 'one side of an arc is open');
 });
 
 test('no two designs in the catalog render identically', async () => {

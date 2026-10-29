@@ -32,9 +32,10 @@ and the timeline designs on the document clock). Safari is not exercised here.
 ## What the library is
 
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
-  83 public IDs, each with its own implementation; no deprecated aliases.
+  98 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 19 `--wavelo-*`
-  custom properties, 44 `@keyframes`, 120 named presets.
+  custom properties, 56 `@keyframes`, 143 named presets. Eight categories, one of
+  them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by
   `scripts/generate-catalog.mjs`; `npm run catalog` fails on drift.
@@ -60,16 +61,16 @@ and the timeline designs on the document clock). Safari is not exercised here.
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
 | `npm test` | Passed: 45 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 83 IDs / 83 active / 120 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run catalog` | Passed: 98 IDs / 98 active / 143 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
-| `npm run docs:check` | Passed: 83 designs, 27 configuration keys, 19 custom properties and every bundle figure match the built packages, in 12 documents |
-| `npm run measure` | Passed: 10 entry points inside budget; single design 5,018 B gzip, runtime renderer 12,692 B |
+| `npm run docs:check` | Passed: 98 designs, 27 configuration keys, 19 custom properties and every bundle figure match the built packages, in 12 documents |
+| `npm run measure` | Passed: 11 entry points inside budget; `ring` 5,482 B gzip (budget 6,144), the busiest kind `skeleton-card` 6,248 B (budget 7,168), runtime renderer 16,057 B (budget 18,944) |
 | `npm run test:browser` | Passed: 32 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
-| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 83 designs |
-| `npm run audit:layout` | Passed: 80 of 83 designs cost no layout per frame; the three that do are each accounted for |
-| `npm run audit:visual` | Passed: 83-card contact sheet, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 83 active designs — 76 animating, 5 static determinate-progress designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
+| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 98 designs |
+| `npm run audit:layout` | Passed: 95 of 98 designs cost no layout per frame; the three that do are each accounted for |
+| `npm run audit:visual` | Passed: 98-card contact sheet, desktop and 375px mobile |
+| `npm run audit:visual:correctness` | Passed: 98 active designs — 91 animating, 5 static determinate-progress designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
 | `node scripts/style-fidelity.mjs isolated` | Passed: 0 differences between the combined sheet and each design rendered with only its own slice |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |
@@ -105,7 +106,7 @@ and the timeline designs on the document clock). Safari is not exercised here.
   `inline` puts a line on the text line at text metrics.
 - Twelve loaders across five kinds produce five `<style>` elements in the head and
   none inside a host.
-- Every one of the 83 designs renders identically when given only the stylesheet slice
+- Every one of the 98 designs renders identically when given only the stylesheet slice
   its own entry point ships, checked against the combined sheet with clock-driven
   animations frozen at time zero and timeline-driven ones paused.
 - The custom element renders, re-renders on attribute change, reports
@@ -134,7 +135,7 @@ and the timeline designs on the document clock). Safari is not exercised here.
 - Every design paints something visible, each renders what its name says (part counts,
   border geometry, gradients), and no two designs render identically at any of four
   frozen animation frames.
-- The gallery shows 83 cards with their measured option chips, drives the playground's
+- The gallery shows 98 cards with their measured option chips, drives the playground's
   tokens and code output, has zero axe violations, and logs no console or page errors.
 
 These assertions were checked in both directions: reintroducing the original
@@ -152,7 +153,7 @@ workspace, installs the tarballs into a fresh project whose only other dependenc
 are the framework peers (with `@wavelo/core` overridden to the tarball under test, so
 nothing is fetched from the registry), and asserts there that:
 
-- the installed registry holds the same 83 designs the source built;
+- the installed registry holds the same 98 designs the source built;
 - `@wavelo/core`, `@wavelo/core/loaders/ring` and `@wavelo/core/styles.css` all
   resolve, the modular entry carries its own rules and not another design's, and the
   shipped sheet keeps the reduced-motion rules;

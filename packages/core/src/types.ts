@@ -54,7 +54,8 @@ export type LoaderCategory =
   | 'creative'
   | 'skeleton'
   | 'progress'
-  | 'application';
+  | 'application'
+  | 'ai';
 
 export type Theme = 'light' | 'dark' | 'system';
 export type ReducedMotion = 'auto' | 'always' | 'never';

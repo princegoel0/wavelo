@@ -59,7 +59,7 @@ const PROPS = [
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderTopStyle', 'borderTopColor',
   'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderImageSource', 'borderRadius', 'backgroundImage',
   'backgroundColor', 'color', 'fill', 'opacity', 'transform', 'inset', 'clipPath', 'boxShadow', 'content',
-  'verticalAlign',
+  'verticalAlign', 'WebkitMaskImage', 'maskImage',
   'animationName', 'animationDuration', 'animationDirection', 'animationPlayState', 'animationDelay', 'animationIterationCount', 'animationTimeline'
 ];
 
@@ -115,7 +115,25 @@ const SELF_CHECKS = [
   ['skeleton-line', 'inline', true],
   ['skeleton-card', 'inline', true],
   ['progress-scroll', 'inline', true],
-  ['fullscreen', 'inline', false]
+  ['fullscreen', 'inline', false],
+  // The tranche added with the streaming lane. Two of the new designs carve their ring
+  // out of a conic gradient with a mask, so a stroke that never touches a border still
+  // has to be measured as honoured — which is why the mask is one of the properties.
+  ['conic-ring', 'strokeWidth', true],
+  ['comet-orbit', 'strokeWidth', true],
+  ['neon-ring', 'strokeWidth', true],
+  ['thinking-glow', 'strokeWidth', true],
+  ['token-stream', 'strokeWidth', true],
+  ['trip-orbit', 'strokeWidth', true],
+  ['stream-cursor', 'strokeWidth', false],
+  ['liquid-blob', 'duration', true],
+  ['neural-grid', 'size', true],
+  ['ai-shimmer', 'theme', true],
+  ['typing-dots', 'count', false],
+  ['ai-shimmer', 'count', false],
+  ['skeleton-inbox', 'count', true],
+  ['skeleton-inbox', 'height', false],
+  ['skeleton-code', 'strokeWidth', false]
 ];
 
 async function fingerprintPage(browser, overrides) {
@@ -129,6 +147,18 @@ async function fingerprintPage(browser, overrides) {
       })
       .join('');
     await page.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body>${body}</body></html>`);
+    // A scroll- or view-driven animation is sampled while frames render, so reading in
+    // the task that set the content catches some loads before the first sample and
+    // others after it. The frozen transform then differs between two identical pages,
+    // and the probe credits a key that no rule actually reads. Let two frames land from
+    // the same scroll offset before pausing anything.
+    await page.evaluate(
+      () =>
+        new Promise((settle) => {
+          window.scrollTo(0, 0);
+          requestAnimationFrame(() => requestAnimationFrame(settle));
+        })
+    );
     return await page.evaluate((propertyList) => {
       // A scroll-driven animation takes its progress from its timeline, and
       // assigning it a numeric currentTime throws, so only document-timeline
