@@ -72,8 +72,10 @@ and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
-| GitHub Actions, `dev` at `23a6ccb` | *Not yet run on this head.* The previous pass (through `19cffe1`) was green on both `verify` and `verify-browser`; the rows above are this build's local results, and the CI run for the Phases B–J work is recorded in the pull request. |
-| `dev` → `main` merge | Done as merge commit `603ecfc` through pull request #6 for the earlier pass, which also carried `b6e67b6`. The Phases B–J work lands through the pull request opened for it. |
+| GitHub Actions, pull request #10 head at `f1a2c11` | Passed: `verify` and `verify-browser` green on the push and pull-request runs, including the new `packages:check`, `audit:layout` and `pack:verify` steps |
+| `dev` → `main` merge | Done as merge commit `5dcbdf2` through pull request #10, which carried Phases B–J; the earlier pass landed as `603ecfc` through pull request #6 |
+| GitHub Actions, `main` at `5dcbdf2` | `CI` passed; `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false` — nothing was published |
+| npm registry state | `0.1.0` not present for any of the seven names (`npm view @wavelo/core version` returns a 404) |
 
 ## Browser evidence
 
