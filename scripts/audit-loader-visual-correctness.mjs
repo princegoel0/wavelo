@@ -7,9 +7,13 @@ import { chromium } from 'playwright';
 const outputDirectory = resolve('release-audit');
 const screenshotPath = resolve(outputDirectory, 'catalog-corrected-contact-sheet.png');
 const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
-// Designs with no CSS animation by design: determinate tracks whose fill is the
-// value, not motion. Anything else in the catalog must be sampled as advancing.
+// Designs whose motion is not driven by the document clock, so sampling two
+// moments 250ms apart cannot show them advancing. Determinate tracks take their
+// fill from the configured value; the scroll-driven bar takes its progress from a
+// scroll timeline, which the audit checks by name instead of by elapsed time.
+// Anything else in the catalog must be sampled as advancing.
 const staticTypes = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top']);
+const scrollTypes = new Set(['progress-scroll']);
 
 function expectedBehavior(loader) {
   const descriptions = {
@@ -73,6 +77,7 @@ function expectedBehavior(loader) {
     'progress-ring': 'A determinate circular fill reflects the configured value.',
     'progress-steps': 'Five determinate steps reflect the configured value.',
     'progress-top': 'A determinate three-pixel top edge reflects progress.',
+    'progress-scroll': 'A reading-progress bar fills as the document scrolls, driven by a scroll timeline rather than a clock.',
     'progress-upload': 'A determinate upload track reflects progress.',
     inline: 'A compact inline dot indicator pulses.',
     button: 'A compact button-state indicator pulses without changing layout.',
@@ -124,7 +129,8 @@ try {
       animations: [styles?.animationName ?? 'none', pseudoBefore, pseudoAfter, ...partAnimations].filter((name) => name && name !== 'none'),
       progress: element?.style.getPropertyValue('--wavelo-progress') ?? '',
       playStates: live.map((animation) => animation.playState),
-      times: live.map((animation) => animation.currentTime)
+      times: live.map((animation) => animation.currentTime),
+      timelines: live.map((animation) => (animation.timeline === document.timeline ? 'document' : animation.timeline?.constructor?.name ?? 'other'))
     };
   }));
   // Two samples ~250ms apart prove the animation is advancing, not merely declared.
@@ -155,11 +161,15 @@ const rows = active.map((loader) => {
   const actual = byId.get(loader.id);
   const motion = staticTypes.has(loader.id)
     ? 'static by design'
-    : actual.advancing
-      ? `animating (${actual.playStates.length} CSS animation(s) advancing)`
-      : actual.animations.length > 0
-        ? 'MISMATCH: animation declared but not advancing'
-        : 'MISMATCH: no animation found';
+    : scrollTypes.has(loader.id)
+      ? actual.timelines.length > 0 && actual.timelines.every((timeline) => timeline === 'ScrollTimeline')
+        ? `scroll-driven (${actual.timelines.length} ScrollTimeline animation(s), no document clock)`
+        : `MISMATCH: expected a ScrollTimeline, found ${actual.timelines.join(', ') || 'no animation'}`
+      : actual.advancing
+        ? `animating (${actual.playStates.length} CSS animation(s) advancing)`
+        : actual.animations.length > 0
+          ? 'MISMATCH: animation declared but not advancing'
+          : 'MISMATCH: no animation found';
   const implementation = `kind=${loader.kind}; parts=${actual.partCount}; classes=${actual.className}; animations=${actual.animations.join(', ') || 'none'}`;
   const status = motion.startsWith('MISMATCH') ? 'FAIL' : 'PASS';
   return `| \`${loader.id}\` | ${loader.name} | ${expectedBehavior(loader)} | ${implementation} | ${motion} | ${status} |`;
@@ -169,9 +179,10 @@ const failures = active.filter((loader) => {
   const actual = byId.get(loader.id);
   if (!actual) return true;
   if (staticTypes.has(loader.id)) return false;
+  if (scrollTypes.has(loader.id)) return actual.timelines.length === 0 || !actual.timelines.every((timeline) => timeline === 'ScrollTimeline');
   return !actual.advancing;
 });
-if (failures.length > 0) throw new Error(`Visual contracts not animating in the browser: ${failures.map((loader) => loader.id).join(', ')}`);
+if (failures.length > 0) throw new Error(`Visual contracts not met in the browser: ${failures.map((loader) => loader.id).join(', ')}`);
 
 await writeFile(reportPath, `# Loader visual correctness audit
 
@@ -207,9 +218,10 @@ their alias definitions instead of the canonical implementation.
 ## Results
 
 All ${active.length} active designs render their own ID-specific geometry in the browser.
-${active.length - staticTypes.size} were sampled animating through \`document.getAnimations()\`;
+${active.length - staticTypes.size - scrollTypes.size} were sampled animating through \`document.getAnimations()\`;
 the ${staticTypes.size} determinate progress designs are static by design, because their fill is
-bound to the configured value rather than to a clock.
+bound to the configured value rather than to a clock; and ${[...scrollTypes].map((id) => `\`${id}\``).join(' and ')}
+runs on a scroll timeline, which is verified by the timeline's own type rather than by elapsed time.
 ${aliases ? `${aliases} deprecated aliases resolve to their canonical definitions while preserving their public imports.` : 'Every public ID has its own implementation, so no design borrows another name.'}
 The gallery embeds the complete stylesheet once. Separately,
 \`tests/browser.test.mjs\` re-renders every design using only the slice its own
@@ -225,8 +237,9 @@ ${rows}
 ## Remaining limitations
 
 The sampled play-state evidence proves each animating design advances in Chromium
-with the default configuration, and the static designs bind their fill to the
-configured value instead. It does not prove subjective quality, nor does it cover
+with the default configuration, the static designs bind their fill to the
+configured value instead, and the scroll-driven design reports a ScrollTimeline
+rather than the document clock. It does not prove subjective quality, nor does it cover
 \`paused\`, \`direction\` and \`reducedMotion\` behaviour — those have their own
 computed-style assertions in \`tests/browser.test.mjs\`, which runs in CI.
 Per-design stylesheet slices are checked by rendering each design alone with only
@@ -234,4 +247,4 @@ its own slice; see the same suite. Future visual review should keep using real
 browser playback rather than metadata or unique IDs alone.
 `, 'utf8');
 
-console.log(`Audited ${active.length} active designs: ${active.length - staticTypes.size} animating, ${staticTypes.size} static by design${aliases ? `, ${aliases} deprecated aliases` : ''}`);
+console.log(`Audited ${active.length} active designs: ${active.length - staticTypes.size - scrollTypes.size} animating, ${staticTypes.size} static by design, ${scrollTypes.size} scroll-driven${aliases ? `, ${aliases} deprecated aliases` : ''}`);

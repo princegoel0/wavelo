@@ -8,6 +8,7 @@ import { progressCss } from './kinds/progress.js';
 import { pulseCss } from './kinds/pulse.js';
 import { ringCss } from './kinds/ring.js';
 import { ringsCss } from './kinds/rings.js';
+import { scrollCss } from './kinds/scroll.js';
 import { shapeCss } from './kinds/shape.js';
 import { skeletonCss } from './kinds/skeleton.js';
 import { waveCss } from './kinds/wave.js';
@@ -30,6 +31,7 @@ export const kindStyles: Record<RenderKind, string> = {
   pulse: pulseCss,
   skeleton: skeletonCss,
   progress: progressCss,
+  scroll: scrollCss,
   overlay: overlayCss
 };
 

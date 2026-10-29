@@ -87,6 +87,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['progress-steps', 'Progress steps', 'progress', 'progress', 'Multi-step progress'],
   ['progress-top', 'Top progress', 'progress', 'progress', 'Top-of-page progress'],
   ['progress-upload', 'Upload progress', 'progress', 'progress', 'Upload progress'],
+  ['progress-scroll', 'Scroll progress', 'progress', 'scroll', 'Reading progress driven by the document scroll position'],
   ['inline', 'Inline loading', 'application', 'pulse', 'Inline application loading'],
   ['button', 'Button loading', 'application', 'pulse', 'Button loading state'],
   ['overlay', 'Section overlay', 'application', 'overlay', 'Section loading overlay'],

@@ -76,6 +76,7 @@ export const loaderIds = [
   "progress-steps",
   "progress-top",
   "progress-upload",
+  "progress-scroll",
   "inline",
   "button",
   "overlay",

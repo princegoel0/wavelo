@@ -9,12 +9,19 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 81 public IDs, each with its own implementation and no deprecated aliases. A
+- 82 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
-- 11 render kinds and 11 stylesheet slices, so importing one design ships its own
+- 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.
+- `progress-scroll`: a reading-progress bar driven by a CSS scroll timeline
+  (`animation-timeline: scroll(root block)`), so the document's scroll position
+  fills the bar with no JavaScript, no scroll listener and no re-render. It takes
+  no `value` and therefore never fabricates an `aria-valuenow`; where scroll
+  timelines are unsupported the same keyframes sweep on the document clock. Both
+  paths are asserted in Chromium, including the fill width at 0%, 50% and 100% of
+  the scroll range.
 - Stylesheets are injected into the document head once per distinct slice rather
   than inlined into every component instance.
 - 20 configuration keys, all of which reach the rendered element and are covered

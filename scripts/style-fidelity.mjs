@@ -16,6 +16,7 @@ import { loaderRegistry, renderLoader } from '../packages/core/dist/index.js';
 const PROPS = [
   'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay',
   'animation-iteration-count', 'animation-direction', 'animation-play-state', 'animation-fill-mode',
+  'animation-timeline',
   'display', 'position', 'width', 'height', 'min-width', 'min-height', 'max-height',
   'border-radius', 'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width',
   'border-top-style', 'border-right-style', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color',
@@ -52,10 +53,13 @@ await tab.goto(`http://127.0.0.1:${server.address().port}/`);
 const rows = await tab.evaluate(
   ({ propertyList, variableList, count }) => {
     // Freeze every animation at its start so the captured values are the
-    // cascade's output, not a random interpolation frame.
+    // cascade's output, not a random interpolation frame. A scroll-driven
+    // animation takes its progress from its timeline instead, and assigning it a
+    // numeric currentTime throws, so only document-timeline animations are wound
+    // back; pausing already holds the scroll-driven one where it is.
     for (const animation of document.getAnimations()) {
       animation.pause();
-      animation.currentTime = 0;
+      if (animation.timeline === document.timeline) animation.currentTime = 0;
     }
     const read = (element, pseudo) => {
       const style = getComputedStyle(element, pseudo ?? null);
@@ -102,7 +106,7 @@ if (command === 'isolated') {
       ({ propertyList, variableList }) => {
         for (const animation of document.getAnimations()) {
           animation.pause();
-          animation.currentTime = 0;
+          if (animation.timeline === document.timeline) animation.currentTime = 0;
         }
         const read = (element, pseudo) => {
           const style = getComputedStyle(element, pseudo ?? null);

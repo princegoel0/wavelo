@@ -5,8 +5,8 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 81 designs, each visually distinct, built from 11
-render kinds and 11 stylesheet slices, and every adapter accepts the same
+The catalog holds 82 designs, each visually distinct, built from 12
+render kinds and 12 stylesheet slices, and every adapter accepts the same
 20 configuration keys.
 
 ## Development
@@ -49,6 +49,26 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 
 const loading = orbitingDots({ label: 'Loading data' });
 ```
+
+## Scroll progress without JavaScript
+
+`progress-scroll` is a reading-progress bar driven by a CSS scroll timeline: the
+browser maps the document's scroll position onto the fill, with no scroll
+listener, no state and no re-render.
+
+```ts
+import { progressScroll } from '@wavelo/core/loaders/progress-scroll';
+
+const bar = progressScroll({ label: 'Reading progress' });
+```
+
+It takes no `value`, because the percentage belongs to the page and the markup
+does not invent one: labelled, it renders `role="status"` rather than a
+`progressbar` carrying a fabricated `aria-valuenow`. It tracks the document
+(`scroll(root block)`), which keeps working inside `overflow: hidden` wrappers;
+set `animation-timeline` yourself to drive it from an inner scroll container.
+Where scroll timelines are unsupported the same keyframes sweep on the document
+clock, so the bar shows activity instead of an empty track.
 
 ## Stylesheets
 

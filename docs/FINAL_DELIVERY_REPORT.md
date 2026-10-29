@@ -30,12 +30,14 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 ## What the library is
 
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
-  81 public IDs, each with its own implementation; the catalog has no deprecated
+  82 public IDs, each with its own implementation; the catalog has no deprecated
   aliases.
-- 11 render kinds, 11 stylesheet slices, 20 configuration keys, 43 `@keyframes`.
+- 12 render kinds, 12 stylesheet slices, 20 configuration keys, 44 `@keyframes`.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from
   it by `scripts/generate-catalog.mjs`; `npm run catalog` fails on drift.
+- `progress-scroll` fills from the document's scroll position through a CSS
+  scroll timeline, with no JavaScript at runtime; it is the twelfth render kind.
 - Bridges for React, Angular, Vue, Svelte, vanilla DOM and Web Components, each
   accepting the whole configuration surface.
 
@@ -46,13 +48,13 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
 | `npm test` | Passed: 30 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 81 IDs / 81 active / 116 presets / 11 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run catalog` | Passed: 82 IDs / 82 active / 117 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run measure` | Passed: 10 entry points inside budget; single design 3,542 B gzip |
 | `npm run docs:build` | Passed |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
-| `npm run test:browser` | Passed: 16 Chromium tests (see below) |
-| `npm run audit:visual` | Passed: 81-card contact sheet, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 81 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding |
+| `npm run test:browser` | Passed: 18 Chromium tests (see below) |
+| `npm run audit:visual` | Passed: 82-card contact sheet, desktop and 375px mobile |
+| `npm run audit:visual:correctness` | Passed: 82 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding, and 1 scroll-driven design checked by its timeline type |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
@@ -76,26 +78,33 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
   for `dark`, and follows `prefers-color-scheme` only for `system`.
 - Twelve loaders across five kinds produce five `<style>` elements in the head and
   none inside a host.
-- Every one of the 81 designs renders identically when given only the stylesheet
+- Every one of the 82 designs renders identically when given only the stylesheet
   slice its own entry point ships, checked against the combined sheet with
-  animations frozen at time zero.
+  clock-driven animations frozen at time zero and scroll-driven ones paused.
 - The custom element renders, re-renders on attribute change, reports
   `role="progressbar"` with `aria-valuenow`, and defines once without error.
 - `data-testid` and arbitrary `data-*` values survive to the DOM, including
   values containing quotes.
 - Every determinate design reflects its configured `value` in the browser.
+- `progress-scroll` fills from the document's scroll position: measured at 0%,
+  50% and 100% of the scroll range, bound to a `ScrollTimeline` rather than the
+  document clock, and labelled with `role="status"` and no invented
+  `aria-valuenow`. With the `@supports` enhancement stripped from its slice, the
+  same keyframes sweep on the clock instead of leaving an empty track.
 - The default palette, the gradient designs and the overlay scrim actually paint,
   measured from rendered pixels rather than declared properties.
 - Every design paints something visible, each one renders what its name says
   (part counts, border geometry, gradients), and no two designs render
   identically at any of four frozen animation frames.
-- The gallery shows 81 cards, has zero axe violations, and logs no console or page
+- The gallery shows 82 cards, has zero axe violations, and logs no console or page
   errors.
 
 These assertions were checked in both directions: reintroducing the original
-`animation:` shorthand made the paused and reverse tests fail, and editing one
-generated loader made `npm run catalog` fail. A passing suite therefore means
-something.
+`animation:` shorthand made the paused and reverse tests fail, editing one
+generated loader made `npm run catalog` fail, re-importing a keyframe the base
+already ships made the catalog check fail, and rebinding `progress-scroll` to
+`animation-timeline: auto` made its scroll test fail. A passing suite therefore
+means something.
 
 ## Packed-artifact verification
 
@@ -110,21 +119,24 @@ directory, since removed):
   point: the frameworks are declared as peers, never bundled.
 - `dist/wavelo.css` ships, and its body under the banner comment equals
   `allStyles` exactly.
-- The design's slice equals `baseCss + ringCss`, and `renderLoader({ type: 'ring' })`
-  returns both the markup and the slice that the `ring` entry point returns.
-- All 81 entry points import, render their own `wavelo--<id>` class, resolve to
-  their own definition, and produce 81 distinct markup strings — no ID borrows
+- Each design's slice equals `baseCss + kindCss` (checked for `ring` and for the new
+  `scroll` kind), and `renderLoader({ type: 'ring' })` returns both the markup and
+  the slice that the `ring` entry point returns.
+- All 82 entry points import, render their own `wavelo--<id>` class, resolve to
+  their own definition, and produce 82 distinct markup strings — no ID borrows
   another design's appearance.
-- React and Vue SSR output carries the configuration and contains no `<style>`
-  element, as documented.
+- From the installed package, `progress-scroll` renders `role="status"` with no
+  `aria-valuenow`, as documented for a bar whose percentage the page owns.
+- React and Vue SSR output carries the configuration — including
+  `type: 'progress-scroll'` — and contains no `<style>` element.
 - `@wavelo/core` installs once — no nested copy under the adapters.
-- A strict `tsc --noEmit --target ES2022 --module NodeNext` consumer compiled, and
-  assigning a non-catalog string to `LoaderId` was correctly rejected with the
-  81-member union in the error.
+- A strict `tsc --noEmit --target ES2022 --module NodeNext` consumer compiled with
+  `const id: LoaderId = 'progress-scroll'`, and assigning a non-catalog string to
+  `LoaderId` was correctly rejected against the 82-member union.
 
-Numbers from that run: 81 designs, 11 render kinds, 11 slices, 20 config keys,
-base slice 1,552 B, ring slice 1,983 B, combined sheet 30,475 B (30,550 B as
-shipped, with its banner comment).
+Numbers from that run: 82 designs, 12 render kinds, 12 slices, 20 config keys,
+base slice 1,552 B, ring slice 1,983 B, scroll slice 930 B, combined sheet 31,405 B
+(31,480 B as shipped, with its banner comment).
 
 ## Visual correctness history
 
