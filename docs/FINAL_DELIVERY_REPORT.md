@@ -76,9 +76,9 @@ and the timeline designs on the document clock). Safari is not exercised here.
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |
 | `npm run release:validate` | Passed: `0.1.0` aligned across seven packages and not present on npm |
 | `git diff --check` | Passed |
-| GitHub Actions, pull request #14 head at `8dac440` | Passed: `verify` and `verify-browser` green on both the push and pull-request runs, including the Gecko smoke suite and `npx playwright install --with-deps chromium firefox` on a clean runner |
-| `dev` → `main` merge | Done as merge commit `f3e6dd7` through pull request #14 (the streaming tranche: 98 designs, re-based budgets, gated gallery deploy); earlier passes landed as `7aa8c19` (#13, docs), `f1c47a0` (#12, Tier 1 gaps), `138b1f1` (#11), `5dcbdf2` (#10, Phases B–J) and `603ecfc` (#6) |
-| GitHub Actions, `main` at `f3e6dd7` | `CI` passed (`verify`, `verify-browser`); `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false`; the new `Gallery` workflow run **skipped** both jobs because `GALLERY_ENABLED` is unset — nothing was published and no site was deployed |
+| GitHub Actions, pull request #16 head at `92e02f6` | Passed: `verify` and `verify-browser` green on both the push and pull-request runs, including the Gecko smoke suite and `npx playwright install --with-deps chromium firefox` on a clean runner |
+| `dev` → `main` merge | Done as merge commit `8cbef17` through pull request #16 (the progress tranche: 111 designs, 149 presets, the counted-value and per-part fill paths in the renderer); earlier passes landed as `f3e6dd7` (#14, streaming tranche), `9361edc` (#15, docs), `7aa8c19` (#13), `f1c47a0` (#12, Tier 1 gaps), `138b1f1` (#11), `5dcbdf2` (#10, Phases B–J) and `603ecfc` (#6) |
+| GitHub Actions, `main` at `8cbef17` | `CI` passed (`verify`, `verify-browser`); `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false`; `Gallery` **skipped** both jobs because `GALLERY_ENABLED` is unset — nothing was published and no site was deployed |
 | npm registry state | `0.1.0` not present for any of the seven names (`npm view @wavelo/core version` returns a 404) |
 
 ## Browser evidence
