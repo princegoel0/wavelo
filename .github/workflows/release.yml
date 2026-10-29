@@ -52,7 +52,9 @@ jobs:
           node -e "const fs=require('node:fs'); const v=JSON.parse(fs.readFileSync('packages/core/package.json','utf8')).version; fs.appendFileSync(process.env.GITHUB_OUTPUT, 'version='+v+'\\n')"
       - name: Build release tarballs
         if: steps.gate.outputs.enabled == 'true'
-        run: npm pack --workspaces --pack-destination release-tarballs
+        # npm does not create the destination directory: without this the pack
+        # step fails with ENOENT on the first package.
+        run: mkdir -p release-tarballs && npm pack --workspaces --pack-destination release-tarballs
       - name: Upload validated release tarballs
         if: steps.gate.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
