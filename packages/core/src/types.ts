@@ -88,6 +88,7 @@ export type RenderKind =
   | 'pulse'
   | 'skeleton'
   | 'progress'
+  | 'scroll'
   | 'overlay';
 
 export interface RenderResult {

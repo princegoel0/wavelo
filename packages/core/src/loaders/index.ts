@@ -74,6 +74,7 @@ export { progressRing } from './progress-ring.js';
 export { progressSteps } from './progress-steps.js';
 export { progressTop } from './progress-top.js';
 export { progressUpload } from './progress-upload.js';
+export { progressScroll } from './progress-scroll.js';
 export { inline } from './inline.js';
 export { button } from './button.js';
 export { overlay } from './overlay.js';

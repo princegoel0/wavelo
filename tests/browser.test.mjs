@@ -179,7 +179,9 @@ test('the same slice requested twice adds no element', async () => {
 test('a design renders the same with only the stylesheet slice its entry point ships', async () => {
   const properties = ['animationName', 'animationDuration', 'animationTimingFunction', 'animationDelay', 'width', 'height', 'borderRadius', 'borderTopWidth', 'borderRightColor', 'backgroundImage', 'transform', 'opacity', 'display', 'position', 'gap'];
   const script = `(() => {
-    for (const animation of document.getAnimations()) { animation.pause(); animation.currentTime = 0; }
+    // A scroll-driven animation reads its progress from its timeline, and
+    // assigning it a numeric currentTime throws; pausing holds it where it is.
+    for (const animation of document.getAnimations()) { animation.pause(); if (animation.timeline === document.timeline) animation.currentTime = 0; }
     const read = (element) => ${JSON.stringify(properties)}.map((property) => getComputedStyle(element)[property]).join('|');
     const shape = (root) => ({ root: read(root), parts: [...root.querySelectorAll('.wavelo__part')].map(read).join('||') });
     const scopes = [...document.querySelectorAll('[data-design] .wavelo')];
@@ -326,6 +328,87 @@ test('every determinate design reflects its value in the browser', async () => {
   assert.equal(top.position, 'fixed');
   assert.equal(top.rootWidth, top.viewport, 'progress-top must span the viewport');
   assert.ok(Math.abs(top.partWidth - top.viewport / 2) <= 1, `progress-top at 50 fills ${top.partWidth}px of ${top.viewport}px`);
+});
+
+test('the scroll-driven bar follows the document scroll position without JavaScript', async () => {
+  // The second bar sits inside an `overflow: hidden` wrapper, which is itself a
+  // scroll container: a `scroll(nearest)` timeline would bind to it, find nothing
+  // to scroll and go inactive. `scroll(root block)` must keep tracking the page.
+  const markup = renderLoader({ type: 'progress-scroll', label: 'Reading progress' }).html;
+  const body =
+    `<div id="bar">${markup}</div>` +
+    `<div id="boxed" style="height:6rem;display:grid;place-items:center;overflow:hidden">${markup}</div>` +
+    '<div style="height:3000px"></div>';
+  await setContentPage(body);
+  const settle = () => page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const read = () =>
+    page.evaluate(() => {
+      const probe = (id) => {
+        const root = document.querySelector(`#${id} .wavelo`);
+        const part = root.querySelector('.wavelo__part');
+        const animation = document.getAnimations().find((entry) => entry.effect?.target === part);
+        return {
+          track: root.getBoundingClientRect().width,
+          fill: part.getBoundingClientRect().width,
+          timeline: getComputedStyle(part).animationTimeline,
+          clockDriven: animation ? animation.timeline === document.timeline : null,
+          progress: animation ? String(animation.currentTime) : 'none',
+          role: root.getAttribute('role'),
+          valuenow: root.getAttribute('aria-valuenow')
+        };
+      };
+      return { bar: probe('bar'), boxed: probe('boxed') };
+    });
+
+  const rows = [];
+  for (const fraction of [0, 0.5, 1]) {
+    await page.evaluate((value) => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      window.scrollTo(0, Math.round(value * max));
+    }, fraction);
+    await settle();
+    rows.push(await read());
+  }
+
+  for (const placement of ['bar', 'boxed']) {
+    const [top, middle, bottom] = rows.map((row) => row[placement]);
+    assert.match(top.timeline, /^scroll\(/, `${placement}: the fill must be bound to a scroll timeline`);
+    assert.equal(top.clockDriven, false, `${placement}: the fill must not run on the document clock`);
+    assert.ok(top.fill <= 0.5, `${placement}: an unread page shows ${top.fill}px of progress`);
+    assert.ok(Math.abs(middle.fill - middle.track / 2) <= 1, `${placement}: halfway down the page fills ${middle.fill}px of a ${middle.track}px track`);
+    assert.ok(Math.abs(bottom.fill - bottom.track) <= 1, `${placement}: the end of the page fills ${bottom.fill}px of a ${bottom.track}px track`);
+    assert.equal(bottom.progress, '100%', `${placement}: the timeline reports the end of the scroll range`);
+  }
+  // The percentage lives in the browser, not in JavaScript, so the markup must
+  // not invent one: with no `value` the element stays a status rather than a
+  // progressbar carrying a fabricated aria-valuenow.
+  assert.equal(rows[0].bar.role, 'status');
+  assert.equal(rows[0].bar.valuenow, null);
+});
+
+test('where scroll timelines are unsupported the same keyframes sweep on the clock', async () => {
+  const result = renderLoader({ type: 'progress-scroll', label: 'Reading progress' });
+  // The fallback is what a browser without `animation-timeline` sees: the same
+  // slice with the progressive-enhancement block removed.
+  const fallback = result.css.replace(/@supports \(animation-timeline:scroll\(\)\)\{[\s\S]*?\}\s*\}/, '');
+  assert.ok(fallback.length < result.css.length, 'the slice declares no scroll-timeline enhancement to fall back from');
+  assert.ok(!fallback.includes('animation-timeline'), 'the fallback still binds a scroll timeline');
+  assert.ok(fallback.includes('@keyframes wavelo-scroll-fill'), 'the fallback lost its keyframes');
+
+  await setContentPage(`<div id="bar">${result.html}</div>`, `<style>${fallback}</style>`);
+  const sample = () =>
+    page.evaluate(() => {
+      const part = document.querySelector('#bar .wavelo__part');
+      const animation = document.getAnimations().find((entry) => entry.effect?.target === part);
+      return { name: getComputedStyle(part).animationName, clockDriven: animation?.timeline === document.timeline, time: Number(animation?.currentTime) };
+    });
+  const first = await sample();
+  await page.waitForTimeout(250);
+  const second = await sample();
+
+  assert.equal(first.name, 'wavelo-scroll-fill');
+  assert.equal(first.clockDriven, true, 'without a scroll timeline the sweep must run on the document clock');
+  assert.ok(second.time > first.time, `the fallback sweep did not advance: ${first.time} -> ${second.time}`);
 });
 
 test('the gallery keeps its top-of-page bar inside the preview card', async () => {

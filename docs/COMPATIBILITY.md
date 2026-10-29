@@ -7,6 +7,12 @@ inside the `animation` shorthand), CSS keyframe animations, `color-mix()`,
 and CSS grid or flex for the composite skeleton designs. `color-mix()` sets the
 floor: Chrome and Edge 111, Safari 16.2, Firefox 113.
 
+One design goes further and uses scroll-driven animations: `progress-scroll` binds
+its fill to `animation-timeline: scroll(root block)`. That is a progressive
+enhancement, not part of the floor — inside `@supports (animation-timeline:
+scroll())`, with the same keyframes running on the document clock as a repeating
+sweep where it is unsupported.
+
 The library does not render SVG, does not use JavaScript animation, and does not
 depend on the Web Animations API at runtime — the custom element and DOM helpers
 only read `document.head` and create elements.
@@ -18,8 +24,8 @@ tested.
 
 ## Configuration surface
 
-The catalog holds 81 public IDs, each with its own implementation, built from
-11 render kinds and 11 stylesheet slices. Every adapter accepts the
+The catalog holds 82 public IDs, each with its own implementation, built from
+12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 20 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
@@ -56,6 +62,13 @@ semantics even if one is passed.
 indicator; contain it in a preview or card the way the documentation gallery
 does. `progress-steps` fills whole steps: `ceil(value / max * 5)` of five.
 
+`progress-scroll` is deliberately not one of the seven. Its fill comes from the
+document's scroll position, so there is no value for JavaScript to report: a
+labelled render exposes `role="status"` with no `aria-valuenow`, and passing
+`value` changes nothing. It is the `scroll` render kind, which is why the
+contract above and the tests that enforce it do not apply to it; its own test
+scrolls the document and measures the fill at 0%, 50% and 100% of the range.
+
 ## Styles and server rendering
 
 Client code needs nothing: `ensureStyles` puts each distinct slice in
@@ -88,8 +101,10 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   `tests/framework.test.mjs`, part of `npm test` and CI.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 81
-  IDs, custom-element attribute re-rendering, and axe over the whole gallery —
+  `theme`, style-slice injection counts, per-design slice isolation for all 82
+  IDs, the scroll-driven fill measured against the document's scroll position and
+  its clock-driven fallback, custom-element attribute re-rendering, and axe over
+  the whole gallery —
   `tests/browser.test.mjs`, run by `npm run test:browser` in a dedicated CI job.
 - Hydration is not configured or advertised by these adapters; they render
   markup into a container rather than reconciling it.

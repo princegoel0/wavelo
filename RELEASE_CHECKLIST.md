@@ -30,7 +30,7 @@ Audited version: `0.1.0`
 - [x] Verified `paused`, `direction` and all three `reducedMotion` modes in
   Chromium through computed styles and `document.getAnimations()` play-states,
   and confirmed the assertions fail if the CSS defect is reintroduced.
-- [x] Verified each of the 81 designs renders identically from only its own
+- [x] Verified each of the 82 designs renders identically from only its own
   stylesheet slice, so the modular entry points are complete.
 - [x] Verified style slices are injected once per document (12 loaders across
   five render kinds produce five head elements, none inside a host).
@@ -46,16 +46,22 @@ Audited version: `0.1.0`
 - [x] Ran `npm run check`: passed; build with catalog generation, strict
   typecheck, 30 unit tests, catalog drift check, documentation sync, and bundle
   budgets.
-- [x] Ran `npm run test:browser`: passed; 16 tests in Chromium.
+- [x] Ran `npm run test:browser`: passed; 18 tests in Chromium.
 - [x] Ran `npm run docs:build`: passed.
 - [x] Ran `npm run docs:check`: passed; documented counts and bundle figures are
   read from the build, so a stale document fails the pipeline.
 - [x] Ran `npm run pack:check`: passed.
 - [x] Ran `npm run audit:visual`: passed.
-- [x] Ran `npm run audit:visual:correctness`: passed; 81 active designs, 76 with
-  animations sampled as advancing in Chromium and 5 determinate-progress designs
-  verified through value binding. Every public ID has its own implementation, so
-  no design borrows another name.
+- [x] Ran `npm run audit:visual:correctness`: passed; 82 active designs, 76 with
+  animations sampled as advancing in Chromium, 5 determinate-progress designs
+  verified through value binding, and `progress-scroll` verified to run on a
+  `ScrollTimeline` rather than the document clock. Every public ID has its own
+  implementation, so no design borrows another name.
+- [x] Verified the scroll-driven design by measurement, not by inspection: the
+  fill is 0px at the top of the page, half the track at 50% of the scroll range
+  and the full track at 100%, and it keeps working inside an `overflow: hidden`
+  wrapper because the timeline is `scroll(root block)`. Rebinding it to `auto`
+  fails the test.
 - [ ] Human interactive review of motion quality in a real browser remains an
   owner decision; automated evidence proves each design animates, not that each
   animation looks right.

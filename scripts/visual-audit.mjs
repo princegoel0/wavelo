@@ -39,40 +39,44 @@ try {
   server.close();
 }
 
-const improveBeforeRelease = new Map([
-  ['circular', 'Near-duplicate of ring/arc; improve with a genuinely different mechanism or merge into ring.'],
+// Per-design review decisions, stated against what the stylesheet actually renders
+// now. The name-contract test in `tests/browser.test.mjs` backs every claim here
+// that says a geometry is asserted.
+const designDecisions = new Map([
+  ['circular', 'Closed border with a rotating ::before accent arc, asserted by the name contract; a different mechanism from ring.'],
   ['ring', 'Baseline ring; retain as canonical ring primitive.'],
-  ['arc', 'Near-duplicate of circular/ring; improve arc geometry and motion or merge.'],
-  ['thin-line', 'Cosmetic stroke-width variant of ring; move to customization or replace.'],
-  ['thick-stroke', 'Cosmetic stroke-width variant of ring; move to customization or replace.'],
-  ['monochrome', 'Color/theme variation rather than a distinct design; move to theme preset or replace.'],
+  ['arc', 'One drawn border side (a quarter turn), asserted by the name contract; retain.'],
+  ['thin-line', 'Measured hairline stroke (1px against the ring\u2019s 3px); retain as the documented weight pair with thick-stroke.'],
+  ['thick-stroke', 'Measured heavy stroke, asserted at more than twice the ring\u2019s; retain as the documented weight pair with thin-line.'],
+  ['monochrome', 'Half-filled rotating conic disc, asserted by the name contract; no longer a colour-only variant.'],
   ['dual-ring', 'Distinct nested structure; retain, but verify motion separation in a future animation review.'],
-  ['multi-arc', 'Shares nested-ring structure with dual-ring/segmented-ring; improve geometry or merge.'],
-  ['segmented-ring', 'Stroke-style variation of ring family; improve segmentation or merge.'],
+  ['multi-arc', 'Three arcs at three different insets (root plus both pseudo layers), asserted distinct from dual-ring; retain.'],
+  ['segmented-ring', 'Dashed four-sided border, asserted by the name contract; retain as the stroke-pattern member of the ring family.'],
   ['three-dots', 'Canonical three-dot sequence; retain.'],
   ['four-dots', 'Dot-count variation of three/five dots; improve timing/arrangement or merge into configurable preset.'],
   ['five-dots', 'Dot-count variation of three/four dots; improve timing/arrangement or merge into configurable preset.'],
-  ['dot-matrix', 'Static dot-count variation of dot sequence; improve matrix layout or merge.'],
+  ['dot-matrix', 'Three-by-three grid of nine parts with staggered pulse, asserted by the name contract; retain.'],
   ['alternating-dots', 'Shares linear-dot structure with fading/staggered dots; improve alternating grouping.'],
   ['vertical-dots', 'Orientation variant of dot wave; retain only if vertical motion remains perceptually distinct.'],
   ['bouncing-bars', 'Shares bar primitive with equalizer/growing bars; improve rhythm or merge.'],
   ['vertical-pulse-bars', 'Shares bar primitive with bouncing/growing bars; improve rhythm or merge.'],
   ['horizontal-pulse-bars', 'Orientation variant of bar family; retain if horizontal motion is intentional.'],
-  ['audio-waveform', 'Near-duplicate of waveform; replace with a distinct waveform topology or merge.'],
+  ['audio-waveform', 'Seven bars on its own wavelo-audio keyframe, asserted different from waveform; retain.'],
   ['fading-bars', 'Shares bar primitive with equalizer/growing bars; improve timing or merge.'],
   ['alternating-bars', 'Shares bar primitive with equalizer/fading bars; improve grouping or merge.'],
-  ['gradient-bars', 'Cosmetic color variation of bars; move to theme preset or replace.'],
+  ['gradient-bars', 'Gradient-filled bars, asserted against the equalizer\u2019s flat fill; retain as the colour variant, and a theme preset would still be useful.'],
   ['ripple-circles', 'Shares expanding-ring structure with expanding circles; improve ripple origin or merge.'],
   ['expanding-circles', 'Shares expanding-ring structure with ripple circles; improve topology or merge.'],
-  ['nested-squares', 'Shares nested shape structure with dual-ring; improve square-specific motion.'],
-  ['concentric-pulse', 'Shares concentric structure with ripple/expanding circles; improve pulse staging.'],
-  ['cube', 'Rendered as generic rotating shape; replace with an actual cube topology.'],
-  ['polygon', 'Rendered as generic rotating shape; add polygon-specific geometry before release.'],
-  ['triangles', 'Rendered as generic rotating shape; add visible triangle geometry before release.'],
-  ['folding-squares', 'Rendered as generic rotating shape; add folding panels before release.'],
+  ['nested-squares', 'Three nested outlines at 8/25/42% insets with their own rotations; retain.'],
+  ['concentric-pulse', 'Three circles at 12/28/44% insets pulsing with staggered delays; retain.'],
+  ['cube', 'Faceted gradient with preserve-3d on wavelo-cube; retain.'],
+  ['polygon', 'Pentagon clip-path on wavelo-polygon; retain.'],
+  ['triangles', 'Three clipped triangles orbiting at 120-degree offsets on wavelo-triangle-orbit; retain.'],
+  ['folding-squares', 'Two panels with a transparent seam on wavelo-fold; retain.'],
   ['skeleton-card', 'Application-role variant of skeleton; retain with documented dimensions.'],
   ['skeleton-dashboard', 'Application-role variant of skeleton; retain with documented dimensions.'],
   ['progress-steps', 'Progress-specific structure; retain and verify multiple step segments interactively.'],
+  ['progress-scroll', 'Scroll-driven fill with no JavaScript; retain, and note it is Chromium-only today with a clock-driven sweep as the fallback.'],
   ['inline', 'Application-role variant; retain because placement semantics differ.'],
   ['button', 'Application-role variant; retain because placement semantics differ.'],
   ['overlay', 'Application-role variant; retain because overlay semantics differ.'],
@@ -83,9 +87,9 @@ const rows = loaderRegistry.map((loader) => {
   const sharedPrimitive = loader.kind === 'ring' || loader.kind === 'rings' ? 'ring-family' : loader.kind;
   const decision = loader.deprecated
     ? `Deprecated alias of \`${loader.aliasOf}\`; public import retained for compatibility.`
-    : improveBeforeRelease.get(loader.id) ?? 'Retain; rendered correctly and no immediate layout defect found.';
+    : designDecisions.get(loader.id) ?? 'Retain; rendered correctly and no immediate layout defect found.';
   const findings = `Rendered in the consistent gallery card; ${sharedPrimitive} primitive, ${loader.supportsProgress ? 'progress semantics enabled' : 'indeterminate semantics'}.`;
-  return `| \`${loader.id}\` | ${loader.category} | Human reviewed | ${findings} | ${decision} |`;
+  return `| \`${loader.id}\` | ${loader.category} | Automated evidence; human motion-quality review pending | ${findings} | ${decision} |`;
 }).join('\n');
 
 await writeFile(reportPath, `# Visual catalog audit
@@ -93,27 +97,30 @@ await writeFile(reportPath, `# Visual catalog audit
 ## Review scope
 
 - **Artifact:** [catalog-contact-sheet.png](../release-audit/catalog-contact-sheet.png)
-- **Source of truth:** \`loaderRegistry\` (81 entries)
+- **Source of truth:** \`loaderRegistry\` (${loaderRegistry.length} entries)
 - **Preview contract:** the production documentation gallery, one consistent card
   size, shared preview dimensions, labels, descriptions, and the same generated
   core markup used by consumers.
 - **Automated review:** gallery card count, catalog metadata, deterministic
   rendering, public modular imports, axe checks, reduced-motion behavior, and
   console/page-error checks are covered by the existing test suite.
-- **Human visual review:** the contact sheet was inspected at desktop size for
-  blank output, clipping, inconsistent dimensions, broken labels, obvious
-  cosmetic-only variants, and responsive card layout. Human review is separate
-  from automated validation and does not claim that animation quality can be
-  proven from a static screenshot alone.
+- **Human visual review:** the contact sheet is the artifact for the owner's review
+  at desktop size — blank output, clipping, inconsistent dimensions, broken labels
+  and obvious cosmetic-only variants. That review is separate from automated
+  validation and is not recorded as complete here: whether each animation looks
+  right is still an owner decision, tracked in \`RELEASE_CHECKLIST.md\`.
 
 ## Decisions
 
-All 81 entries rendered correctly in the review artifact with consistent card
+All ${loaderRegistry.length} entries rendered correctly in the review artifact with consistent card
 dimensions, readable labels, and no desktop or mobile horizontal overflow.
-The decisions below explicitly flag cosmetic variants and generic shape
-implementations for improvement or merging; they are not being counted as
-evidence of 81 independently novel animations. No entry was removed during this
-audit because doing so requires coordinated preset/API deprecation work.
+None of them renders something other than what its name and description promise:
+the name-contract test asserts the promised geometry per design, and the
+distinctness test asserts that no two of the ${loaderRegistry.length} share a rendered signature. What the decisions below
+still flag is a taste question — whether a count or orientation variant earns its
+own public ID — not a defect, and it is a post-release judgement rather than a
+release blocker. No entry was removed during this audit because doing so requires
+coordinated preset/API deprecation work.
 
 | Design ID | Category | Review status | Findings | Decision |
 |---|---|---|---|---|
@@ -121,11 +128,15 @@ ${rows}
 
 ## Follow-up risk
 
-Static inspection cannot prove animation distinctness, timing quality, or
-perceptual separation in every near-duplicate group. The closest groups are
-the ring-family spinner entries, dot sequences, bar/wave entries, generic shape
-entries, and skeleton application states. Entries marked "improve" or "merge"
-remain release blockers until their implementation or API decision is completed.
+A screenshot cannot judge taste, but distinctness and motion are no longer taken
+from one. The browser suite compares a computed-style signature for every design
+(geometry, drawn borders, gradients, animation identity and timing, part layout)
+and requires all ${loaderRegistry.length} to differ, and the correctness audit samples each design's
+animations twice, 250ms apart, so a frozen or duplicated design fails a test
+rather than relying on a reviewer's memory. What remains genuinely unproven is
+perceptual quality: whether a count or orientation variant deserves its own public
+ID. That is a product call for after the release, and the closest groups to
+revisit are the ring-family spinners, the dot counts, and the bar/wave families.
 `, 'utf8');
 
 console.log(`Visual audit written for ${loaderRegistry.length} designs`);
