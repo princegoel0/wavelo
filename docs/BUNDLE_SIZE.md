@@ -8,15 +8,15 @@ fails the build rather than getting documented.
 | --- | --- | --- | --- |
 | `@wavelo/core/loaders/ring` — one design, chosen at build time | 13,106 | 4.9 KB (5,018 B) | 5,632 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 17,426 | 5,782 | 6,656 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 59,410 | 12.3 KB (12,632 B) | 13,824 |
-| `@wavelo/core` + registry walk over all 83 designs | 59,413 | 12,642 | 13,824 |
-| `@wavelo/react` | 60,051 | 12,964 | 13,824 |
-| `@wavelo/vue` | 61,036 | 13,398 | 13,824 |
-| `@wavelo/angular` | 62,995 | 14,226 | 15,872 |
-| `@wavelo/svelte` | 59,602 | 12,729 | 13,824 |
-| `@wavelo/web-components` | 61,478 | 13,438 | 13,824 |
-| `@wavelo/vanilla` | 59,734 | 12,798 | 13,824 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 39,289 raw | 5,842 | — |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 59,490 | 12.4 KB (12,692 B) | 13,824 |
+| `@wavelo/core` + registry walk over all 83 designs | 59,493 | 12,702 | 13,824 |
+| `@wavelo/react` | 60,322 | 13,101 | 13,824 |
+| `@wavelo/vue` | 61,307 | 13,532 | 13,824 |
+| `@wavelo/angular` | 63,266 | 14,357 | 15,872 |
+| `@wavelo/svelte` | 59,682 | 12,789 | 13,824 |
+| `@wavelo/web-components` | 61,749 | 13,575 | 13,824 |
+| `@wavelo/vanilla` | 60,012 | 12,942 | 13,824 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 39,384 raw | 5,897 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a
 design chosen at build time must not carry the rest of the catalog, so it does not

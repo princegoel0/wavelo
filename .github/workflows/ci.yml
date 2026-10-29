@@ -49,3 +49,5 @@ jobs:
       - run: npm run test:browser
       - name: Verify the advertised options still match the render
         run: npm run audit:customization
+      - name: Layout cost per frame
+        run: npm run audit:layout

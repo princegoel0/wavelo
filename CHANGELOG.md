@@ -195,6 +195,29 @@ Not yet published.
   react-content-loader, MUI and Chakra skeletons and NProgress, including the
   differences that will bite — `speed` means the opposite of what it means there, and
   an unlabelled loader is `aria-hidden` rather than "Loading…".
+- Four bar designs stopped costing the browser a layout on every frame. `equalizer`,
+  `gradient-bars`, `growing-bars` and `alternating-bars` animated `height: 20% → 100%`;
+  they now animate `transform: scaleY(.2 → 1)` on a full-height box anchored to the
+  bottom, which measured 119–120 layouts per two seconds across 150 copies before and
+  0 after. The change was kept on a measurement, not an argument: every bar's box was
+  compared at three points of the animation cycle across all eight bar designs and
+  matched within 0.6 px, and the residual difference is recorded — about 0.5% of
+  pixels, all on the caps, because a vertical scale also compresses the 2 px corner
+  radius while the bar is short. The same conversion was tried on `waveform`, failed
+  that geometry check by 30 px, and was reverted: its slide is a percentage of a
+  height that is itself animating.
+- `progress-view`'s fill became a scale rather than a width, for the same reason — a
+  reading indicator that re-lays-out the page while you scroll is the one thing it
+  must not do.
+- `npm run audit:layout` measures the layout and style-recalculation counters of every
+  design in Chromium and fails when one costs a layout per frame with no recorded
+  reason, and when a recorded reason stops being true. Three designs remain
+  layout-driven and each says why in `docs/PERFORMANCE.md`.
+- A dead keyframe went: `wavelo-bars` was imported by the bars slice and named by the
+  kind's default rule, which every design in that family overrides, so nothing ever
+  ran it. 126 bytes off the catalog sheet.
+- New: [docs/PERFORMANCE.md](docs/PERFORMANCE.md) — per-frame cost, per-kind slice
+  bytes, and which command measures each claim.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

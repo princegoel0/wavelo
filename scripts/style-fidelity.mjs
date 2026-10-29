@@ -30,10 +30,14 @@ const VARS = ['--wavelo-size', '--wavelo-duration', '--wavelo-stroke', '--wavelo
 
 /**
  * Designs whose fill comes from a scroll or view timeline, and the properties that
- * makes position-derived rather than sheet-derived.
+ * makes position-derived rather than sheet-derived. `progress-view` scales its fill,
+ * so the scale itself is the reading position; `progress-scroll` animates a width and
+ * keeps a static transform on its leading dot, which is still worth comparing.
  */
-const positionDriven = ['width', 'transform-origin', '--wavelo-progress'];
-const timelineDriven = new Map([['progress-scroll', positionDriven], ['progress-view', positionDriven]]);
+const timelineDriven = new Map([
+  ['progress-scroll', ['width', 'transform-origin', '--wavelo-progress']],
+  ['progress-view', ['width', 'transform-origin', '--wavelo-progress', 'transform']]
+]);
 
 const [command, file] = process.argv.slice(2);
 const mode = process.argv.includes('--sliced') ? 'sliced' : 'full';

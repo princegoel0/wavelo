@@ -26,14 +26,15 @@ export const scrollCss = `
 .wavelo--scroll .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:scroll(root block)}
 }
 /* "progress-view" follows the element it sits on rather than the document: a view
-   timeline takes the animated element as its subject, so this bar fills as the bar
-   travels through the scrollport. To make a different element the subject, declare
-   "view-timeline: --name block" on it and set "--wavelo-timeline: --name" here.
-   Without view timelines the same frames run on the document clock, so the bar
-   shows activity instead of an empty track. */
-.wavelo--progress-view{animation:wavelo-view-fill var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--progress-view .wavelo__part{width:var(--wavelo-progress,0%);animation:none}
+   timeline takes the animated element as its subject, and the fill is the loader's
+   own box, so this bar reads its in-view progress. To make a different element the
+   subject, declare "view-timeline: --name block" on it and set
+   "--wavelo-timeline: --name" here. The fill is a scale, not a width, because a
+   bar that re-lays-out the page on every frame of a scroll is the one thing a
+   reading indicator must not do. Without view timelines the same frames run on the
+   document clock, so the bar shows activity instead of an empty track. */
+.wavelo--progress-view .wavelo__part{width:100%;transform-origin:left;animation:wavelo-view-fill var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 @supports (animation-timeline:view()){
-.wavelo--progress-view{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:var(--wavelo-timeline,view(block))}
+.wavelo--progress-view .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:var(--wavelo-timeline,view(block))}
 }
 ${scrollFillFrames}${viewFillFrames}`;

@@ -305,5 +305,6 @@ See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the integration boundary,
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) for verified usage examples,
 [docs/RECIPES.md](docs/RECIPES.md) for server rendering, CSP, Tailwind and container
 queries, [docs/MIGRATION.md](docs/MIGRATION.md) for moving off an existing spinner,
-[docs/BUNDLE_SIZE.md](docs/BUNDLE_SIZE.md) for measured sizes, and
+[docs/BUNDLE_SIZE.md](docs/BUNDLE_SIZE.md) and
+[docs/PERFORMANCE.md](docs/PERFORMANCE.md) for measured size and per-frame cost, and
 [PRD.md](PRD.md) for the product requirements.

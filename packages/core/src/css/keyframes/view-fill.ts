@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-view-fill{from{--wavelo-progress:0%}to{--wavelo-progress:100%}}`;
+export const css = `@keyframes wavelo-view-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}`;

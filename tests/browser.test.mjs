@@ -178,22 +178,24 @@ test('the same slice requested twice adds no element', async () => {
 
 test('a design renders the same with only the stylesheet slice its entry point ships', async () => {
   const properties = ['animationName', 'animationDuration', 'animationTimingFunction', 'animationDelay', 'animationTimeline', 'width', 'height', 'borderRadius', 'borderTopWidth', 'borderRightColor', 'backgroundImage', 'transform', 'opacity', 'display', 'position', 'gap'];
+  // A view-timeline design takes its fill from where the element sits in the
+  // viewport, which is not the same thing on a page of 83 designs and a page of
+  // one. What this test claims is that the shipped slice carries the same rules, so
+  // the properties a timeline drives are left out for those designs while the
+  // bindings that produce them - including which timeline is named - are compared.
+  const positionDriven = { 'progress-scroll': ['width'], 'progress-view': ['width', 'transform'] };
   const script = `(() => {
     // A scroll-driven animation reads its progress from its timeline, and
     // assigning it a numeric currentTime throws; pausing holds it where it is.
     for (const animation of document.getAnimations()) { animation.pause(); if (animation.timeline === document.timeline) animation.currentTime = 0; }
-    // A view-timeline design takes its fill from where the element sits in the
-    // viewport, which is not the same thing on a page of 83 designs and a page of
-    // one. What this test claims is that the shipped slice carries the same rules,
-    // so the position-derived width is left out for those designs while the
-    // animation bindings - including which timeline they bind to - are compared.
-    const shape = (root) => {
-      const list = root.classList.contains('wavelo--scroll') ? ${JSON.stringify(properties)}.filter((property) => property !== 'width') : ${JSON.stringify(properties)};
+    const shape = (wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const skip = ${JSON.stringify(positionDriven)}[wrap.dataset.design] ?? [];
+      const list = ${JSON.stringify(properties)}.filter((property) => !skip.includes(property));
       const read = (element) => list.map((property) => getComputedStyle(element)[property]).join('|');
       return { root: read(root), parts: [...root.querySelectorAll('.wavelo__part')].map(read).join('||') };
     };
-    const scopes = [...document.querySelectorAll('[data-design] .wavelo')];
-    return scopes.map(shape);
+    return [...document.querySelectorAll('[data-design]')].map(shape);
   })()`;
 
   await setContentPage(loaderRegistry.map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`).join(''));
@@ -397,7 +399,7 @@ test('the scroll-driven bar follows the document scroll position without JavaScr
 test('where scroll and view timelines are unsupported the same keyframes sweep on the clock', async () => {
   const cases = [
     { type: 'progress-scroll', selector: '#bar .wavelo__part', frame: 'wavelo-scroll-fill' },
-    { type: 'progress-view', selector: '#bar .wavelo', frame: 'wavelo-view-fill' }
+    { type: 'progress-view', selector: '#bar .wavelo__part', frame: 'wavelo-view-fill' }
   ];
   for (const testCase of cases) {
     const result = renderLoader({ type: testCase.type, label: 'Reading progress' });
@@ -1005,7 +1007,7 @@ test('progress-view fills as its own element travels through the viewport', asyn
     page.evaluate(() => {
       const root = document.querySelector('.wavelo--progress-view');
       const part = root.querySelector('.wavelo__part');
-      const animation = document.getAnimations().find((candidate) => candidate.effect?.target === root);
+      const animation = document.getAnimations().find((candidate) => candidate.effect?.target === part);
       return {
         width: Math.round(part.getBoundingClientRect().width),
         track: Math.round(root.getBoundingClientRect().width),
