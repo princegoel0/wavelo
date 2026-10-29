@@ -76,7 +76,22 @@ export interface LoaderConfig {
    * present and not `false`/`0` is paused.
    */
   paused?: boolean | 'true' | 'false' | '0' | '';
+  /** Text alternative for the loader itself; sets `aria-label`. */
   label?: string;
+  /** Ids of the elements that name this one; sets `aria-labelledby`. */
+  labelledBy?: string;
+  /** Ids of the elements that explain this one; sets `aria-describedby`. */
+  describedBy?: string;
+  /**
+   * Human-readable reading of `value`, such as `3 of 8 files` or `72% loaded`.
+   * Without it, assistive technology announces the bare number against `max`.
+   */
+  valueText?: string;
+  /**
+   * Hide the loader from assistive technology even when a label is given, for the
+   * case where a visible caption or a sibling status already announces it.
+   */
+  decorative?: boolean;
   className?: string;
   style?: LoaderStyle;
   reducedMotion?: ReducedMotion;
@@ -86,7 +101,7 @@ export interface LoaderConfig {
   [key: DataAttribute]: string | undefined;
 }
 
-export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'paused' | 'value' | 'max' | DataAttribute> {
+export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'paused' | 'decorative' | 'value' | 'max' | DataAttribute> {
   type: string;
   size: string;
   width: string;
@@ -97,6 +112,7 @@ export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'wid
   theme: Theme;
   /** Always a boolean after validation, whatever form the caller used. */
   paused?: boolean;
+  decorative?: boolean;
   value?: number;
   max: number;
   /** Only `--wavelo-*` custom properties survive validation. */

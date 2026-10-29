@@ -24,7 +24,45 @@ const DIMENSION_HINT = 'Use a number with a unit, auto, or calc()/min()/max()/cl
 
 const SAFE_CLASS = /^[A-Za-z0-9 _-]{0,200}$/;
 const SAFE_DATA_NAME = /^data-[a-z][a-z0-9._-]{0,60}$/;
+const SAFE_ID_REFERENCE = /^[A-Za-z_][A-Za-z0-9_:.-]{0,63}(?:\s+[A-Za-z_][A-Za-z0-9_:.-]{0,63}){0,7}$/;
 const THEMES: Theme[] = ['light', 'dark', 'system'];
+
+/** Space-separated `id` references, as `aria-labelledby` and `aria-describedby` take them. */
+function identifierList(value: string | undefined, label: string): string | undefined {
+  if (value === undefined) return undefined;
+  const text = String(value).trim();
+  if (!SAFE_ID_REFERENCE.test(text)) throw new LoaderConfigurationError(`Invalid ${label}: ${value}. Give one or more element ids separated by spaces.`);
+  return text;
+}
+
+function textValue(value: string | undefined, label: string, limit: number): string | undefined {
+  if (value === undefined) return undefined;
+  const text = String(value).trim();
+  // An empty string means "no text here", not an error: templates pass `label=""`
+  // when a caption is absent.
+  if (!text) return undefined;
+  if (text.length > limit || /[\u0000-\u001f]/.test(text)) {
+    throw new LoaderConfigurationError(`${label} must be at most ${limit} characters with no control characters.`);
+  }
+  return text;
+}
+
+/**
+ * `aria-*` and `role` are written by the renderer from the accessibility options, so
+ * passing them directly would be silently ignored — which is the failure mode this
+ * library removes rather than repeats.
+ */
+const OWN_ACCESSIBILITY_KEYS = new Set(['label', 'labelledBy', 'describedBy', 'valueText', 'decorative']);
+function rejectForeignAccessibility(input: LoaderConfig): void {
+  for (const key of Object.keys(input)) {
+    if (OWN_ACCESSIBILITY_KEYS.has(key)) continue;
+    if (/^aria-/i.test(key) || key.toLowerCase() === 'role') {
+      throw new LoaderConfigurationError(
+        `${key} is not a Wavelo option. Use label, labelledBy, describedBy, valueText or decorative; the renderer owns role and aria-*.`
+      );
+    }
+  }
+}
 
 export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => ({
@@ -127,6 +165,7 @@ function number(value: number | undefined, bounds: [number, number], label: stri
 }
 
 export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
+  rejectForeignAccessibility(input);
   const className = input.className ?? '';
   if (!SAFE_CLASS.test(className)) throw new LoaderConfigurationError('className contains unsupported characters.');
   const speed = number(input.speed, [0, 20], 'speed', true) ?? 1;
@@ -149,6 +188,11 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
     strokeWidth,
     theme: input.theme ?? 'light',
     paused: optionalBoolean(input.paused),
+    decorative: optionalBoolean(input.decorative),
+    label: textValue(input.label, 'label', 200),
+    labelledBy: identifierList(input.labelledBy, 'labelledBy'),
+    describedBy: identifierList(input.describedBy, 'describedBy'),
+    valueText: textValue(input.valueText, 'valueText', 200),
     max,
     value,
     style: safeStyle(input.style),

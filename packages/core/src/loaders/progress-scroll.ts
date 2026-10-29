@@ -5,7 +5,7 @@ import { scrollCss } from '../css/kinds/scroll.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-scroll", name: "Scroll progress", category: "progress", kind: "scroll", description: "Reading progress driven by the document scroll position", options: ["className","color","data-testid","direction","label","paused","reducedMotion","size","style","width"], supportsProgress: false, stability: "stable", visualSignature: "progress-scroll" };
+const definition: LoaderDefinition = { id: "progress-scroll", name: "Scroll progress", category: "progress", kind: "scroll", description: "Reading progress driven by the document scroll position", options: ["className","color","data-testid","decorative","describedBy","direction","label","labelledBy","paused","reducedMotion","size","style","width"], supportsProgress: false, stability: "stable", visualSignature: "progress-scroll" };
 const styles = `${baseCss}${scrollCss}`;
 
 export const progressScroll = (config: Omit<LoaderConfig, 'type'> = {}) =>

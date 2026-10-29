@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "arc", name: "Rotating arc", category: "spinner", kind: "ring", description: "Single quarter-turn rotating arc", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "arc" };
+const definition: LoaderDefinition = { id: "arc", name: "Rotating arc", category: "spinner", kind: "ring", description: "Single quarter-turn rotating arc", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "arc" };
 const styles = `${baseCss}${ringCss}`;
 
 export const arc = (config: Omit<LoaderConfig, 'type'> = {}) =>

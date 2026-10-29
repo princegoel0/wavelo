@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "dual-ring", name: "Dual ring", category: "spinner", kind: "rings", description: "Nested dual-ring rotation", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "dual-ring" };
+const definition: LoaderDefinition = { id: "dual-ring", name: "Dual ring", category: "spinner", kind: "rings", description: "Nested dual-ring rotation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "dual-ring" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const dualRing = (config: Omit<LoaderConfig, 'type'> = {}) =>

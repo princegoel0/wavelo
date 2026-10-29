@@ -45,10 +45,11 @@ caller's theme into another's markup.
 
 The catalog holds 82 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
-same 20 configuration keys — `type`, `size`, `width`, `height`, `color`,
+same 24 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
-`data-testid`, `value`, `max` — plus arbitrary `data-*` values. `tests/framework.test.mjs`
+`data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText` and
+`decorative` — plus arbitrary `data-*` values. `tests/framework.test.mjs`
 renders every key through every adapter and asserts each one reaches the
 element, so a bridge that falls behind the core fails the build.
 

@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "multi-arc", name: "Multiple arcs", category: "spinner", kind: "rings", description: "Three layered arcs rotating in alternating directions", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "multi-arc" };
+const definition: LoaderDefinition = { id: "multi-arc", name: "Multiple arcs", category: "spinner", kind: "rings", description: "Three layered arcs rotating in alternating directions", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "multi-arc" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const multiArc = (config: Omit<LoaderConfig, 'type'> = {}) =>

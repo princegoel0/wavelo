@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "ripple-dot", name: "Ripple dot", category: "dots", kind: "rings", description: "Ripple expanding from a centre dot", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "ripple-dot" };
+const definition: LoaderDefinition = { id: "ripple-dot", name: "Ripple dot", category: "dots", kind: "rings", description: "Ripple expanding from a centre dot", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "ripple-dot" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const rippleDot = (config: Omit<LoaderConfig, 'type'> = {}) =>

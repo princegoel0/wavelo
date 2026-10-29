@@ -36,7 +36,8 @@ export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAUL
   inputs: [
     'type', 'size', 'width', 'height', 'color', 'secondaryColor', 'backgroundColor',
     'speed', 'duration', 'strokeWidth', 'theme', 'direction', 'paused', 'label',
-    'className', 'waveloStyle: style', 'reducedMotion', 'data-testid', 'value', 'max'
+    'className', 'waveloStyle: style', 'reducedMotion', 'data-testid', 'value', 'max',
+    'labelledBy', 'describedBy', 'valueText', 'decorative'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -61,6 +62,10 @@ export class LoaderComponent implements OnChanges, OnDestroy {
   'data-testid'?: string;
   value?: number;
   max?: number;
+  labelledBy?: string;
+  describedBy?: string;
+  valueText?: string;
+  decorative?: boolean;
 
   private readonly element = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
@@ -87,7 +92,11 @@ export class LoaderComponent implements OnChanges, OnDestroy {
       reducedMotion: this.reducedMotion,
       'data-testid': this['data-testid'],
       value: this.value,
-      max: this.max
+      max: this.max,
+      labelledBy: this.labelledBy,
+      describedBy: this.describedBy,
+      valueText: this.valueText,
+      decorative: this.decorative
     };
     const result = renderLoader(mergeWaveloConfig(this.defaults, this.withHostDataAttributes(config)));
     ensureStyles(result.css);

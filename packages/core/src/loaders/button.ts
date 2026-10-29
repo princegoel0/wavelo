@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "button", name: "Button loading", category: "application", kind: "pulse", description: "Button loading state", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "button" };
+const definition: LoaderDefinition = { id: "button", name: "Button loading", category: "application", kind: "pulse", description: "Button loading state", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "button" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const button = (config: Omit<LoaderConfig, 'type'> = {}) =>

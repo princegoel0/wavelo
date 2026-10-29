@@ -787,3 +787,30 @@ test('a determinate value animates because the progress token is registered', as
   assert.ok(samples.middle > 15 && samples.middle < 85, `the value did not interpolate: ${samples.middle}`);
   assert.ok(samples.end > 89, `the value never reached the target: ${samples.end}`);
 });
+
+test('the accessibility options work through element attributes', async () => {
+  await setContentPage(
+    '<p id="caption">Uploading your archive</p>' +
+    '<wavelo-loader id="named" type="progress-bar" labelled-by="caption" described-by="caption" value="70" max="100" value-text="70 of 100 MB"></wavelo-loader>' +
+    '<wavelo-loader id="quiet" type="ring" label="Loading" decorative></wavelo-loader>'
+  );
+  const read = await page.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const named = document.getElementById('named').querySelector('.wavelo');
+    const quiet = document.getElementById('quiet').querySelector('.wavelo');
+    const pick = (element) => ['role', 'aria-labelledby', 'aria-describedby', 'aria-valuenow', 'aria-valuetext', 'aria-label', 'aria-hidden'].reduce((all, name) => {
+      const value = element.getAttribute(name);
+      if (value !== null) all[name] = value;
+      return all;
+    }, {});
+    return { named: pick(named), quiet: pick(quiet), captionText: document.getElementById('caption').textContent };
+  });
+  assert.equal(read.named.role, 'progressbar');
+  assert.equal(read.named['aria-labelledby'], 'caption', 'a referenced caption names the bar');
+  assert.equal(read.named['aria-describedby'], 'caption');
+  assert.equal(read.named['aria-valuenow'], '70');
+  assert.equal(read.named['aria-valuetext'], '70 of 100 MB', 'the reading must survive the attribute path');
+  assert.equal(read.named['aria-label'], undefined);
+  assert.deepEqual(read.quiet, { 'aria-hidden': 'true' }, 'a decorative loader exposes nothing else');
+  assert.equal(read.captionText, 'Uploading your archive');
+});

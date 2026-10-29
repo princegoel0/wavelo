@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "inline", name: "Inline loading", category: "application", kind: "pulse", description: "Inline application loading", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "inline" };
+const definition: LoaderDefinition = { id: "inline", name: "Inline loading", category: "application", kind: "pulse", description: "Inline application loading", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "inline" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const inline = (config: Omit<LoaderConfig, 'type'> = {}) =>

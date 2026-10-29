@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "vertical-dots", name: "Vertical bouncing dots", category: "dots", kind: "wave", description: "Vertical dot bounce", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "vertical-dots" };
+const definition: LoaderDefinition = { id: "vertical-dots", name: "Vertical bouncing dots", category: "dots", kind: "wave", description: "Vertical dot bounce", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "vertical-dots" };
 const styles = `${baseCss}${waveCss}`;
 
 export const verticalDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "fading-bars", name: "Fading bars", category: "bars", kind: "bars", description: "Sequential fading bars", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "fading-bars" };
+const definition: LoaderDefinition = { id: "fading-bars", name: "Fading bars", category: "bars", kind: "bars", description: "Sequential fading bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "fading-bars" };
 const styles = `${baseCss}${barsCss}`;
 
 export const fadingBars = (config: Omit<LoaderConfig, 'type'> = {}) =>

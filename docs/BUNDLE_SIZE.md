@@ -6,16 +6,16 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 10,831 | 4.1 KB (4,205 B) | 4,608 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 13,331 | 4,694 | 5,632 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 51,843 | 10.8 KB (11,051 B) | 12,288 |
-| `@wavelo/core` + registry walk over all 82 designs | 51,846 | 11,059 | 12,288 |
-| `@wavelo/react` | 52,468 | 11,388 | 12,288 |
-| `@wavelo/vue` | 53,251 | 11,730 | 12,288 |
-| `@wavelo/angular` | 55,182 | 12,574 | 13,312 |
-| `@wavelo/svelte` | 52,035 | 11,152 | 12,288 |
-| `@wavelo/web-components` | 53,788 | 11,850 | 12,288 |
-| `@wavelo/vanilla` | 52,163 | 11,219 | 12,288 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 12,022 | 4.5 KB (4,612 B) | 5,632 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 14,566 | 5,098 | 6,144 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 53,132 | 11.2 KB (11,457 B) | 13,824 |
+| `@wavelo/core` + registry walk over all 82 designs | 53,135 | 11,463 | 13,824 |
+| `@wavelo/react` | 53,757 | 11,786 | 13,824 |
+| `@wavelo/vue` | 54,592 | 12,131 | 13,824 |
+| `@wavelo/angular` | 56,631 | 13,025 | 14,848 |
+| `@wavelo/svelte` | 53,324 | 11,558 | 13,824 |
+| `@wavelo/web-components` | 55,142 | 12,248 | 13,824 |
+| `@wavelo/vanilla` | 53,452 | 11,628 | 13,824 |
 | `@wavelo/core/styles.css` (all designs, loaded once) | 33,763 raw | 4,863 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a
@@ -33,10 +33,12 @@ trade — configuration that a page can set once instead of per loader:
 - The colour and dimension grammar got wider.
 
 Runtime bundles additionally carry the registry and the 82-entry bitset those lists
-are decoded from, which is why their budget is 12 KiB (13 for Angular). Adapters and
-`renderLoader` choose by string at runtime, so they carry every slice and grow by
-roughly 220 B per design added; budgets are set from measurement with roughly 10%
-headroom rather than pretending to be per-design.
+are decoded from, which is why their budget is 13.5 KiB (14.5 for Angular). Adapters
+and `renderLoader` choose by string at runtime, so they carry every slice and grow by
+roughly 220 B per design added. Budgets sit about 12% above the measured value,
+rounded up to the next 512 B, and are re-based on purpose: a configuration key costs
+20-30 B gzipped in every bundle, which is what the four accessibility options cost a
+single design (4,205 → 4,612 B).
 
 ## Why the numbers look like this
 

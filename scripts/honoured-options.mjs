@@ -44,7 +44,11 @@ const PROBES = {
   direction: { direction: 'reverse' },
   paused: { paused: true },
   value: { value: 70, max: 100 },
-  max: { value: 40, max: 80 }
+  max: { value: 40, max: 80 },
+  labelledBy: { labelledBy: 'caption' },
+  describedBy: { describedBy: 'hint' },
+  valueText: { value: 70, max: 100, valueText: '70% done' },
+  decorative: { decorative: true }
 };
 
 const PROPS = [
@@ -76,7 +80,11 @@ const SELF_CHECKS = [
   ['progress-bar', 'value', true],
   ['progress-bar', 'duration', false],
   ['dot-matrix', 'size', true],
-  ['dot-matrix', 'width', false]
+  ['dot-matrix', 'width', false],
+  ['ring', 'labelledBy', true],
+  ['ring', 'decorative', true],
+  ['ring', 'valueText', false],
+  ['progress-bar', 'valueText', true]
 ];
 
 async function fingerprintPage(browser, overrides) {
@@ -118,6 +126,14 @@ async function fingerprintPage(browser, overrides) {
         const scrollDriven = own.some((animation) => animation.timeline !== document.timeline);
         cells[wrap.dataset.id] = {
           render: elements.map(([element, pseudo]) => read(element, pseudo)).join('##'),
+          // Attributes the key can genuinely change. `style` echoes every token the
+          // renderer was handed whether or not anything reads it, and
+          // `data-wavelo-theme`/`data-wavelo-motion` are mechanism, not effect.
+          attributes: [...root.attributes]
+            .filter((attribute) => attribute.name !== 'style' && !attribute.name.startsWith('data-wavelo-'))
+            .map((attribute) => `${attribute.name}=${attribute.value}`)
+            .sort()
+            .join(' '),
           animates,
           scrollDriven
         };
@@ -139,7 +155,7 @@ export async function measureHonouredKeys(browser) {
     for (const design of loaderRegistry) {
       const before = baseline[design.id];
       const after = measured[design.id];
-      const differs = before.render !== after.render;
+      const differs = before.render !== after.render || before.attributes !== after.attributes;
       let honoured;
       if (TIME_KEYS.includes(key)) honoured = before.animates && !before.scrollDriven && differs;
       else if (CONTROL_KEYS.includes(key)) honoured = before.animates && differs;

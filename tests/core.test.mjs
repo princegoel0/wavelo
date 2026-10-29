@@ -132,12 +132,15 @@ test('every supported configuration key reaches the rendered element', () => {
 
 test('loaderConfigKeys covers the whole documented configuration surface', () => {
   assert.deepEqual([...loaderConfigKeys].sort(), [
-    'backgroundColor', 'className', 'color', 'data-testid', 'direction', 'duration', 'height', 'label', 'max',
-    'paused', 'reducedMotion', 'secondaryColor', 'size', 'speed', 'strokeWidth', 'style', 'theme', 'type', 'value', 'width'
+    'backgroundColor', 'className', 'color', 'data-testid', 'decorative', 'describedBy', 'direction', 'duration',
+    'height', 'label', 'labelledBy', 'max', 'paused', 'reducedMotion', 'secondaryColor', 'size', 'speed',
+    'strokeWidth', 'style', 'theme', 'type', 'value', 'valueText', 'width'
   ]);
   assert.equal(loaderAttributes.length, loaderConfigKeys.length);
   assert.ok(loaderAttributes.includes('secondary-color'));
   assert.ok(loaderAttributes.includes('data-testid'));
+  assert.ok(loaderAttributes.includes('labelled-by'), 'the accessibility keys need attribute forms');
+  assert.ok(loaderAttributes.includes('value-text'));
 });
 
 test('an unknown type renders the default design and reports the substitution', () => {
@@ -332,4 +335,24 @@ test('paused reads the same through the config and the attribute paths', () => {
   assert.equal(configFromAttributes({ paused: '' }).paused, true);
   assert.equal(configFromAttributes({ paused: 'false' }).paused, false);
   assert.equal(renderLoader({ type: 'ring', ...configFromAttributes({ paused: '' }) }).config.paused, renderLoader({ type: 'ring', paused: '' }).config.paused);
+});
+
+test('the accessibility options reach the markup, and foreign aria keys are refused', () => {
+  const attrs = (config) => renderLoader({ type: 'ring', ...config }).html;
+  assert.match(attrs({ label: 'Loading' }), /aria-label="Loading"/);
+  assert.match(attrs({ label: 'Loading' }), /role="status"/);
+  assert.match(attrs({ labelledBy: 'caption' }), /aria-labelledby="caption"/);
+  assert.doesNotMatch(attrs({ labelledBy: 'caption' }), /aria-label=/);
+  assert.match(attrs({ labelledBy: 'caption' }), /role="status"/, 'a referenced label still names the loader');
+  assert.match(attrs({ label: 'Loading', describedBy: 'hint extra' }), /aria-describedby="hint extra"/);
+  assert.match(attrs({ label: 'Loading', decorative: true }), /aria-hidden="true"/);
+  assert.doesNotMatch(attrs({ label: 'Loading', decorative: true }), /role=|aria-label/, 'a decorative loader announces nothing');
+  const named = renderLoader({ type: 'progress-bar', label: 'Uploading', value: 70, max: 100, valueText: '70 of 100 MB' });
+  assert.match(named.html, /role="progressbar"/);
+  assert.match(named.html, /aria-valuenow="70"/);
+  assert.match(named.html, /aria-valuetext="70 of 100 MB"/);
+  assert.doesNotMatch(renderLoader({ type: 'ring', label: 'Loading', valueText: 'ignored' }).html, /aria-valuetext/, 'only a determinate design can carry a value text');
+  assert.throws(() => renderLoader({ type: 'ring', 'aria-label': 'sneaky' }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'ring', role: 'progressbar' }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'ring', labelledBy: 'id; background:url(x)' }), LoaderConfigurationError);
 });

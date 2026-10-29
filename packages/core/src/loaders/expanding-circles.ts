@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "expanding-circles", name: "Expanding circles", category: "creative", kind: "rings", description: "Expanding concentric circles", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "expanding-circles" };
+const definition: LoaderDefinition = { id: "expanding-circles", name: "Expanding circles", category: "creative", kind: "rings", description: "Expanding concentric circles", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "expanding-circles" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const expandingCircles = (config: Omit<LoaderConfig, 'type'> = {}) =>

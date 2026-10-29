@@ -25,7 +25,11 @@ const declaredKeys = [
   'reducedMotion',
   'data-testid',
   'value',
-  'max'
+  'max',
+  'labelledBy',
+  'describedBy',
+  'valueText',
+  'decorative'
 ] as const satisfies readonly (keyof LoaderConfig)[];
 
 type Unlisted = Exclude<keyof LoaderConfig, (typeof declaredKeys)[number] | `data-${string}`>;
@@ -53,7 +57,7 @@ export function configFromAttributes(values: Record<string, string | undefined>)
 
 const NUMERIC_ONLY = new Set(['strokeWidth', 'speed', 'value', 'max']);
 const LENGTH_OR_NUMBER = new Set(['size', 'width', 'height']);
-const BOOLEAN = new Set(['paused']);
+const BOOLEAN = new Set(['paused', 'decorative']);
 
 /**
  * The `style` attribute is read as configuration only for `--wavelo-*` custom

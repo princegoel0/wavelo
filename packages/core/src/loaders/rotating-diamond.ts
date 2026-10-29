@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "rotating-diamond", name: "Rotating diamond", category: "spinner", kind: "shape", description: "Rotating diamond", options: ["className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-diamond" };
+const definition: LoaderDefinition = { id: "rotating-diamond", name: "Rotating diamond", category: "spinner", kind: "shape", description: "Rotating diamond", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-diamond" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const rotatingDiamond = (config: Omit<LoaderConfig, 'type'> = {}) =>

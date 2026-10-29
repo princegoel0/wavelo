@@ -24,10 +24,11 @@ Not yet published.
   the scroll range.
 - Stylesheets are injected into the document head once per distinct slice rather
   than inlined into every component instance.
-- 20 configuration keys: `type`, `size`, `width`, `height`, `color`,
+- 24 configuration keys: `type`, `size`, `width`, `height`, `color`,
   `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
   `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
-  `data-testid`, `value`, `max`, plus arbitrary `data-*` attributes.
+  `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText` and
+  `decorative`, plus arbitrary `data-*` attributes.
 - Each design advertises only the keys it actually honours.
   `scripts/honoured-options.mjs` renders every design in Chromium with each key set
   and unset, and the measurement becomes `LoaderDefinition.options`, the gallery's
@@ -55,6 +56,12 @@ Not yet published.
 - `paused` and `direction` drive `animation-play-state` and
   `animation-direction` on the element that actually animates, verified against
   computed styles and `document.getAnimations()` in Chromium.
+- Accessibility is configurable rather than fixed: `labelledBy` and `describedBy`
+  reference visible text, `valueText` gives assistive technology a reading of a
+  determinate value instead of a bare number, and `decorative` hides a labelled
+  loader when a caption already announces it. Passing `aria-*` or `role` directly is
+  rejected with a message naming the option that does the job, instead of being
+  dropped on the floor.
 - Framework bridges for React, Angular, Vue, Svelte, vanilla DOM and Web
   Components, each accepting the full configuration surface.
 - All seven determinate progress designs render their documented contract,

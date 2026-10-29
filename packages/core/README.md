@@ -81,3 +81,16 @@ A labelled design renders `role="status"` (or `role="progressbar"` with
 `aria-valuenow` when the design supports progress and `value` is set). An
 unlabelled design renders `aria-hidden="true"`, so it can never announce nothing.
 Skeleton surfaces stay hidden from assistive technology in both cases.
+
+Naming and reading are options, not fixed choices:
+
+| option | output |
+| --- | --- |
+| `label` | `aria-label`, and the element becomes named |
+| `labelledBy` | `aria-labelledby`, for a caption that is already on the page |
+| `describedBy` | `aria-describedby` |
+| `valueText` | `aria-valuetext` alongside `aria-valuenow`, so "70 of 100 MB" replaces the bare number |
+| `decorative` | `aria-hidden="true"` even when labelled |
+
+`aria-*` and `role` are owned by the renderer: passing them as config throws, with a
+message naming the option that does what the caller meant.

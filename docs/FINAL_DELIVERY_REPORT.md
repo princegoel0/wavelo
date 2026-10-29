@@ -32,7 +32,7 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   82 public IDs, each with its own implementation; the catalog has no deprecated
   aliases.
-- 12 render kinds, 12 stylesheet slices, 20 configuration keys, 44 `@keyframes`.
+- 12 render kinds, 12 stylesheet slices, 24 configuration keys, 44 `@keyframes`.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from
   it by `scripts/generate-catalog.mjs`; `npm run catalog` fails on drift.
@@ -47,12 +47,12 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | --- | --- |
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
-| `npm test` | Passed: 37 tests across core, adapters, Angular TestBed and Angular SSR |
+| `npm test` | Passed: 38 tests across core, adapters, Angular TestBed and Angular SSR |
 | `npm run catalog` | Passed: 82 IDs / 82 active / 117 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
-| `npm run measure` | Passed: 10 entry points inside budget; single design 4,205 B gzip |
+| `npm run measure` | Passed: 10 entry points inside budget; single design 4,612 B gzip |
 | `npm run docs:build` | Passed |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
-| `npm run test:browser` | Passed: 21 Chromium tests (see below) |
+| `npm run test:browser` | Passed: 22 Chromium tests (see below) |
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 82 designs |
 | `npm run audit:visual` | Passed: 82-card contact sheet, desktop and 375px mobile |
 | `npm run audit:visual:correctness` | Passed: 82 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding, and 1 scroll-driven design checked by its timeline type |
@@ -92,6 +92,10 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 - `data-testid` and arbitrary `data-*` values survive to the DOM, including
   values containing quotes.
 - Every determinate design reflects its configured `value` in the browser.
+- `labelledBy`, `describedBy`, `valueText` and `decorative` work through both the
+  config object and element attributes; passing `aria-*` or `role` directly throws.
+- A determinate value change interpolates, because `--wavelo-progress` is registered
+  with `@property` and transitioned: 10% → 90% is sampled mid-flight between the two.
 - `progress-scroll` fills from the document's scroll position: measured at 0%,
   50% and 100% of the scroll range, bound to a `ScrollTimeline` rather than the
   document clock, and labelled with `role="status"` and no invented

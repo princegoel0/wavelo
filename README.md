@@ -7,7 +7,7 @@ documentation gallery.
 
 The catalog holds 82 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
-20 configuration keys.
+24 configuration keys.
 
 ## Development
 
@@ -143,11 +143,12 @@ Every adapter package documents the same rule. See
 
 ## What the configuration does
 
-These 20 keys are the whole surface, and a test asserts each one reaches the
+These 24 keys are the whole surface, and a test asserts each one reaches the
 rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
-`paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`
-and `max`, plus arbitrary `data-*` attributes.
+`paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`,
+`max`, `labelledBy`, `describedBy`, `valueText` and `decorative`, plus arbitrary
+`data-*` attributes.
 
 Which of them a given design actually uses is measured rather than claimed.
 `npm run audit:customization` renders every design in Chromium with each key set
@@ -162,6 +163,12 @@ opts out when the system asks for it. Colours accept `oklch()`, `lab()`, `hwb()`
 and `color-mix()`; sizes accept `calc()`, container units and `var(--wavelo-*)`;
 `style` carries custom properties and rejects a key it cannot apply rather than
 dropping it quietly.
+
+For assistive technology: `label` names the loader, `labelledBy` names the visible
+element that already does, `describedBy` points at explanatory text, `valueText`
+supplies the reading of a determinate value (`70 of 100 MB`, not `70`), and
+`decorative` hides the loader from assistive technology when something else already
+announces it. Passing `aria-*` or `role` directly is rejected rather than ignored.
 
 See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the integration boundary,
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) for verified usage examples,

@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "circular", name: "Circular border", category: "spinner", kind: "ring", description: "Closed circular border with a sweeping accent arc", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "circular" };
+const definition: LoaderDefinition = { id: "circular", name: "Circular border", category: "spinner", kind: "ring", description: "Closed circular border with a sweeping accent arc", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "circular" };
 const styles = `${baseCss}${ringCss}`;
 
 export const circular = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -73,14 +73,24 @@ function attributes(config: Attributes): string {
 export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact'): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
   const progressValue = definition.supportsProgress && config.value !== undefined;
-  const labelled = config.label !== undefined && config.label !== '';
-  const attrs: Attributes = labelled
-    ? { 'aria-label': config.label as string, role: progressValue ? 'progressbar' : 'status' }
-    : { 'aria-hidden': 'true' };
-  if (progressValue && labelled) {
+  // Named either by its own label or by a reference to visible text. `decorative`
+  // hides the loader from assistive technology even when it is named, for the case
+  // where a caption or a sibling status already says the same thing.
+  const named = Boolean(config.label) || Boolean(config.labelledBy);
+  const attrs: Attributes =
+    config.decorative || !named
+      ? { 'aria-hidden': 'true' }
+      : {
+          ...(config.label ? { 'aria-label': config.label } : {}),
+          ...(config.labelledBy ? { 'aria-labelledby': config.labelledBy } : {}),
+          ...(config.describedBy ? { 'aria-describedby': config.describedBy } : {}),
+          role: progressValue ? 'progressbar' : 'status'
+        };
+  if (progressValue && named && !config.decorative) {
     attrs['aria-valuemin'] = '0';
     attrs['aria-valuemax'] = String(config.max);
     attrs['aria-valuenow'] = String(config.value);
+    if (config.valueText) attrs['aria-valuetext'] = config.valueText;
   }
   // Only what the caller chose is written inline. Every token the stylesheets read
   // has a default in the rule that consumes it, so an ancestor or a class can set

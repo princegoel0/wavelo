@@ -12,7 +12,7 @@ rendering bridge for stores and tests.
 ```
 
 The component forwards its `$props()` object straight to `renderLoader`, so any
-of the 20 configuration keys reaches the core, and an `$effect` calls
+of the 24 configuration keys reaches the core, and an `$effect` calls
 `ensureStyles`. Only markup is rendered into the component; a server-rendered
 page includes the sheet itself, e.g. `@wavelo/core/styles.css`.
 

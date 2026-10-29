@@ -23,21 +23,26 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 // measured option table, and they grow with each design added (~220 B gzipped at
 // the time of writing); their budgets are set from that reality with ~10% headroom
 // rather than pretending to be per-design.
-const runtime = 12 * 1024;
+const runtime = 13.5 * 1024;
 const budgets = {
   // A design chosen at build time carries its slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level
-  // theming can reach it: 3,542 B before the change, 4,205 B after. The saving
+  // theming can reach it: 3,542 B before that change, 4,612 B after. The saving
   // lands per page instead — a default loader now carries no `style` attribute at
   // all, where it used to carry about 180 bytes of tokens.
-  'individual-loader': 4.5 * 1024,
-  'two-loaders': 5.5 * 1024,
+  //
+  // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
+  // and are re-based deliberately when a feature adds surface: a configuration key
+  // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
+  // keys cost a single design 407 B.
+  'individual-loader': 5.5 * 1024,
+  'two-loaders': 6 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 13 * 1024,
+  angular: 14.5 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

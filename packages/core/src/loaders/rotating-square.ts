@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "rotating-square", name: "Rotating square", category: "spinner", kind: "shape", description: "Rotating square", options: ["className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-square" };
+const definition: LoaderDefinition = { id: "rotating-square", name: "Rotating square", category: "spinner", kind: "shape", description: "Rotating square", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","label","labelledBy","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "rotating-square" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const rotatingSquare = (config: Omit<LoaderConfig, 'type'> = {}) =>
