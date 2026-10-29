@@ -6,7 +6,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/princegoel0/wavelo.git"
+    "url": "git+https://github.com/princegoel0/wavelo.git",
+    "directory": "packages/angular"
   },
   "bugs": {
     "url": "https://github.com/princegoel0/wavelo/issues"
@@ -18,7 +19,10 @@
     "loader",
     "angular",
     "animation",
-    "accessible"
+    "accessible",
+    "css",
+    "reduced-motion",
+    "angular-spinner"
   ],
   "dependencies": {
     "@wavelo/core": "0.1.0"
@@ -39,5 +43,13 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json"
-  }
+  },
+  "author": "Prince Goel",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
 }

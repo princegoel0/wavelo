@@ -689,7 +689,10 @@ test('documentation gallery renders and has no axe violations', async () => {
   galleryPage.on('pageerror', (error) => pageErrors.push(error.message));
   await galleryPage.goto(`http://127.0.0.1:${address.port}`);
   assert.equal(await galleryPage.locator('.card').count(), loaderRegistry.length);
-  assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length);
+  // The playground stages a live clone of the selected design, so the page holds one
+  // loader more than the catalog has cards.
+  assert.equal(await galleryPage.locator('.card .wavelo').count(), loaderRegistry.length);
+  assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length + 1);
   await galleryPage.emulateMedia({ reducedMotion: 'reduce' });
   const reducedDuration = await galleryPage.locator('.card .wavelo').first().evaluate((element) => getComputedStyle(element).animationDuration);
   assert.ok(Number.parseFloat(reducedDuration) <= 0.000001, `unexpected reduced-motion duration: ${reducedDuration}`);
@@ -697,6 +700,32 @@ test('documentation gallery renders and has no axe violations', async () => {
   await galleryPage.addScriptTag({ content: axe });
   const report = await galleryPage.evaluate(async () => await window.axe.run());
   assert.deepEqual(report.violations, []);
+  // The playground writes tokens on the box around the loader, so driving it proves
+  // the same path a page's own CSS takes.
+  await galleryPage.selectOption('#design', 'ring');
+  await galleryPage.locator('#size').evaluate((element) => {
+    element.value = '96';
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await galleryPage.locator('#dark').evaluate((element) => {
+    element.checked = true;
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const staged = await galleryPage.evaluate(() => {
+    const loader = document.querySelector('#stage .wavelo');
+    return {
+      width: Math.round(loader.getBoundingClientRect().width),
+      theme: loader.getAttribute('data-wavelo-theme'),
+      token: document.querySelector('#stage').style.getPropertyValue('--wavelo-size'),
+      code: document.querySelector('#code').textContent
+    };
+  });
+  assert.equal(staged.width, 96, 'the size control reaches the staged loader');
+  assert.equal(staged.token, '96px', 'it gets there through the token, not an inline width');
+  assert.equal(staged.theme, 'dark', 'the dark-surface switch is the theme option');
+  assert.match(staged.code, /"type": "ring"/);
+  assert.match(staged.code, /"size": 96/);
+  assert.match(staged.code, /"theme": "dark"/);
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(pageErrors, []);
   await galleryPage.close();
@@ -1066,4 +1095,53 @@ test('a container-query size resolves against the loader’s own container', asy
   assert.equal(widths.narrow, 50, '25cqi of a 200-pixel container');
   assert.equal(widths.wide, 150, 'the same option in a 600-pixel container');
   assert.equal(widths.themed, 40, 'a container unit set on an ancestor resolves the same way');
+});
+
+test('a page under a style-src CSP gets a nonce on every injected slice', async () => {
+  const nonce = 'wavelo-test-nonce';
+  const html =
+    `<!doctype html><html><head><meta name="wavelo-csp-nonce" content="${nonce}"></head><body>` +
+    `<div id="slot"></div>` +
+    `<script nonce="${nonce}" src="/bundle.js"></script>` +
+    `<script nonce="${nonce}">window.Wavelo.mountLoader(document.getElementById('slot'), { type: 'ring', label: 'Loading' });</script>` +
+    `</body></html>`;
+  const server = createServer((request, response) => {
+    if (request.url === '/bundle.js') {
+      response.writeHead(200, { 'content-type': 'text/javascript' });
+      response.end(coreBundle);
+      return;
+    }
+    response.writeHead(200, {
+      'content-type': 'text/html',
+      // No 'unsafe-inline': the only way a stylesheet can be applied is a nonce, so
+      // an injected slice without one would leave the loader unstyled.
+      'content-security-policy': `style-src 'nonce-${nonce}'; script-src 'nonce-${nonce}'`
+    });
+    response.end(html);
+  });
+  await new Promise((resolveListen) => server.listen(0, resolveListen));
+  const cspPage = await browser.newPage();
+  const blocked = [];
+  cspPage.on('console', (message) => {
+    if (message.type() === 'error' && /Content Security Policy/.test(message.text())) blocked.push(message.text());
+  });
+  await cspPage.goto(`http://127.0.0.1:${server.address().port}`);
+  const read = await cspPage.evaluate(() => {
+    const style = document.querySelector('style[data-wavelo-style]');
+    const element = document.querySelector('#slot .wavelo');
+    return {
+      stamped: style?.hasAttribute('nonce') ?? false,
+      border: getComputedStyle(element).borderTopWidth,
+      display: getComputedStyle(element).display
+    };
+  });
+  await cspPage.close();
+  server.close();
+  // The browser consumes the nonce value as it inserts the element, so the test asks
+  // whether the attribute was stamped and - the claim that matters - whether a
+  // page with no 'unsafe-inline' actually applied the injected sheet.
+  assert.equal(read.stamped, true, 'the injected slice must carry the page nonce');
+  assert.equal(read.border, '3px', 'the CSP must accept the injected stylesheet, or the ring is unstyled');
+  assert.equal(read.display, 'inline-flex');
+  assert.deepEqual(blocked, [], 'the page reported a CSP violation');
 });

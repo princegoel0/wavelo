@@ -139,6 +139,28 @@ escape hatch for a page that genuinely needs isolation is the one CSS already
 offers — mount the loader inside an iframe, or use the static sheet rather than
 injected styles — so the surface stays single.
 
+## Content security policy
+
+A `style-src` policy without `'unsafe-inline'` rejects a stylesheet that carries no
+nonce, and an injected slice is exactly that — so the loader renders as unstyled
+markup. Wavelo stamps the page's nonce on every slice it injects:
+
+```html
+<head><meta name="wavelo-csp-nonce" content="{per-response nonce}"></head>
+```
+
+Nothing else changes: `ensureStyles`, `mountLoader` and every adapter read that meta
+element when they create a `<style>`. A caller who injects styles from code that
+already knows the nonce can pass it directly — `ensureStyles(css, { nonce })`,
+`mountLoader(element, config, { nonce })`, `renderStylesheets(slices, { nonce })` —
+and the SSR markup path takes the same option.
+
+The nonce is read per injection rather than stored in a module, because a server that
+renders many responses in one process must not stamp one response's nonce onto
+another. `tests/browser.test.mjs` serves a page with
+`style-src 'nonce-…'` and no `'unsafe-inline'` and asserts the ring is actually
+styled — and that the same page without the meta element is not.
+
 ## Framework versions
 
 Peer ranges are deliberately limited to the versions this repository exercises:

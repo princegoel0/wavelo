@@ -109,7 +109,7 @@ try {
   await page.goto(`http://127.0.0.1:${address.port}`);
   await page.screenshot({ path: screenshotPath, fullPage: true });
   const sample = () => page.locator('.card').evaluateAll((cards) => cards.map((card) => {
-    const id = card.querySelector('code:last-child')?.textContent?.match(/type: '([^']+)'/)?.[1];
+    const id = card.dataset.id ?? card.querySelector('code')?.textContent?.match(/type: '([^']+)'/)?.[1];
     const element = card.querySelector('.wavelo');
     const styles = element ? getComputedStyle(element) : null;
     const pseudoBefore = element ? getComputedStyle(element, '::before').animationName : 'none';

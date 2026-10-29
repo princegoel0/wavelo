@@ -26,6 +26,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run catalog
+      - run: npm run packages:check
       - run: npm run measure
       - run: npm run docs:build
       - run: npm run docs:check

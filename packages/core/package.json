@@ -6,7 +6,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/princegoel0/wavelo.git"
+    "url": "git+https://github.com/princegoel0/wavelo.git",
+    "directory": "packages/core"
   },
   "bugs": {
     "url": "https://github.com/princegoel0/wavelo/issues"
@@ -21,7 +22,8 @@
     "animation",
     "css",
     "accessible",
-    "reduced-motion"
+    "reduced-motion",
+    "ui"
   ],
   "sideEffects": [
     "*.css"
@@ -76,5 +78,12 @@
   ],
   "scripts": {
     "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs"
+  },
+  "author": "Prince Goel",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -41,7 +41,9 @@ const required = [
   ['packages/angular/README.md', ['styles.css']],
   ['packages/vanilla/README.md', ['styles.css']],
   ['packages/web-components/README.md', ['styles.css']],
-  ['docs/BUNDLE_SIZE.md', [`${singleLoaderKb} KB`, `${catalogKb} KB`]]
+  ['docs/BUNDLE_SIZE.md', [`${singleLoaderKb} KB`, `${catalogKb} KB`]],
+  ['docs/RECIPES.md', ['@wavelo/core/styles.css', 'wavelo-csp-nonce', 'ensureStyles']],
+  ['docs/MIGRATION.md', [`${ids} designs`, 'createRouteProgress']]
 ];
 
 /** API that no longer exists must not be documented anywhere. */

@@ -277,4 +277,6 @@ drops the rest:
 import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 ```
 
-See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for the measured difference.
+See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for the measured difference, and
+[RECIPES.md](RECIPES.md) for server rendering, content security policy and Tailwind
+wiring per framework.

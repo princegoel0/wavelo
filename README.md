@@ -244,7 +244,19 @@ renderStylesheets(results.map((result) => result.css));
 ```
 
 Every adapter package documents the same rule. See
-[docs/FRAMEWORKS.md](docs/FRAMEWORKS.md).
+[docs/FRAMEWORKS.md](docs/FRAMEWORKS.md), and for a page under a `style-src` policy
+without `'unsafe-inline'`, declare the nonce once and every injected slice carries it:
+
+```html
+<head><meta name="wavelo-csp-nonce" content="{nonce}"></head>
+```
+
+`ensureStyles`, `mountLoader` and `renderStylesheets` also take `{ nonce }` directly.
+
+The documentation gallery doubles as a playground: `npm run docs:build` writes
+`apps/docs/dist/index.html`, where every design shows the options it was measured to
+honour and the controls above the grid write `--wavelo-*` properties the way a page's
+own CSS would.
 
 ## What the configuration does
 
@@ -291,5 +303,7 @@ announces it. Passing `aria-*` or `role` directly is rejected rather than ignore
 
 See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the integration boundary,
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) for verified usage examples,
+[docs/RECIPES.md](docs/RECIPES.md) for server rendering, CSP, Tailwind and container
+queries, [docs/MIGRATION.md](docs/MIGRATION.md) for moving off an existing spinner,
 [docs/BUNDLE_SIZE.md](docs/BUNDLE_SIZE.md) for measured sizes, and
 [PRD.md](PRD.md) for the product requirements.

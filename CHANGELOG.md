@@ -167,6 +167,34 @@ Not yet published.
 - A design missing from the measured option table now renders with no options and
   fails `npm run catalog` by name, instead of throwing when the registry is
   imported - which made it impossible to measure a catalog that had just grown.
+- A page under a `style-src` content security policy works without `'unsafe-inline'`:
+  every injected `<style>` carries the nonce declared by
+  `<meta name="wavelo-csp-nonce">`, and `ensureStyles`, `mountLoader`,
+  `createLoaderElement` and `renderStylesheets` take it explicitly for a caller who
+  knows it. The nonce is read per injection rather than kept in a module, so two
+  responses rendered in one process cannot share one. Verified against a real CSP
+  header in Chromium, including the counterfactual that the same page without the
+  meta element is unstyled.
+- `npm run packages:check` asserts the manifest of every published package — name,
+  description, licence, author, `engines.node`, repository directory, keywords,
+  `sideEffects`, peers, and that every path in its `exports` map exists in the build
+  output with a declaration beside it. All seven packages now carry `author`,
+  `engines`, `repository.directory`, `publishConfig.access` and search keywords; the
+  adapters declare `sideEffects: false` so a bundler may drop what is unused.
+- The documentation gallery shows each design's **measured** option list as chips, so
+  the table that used to live only in `loaderRegistry` is what a visitor reads.
+- A configuration playground sits above the gallery: pick a design, move size,
+  stroke, duration, value, colour, radius, paused, reverse and dark surface, and the
+  stage writes `--wavelo-*` properties on the box around the loader — the same
+  mechanism a page's own CSS uses — while the code block below writes the equivalent
+  configuration object.
+- New: [docs/RECIPES.md](docs/RECIPES.md) for server rendering per framework, content
+  security policy, Tailwind v4 `@theme`, dark mode and container-query sizing, each
+  line marked tested or documented; and
+  [docs/MIGRATION.md](docs/MIGRATION.md) for moving off react-spinners, loaders.css,
+  react-content-loader, MUI and Chakra skeletons and NProgress, including the
+  differences that will bite — `speed` means the opposite of what it means there, and
+  an unlabelled loader is `aria-hidden` rather than "Loading…".
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style
