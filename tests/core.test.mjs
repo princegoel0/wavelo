@@ -62,7 +62,12 @@ test('designs whose names promise a count render that many parts', () => {
     'comet-orbit': 1,
     'ai-shimmer': 0,
     'skeleton-chat': 3,
-    'skeleton-metric': 3
+    'skeleton-metric': 3,
+    'progress-dots-fill': 5,
+    'progress-multi-step': 5,
+    'progress-orbit-fill': 6,
+    'progress-upload-multi': 3,
+    'progress-ai-generate': 1
   };
   for (const [id, expected] of Object.entries(counts)) {
     const result = renderLoader({ type: id, value: 50, max: 100, label: id });
@@ -190,7 +195,10 @@ test('each design ships only its own stylesheet slice', () => {
 
 test('every determinate design exposes progressbar semantics, and only those do', () => {
   const determinate = loaderRegistry.filter((loader) => loader.kind === 'progress');
-  assert.equal(determinate.length, 7);
+  // The count is derived, not pinned: what matters is that the set is the progress
+  // family and that semantics follow `supportsProgress`, which is what the loop below
+  // asserts for every member and for twenty designs outside the family.
+  assert.ok(determinate.length >= 7, `the progress family shrank to ${determinate.length}`);
   for (const definition of determinate) {
     const result = renderLoader({ type: definition.id, value: 40, max: 80, label: 'Working' });
     assert.match(result.html, /role="progressbar"/, definition.id);
@@ -218,7 +226,41 @@ test('progress steps fill whole steps in proportion to the value', () => {
   assert.equal((renderLoader({ type: 'progress-steps', value: 100, max: 100, label: 'L' }).html.match(/wavelo__part/g) ?? []).length, 5);
 });
 
-test('the progress family renders seven distinguishable designs', () => {
+test('the discrete progress designs mark their own units', () => {
+  const filled = (type, config) => (renderLoader({ type, max: 100, label: 'Working', ...config }).html.match(/data-wavelo-step="filled"/g) ?? []).length;
+  assert.equal(filled('progress-dots-fill', { value: 60 }), 3);
+  assert.equal(filled('progress-multi-step', { value: 60 }), 3);
+  assert.equal(filled('progress-orbit-fill', { value: 60 }), 4, 'six stations, 60% fills four');
+  assert.equal(filled('progress-dots-fill', { value: 60, count: 10 }), 6);
+  assert.equal(filled('progress-orbit-fill', { value: 0 }), 0);
+  assert.equal(filled('progress-dots-fill', { value: 100 }), 5);
+});
+
+test('a counted bar prints the percentage and a label prints its own text', () => {
+  const counted = renderLoader({ type: 'progress-count', value: 70, max: 100, label: 'Working' });
+  assert.match(counted.html, /--wavelo-count:70/);
+  // The number is the percentage the bar reached, not the raw value: 40 of 80 is 50%.
+  assert.match(renderLoader({ type: 'progress-count', value: 40, max: 80, label: 'Working' }).html, /--wavelo-count:50/);
+  assert.match(counted.css, /@property --wavelo-count\{syntax:"<integer>"/);
+  const labelled = renderLoader({ type: 'progress-label-inline', value: 70, max: 100, label: 'Working', valueText: '70% uploaded' });
+  assert.match(labelled.html, /data-wavelo-value-text="70% uploaded"/);
+  // An indeterminate design is not handed a number it cannot draw, and a design that
+  // never prints the text pays nothing for the attribute.
+  assert.doesNotMatch(renderLoader({ type: 'progress-ai-generate', value: 70, max: 100, label: 'Working' }).html, /--wavelo-count:/);
+  assert.doesNotMatch(renderLoader({ type: 'ring', label: 'Loading' }).html, /--wavelo-count:/);
+  assert.doesNotMatch(renderLoader({ type: 'ring', label: 'Loading' }).html, /data-wavelo-value-text/);
+});
+
+test('a file queue splits one value across its tracks', () => {
+  const html = renderLoader({ type: 'progress-upload-multi', value: 50, max: 100, count: 3, label: 'Uploading' }).html;
+  // Read the tracks, not the element: the element carries the queue's own 50% and the
+  // first track inherits the same token name at 100%.
+  const levels = [...html.matchAll(/class="wavelo__part"[^>]*style="--wavelo-progress:(\d+)%"/g)].map((match) => Number(match[1]));
+  assert.deepEqual(levels, [100, 50, 0]);
+  assert.match(html, /style="--wavelo-progress:50%;--wavelo-count:50"/, 'the queue itself still reports its total');
+});
+
+test('every progress-kind design renders distinguishable markup', () => {
   const ids = loaderRegistry.filter((loader) => loader.kind === 'progress').map((loader) => loader.id);
   const rendered = ids.map((id) => renderLoader({ type: id, value: 60, max: 100, label: 'Working' }));
   assert.equal(new Set(rendered.map((result) => result.html)).size, ids.length, 'two progress designs render identical markup');
@@ -233,6 +275,14 @@ test('the progress family renders seven distinguishable designs', () => {
   assert.match(css, /\.wavelo--page-transition[^}]*wavelo-transition/);
   assert.match(css, /\.wavelo--segmented-bar[^}]*repeating-linear-gradient/);
   assert.match(css, /\.wavelo--progress-top\{[^}]*position:fixed/);
+  // The tranche's mechanisms, asserted where they are cheap to read: a counter that
+  // consumes the registered integer, a label drawn from the attribute the renderer
+  // writes, a gauge carved by a mask, and a queue whose tracks are separate.
+  assert.match(css, /\.wavelo--progress-count\{[^}]*counter-reset:wavelo-count var\(--wavelo-count,0\)/);
+  assert.match(css, /\.wavelo--progress-label-inline:after\{[^}]*attr\(data-wavelo-value-text\)/);
+  assert.match(css, /\.wavelo--progress-half-ring\{[^}]*conic-gradient/);
+  assert.match(css, /\.wavelo--progress-half-ring\{[^}]*mask:radial-gradient/);
+  assert.match(css, /\.wavelo--progress-upload-multi \.wavelo__part:after\{[^}]*var\(--wavelo-progress,35%\)/);
 });
 
 test('unset colours are not emitted as self-referencing variables', () => {

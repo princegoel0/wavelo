@@ -1,7 +1,7 @@
 # Migrating to Wavelo
 
 Mappings from the loaders people replace, and the differences that will bite. The
-design ids below all exist in the catalog — browse all 98 designs with their measured options
+design ids below all exist in the catalog — browse all 111 designs with their measured options
 in the gallery (`npm run docs:build`, then open `apps/docs/dist/index.html`) before
 choosing.
 

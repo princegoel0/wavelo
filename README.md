@@ -5,14 +5,17 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 98 designs, each visually distinct, built from 12
+The catalog holds 111 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 
 Nine of them are the streaming lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
 `token-stream`, `ai-shimmer`, `neural-grid`, plus the composite `skeleton-chat`,
 `skeleton-code` and `skeleton-inbox` layouts): what an assistant shows while it is
-composing an answer, which no loading library has as a category.
+composing an answer, which no loading library has as a category. Thirteen more are the
+progress family that real products report with a number — a battery, a half-ring gauge,
+a counting bar whose percentage animates itself in CSS, a queue of files, steps that
+number themselves, a countdown and a wave-filled level.
 
 ## Development
 
@@ -138,10 +141,11 @@ overrides that one loader:
 | `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
 | `--wavelo-ease` | the timing function of each design's animation | the timing that design was authored with |
 | `--wavelo-timeline` | the named scroll or view timeline `progress-view` follows | the bar's own `view(block)` |
-| `--wavelo-stroke` | `strokeWidth` | `3px` |
+| `--wavelo-stroke` | `strokeWidth` | `3px` in most rules; a battery shell and a gauge band are drawn thicker |
 | `--wavelo-direction` | `direction` | `normal` |
 | `--wavelo-play-state` | `paused` | `running` |
 | `--wavelo-progress` | `value` / `max` on the determinate designs | `35%`, and it interpolates |
+| `--wavelo-count` | the same `value` as a whole percentage, for the design that prints it | `0`, registered as an integer so a count can animate |
 | `--wavelo-radius` | the corner radius of tracks, bars, steps and placeholders — not a design's own shape | each rule's own |
 | `--wavelo-gap` | the space between the parts of a composite design | each rule's own |
 | `--wavelo-z-index` | the layer of the fixed top bars and the full-screen overlay | `9999` |

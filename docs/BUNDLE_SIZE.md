@@ -6,28 +6,29 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 14,894 | 5.4 KB (5,482 B) | 6,144 |
-| `@wavelo/core/loaders/skeleton-card` — the busiest kind | 19,159 | 6,248 | 7,168 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 23,383 | 7,053 | 8,192 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 75,808 | 15.7 KB (16,105 B) | 18,944 |
-| `@wavelo/core` + registry walk over all 98 designs | 75,811 | 16,115 | 18,944 |
-| `@wavelo/react` | 76,640 | 16,526 | 18,944 |
-| `@wavelo/vue` | 77,625 | 16,959 | 18,944 |
-| `@wavelo/angular` | 79,582 | 17,789 | 19,968 |
-| `@wavelo/svelte` | 76,000 | 16,205 | 18,944 |
-| `@wavelo/web-components` | 78,067 | 17,013 | 18,944 |
-| `@wavelo/vanilla` | 76,330 | 16,360 | 18,944 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 52,947 raw | 8,343 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 15,556 | 5.6 KB (5,709 B) | 6,656 |
+| `@wavelo/core/loaders/progress-battery` — the busiest kind | 23,558 | 7,529 | 8,704 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 24,045 | 7,278 | 8,704 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 88,737 | 18.6 KB (19,011 B) | 22,528 |
+| `@wavelo/core` + registry walk over all 111 designs | 88,740 | 19,016 | 22,528 |
+| `@wavelo/react` | 89,569 | 19,438 | 22,528 |
+| `@wavelo/vue` | 90,554 | 19,870 | 22,528 |
+| `@wavelo/angular` | 92,511 | 20,700 | 23,552 |
+| `@wavelo/svelte` | 88,929 | 19,110 | 22,528 |
+| `@wavelo/web-components` | 90,996 | 19,926 | 22,528 |
+| `@wavelo/vanilla` | 89,259 | 19,268 | 22,528 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 63,250 raw | 10,444 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
-per-design — every design sharing a kind ships that kind's whole slice — so it moves
-when a sibling joins the kind, and `busiest-loader` is measured alongside it to keep
-that honest. The streaming tranche is the proof: two ring designs and five skeleton
-designs took `ring` from 5,054 B to 5,482 B and `skeleton-card` to 6,248 B, while a
-design in a quiet kind (`overlay`, 1,322 B of stylesheet) stayed where it was. Three
-earlier changes moved the same number, all of them the same trade — configuration that
-a page can set once instead of per loader:
+per-design in two ways, and both are measured rather than asserted: the rules of every
+design sharing a kind ship with it (the streaming tranche took `ring` from 5,054 B to
+5,482 B when two ring designs joined it), and the shared renderer ships in every one of
+them — the progress tranche's per-part fill logic cost every design a further ~227 B,
+including a ring, which uses none of it. `busiest-loader` is measured alongside
+`individual-loader` so a crowded kind cannot grow unnoticed. Three earlier changes moved
+the same number, all of them the same trade — configuration that a page can set once
+instead of per loader:
 
 - Defaults used to be written into the `style` attribute of every rendered element
   (about 180 B each). They are now fallbacks in the rules that read them, so a
@@ -38,8 +39,8 @@ a page can set once instead of per loader:
   `npm run audit:customization`) rather than a hand-written kind guess.
 - The colour and dimension grammar got wider.
 
-Runtime bundles additionally carry the registry and the 98-entry bitset those lists
-are decoded from, which is why their budget is 18.5 KiB (19.5 for Angular). Adapters
+Runtime bundles additionally carry the registry and the 111-entry bitset those lists
+are decoded from, which is why their budget is 22 KiB (23 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow by
 roughly 220 B per design added. Budgets sit about 12% above the measured value,
 rounded up to the next 512 B, and are re-based on purpose: a configuration key costs
@@ -51,7 +52,10 @@ rules that already existed. `inline` needs a twin for every design authored as a
 block or a grid, `count` needs the stack rules, and `--wavelo-ease`, `--wavelo-gap`
 and `--wavelo-radius` are inserted into the declarations of the slices that draw
 them. A design that is not a skeleton does not load the stack rules at all, and the
-cost of the tokens is what an ancestor rule could not previously reach.
+cost of the tokens is what an ancestor rule could not previously reach. The one
+exception is a change to the renderer itself, which no design is exempt from: the
+determinate per-part fill added with the progress tranche cost every single-design
+bundle about 227 B, `ring` included.
 
 `createRouteProgress` is not in any of the rows above, because nothing imports it
 unless a page asks for it: adding it to a runtime bundle costs 539 B gzipped, and a
@@ -63,14 +67,14 @@ Styles and markup are separate. A design's stylesheet slice is `baseCss` plus th
 one render-kind slice it uses. The shared base carries the layout shell, the
 reduced-motion and theme rules, and the four `@keyframes` blocks that more than
 one kind animates with (2.5 KB, listed once for the whole catalog rather than
-repeated per kind). The other 52 frames each live in their own module under
+repeated per kind). The other 54 frames each live in their own module under
 `css/keyframes/`, imported only by the kinds that animate with them, so a single
 design never pays for a frame it cannot run. `npm run catalog` fails if a slice
 animates with a frame nobody imports, or re-imports one the base already ships.
 
 - Importing one design costs its slice: the `ring` entry point ships 3.7 KB of ring
-  rules (1.8 KB gzipped together with the base) rather than the 52.9 KB sheet for all
-  98 designs.
+  rules (1.8 KB gzipped together with the base) rather than the 63,250-byte sheet for
+  all 111 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can
   render every design; it is paid once per page, not once per loader.

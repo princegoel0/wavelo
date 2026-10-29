@@ -7,7 +7,7 @@ export type { LoaderId };
  * an ancestor, or in a class rule configures every loader it contains; each key
  * below is the token-level twin of a config option, and the ones with no twin
  * (`--wavelo-radius`, `--wavelo-ease`, `--wavelo-gap`, `--wavelo-scrim`,
- * `--wavelo-z-index`, `--wavelo-timeline`, the skeleton palette) are reachable only
+ * `--wavelo-z-index`, `--wavelo-timeline`, `--wavelo-count`, the skeleton palette) are reachable only
  * this way.
  * `scripts/validate-docs.mjs` checks that the sheet reads exactly this set and that
  * the README documents every one of them.
@@ -26,6 +26,13 @@ export interface WaveloTokens {
   '--wavelo-ease'?: string;
   '--wavelo-timeline'?: string;
   '--wavelo-progress'?: string;
+  /**
+   * The same determinate value as a whole number, so a design can print it. The
+   * renderer writes it whenever `value` is set on a design that takes one; it is
+   * registered as an `<integer>`, which is what lets a count animate to its new
+   * number without JavaScript.
+   */
+  '--wavelo-count'?: string | number;
   '--wavelo-skeleton-base'?: string;
   '--wavelo-skeleton-highlight'?: string;
   '--wavelo-scrim'?: string;

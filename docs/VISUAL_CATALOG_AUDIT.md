@@ -3,7 +3,7 @@
 ## Review scope
 
 - **Artifact:** [catalog-contact-sheet.png](../release-audit/catalog-contact-sheet.png)
-- **Source of truth:** `loaderRegistry` (98 entries)
+- **Source of truth:** `loaderRegistry` (111 entries)
 - **Preview contract:** the production documentation gallery, one consistent card
   size, shared preview dimensions, labels, descriptions, and the same generated
   core markup used by consumers.
@@ -18,11 +18,11 @@
 
 ## Decisions
 
-All 98 entries rendered correctly in the review artifact with consistent card
+All 111 entries rendered correctly in the review artifact with consistent card
 dimensions, readable labels, and no desktop or mobile horizontal overflow.
 None of them renders something other than what its name and description promise:
 the name-contract test asserts the promised geometry per design, and the
-distinctness test asserts that no two of the 98 share a rendered signature. What the decisions below
+distinctness test asserts that no two of the 111 share a rendered signature. What the decisions below
 still flag is a taste question — whether a count or orientation variant earns its
 own public ID — not a defect, and it is a post-release judgement rather than a
 release blocker. No entry was removed during this audit because doing so requires
@@ -120,6 +120,19 @@ coordinated preset/API deprecation work.
 | `progress-upload` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
 | `progress-scroll` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; scroll primitive, indeterminate semantics. | Scroll-driven fill with no JavaScript; retain, and note it is Chromium-only today with a clock-driven sweep as the fallback. |
 | `progress-view` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; scroll primitive, indeterminate semantics. | View-timeline fill with no JavaScript: the bar tracks its own travel through the viewport, and `--wavelo-timeline` names another subject. Same clock-driven sweep where view timelines are missing. |
+| `progress-battery` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-half-ring` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-wave-fill` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-count` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-dots-fill` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-label-inline` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-gradient-ring` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-multi-step` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-upload-multi` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-ai-generate` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-skill` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-timer` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
+| `progress-orbit-fill` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
 | `inline` | application | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Application-role variant; retain because placement semantics differ. |
 | `button` | application | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; pulse primitive, indeterminate semantics. | Application-role variant; retain because placement semantics differ. |
 | `overlay` | application | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; overlay primitive, indeterminate semantics. | Application-role variant; retain because overlay semantics differ. |
@@ -134,7 +147,7 @@ coordinated preset/API deprecation work.
 A screenshot cannot judge taste, but distinctness and motion are no longer taken
 from one. The browser suite compares a computed-style signature for every design
 (geometry, drawn borders, gradients, animation identity and timing, part layout)
-and requires all 98 to differ, and the correctness audit samples each design's
+and requires all 111 to differ, and the correctness audit samples each design's
 animations twice, 250ms apart, so a frozen or duplicated design fails a test
 rather than relying on a reviewer's memory. What remains genuinely unproven is
 perceptual quality: whether a count or orientation variant deserves its own public

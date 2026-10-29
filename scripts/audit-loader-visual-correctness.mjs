@@ -12,7 +12,17 @@ const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
 // fill from the configured value; the scroll-driven bar takes its progress from a
 // scroll timeline, which the audit checks by name instead of by elapsed time.
 // Anything else in the catalog must be sampled as advancing.
-const staticTypes = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top']);
+//
+// A level indicator is static on purpose: a battery at 40% should not move. That is
+// an exemption from this audit, not a free pass — the browser suite measures each of
+// these at 0%, 50% and 100% of its value and asserts the drawn level follows it, so
+// "static" here means "bound to the value", never "unchecked".
+const staticTypes = new Set([
+  'segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top',
+  'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline',
+  'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-skill',
+  'progress-timer', 'progress-orbit-fill'
+]);
 /** Designs whose fill comes from a timeline the browser drives, not the clock. */
 const timelineTypes = new Map([['progress-scroll', 'ScrollTimeline'], ['progress-view', 'ViewTimeline']]);
 
