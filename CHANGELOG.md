@@ -218,6 +218,31 @@ Not yet published.
   ran it. 126 bytes off the catalog sheet.
 - New: [docs/PERFORMANCE.md](docs/PERFORMANCE.md) — per-frame cost, per-kind slice
   bytes, and which command measures each claim.
+- `@wavelo/core/tokens.css` — the `--wavelo-*` defaults as a `:root` block, for a page
+  that wants them declared and editable rather than inherited from the sheet. It is
+  generated from the built stylesheet and lists a property only where every rule that
+  reads it agrees on the same default, which is why radius, gap, easing and the
+  `--wavelo-size` chain are absent: one global value would flatten designs that
+  author their own. A Chromium test compares 13 designs with and without it and
+  requires every computed value to match.
+- An unknown `type` now leaves a trace where it is looked at: the element carries
+  `data-wavelo-fallback="<what was asked for>"` beside the default design's own
+  classes, alongside the `resolution` and `fallback` the result already reported. A
+  preset that resolved and an absent `type` carry nothing, because neither is a
+  mistake.
+- Design resolution is a `Map` lookup rather than a scan of the catalog, which
+  happens on every render.
+- The PRD said pnpm, Vitest and `pnpm-workspace.yaml`; the repository is npm
+  workspaces, `node --test` and one `tsconfig.json`. Corrected, and the versioning
+  section now says what may change during `0.x` and what never does.
+- A Gecko smoke suite (`npm run test:browser:firefox`, in CI next to the Chromium
+  suite): the sheet applies in Firefox, geometry, stroke, the dark palette,
+  `paused`, `direction`, `reducedMotion` and ancestor tokens all reach the loader,
+  every design paints something, the custom element re-renders, and the two timeline
+  designs run on the document clock. Measured on Firefox 157:
+  `animation-timeline: scroll()` and `view()` are unsupported, so the fallback this
+  library documents is what that engine actually gets — previously it was a claim
+  with one engine behind it.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

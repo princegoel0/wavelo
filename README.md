@@ -16,6 +16,7 @@ npm install
 npm run build          # compiles the core, regenerates catalog entry points, builds adapters
 npm run check          # build, typecheck, unit tests, catalog drift, documentation sync, bundle budgets
 npm run test:browser   # Chromium suite: computed styles, style injection, axe, gallery
+npm run test:browser:firefox   # Gecko smoke suite: the sheet applies, fallbacks hold
 npm run docs:build
 ```
 
@@ -141,9 +142,15 @@ overrides that one loader:
 | `--wavelo-skeleton-base` / `--wavelo-skeleton-highlight` | the shimmer, normally via `theme` | light or dark palette |
 
 A token with no config twin — `--wavelo-radius`, `--wavelo-ease`, `--wavelo-gap`,
-`--wavelo-scrim`, `--wavelo-z-index` and the skeleton palette — is reachable only
-this way, and `npm run docs:check` fails if the sheet reads a property that
-`WaveloTokens` does not declare or the table above does not document.
+`--wavelo-scrim`, `--wavelo-z-index`, `--wavelo-timeline` and the skeleton palette —
+is reachable only this way, and `npm run docs:check` fails if the sheet reads a
+property that `WaveloTokens` does not declare or the table above does not document.
+
+`@wavelo/core/tokens.css` declares as a `:root` block the tokens whose default every
+design agrees on, for a team that would rather see and edit them than inherit them
+from the sheet. It is generated from the stylesheet, so it can only list a property
+that is safe to set globally — radius, gap, easing and the size chain stay in the
+rules that read them — and a browser test asserts that loading it changes nothing.
 
 For defaults that are configuration rather than styling — label, reduced-motion
 policy, design choice — register them for a subtree. Each is per render tree, never

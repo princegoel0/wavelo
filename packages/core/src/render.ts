@@ -72,7 +72,7 @@ function attributes(config: Attributes): string {
   return entries.map(([name, value]) => ` ${name}="${escapeHtml(value)}"`).join('');
 }
 
-export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact'): RenderResult {
+export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact', requestedType = input.type): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
   // A loader that is not loading costs nothing: no markup, and no stylesheet slice
   // to inject, so a page full of `loading={false}` adds no bytes to the document.
@@ -137,11 +137,18 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     .join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));
+  // A request that matched nothing is otherwise invisible once it reaches the page:
+  // the element looks exactly like the default design. Naming what was asked for
+  // turns "why is the wrong loader showing" into one look at the inspector, and it
+  // costs nothing when the type resolves.
+  const diagnostics: Attributes =
+    resolution === 'default' && typeof requestedType === 'string' && requestedType ? { 'data-wavelo-fallback': requestedType } : {};
   const html =
     `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +
     attributes(dataAttributes) +
     attributes(attrs) +
+    attributes(diagnostics) +
     `>${parts(definition.kind, definition.id, config)}</span>`;
   return {
     html,

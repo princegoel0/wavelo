@@ -69,6 +69,7 @@
       "import": "./dist/loaders/*.js"
     },
     "./styles.css": "./dist/wavelo.css",
+    "./tokens.css": "./dist/tokens.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -77,7 +78,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs"
+    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs && node ../../scripts/emit-tokens.mjs"
   },
   "author": "Prince Goel",
   "engines": {

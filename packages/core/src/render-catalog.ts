@@ -16,6 +16,10 @@ export function renderLoader(input: LoaderConfig = {}): RenderResult {
     { ...input, type: resolution.id },
     resolution.definition,
     designStyles(resolution.definition.kind),
-    resolution.source
+    resolution.source,
+    // The renderer is handed the resolved design as `type`, so what the caller asked
+    // for travels separately — that is the value worth reporting when it matched
+    // nothing.
+    input.type
   );
 }

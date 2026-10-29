@@ -29,7 +29,8 @@
     "docs:build": "npm run build --workspace @wavelo/docs",
     "pack:check": "npm pack --dry-run --workspaces --if-present",
     "pack:verify": "node scripts/verify-packed.mjs",
-    "test:browser": "node tests/browser.test.mjs"
+    "test:browser": "node tests/browser.test.mjs",
+    "test:browser:firefox": "node tests/browser-firefox.test.mjs"
   },
   "devDependencies": {
     "@angular/compiler": "^22.2.3",

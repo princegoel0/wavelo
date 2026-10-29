@@ -150,7 +150,14 @@ test('an unknown type renders the default design and reports the substitution', 
   const result = renderLoader({ type: 'definitely-not-a-design', label: 'Loading' });
   assert.equal(result.fallback, true);
   assert.equal(result.definition.id, 'inline');
+  assert.match(result.html, /data-wavelo-fallback="definitely-not-a-design"/, 'the substitution must be visible in the markup');
   assert.equal(renderLoader({ label: 'Loading' }).fallback, false);
+  assert.doesNotMatch(renderLoader({ label: 'Loading' }).html, /data-wavelo-fallback/, 'no type asked, nothing to report');
+  assert.doesNotMatch(renderLoader({ type: 'inline', label: 'Loading' }).html, /data-wavelo-fallback/, 'the default design by name is not a substitution');
+  assert.doesNotMatch(renderLoader({ type: 'download-progress', label: 'Loading' }).html, /data-wavelo-fallback/, 'a preset that resolved must not be flagged');
+  // The requested value is whatever the caller typed, so it goes through the same
+  // escaping as every other attribute rather than into the markup raw.
+  assert.match(renderLoader({ type: '"><script', label: 'Loading' }).html, /data-wavelo-fallback="&quot;&gt;&lt;script"/);
 });
 
 test('every registered design renders its own stable identity', () => {

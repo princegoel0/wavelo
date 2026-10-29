@@ -53,7 +53,23 @@ Audited version: `0.1.0`
 - [x] Ran `npm run check`: passed; build with catalog generation, strict typecheck,
   45 unit tests, catalog drift check, package metadata check, documentation sync, and
   bundle budgets.
-- [x] Ran `npm run test:browser`: passed; 30 tests in Chromium.
+- [x] Ran `npm run test:browser`: passed; 32 tests in Chromium.
+- [x] Ran `npm run test:browser:firefox`: passed; 6 Gecko smoke tests — the sheet
+  applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the
+  loader, every design paints, the custom element re-renders, and both timeline
+  designs run on the document clock. Measured on Firefox 157: `scroll()` and `view()`
+  timelines are unsupported, so the documented fallback is what that engine gets.
+  Wired into both CI jobs.
+- [x] Verified an unknown `type` leaves a trace in the DOM: the element carries
+  `data-wavelo-fallback="<asked for>"` beside the default design, while a resolved
+  preset and an absent type carry nothing. Asserted in the unit suite and through the
+  custom element in Chromium.
+- [x] Added `@wavelo/core/tokens.css`, generated from the built sheet and listing only
+  the properties every design agrees on; a Chromium test compares 13 designs with and
+  without it and requires every computed value to match, and `pack:verify` checks the
+  path resolves from the installed tarball.
+- [x] Corrected the PRD where it described a different repository (pnpm, Vitest,
+  `pnpm-workspace.yaml`, `tsconfig.base.json`) and stated what may change during `0.x`.
 - [x] Verified the accessibility options end to end: `labelledBy`, `describedBy`,
   `valueText` and `decorative` work from the config object and from element
   attributes, and foreign `aria-*`/`role` keys throw instead of being dropped.
@@ -163,9 +179,10 @@ Re-checked against GitHub and the npm registry on 2026-10-28.
 
 ```powershell
 npm ci
-npx playwright install --with-deps chromium
+npx playwright install --with-deps chromium firefox
 npm run check
 npm run test:browser
+npm run test:browser:firefox
 npm run docs:build
 npm run docs:check
 npm run audit:customization
