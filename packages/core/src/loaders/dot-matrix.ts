@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "dot-matrix", name: "Dot matrix", category: "dots", kind: "dots", description: "Three-by-three pulsing dot matrix", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "dot-matrix" };
+const definition: LoaderDefinition = { id: "dot-matrix", name: "Dot matrix", category: "dots", kind: "dots", description: "Three-by-three pulsing dot matrix", options: ["className","color","data-testid","direction","duration","label","paused","reducedMotion","size","speed","style"], supportsProgress: false, stability: "stable", visualSignature: "dot-matrix" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const dotMatrix = (config: Omit<LoaderConfig, 'type'> = {}) =>

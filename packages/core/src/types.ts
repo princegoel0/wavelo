@@ -35,7 +35,12 @@ export interface LoaderConfig {
   /** Palette for skeleton and placeholder surfaces. Omitted means `light`. */
   theme?: Theme;
   direction?: 'normal' | 'reverse';
-  paused?: boolean;
+  /**
+   * Templates deliver attributes as strings, so the string forms are accepted
+   * alongside the boolean and mean the same thing the custom element means:
+   * present and not `false`/`0` is paused.
+   */
+  paused?: boolean | 'true' | 'false' | '0' | '';
   label?: string;
   className?: string;
   style?: Record<string, string | number>;
@@ -46,7 +51,7 @@ export interface LoaderConfig {
   [key: DataAttribute]: string | undefined;
 }
 
-export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'value' | 'max' | DataAttribute> {
+export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'width' | 'height' | 'duration' | 'speed' | 'strokeWidth' | 'paused' | 'value' | 'max' | DataAttribute> {
   type: string;
   size: string;
   width: string;
@@ -55,6 +60,8 @@ export interface NormalizedLoaderConfig extends Omit<LoaderConfig, 'size' | 'wid
   speed: number;
   strokeWidth: number;
   theme: Theme;
+  /** Always a boolean after validation, whatever form the caller used. */
+  paused?: boolean;
   value?: number;
   max: number;
   /** Only `--wavelo-*` custom properties survive validation. */
@@ -91,6 +98,9 @@ export type RenderKind =
   | 'scroll'
   | 'overlay';
 
+/** How the requested `type` was turned into the design that rendered. */
+export type ResolutionSource = 'exact' | 'alias' | 'preset' | 'default';
+
 export interface RenderResult {
   /** Element markup. Contains no stylesheet; see `css` and `ensureStyles`. */
   html: string;
@@ -100,7 +110,12 @@ export interface RenderResult {
   styleKey: string;
   config: NormalizedLoaderConfig;
   definition: LoaderDefinition;
-  /** True when the requested `type` was not used, including unknown IDs. */
+  /**
+   * `'preset'` means the caller asked for a usage-shaped preset and got the
+   * design it names; only `'default'` means the request was not understood.
+   */
+  resolution: ResolutionSource;
+  /** True only when the requested `type` was unknown and the default rendered. */
   fallback: boolean;
 }
 

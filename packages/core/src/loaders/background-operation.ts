@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "background-operation", name: "Background operation", category: "application", kind: "pulse", description: "Background operation indicator", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "background-operation" };
+const definition: LoaderDefinition = { id: "background-operation", name: "Background operation", category: "application", kind: "pulse", description: "Background operation indicator", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "background-operation" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const backgroundOperation = (config: Omit<LoaderConfig, 'type'> = {}) =>

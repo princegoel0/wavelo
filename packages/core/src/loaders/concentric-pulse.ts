@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "concentric-pulse", name: "Concentric pulse", category: "creative", kind: "rings", description: "Pulsing concentric circles", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "concentric-pulse" };
+const definition: LoaderDefinition = { id: "concentric-pulse", name: "Concentric pulse", category: "creative", kind: "rings", description: "Pulsing concentric circles", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "concentric-pulse" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const concentricPulse = (config: Omit<LoaderConfig, 'type'> = {}) =>

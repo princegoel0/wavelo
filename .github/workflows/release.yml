@@ -30,6 +30,7 @@ jobs:
       - run: npm run docs:build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - run: npm run audit:customization
       - run: npm run audit:visual:correctness
       - run: npm run pack:check
       - name: Check release gate

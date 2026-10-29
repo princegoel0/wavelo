@@ -47,12 +47,13 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
 | --- | --- |
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
-| `npm test` | Passed: 30 tests across core, adapters, Angular TestBed and Angular SSR |
+| `npm test` | Passed: 36 tests across core, adapters, Angular TestBed and Angular SSR |
 | `npm run catalog` | Passed: 82 IDs / 82 active / 117 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
-| `npm run measure` | Passed: 10 entry points inside budget; single design 3,542 B gzip |
+| `npm run measure` | Passed: 10 entry points inside budget; single design 3,880 B gzip |
 | `npm run docs:build` | Passed |
 | `npm run docs:check` | Passed: documented counts, options and bundle figures match the built packages |
-| `npm run test:browser` | Passed: 18 Chromium tests (see below) |
+| `npm run test:browser` | Passed: 20 Chromium tests (see below) |
+| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 82 designs |
 | `npm run audit:visual` | Passed: 82-card contact sheet, desktop and 375px mobile |
 | `npm run audit:visual:correctness` | Passed: 82 active designs — 76 with animations sampled as advancing, 5 static determinate-progress designs checked for value binding, and 1 scroll-driven design checked by its timeline type |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
@@ -83,6 +84,11 @@ range, and only Chromium was exercised — Firefox and Safari are untested here.
   clock-driven animations frozen at time zero and scroll-driven ones paused.
 - The custom element renders, re-renders on attribute change, reports
   `role="progressbar"` with `aria-valuenow`, and defines once without error.
+- A bad attribute value cannot blank the element: it keeps its last valid render,
+  exposes `data-wavelo-error`, and produces exactly one `console.error` and no
+  uncaught error out of the attribute callback.
+- `--wavelo-*` properties in the element's `style` attribute reach the rendered
+  element, while ordinary declarations in the same attribute stay host styling.
 - `data-testid` and arbitrary `data-*` values survive to the DOM, including
   values containing quotes.
 - Every determinate design reflects its configured `value` in the browser.

@@ -9,10 +9,11 @@ import { renderLoader } from '@wavelo/core';
 
 const result = renderLoader({ type: 'ring', label: 'Loading data', size: 48 });
 
-result.html;      // <span class="wavelo wavelo--ring wavelo--ring" …>
-result.css;       // the stylesheet slice this design needs
-result.styleKey;  // identity of that slice, for injection dedupe
-result.fallback;  // true when the requested type was not a catalog ID
+result.html;        // <span class="wavelo wavelo--ring wavelo--ring" …>
+result.css;         // the stylesheet slice this design needs
+result.styleKey;    // identity of that slice, for injection dedupe
+result.resolution;  // 'exact' | 'preset' | 'alias' | 'default'
+result.fallback;    // true only when the requested type matched nothing
 ```
 
 ## Choosing a design at build time
@@ -29,6 +30,17 @@ const result = orbitingDots({ label: 'Loading data' });
 The catalog holds 82 public IDs across 12 render kinds, and `src/loaders/*.ts`,
 `src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
 Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
+
+## Options are measured, not listed by hand
+
+`definition.options` for a design is generated from what actually changes its
+render: `scripts/honoured-options.mjs` draws every design in Chromium with each key
+set and unset and keeps the keys that made a difference, as a hex bitset decoded by
+the registry. So `skeleton-card` advertises no `strokeWidth`, `ring` advertises no
+`secondaryColor`, `progress-bar` advertises no `duration`, and `progress-scroll`
+advertises no `speed` — its fill follows the scroll position, not the clock.
+`npm run audit:customization` re-measures the table and fails when it drifts, so an
+option that does nothing cannot be documented as one.
 
 ## Styles
 

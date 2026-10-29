@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "five-dots", name: "Five dots", category: "dots", kind: "dots", description: "Five-dot sequence", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "five-dots" };
+const definition: LoaderDefinition = { id: "five-dots", name: "Five dots", category: "dots", kind: "dots", description: "Five-dot sequence", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "five-dots" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const fiveDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

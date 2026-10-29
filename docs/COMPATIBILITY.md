@@ -46,7 +46,32 @@ element, so a bridge that falls behind the core fails the build.
 
 Boolean options (`paused`) need binding syntax in Vue and Svelte
 (`:paused="true"`, `paused={true}`); a bare attribute reads as a string there.
-On the custom element, `paused=""` is true and `paused="false"` is false.
+On the custom element, `paused=""` is true and `paused="false"` is false — and the
+same strings in a JavaScript config object mean the same thing, so the two paths
+cannot disagree.
+
+## Value grammar and measured options
+
+Colours accept hex, CSS colour keywords and any colour function — `rgb()`, `hsl()`,
+`oklch()`, `lab()`, `hwb()`, `color-mix()` — and reject anything containing a
+character that could end a declaration or start a block, so a value cannot escape
+the inline style it lands in.
+
+Sizes accept `auto`, a number with a unit of up to five letters (`px`, `rem`, `%`,
+`ch`, `cqi`, `svh`, `q` …), and the functions `calc()`, `min()`, `max()`, `clamp()`,
+`env()` and `var(--wavelo-*)`. Numbers passed as strings on an attribute are
+coerced; strings that are not valid CSS are rejected with a message naming the key.
+
+`style` carries custom properties and **throws** on a key it cannot apply, because a
+silently discarded option is the failure mode this library exists to remove.
+
+`LoaderDefinition.options` is not a hand-maintained list. `scripts/honoured-options.mjs`
+renders every design in Chromium with each key set and unset and records which keys
+changed the render; `npm run audit:customization` repeats that measurement in CI and
+fails if the committed table drifts. A design therefore cannot advertise an option
+that does nothing: `skeleton-card` has no `strokeWidth`, `ring` has no
+`secondaryColor`, `progress-bar` has no `duration`, and `progress-scroll` has no
+`speed` because its fill follows the scroll position rather than the clock.
 
 ## Determinate progress
 
@@ -103,9 +128,11 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   `reducedMotion` values against both OS settings, the skeleton palette for each
   `theme`, style-slice injection counts, per-design slice isolation for all 82
   IDs, the scroll-driven fill measured against the document's scroll position and
-  its clock-driven fallback, custom-element attribute re-rendering, and axe over
-  the whole gallery —
+  its clock-driven fallback, custom-element attribute re-rendering, the element's
+  behaviour on an invalid attribute value, and axe over the whole gallery —
   `tests/browser.test.mjs`, run by `npm run test:browser` in a dedicated CI job.
+- The measured option table above, re-measured by `npm run audit:customization` in
+  the same CI job.
 - Hydration is not configured or advertised by these adapters; they render
   markup into a container rather than reconciling it.
 - No adapter touches browser globals during module evaluation, so all of them
@@ -128,3 +155,18 @@ with it) stays in the registry for future renames, and `npm run catalog` rejects
 an alias whose metadata disagrees with its target; the catalog currently has zero
 aliases. Two browser tests guard the property that matters: no two designs may
 render identically, and every design must paint something visible.
+
+### Presets and resolution
+
+`renderLoader` reports how the requested `type` became the design that rendered:
+
+| `resolution` | meaning | `fallback` |
+| --- | --- | --- |
+| `'exact'` | a catalog ID, rendered as itself | `false` |
+| `'preset'` | a pattern preset such as `download-progress`, rendering the design it names | `false` |
+| `'alias'` | a deprecated ID, rendering its canonical design | `false` |
+| `'default'` | an ID that matches nothing, rendering `inline` | `true` |
+
+`fallback` therefore means exactly "your request was not understood", and a preset
+hit is never reported as one. All 35 pattern presets resolve to the design they
+declare; a unit test walks the whole table.

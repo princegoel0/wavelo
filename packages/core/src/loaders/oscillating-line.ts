@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "oscillating-line", name: "Oscillating line", category: "bars", kind: "wave", description: "Oscillating line", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "oscillating-line" };
+const definition: LoaderDefinition = { id: "oscillating-line", name: "Oscillating line", category: "bars", kind: "wave", description: "Oscillating line", options: ["className","color","data-testid","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "oscillating-line" };
 const styles = `${baseCss}${waveCss}`;
 
 export const oscillatingLine = (config: Omit<LoaderConfig, 'type'> = {}) =>

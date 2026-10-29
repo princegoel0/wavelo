@@ -688,3 +688,71 @@ test('documentation gallery renders and has no axe violations', async () => {
   await galleryPage.close();
   server.close();
 });
+
+test('a bad attribute value keeps the last good loader on screen', async () => {
+  const scoped = await browser.newPage();
+  const consoleErrors = [];
+  const pageErrors = [];
+  scoped.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
+  scoped.on('pageerror', (error) => pageErrors.push(error.message));
+  await scoped.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body><wavelo-loader id="el" type="ring" label="Loading"></wavelo-loader></body></html>`);
+  await scoped.addScriptTag({ content: coreBundle });
+  const first = await scoped.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    return document.querySelector('#el .wavelo')?.className ?? null;
+  });
+  assert.match(first, /wavelo--ring/, 'the element must render before the bad value arrives');
+
+  const after = await scoped.evaluate(() => {
+    const element = document.getElementById('el');
+    element.setAttribute('size', 'giant');
+    return {
+      rendered: Boolean(element.querySelector('.wavelo')),
+      className: element.querySelector('.wavelo')?.className ?? null,
+      error: element.getAttribute('data-wavelo-error')
+    };
+  });
+  assert.equal(after.rendered, true, 'an invalid attribute value must not blank the loader');
+  assert.match(after.className, /wavelo--ring/, 'the loader must keep showing its last valid render');
+  assert.match(after.error, /Invalid dimension/, `expected a diagnostic, got ${after.error}`);
+  assert.equal(pageErrors.length, 0, `the element must not throw out of its callback: ${pageErrors.join('; ')}`);
+  assert.equal(consoleErrors.length, 1, `expected exactly one console error, got ${consoleErrors.length}`);
+  assert.match(consoleErrors[0], /Invalid dimension/);
+
+  // And it recovers: a corrected value replaces the diagnostic.
+  const recovered = await scoped.evaluate(() => {
+    const element = document.getElementById('el');
+    element.setAttribute('size', '48');
+    return { style: element.querySelector('.wavelo').getAttribute('style'), error: element.getAttribute('data-wavelo-error') };
+  });
+  assert.match(recovered.style, /--wavelo-size:48px/);
+  assert.equal(recovered.error, null, 'the diagnostic attribute must clear once the value is valid');
+  await scoped.close();
+});
+
+test('the style attribute configures custom properties without stealing host styling', async () => {
+  const scoped = await browser.newPage();
+  await scoped.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body>
+    <wavelo-loader id="token" type="skeleton-line" label="Loading" style="--wavelo-radius:2px"></wavelo-loader>
+    <wavelo-loader id="host" type="skeleton-line" label="Loading" style="margin-top:1rem"></wavelo-loader>
+  </body></html>`);
+  await scoped.addScriptTag({ content: coreBundle });
+  const read = await scoped.evaluate(() => {
+    window.Wavelo.defineWaveloElements();
+    const token = document.getElementById('token');
+    const host = document.getElementById('host');
+    return {
+      tokenOnInner: token.querySelector('.wavelo').getAttribute('style').includes('--wavelo-radius:2px'),
+      hostMargin: getComputedStyle(host).marginTop,
+      // A host property that is not a --wavelo-* token stays host styling and is
+      // not fed to the renderer, where it would be rejected.
+      hostInnerHasMargin: host.querySelector('.wavelo').getAttribute('style').includes('margin')
+    };
+  });
+  assert.equal(read.tokenOnInner, true, 'a --wavelo-* property in the attribute must reach the rendered element');
+  assert.equal(read.hostMargin, '16px', 'ordinary host styling in the same attribute must still apply');
+  assert.equal(read.hostInnerHasMargin, false, 'non-token declarations must not be treated as configuration');
+  await scoped.close();
+});

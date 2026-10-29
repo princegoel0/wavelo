@@ -101,6 +101,13 @@ an observed attribute re-renders; `defineWaveloElements` is safe to call more
 than once and does nothing during server module evaluation. The element renders
 into the light DOM, so its slice lands in the document head like everyone else's.
 
+`--wavelo-*` custom properties in the `style` attribute are read as configuration
+and applied to the rendered element; the rest of that attribute stays ordinary host
+styling, so `<wavelo-loader style="margin-top:1rem">` behaves as it looks. A value
+that fails validation cannot blank the loader: it keeps the last valid render,
+sets `data-wavelo-error` to the message and logs one console error, rather than
+throwing out of the attribute callback.
+
 ## Vanilla DOM
 
 ```ts

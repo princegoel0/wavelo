@@ -19,10 +19,11 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 // The number that backs the "modular catalog" claim is `individual-loader`: a
 // design chosen at build time must not carry the rest of the catalog, so its
 // budget does not move when the catalog grows. Adapters and `renderLoader` select
-// by string at runtime, so they carry every stylesheet slice and grow with each
-// design added (~220 B gzipped at the time of writing); their budgets are set
-// from that reality with ~10% headroom rather than pretending to be per-design.
-const runtime = 11 * 1024;
+// by string at runtime, so they carry every stylesheet slice, the registry and the
+// measured option table, and they grow with each design added (~220 B gzipped at
+// the time of writing); their budgets are set from that reality with ~10% headroom
+// rather than pretending to be per-design.
+const runtime = 12 * 1024;
 const budgets = {
   'individual-loader': 4 * 1024,
   'two-loaders': 5 * 1024,
@@ -31,7 +32,7 @@ const budgets = {
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 12 * 1024,
+  angular: 13 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

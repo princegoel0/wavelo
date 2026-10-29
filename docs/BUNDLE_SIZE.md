@@ -6,25 +6,27 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 9,491 | 3.5 KB (3,542 B) | 4,096 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 11,889 | 4,023 | 5,120 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 46,897 | 9.7 KB (9,892 B) | 11,264 |
-| `@wavelo/core` + registry walk over all 82 designs | 46,900 | 9,899 | 11,264 |
-| `@wavelo/react` | 47,320 | 10,126 | 11,264 |
-| `@wavelo/vue` | 48,087 | 10,475 | 11,264 |
-| `@wavelo/angular` | 49,999 | 11,308 | 12,288 |
-| `@wavelo/svelte` | 46,906 | 9,895 | 11,264 |
-| `@wavelo/web-components` | 48,399 | 10,518 | 11,264 |
-| `@wavelo/vanilla` | 47,217 | 10,060 | 11,264 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 10,012 | 3.8 KB (3,880 B) | 4,096 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 12,420 | 4,365 | 5,120 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 49,397 | 10.5 KB (10,705 B) | 12,288 |
+| `@wavelo/core` + registry walk over all 82 designs | 49,400 | 10,713 | 12,288 |
+| `@wavelo/react` | 49,820 | 10,938 | 12,288 |
+| `@wavelo/vue` | 50,587 | 11,307 | 12,288 |
+| `@wavelo/angular` | 52,499 | 12,117 | 13,312 |
+| `@wavelo/svelte` | 49,406 | 10,707 | 12,288 |
+| `@wavelo/web-components` | 51,342 | 11,526 | 12,288 |
+| `@wavelo/vanilla` | 49,717 | 10,874 | 12,288 |
 | `@wavelo/core/styles.css` (all designs, loaded once) | 31,480 raw | 4,581 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a
 design chosen at build time must not carry the rest of the catalog, so it does not
-move when the catalog grows — adding the `progress-scroll` design and its render
-kind left it at exactly 3,542 B. Adapters and `renderLoader` choose by string at
-runtime, so they carry every slice and grow by roughly 220 B per design added;
-their budgets are set from that reality with roughly 10% headroom rather than
-pretending to be per-design.
+move when the catalog grows. Two things did move it, both measured: each design now
+ships the list of options it actually honours, and the colour/dimension grammar got
+wider (3,542 → 3,880 B). Runtime bundles additionally carry the 82-entry bitset
+those lists are decoded from, which is why their budget is 12 KiB rather than 11.
+Adapters and `renderLoader` choose by string at runtime, so they carry every slice
+and grow by roughly 220 B per design added; their budgets are set from that reality
+with roughly 10% headroom rather than pretending to be per-design.
 
 ## Why the numbers look like this
 

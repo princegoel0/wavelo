@@ -1,15 +1,22 @@
 import { catalogAliases, catalogEntries, defaultLoaderId, patternPresets } from './catalog.js';
-import type { LoaderDefinition, RenderKind } from './types.js';
+import { honouredKeyNames, honouredOptions } from './honoured-options.js';
+import type { LoaderDefinition, ResolutionSource } from './types.js';
 
-const BORDER_KINDS: RenderKind[] = ['ring', 'rings', 'progress', 'overlay', 'skeleton'];
-
+/**
+ * The keys a design actually honours, measured in Chromium against the built
+ * stylesheet by `scripts/honoured-options.mjs` and stored as a hex bitset. This is
+ * what the docs, the gallery and the adapter prop tables advertise, so an option
+ * that changes nothing cannot be listed.
+ */
 function optionsFor(definition: LoaderDefinition): string[] {
-  const options = ['size', 'color', 'speed', 'duration', 'paused', 'direction', 'reducedMotion', 'theme', 'label', 'className', 'style'];
-  if (definition.kind !== 'skeleton' && definition.kind !== 'overlay') options.push('width', 'height');
-  if (BORDER_KINDS.includes(definition.kind)) options.push('strokeWidth');
-  if (definition.kind === 'shape' || definition.kind === 'orbit') options.push('secondaryColor');
-  if (definition.supportsProgress) options.push('value', 'max');
-  return options.sort();
+  const bits = honouredOptions[definition.id];
+  if (!bits) throw new Error(`honoured-options.ts has no entry for "${definition.id}"; run npm run catalog:generate`);
+  const keys: string[] = [];
+  for (let index = 0; index < honouredKeyNames.length; index++) {
+    const digit = Number.parseInt(bits[bits.length - 1 - Math.floor(index / 4)], 16);
+    if (digit & (1 << index % 4)) keys.push(honouredKeyNames[index]);
+  }
+  return keys.sort();
 }
 
 /**
@@ -57,7 +64,15 @@ export const presetRegistry = [
   ...patternPresets.map(([id, type]) => ({ id, name: id.replace(/-/g, ' '), type }))
 ];
 
-export type ResolutionSource = 'exact' | 'alias' | 'default';
+export type { ResolutionSource } from './types.js';
+
+/** Pattern preset ID to the catalog design it stands for. */
+const presetTargets = new Map(presetRegistry.map((preset) => [preset.id, preset.type]));
+
+/** The design a usage-shaped preset names, when the preset exists. */
+export function getPresetTarget(presetId: string): string | undefined {
+  return presetTargets.get(presetId);
+}
 
 export interface ResolvedCatalogEntry {
   /** The ID whose rules and markup are actually rendered. */
@@ -70,7 +85,7 @@ function byId(id: string): LoaderDefinition | undefined {
   return loaderRegistry.find((loader) => loader.id === id);
 }
 
-/** The design rendered for a catalog ID, following alias declarations. */
+/** The design rendered for a catalog ID or a pattern preset, following aliases. */
 export function resolveCatalogEntry(type: string | undefined): ResolvedCatalogEntry {
   const requested = type ?? defaultLoaderId;
   const entry = byId(requested);
@@ -78,6 +93,14 @@ export function resolveCatalogEntry(type: string | undefined): ResolvedCatalogEn
     if (!entry.aliasOf) return { id: entry.id, definition: entry, source: 'exact' };
     const canonical = byId(entry.aliasOf) ?? entry;
     return { id: canonical.id, definition: canonical, source: 'alias' };
+  }
+  // A usage-shaped preset is a real request, not a mistake: `download-progress`
+  // means the design it names, and the caller must be able to tell that apart
+  // from an unknown ID.
+  const presetTarget = presetTargets.get(requested);
+  if (presetTarget) {
+    const presetEntry = byId(presetTarget);
+    if (presetEntry) return { id: presetEntry.id, definition: presetEntry, source: 'preset' };
   }
   const fallbackEntry = byId(defaultLoaderId);
   if (!fallbackEntry) throw new Error(`Catalog is missing its default design "${defaultLoaderId}".`);

@@ -24,11 +24,31 @@ Not yet published.
   the scroll range.
 - Stylesheets are injected into the document head once per distinct slice rather
   than inlined into every component instance.
-- 20 configuration keys, all of which reach the rendered element and are covered
-  by a test: `type`, `size`, `width`, `height`, `color`, `secondaryColor`,
-  `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
-  `paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`,
-  `value`, `max`, plus arbitrary `data-*` attributes.
+- 20 configuration keys: `type`, `size`, `width`, `height`, `color`,
+  `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
+  `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
+  `data-testid`, `value`, `max`, plus arbitrary `data-*` attributes.
+- Each design advertises only the keys it actually honours.
+  `scripts/honoured-options.mjs` renders every design in Chromium with each key set
+  and unset, and the measurement becomes `LoaderDefinition.options`, the gallery's
+  option list and the documentation: `skeleton-card` no longer advertises a
+  `strokeWidth` it never reads, `ring` no longer advertises `secondaryColor`, and a
+  static track no longer advertises `duration`. `npm run audit:customization`
+  re-measures the table and fails CI when it drifts.
+- Pattern presets resolve: `renderLoader({ type: 'download-progress' })` renders
+  `progress-upload`, reports `resolution: 'preset'`, and is not a fallback. An
+  unknown ID reports `resolution: 'default'` with `fallback: true`, which is now the
+  only case meaning "not understood".
+- Validation is stricter where it matters and wider where it didn't: colours accept
+  `oklch()`, `lab()`, `hwb()`, `color-mix()` and keywords while anything that could
+  break out of a declaration is rejected; dimensions accept container and query
+  units plus `calc()`, `min()`, `max()`, `clamp()`, `env()` and `var(--wavelo-*)`.
+  `style` now throws on a key it cannot apply instead of dropping it silently.
+- `<wavelo-loader>` reads `--wavelo-*` properties from its `style` attribute, and a
+  bad attribute value no longer blanks the element: it keeps the last valid render,
+  sets `data-wavelo-error`, and logs one console error rather than throwing out of a
+  lifecycle callback. `paused` means the same thing in a config object and in an
+  attribute.
 - `theme` selects the skeleton palette (`light` by default, `dark`, or `system`).
 - `reducedMotion: 'always'` reduces motion without an operating-system
   preference; `'never'` opts out when one exists.

@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-line", name: "Skeleton text line", category: "skeleton", kind: "skeleton", description: "Single skeleton line", options: ["className","color","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-line" };
+const definition: LoaderDefinition = { id: "skeleton-line", name: "Skeleton text line", category: "skeleton", kind: "skeleton", description: "Single skeleton line", options: ["className","color","data-testid","direction","duration","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-line" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonLine = (config: Omit<LoaderConfig, 'type'> = {}) =>

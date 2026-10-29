@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-upload", name: "Upload progress", category: "progress", kind: "progress", description: "Upload progress", options: ["className","color","direction","duration","height","label","max","paused","reducedMotion","size","speed","strokeWidth","style","theme","value","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-upload" };
+const definition: LoaderDefinition = { id: "progress-upload", name: "Upload progress", category: "progress", kind: "progress", description: "Upload progress", options: ["className","color","data-testid","direction","duration","label","max","paused","reducedMotion","size","speed","style","value","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-upload" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressUpload = (config: Omit<LoaderConfig, 'type'> = {}) =>

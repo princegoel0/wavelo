@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir } from 'node:fs/promises';
-import { getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, renderLoader, LoaderConfigurationError } from '../packages/core/dist/index.js';
+import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
 test('catalog has distinct metadata and required categories', () => {
   assert.ok(new Set(loaderRegistry.map((loader) => loader.id)).size >= 60);
@@ -251,4 +251,80 @@ test('Web Components package can be imported during SSR', async () => {
   const module = await import('../packages/web-components/dist/index.js');
   assert.equal(typeof module.defineWaveloElements, 'function');
   module.defineWaveloElements();
+});
+
+test('pattern presets render the design they name', () => {
+  const patterns = presetRegistry.filter((preset) => preset.id !== preset.type);
+  assert.ok(patterns.length > 0, 'the catalog must carry pattern presets');
+  for (const preset of patterns) {
+    const result = renderLoader({ type: preset.id, label: 'Loading' });
+    assert.equal(result.definition.id, preset.type, `${preset.id} rendered ${result.definition.id}, not ${preset.type}`);
+    assert.equal(result.resolution, 'preset', `${preset.id} resolution`);
+    assert.equal(result.fallback, false, `${preset.id} was advertised as a preset but reported a fallback`);
+  }
+});
+
+test('an unknown ID is a fallback, which is not the same as a preset hit', () => {
+  const unknown = renderLoader({ type: 'not-a-design-at-all', label: 'Loading' });
+  assert.equal(unknown.resolution, 'default');
+  assert.equal(unknown.fallback, true);
+  const preset = renderLoader({ type: 'download-progress', label: 'Loading' });
+  assert.equal(preset.fallback, false, 'a preset must not be reported as a substitution');
+});
+
+test('the advertised options are what the design actually reads', () => {
+  const options = (id) => loaderRegistry.find((loader) => loader.id === id).options;
+  // Keys the stylesheet never reads for that design.
+  assert.ok(!options('skeleton-card').includes('strokeWidth'), 'skeleton-card advertises a stroke it never uses');
+  assert.ok(!options('ring').includes('secondaryColor'), 'ring advertises a secondary colour it never uses');
+  assert.ok(!options('progress-bar').includes('duration'), 'a static track must not advertise a clock control');
+  assert.ok(!options('progress-scroll').includes('duration'), 'a scroll-driven fill is not governed by the clock');
+  assert.ok(!options('progress-scroll').includes('speed'));
+  assert.ok(!options('dot-matrix').includes('width'), 'dot-matrix sizes from --wavelo-size, not width');
+  assert.ok(!options('progress-top').includes('size'), 'progress-top pins its own box');
+  // Keys that do work, so the removal above cannot be blanket trimming.
+  assert.ok(options('circular').includes('secondaryColor'));
+  assert.ok(options('ring').includes('strokeWidth'));
+  assert.ok(options('skeleton-card').includes('theme'));
+  assert.ok(options('progress-scroll').includes('paused'), 'paused must still freeze a scroll-driven fill');
+  assert.ok(options('progress-scroll').includes('direction'), 'reverse must still invert a scroll-driven fill');
+  for (const loader of loaderRegistry) {
+    for (const key of loader.options) assert.ok(loaderConfigKeys.includes(key), `${loader.id} advertises unknown key ${key}`);
+    assert.ok(loader.options.includes('label') && loader.options.includes('style'), `${loader.id} lost a structural key`);
+  }
+});
+
+test('style rejects a key it cannot apply instead of dropping it', () => {
+  assert.throws(() => renderLoader({ type: 'ring', style: { position: 'fixed' } }), LoaderConfigurationError);
+  assert.throws(() => renderLoader({ type: 'ring', style: { '--color': 'red' } }), LoaderConfigurationError);
+  assert.equal(renderLoader({ type: 'ring', style: { '--wavelo-radius': '2px' } }).config.style['--wavelo-radius'], '2px');
+});
+
+test('colours and dimensions accept the grammar developers actually reach for', () => {
+  const color = (value) => renderLoader({ type: 'ring', color: value }).config.color;
+  assert.equal(color('oklch(70% 0.15 130)'), 'oklch(70% 0.15 130)');
+  assert.equal(color('color-mix(in srgb, red, blue)'), 'color-mix(in srgb, red, blue)');
+  assert.equal(color('hwb(120 30% 40%)'), 'hwb(120 30% 40%)');
+  assert.throws(() => color('red;color: blue'), LoaderConfigurationError);
+  assert.throws(() => color('url(https://example.com/x)'), LoaderConfigurationError);
+  const size = (value) => renderLoader({ type: 'ring', size: value }).config.size;
+  assert.equal(size('calc(100% - 4px)'), 'calc(100% - 4px)');
+  assert.equal(size('20ch'), '20ch');
+  assert.equal(size('100svh'), '100svh');
+  assert.equal(size('auto'), 'auto');
+  assert.equal(size('50cqi'), '50cqi');
+  assert.throws(() => size('20parsecs'), LoaderConfigurationError);
+});
+
+test('paused reads the same through the config and the attribute paths', () => {
+  for (const value of ['false', '0', false]) {
+    assert.equal(renderLoader({ type: 'ring', paused: value }).config.paused, false, `paused ${JSON.stringify(value)}`);
+  }
+  for (const value of ['', true, 'true']) {
+    assert.equal(renderLoader({ type: 'ring', paused: value }).config.paused, true, `paused ${JSON.stringify(value)}`);
+  }
+  // The custom element path coerces to a boolean first; both must agree.
+  assert.equal(configFromAttributes({ paused: '' }).paused, true);
+  assert.equal(configFromAttributes({ paused: 'false' }).paused, false);
+  assert.equal(renderLoader({ type: 'ring', ...configFromAttributes({ paused: '' }) }).config.paused, renderLoader({ type: 'ring', paused: '' }).config.paused);
 });

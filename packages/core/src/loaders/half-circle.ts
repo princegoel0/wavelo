@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "half-circle", name: "Half circle", category: "spinner", kind: "ring", description: "Half-circle sweep", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "half-circle" };
+const definition: LoaderDefinition = { id: "half-circle", name: "Half circle", category: "spinner", kind: "ring", description: "Half-circle sweep", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "half-circle" };
 const styles = `${baseCss}${ringCss}`;
 
 export const halfCircle = (config: Omit<LoaderConfig, 'type'> = {}) =>

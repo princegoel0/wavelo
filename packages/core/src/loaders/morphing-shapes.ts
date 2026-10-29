@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "morphing-shapes", name: "Morphing shapes", category: "creative", kind: "shape", description: "Shape morphing between square, triangle and diamond", options: ["className","color","direction","duration","height","label","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "morphing-shapes" };
+const definition: LoaderDefinition = { id: "morphing-shapes", name: "Morphing shapes", category: "creative", kind: "shape", description: "Shape morphing between square, triangle and diamond", options: ["className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "morphing-shapes" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const morphingShapes = (config: Omit<LoaderConfig, 'type'> = {}) =>

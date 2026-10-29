@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "infinite-scroll", name: "Infinite scroll", category: "application", kind: "dots", description: "Infinite-scroll indicator", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "infinite-scroll" };
+const definition: LoaderDefinition = { id: "infinite-scroll", name: "Infinite scroll", category: "application", kind: "dots", description: "Infinite-scroll indicator", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "infinite-scroll" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const infiniteScroll = (config: Omit<LoaderConfig, 'type'> = {}) =>

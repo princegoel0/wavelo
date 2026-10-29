@@ -1,5 +1,5 @@
 import { escapeHtml, normalizeConfig } from './validation.js';
-import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult } from './types.js';
+import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult, ResolutionSource } from './types.js';
 
 /** FNV-1a, used to identify a stylesheet slice so it is injected only once. */
 export function styleKey(css: string): string {
@@ -70,8 +70,7 @@ function attributes(config: Attributes): string {
   return entries.map(([name, value]) => ` ${name}="${escapeHtml(value)}"`).join('');
 }
 
-export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string): RenderResult {
-  const requested = input.type ?? definition.id;
+export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact'): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
   const progressValue = definition.supportsProgress && config.value !== undefined;
   const labelled = config.label !== undefined && config.label !== '';
@@ -119,6 +118,9 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     styleKey: styleKey(css),
     config,
     definition,
-    fallback: requested !== definition.id
+    resolution,
+    // `resolution` says exactly what happened; `fallback` stays the blunt signal
+    // that the request was not understood at all.
+    fallback: resolution === 'default'
   };
 }

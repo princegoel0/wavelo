@@ -5,7 +5,7 @@ import { overlayCss } from '../css/kinds/overlay.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "fullscreen", name: "Full-screen overlay", category: "application", kind: "overlay", description: "Full-screen loading overlay", options: ["className","color","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "fullscreen" };
+const definition: LoaderDefinition = { id: "fullscreen", name: "Full-screen overlay", category: "application", kind: "overlay", description: "Full-screen loading overlay", options: ["backgroundColor","className","color","data-testid","direction","duration","label","paused","reducedMotion","speed","style"], supportsProgress: false, stability: "stable", visualSignature: "fullscreen" };
 const styles = `${baseCss}${overlayCss}`;
 
 export const fullscreen = (config: Omit<LoaderConfig, 'type'> = {}) =>

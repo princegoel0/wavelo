@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-ring", name: "Progress ring", category: "progress", kind: "progress", description: "Determinate circular progress", options: ["className","color","direction","duration","height","label","max","paused","reducedMotion","size","speed","strokeWidth","style","theme","value","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-ring" };
+const definition: LoaderDefinition = { id: "progress-ring", name: "Progress ring", category: "progress", kind: "progress", description: "Determinate circular progress", options: ["className","color","data-testid","label","max","reducedMotion","size","strokeWidth","style","value"], supportsProgress: true, stability: "stable", visualSignature: "progress-ring" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressRing = (config: Omit<LoaderConfig, 'type'> = {}) =>

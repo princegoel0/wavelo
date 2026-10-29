@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "staggered-dots", name: "Staggered dots", category: "dots", kind: "dots", description: "Staggered dot timing", options: ["className","color","direction","duration","height","label","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "staggered-dots" };
+const definition: LoaderDefinition = { id: "staggered-dots", name: "Staggered dots", category: "dots", kind: "dots", description: "Staggered dot timing", options: ["backgroundColor","className","color","data-testid","direction","duration","height","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "staggered-dots" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const staggeredDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

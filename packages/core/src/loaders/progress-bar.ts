@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-bar", name: "Progress bar", category: "progress", kind: "progress", description: "Determinate progress bar", options: ["className","color","direction","duration","height","label","max","paused","reducedMotion","size","speed","strokeWidth","style","theme","value","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-bar" };
+const definition: LoaderDefinition = { id: "progress-bar", name: "Progress bar", category: "progress", kind: "progress", description: "Determinate progress bar", options: ["className","color","data-testid","label","max","reducedMotion","size","style","value","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-bar" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressBar = (config: Omit<LoaderConfig, 'type'> = {}) =>

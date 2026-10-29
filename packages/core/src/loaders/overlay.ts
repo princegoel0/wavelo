@@ -5,7 +5,7 @@ import { overlayCss } from '../css/kinds/overlay.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "overlay", name: "Section overlay", category: "application", kind: "overlay", description: "Section loading overlay", options: ["className","color","direction","duration","label","paused","reducedMotion","size","speed","strokeWidth","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "overlay" };
+const definition: LoaderDefinition = { id: "overlay", name: "Section overlay", category: "application", kind: "overlay", description: "Section loading overlay", options: ["backgroundColor","className","color","data-testid","direction","duration","label","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "overlay" };
 const styles = `${baseCss}${overlayCss}`;
 
 export const overlay = (config: Omit<LoaderConfig, 'type'> = {}) =>
