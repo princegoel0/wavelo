@@ -84,7 +84,13 @@ const SELF_CHECKS = [
   ['progress-bar', 'value', true],
   ['progress-bar', 'duration', false],
   ['dot-matrix', 'size', true],
-  ['dot-matrix', 'width', false],
+  // A design may pin a size to its shape, but it must not silently cap a size the
+  // caller gave it: these are the boxes whose floors and ceilings became defaults.
+  ['dot-matrix', 'width', true],
+  ['progress-bar', 'height', true],
+  ['skeleton-line', 'height', true],
+  ['skeleton-card', 'height', true],
+  ['progress-top', 'height', true],
   ['ring', 'labelledBy', true],
   ['ring', 'decorative', true],
   ['ring', 'valueText', false],

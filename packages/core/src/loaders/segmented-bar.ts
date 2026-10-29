@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "segmented-bar", name: "Segmented bar", category: "progress", kind: "progress", description: "Segmented progress bar", options: ["className","color","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","size","style","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "segmented-bar" };
+const definition: LoaderDefinition = { id: "segmented-bar", name: "Segmented bar", category: "progress", kind: "progress", description: "Segmented progress bar", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "segmented-bar" };
 const styles = `${baseCss}${progressCss}`;
 
 export const segmentedBar = (config: Omit<LoaderConfig, 'type'> = {}) =>

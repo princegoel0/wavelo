@@ -125,6 +125,29 @@ Not yet published.
   whether a key did something, so a key is credited for the effect it has on screen
   rather than for switching a mechanism on. That is what makes `fullscreen` report no
   `inline` while `ring` reports it.
+- The styling a config key does not cover is a token, and the tokens now reach the
+  rules that draw: `--wavelo-radius` on bars, tracks, steps and placeholders (not on
+  a design's own shape), `--wavelo-gap` on every composite that spaces its parts,
+  `--wavelo-ease` as the timing function of every authored animation, keeping each
+  design's own timing as the fallback, and `--wavelo-z-index` on the fixed top bars
+  and the full-screen layer, which now default to `9999` because an overlay that a
+  page can scroll under is not an overlay.
+- No design caps a size it is given. `min-width`/`min-height` floors and
+  `max-height` ceilings became the defaults of the rules that had them, so a 2 rem
+  progress bar is 2 rem tall, a skeleton card takes the height asked for, and a
+  skeleton line takes its width. `height` is now measured as honoured on 15 more
+  designs, `width` on `dot-matrix` and `grid-pulse`; `progress-scroll` no longer
+  reads `size` because it fills its container instead.
+- `fullscreen` draws its scrim: it was declared with the same translucent layer as
+  `overlay` in the prose but with no background in the sheet, so a full-screen
+  loading layer showed the page behind it at full strength.
+- `theme` is the page's palette rather than only the skeleton's. `dark` also sets the
+  colour a design falls back to (`#a5b4fc`) and the overlay scrim (`#0f172a`),
+  `system` follows `prefers-color-scheme`, and an explicit `color` or
+  `backgroundColor` still wins — so `theme` moved from 6 designs to all 82.
+- `npm run docs:check` now compares the custom properties three ways: what the sheet
+  reads, what `WaveloTokens` declares and what the README table documents. A token in
+  only one of those places fails the build.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

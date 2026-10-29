@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "particle-orbit", name: "Particle orbit", category: "creative", kind: "orbit", description: "Particle orbit system", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "particle-orbit" };
+const definition: LoaderDefinition = { id: "particle-orbit", name: "Particle orbit", category: "creative", kind: "orbit", description: "Particle orbit system", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "particle-orbit" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const particleOrbit = (config: Omit<LoaderConfig, 'type'> = {}) =>

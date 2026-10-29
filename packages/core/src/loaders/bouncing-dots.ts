@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "bouncing-dots", name: "Bouncing dots", category: "dots", kind: "dots", description: "Bouncing dot rhythm", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "bouncing-dots" };
+const definition: LoaderDefinition = { id: "bouncing-dots", name: "Bouncing dots", category: "dots", kind: "dots", description: "Bouncing dot rhythm", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "bouncing-dots" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const bouncingDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

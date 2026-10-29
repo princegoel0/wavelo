@@ -100,6 +100,16 @@ head(renderStylesheets(pages.map((page) => page.css)));
 | `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
 | `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |
 
+## Theme
+
+`theme` is the palette of the page rather than of one design: `dark` sets the colour
+a loader falls back to (`#a5b4fc`), the skeleton shimmer and the overlay scrim;
+`system` follows `prefers-color-scheme`; an explicit `color` or `backgroundColor`
+still wins. The properties it drives — `--wavelo-color`, `--wavelo-scrim`,
+`--wavelo-skeleton-base` and `--wavelo-skeleton-highlight` — can be set directly when
+a page wants a palette of its own, and `--wavelo-radius`, `--wavelo-ease`,
+`--wavelo-gap` and `--wavelo-z-index` reach the styling a config key does not cover.
+
 ## Accessibility
 
 A labelled design renders `role="status"` (or `role="progressbar"` with

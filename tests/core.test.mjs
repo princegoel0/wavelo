@@ -209,7 +209,9 @@ test('the progress family renders seven distinguishable designs', () => {
   // Designs that must differ from the plain bar each need their own rule; the
   // plain bar itself is styled by the shared `.wavelo--progress` rules.
   const css = rendered[0].css;
-  assert.match(css, /\.wavelo--progress-ring\{[^}]*min-width:0/);
+  // A ring is a circle: both of its axes follow `size`, so a width or height that
+  // would turn it into an ellipse is not read.
+  assert.match(css, /\.wavelo--progress-ring\{[^}]*width:var\(--wavelo-size,2\.5rem\);height:var\(--wavelo-size,2\.5rem\)/);
   assert.match(css, /\.wavelo--progress-steps[^}]*data-wavelo-step="filled"/);
   assert.match(css, /\.wavelo--progress-upload[^}]*wavelo-upload/);
   assert.match(css, /\.wavelo--page-transition[^}]*wavelo-transition/);
@@ -286,8 +288,13 @@ test('the advertised options are what the design actually reads', () => {
   assert.ok(!options('progress-bar').includes('duration'), 'a static track must not advertise a clock control');
   assert.ok(!options('progress-scroll').includes('duration'), 'a scroll-driven fill is not governed by the clock');
   assert.ok(!options('progress-scroll').includes('speed'));
-  assert.ok(!options('dot-matrix').includes('width'), 'dot-matrix sizes from --wavelo-size, not width');
+  assert.ok(options('dot-matrix').includes('width'), 'a grid of dots may be rectangular');
+  assert.ok(!options('progress-ring').includes('width'), 'a ring stays a circle: both of its axes follow size');
   assert.ok(!options('progress-top').includes('size'), 'progress-top pins its own box');
+  // No design may cap a size the caller gave it: these were floors and ceilings.
+  assert.ok(options('progress-bar').includes('height'), 'a bar must take the height asked for');
+  assert.ok(options('skeleton-line').includes('height'), 'a skeleton line must take the height asked for');
+  assert.ok(options('skeleton-card').includes('height'), 'a card must take the height asked for');
   // Keys that do work, so the removal above cannot be blanket trimming.
   assert.ok(options('circular').includes('secondaryColor'));
   assert.ok(options('ring').includes('strokeWidth'));

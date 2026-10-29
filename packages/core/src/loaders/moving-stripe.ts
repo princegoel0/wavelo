@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "moving-stripe", name: "Moving stripe", category: "bars", kind: "wave", description: "Traveling stripe", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "moving-stripe" };
+const definition: LoaderDefinition = { id: "moving-stripe", name: "Moving stripe", category: "bars", kind: "wave", description: "Traveling stripe", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "moving-stripe" };
 const styles = `${baseCss}${waveCss}`;
 
 export const movingStripe = (config: Omit<LoaderConfig, 'type'> = {}) =>

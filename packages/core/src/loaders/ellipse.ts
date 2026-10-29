@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "ellipse", name: "Elliptical spinner", category: "spinner", kind: "ring", description: "Elliptical rotation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "ellipse" };
+const definition: LoaderDefinition = { id: "ellipse", name: "Elliptical spinner", category: "spinner", kind: "ring", description: "Elliptical rotation", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ellipse" };
 const styles = `${baseCss}${ringCss}`;
 
 export const ellipse = (config: Omit<LoaderConfig, 'type'> = {}) =>

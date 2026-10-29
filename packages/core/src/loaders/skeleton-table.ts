@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-table", name: "Skeleton table", category: "skeleton", kind: "skeleton", description: "Table placeholder", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-table" };
+const definition: LoaderDefinition = { id: "skeleton-table", name: "Skeleton table", category: "skeleton", kind: "skeleton", description: "Table placeholder", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-table" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonTable = (config: Omit<LoaderConfig, 'type'> = {}) =>

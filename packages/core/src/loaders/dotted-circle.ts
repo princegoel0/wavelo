@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "dotted-circle", name: "Dotted circle", category: "spinner", kind: "dots", description: "Circular dotted spinner", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "dotted-circle" };
+const definition: LoaderDefinition = { id: "dotted-circle", name: "Dotted circle", category: "spinner", kind: "dots", description: "Circular dotted spinner", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "dotted-circle" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const dottedCircle = (config: Omit<LoaderConfig, 'type'> = {}) =>

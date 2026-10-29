@@ -79,9 +79,26 @@ for (const file of files) {
   }
 }
 
+// The custom properties are one promise in three places: the sheet reads them,
+// `WaveloTokens` declares them, and the README table documents them. Any pair of
+// those drifting means a caller sets a property that does nothing.
+const stylesheet = await readFile('packages/core/dist/wavelo.css', 'utf8');
+const tokensRead = new Set([...stylesheet.matchAll(/var\(\s*(--wavelo-[a-z0-9-]+)/g)].map((match) => match[1]));
+const tokensDeclared = new Set(
+  [...(await readFile('packages/core/src/types.ts', 'utf8')).matchAll(/'(--wavelo-[a-z0-9-]+)'\??:/g)].map((match) => match[1])
+);
+const readme = await readFile('README.md', 'utf8');
+for (const token of tokensRead) {
+  if (!tokensDeclared.has(token)) failures.push(`the sheet reads ${token}, which WaveloTokens does not declare`);
+  if (!readme.includes(token)) failures.push(`README.md does not document the ${token} token`);
+}
+for (const token of tokensDeclared) {
+  if (!tokensRead.has(token)) failures.push(`WaveloTokens declares ${token}, which no rule in the sheet reads`);
+}
+
 if (failures.length) {
   console.error(`Documentation check failed with ${failures.length} problem(s):`);
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
-console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, single loader ${singleLoaderKb} KB gzipped.`);
+console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, ${tokensRead.size} custom properties, single loader ${singleLoaderKb} KB gzipped.`);

@@ -16,8 +16,11 @@ export const baseCss = `
 .wavelo-inline{vertical-align:middle}
 .wavelo-host{display:contents}
 .wavelo,.wavelo[data-wavelo-theme="light"]{--wavelo-skeleton-base:#e5e7eb;--wavelo-skeleton-highlight:#f9fafb}
-.wavelo[data-wavelo-theme="dark"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563}
-@media (prefers-color-scheme:dark){.wavelo[data-wavelo-theme="system"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563}}
+/* A theme is the page's palette, not only the skeleton's: it sets the colour a
+   design falls back to and the scrim an overlay draws, both of which an explicit
+   "color" or "backgroundColor" still overrides. */
+.wavelo[data-wavelo-theme="dark"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563;--wavelo-color:#a5b4fc;--wavelo-scrim:#0f172a}
+@media (prefers-color-scheme:dark){.wavelo[data-wavelo-theme="system"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563;--wavelo-color:#a5b4fc;--wavelo-scrim:#0f172a}}
 @media (prefers-reduced-motion:reduce){.wavelo:not([data-wavelo-motion="never"]),.wavelo:not([data-wavelo-motion="never"]) *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}
 .wavelo[data-wavelo-motion="always"],.wavelo[data-wavelo-motion="always"] *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
 ${pulseFrames}${dotOrbitFrames}${bounceDotFrames}${spinFrames}`;

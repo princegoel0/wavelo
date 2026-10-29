@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "triangles", name: "Rotating triangles", category: "creative", kind: "shape", description: "Rotating triangles", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "triangles" };
+const definition: LoaderDefinition = { id: "triangles", name: "Rotating triangles", category: "creative", kind: "shape", description: "Rotating triangles", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "triangles" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const triangles = (config: Omit<LoaderConfig, 'type'> = {}) =>

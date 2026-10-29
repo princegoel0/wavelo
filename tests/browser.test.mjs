@@ -908,3 +908,45 @@ test('the custom element reads loading, count and inline from attributes', async
   assert.equal(read.hidden.emptySlices, 0, 'hiding through the attribute must not inject the empty slice');
   assert.equal(read.restored, 4, 'removing the attribute brings the loader back');
 });
+
+test('a configured size is kept, and the new tokens reach the rules that read them', async () => {
+  await setContentPage(
+    '<div id="tall">' + renderLoader({ type: 'progress-bar', label: 'Loading', height: 32, value: 50 }).html + '</div>' +
+    '<div id="styled">' + renderLoader({ type: 'progress-bar', label: 'Loading', style: { '--wavelo-radius': '2px' } }).html + '</div>' +
+    '<div id="paced">' + renderLoader({ type: 'ring', label: 'Loading', style: { '--wavelo-ease': 'steps(4, end)' } }).html + '</div>' +
+    '<div id="layered">' + renderLoader({ type: 'progress-top', label: 'Loading', style: { '--wavelo-height': '9px', '--wavelo-z-index': '3' } }).html + '</div>' +
+    '<div id="plain-top">' + renderLoader({ type: 'progress-top', label: 'Loading' }).html + '</div>' +
+    '<div id="dark">' + renderLoader({ type: 'ring', label: 'Loading', theme: 'dark' }).html + '</div>' +
+    '<div id="light">' + renderLoader({ type: 'ring', label: 'Loading' }).html + '</div>' +
+    '<div id="dark-scrim">' + renderLoader({ type: 'overlay', label: 'Loading', theme: 'dark' }).html + '</div>' +
+    '<div id="light-scrim">' + renderLoader({ type: 'overlay', label: 'Loading' }).html + '</div>'
+  );
+  const read = await page.evaluate(() => {
+    const at = (id) => {
+      const element = document.querySelector(`#${id} .wavelo`);
+      const style = getComputedStyle(element);
+      const part = element.querySelector('.wavelo__part');
+      return {
+        height: Math.round(element.getBoundingClientRect().height),
+        radius: style.borderTopLeftRadius,
+        ease: style.animationTimingFunction,
+        z: style.zIndex,
+        color: style.color,
+        paint: style.backgroundImage + '|' + style.backgroundColor,
+        fill: part ? Math.round(part.getBoundingClientRect().width) : null
+      };
+    };
+    return Object.fromEntries(['tall', 'styled', 'paced', 'layered', 'plain-top', 'dark', 'light', 'dark-scrim', 'light-scrim'].map((id) => [id, at(id)]));
+  });
+  assert.equal(read.tall.height, 32, 'a 32-pixel bar is 32 pixels, not a capped 16');
+  assert.equal(read.tall.fill, 64, 'the half-filled track fills half of the real width');
+  assert.equal(read.styled.radius, '2px', 'a squared bar takes the radius');
+  assert.match(read.paced.ease, /steps\(4/, 'the timing function is the page’s to choose');
+  assert.equal(read.layered.height, 9, 'the top bar takes a configured thickness');
+  assert.equal(read.layered.z, '3', 'a page can layer it under its own chrome');
+  assert.equal(read['plain-top'].z, '9999', 'and it covers the page by default');
+  assert.equal(read.dark.color, 'rgb(165, 180, 252)', 'a dark theme picks a colour that reads on dark');
+  assert.equal(read.light.color, 'rgb(99, 102, 241)', 'the light default is unchanged');
+  assert.notEqual(read['dark-scrim'].paint, read['light-scrim'].paint, 'the overlay scrim follows the theme');
+  assert.notEqual(read['light-scrim'].paint, 'none|rgba(0, 0, 0, 0)', 'the overlay still draws a scrim in light');
+});

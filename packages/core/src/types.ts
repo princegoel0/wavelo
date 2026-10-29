@@ -6,7 +6,10 @@ export type { LoaderId };
  * The CSS custom properties Wavelo's stylesheets read. Setting one in `style`, on
  * an ancestor, or in a class rule configures every loader it contains; each key
  * below is the token-level twin of a config option, and the ones with no twin
- * (`--wavelo-radius`, the skeleton palette) are reachable only this way.
+ * (`--wavelo-radius`, `--wavelo-ease`, `--wavelo-gap`, `--wavelo-scrim`,
+ * `--wavelo-z-index`, the skeleton palette) are reachable only this way.
+ * `scripts/validate-docs.mjs` checks that the sheet reads exactly this set and that
+ * the README documents every one of them.
  */
 export interface WaveloTokens {
   '--wavelo-size'?: string | number;
@@ -19,9 +22,12 @@ export interface WaveloTokens {
   '--wavelo-stroke'?: string | number;
   '--wavelo-radius'?: string;
   '--wavelo-gap'?: string;
+  '--wavelo-ease'?: string;
   '--wavelo-progress'?: string;
   '--wavelo-skeleton-base'?: string;
   '--wavelo-skeleton-highlight'?: string;
+  '--wavelo-scrim'?: string;
+  '--wavelo-z-index'?: string | number;
   '--wavelo-direction'?: 'normal' | 'reverse';
   '--wavelo-play-state'?: 'running' | 'paused';
 }
@@ -69,7 +75,11 @@ export interface LoaderConfig {
   speed?: number;
   duration?: number | string;
   strokeWidth?: number;
-  /** Palette for skeleton and placeholder surfaces. Omitted means `light`. */
+  /**
+   * The palette of the page the loader sits in: the colour a design falls back to,
+   * the skeleton shimmer and the overlay scrim. Omitted means `light`; `system`
+   * follows `prefers-color-scheme`. An explicit `color` or `backgroundColor` wins.
+   */
   theme?: Theme;
   direction?: 'normal' | 'reverse';
   /**

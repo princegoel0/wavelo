@@ -27,22 +27,25 @@ const runtime = 13.5 * 1024;
 const budgets = {
   // A design chosen at build time carries its slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level
-  // theming can reach it: 3,542 B before that change, 4,612 B after. The saving
-  // lands per page instead — a default loader now carries no `style` attribute at
-  // all, where it used to carry about 180 bytes of tokens.
+  // theming can reach it: 3,542 B before that change, 4,612 B after, 5,018 B with
+  // the visibility, track-count and inline options. The saving lands per page
+  // instead — a default loader now carries no `style` attribute at all, where it
+  // used to carry about 180 bytes of tokens, and a loader with `loading: false`
+  // carries nothing.
   //
   // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
   // and are re-based deliberately when a feature adds surface: a configuration key
   // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
-  // keys cost a single design 407 B.
+  // keys cost a single design 407 B and why the styling tokens cost more than that —
+  // they are new rules in every slice, not new reads of existing ones.
   'individual-loader': 5.5 * 1024,
-  'two-loaders': 6 * 1024,
+  'two-loaders': 6.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 14.5 * 1024,
+  angular: 15.5 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

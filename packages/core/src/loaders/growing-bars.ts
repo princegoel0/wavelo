@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "growing-bars", name: "Growing bars", category: "bars", kind: "bars", description: "Growing and shrinking bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "growing-bars" };
+const definition: LoaderDefinition = { id: "growing-bars", name: "Growing bars", category: "bars", kind: "bars", description: "Growing and shrinking bars", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "growing-bars" };
 const styles = `${baseCss}${barsCss}`;
 
 export const growingBars = (config: Omit<LoaderConfig, 'type'> = {}) =>

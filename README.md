@@ -83,19 +83,27 @@ overrides that one loader:
 
 | token | config key it backs | default |
 | --- | --- | --- |
-| `--wavelo-size` | `size` (and `width`/`height` when they are unset) | `2.5rem` |
-| `--wavelo-width` / `--wavelo-height` | `width` / `height` | falls back to `--wavelo-size` |
-| `--wavelo-color` | `color`, and everything painted through `currentColor` | `#6366f1` |
+| `--wavelo-size` | `size` — the square box most designs are built in | `2.5rem` |
+| `--wavelo-width` / `--wavelo-height` | `width` / `height`, on the designs that are not a square | each design's own shape (a bar is `8rem` by `.5rem`) |
+| `--wavelo-color` | `color`, and everything painted through `currentColor` | `#6366f1`, or `#a5b4fc` on a dark theme |
 | `--wavelo-secondary-color` | `secondaryColor`, on the designs that layer a second colour | `#a5b4fc` |
-| `--wavelo-background` | `backgroundColor` | `transparent` (the overlay keeps its own scrim) |
+| `--wavelo-background` | `backgroundColor` | `transparent`; the overlay designs fall back to the scrim |
+| `--wavelo-scrim` | the translucent layer of `overlay` and `fullscreen`, normally via `theme` | `#fff`, or `#0f172a` on a dark theme |
 | `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
+| `--wavelo-ease` | the timing function of each design's animation | the timing that design was authored with |
 | `--wavelo-stroke` | `strokeWidth` | `3px` |
 | `--wavelo-direction` | `direction` | `normal` |
 | `--wavelo-play-state` | `paused` | `running` |
 | `--wavelo-progress` | `value` / `max` on the determinate designs | `35%`, and it interpolates |
+| `--wavelo-radius` | the corner radius of tracks, bars, steps and placeholders — not a design's own shape | each rule's own |
+| `--wavelo-gap` | the space between the parts of a composite design | each rule's own |
+| `--wavelo-z-index` | the layer of the fixed top bars and the full-screen overlay | `9999` |
 | `--wavelo-skeleton-base` / `--wavelo-skeleton-highlight` | the shimmer, normally via `theme` | light or dark palette |
-| `--wavelo-radius` | skeleton/placeholder corner radius | `.4rem` |
-| `--wavelo-gap` | the space between the tracks of a `count`ed skeleton | `.5rem` |
+
+A token with no config twin — `--wavelo-radius`, `--wavelo-ease`, `--wavelo-gap`,
+`--wavelo-scrim`, `--wavelo-z-index` and the skeleton palette — is reachable only
+this way, and `npm run docs:check` fails if the sheet reads a property that
+`WaveloTokens` does not declare or the table above does not document.
 
 For defaults that are configuration rather than styling — label, reduced-motion
 policy, design choice — register them for a subtree. Each is per render tree, never
@@ -222,10 +230,18 @@ fixed overlay is not on anybody's line of text.
 
 `direction` and `paused` drive the CSS animation controls; `reducedMotion:
 'always'` reduces motion without waiting for the operating system, and `'never'`
-opts out when the system asks for it. Colours accept `oklch()`, `lab()`, `hwb()`
+opts out when the system asks for it. `theme` is the palette of the page rather than
+of one design: `dark` picks the colour a design falls back to, the skeleton shimmer
+and the overlay scrim, `system` follows `prefers-color-scheme`, and an explicit
+`color` or `backgroundColor` still wins. Colours accept `oklch()`, `lab()`, `hwb()`
 and `color-mix()`; sizes accept `calc()`, container units and `var(--wavelo-*)`;
 `style` carries custom properties and rejects a key it cannot apply rather than
 dropping it quietly.
+
+A design's own shape may pin a size — a ring is a circle, a top bar spans the page —
+and then that key is not advertised for it. What no design may do is *cap* a size you
+asked for: a 2 rem progress bar is 2 rem tall, a 32-pixel skeleton line is 32 pixels,
+and the floors that used to enforce those caps are the defaults they fall back to.
 
 For assistive technology: `label` names the loader, `labelledBy` names the visible
 element that already does, `describedBy` points at explanatory text, `valueText`

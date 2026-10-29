@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "scaling-dots", name: "Scaling dots", category: "dots", kind: "pulse", description: "Scaling dots", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","width"], supportsProgress: false, stability: "stable", visualSignature: "scaling-dots" };
+const definition: LoaderDefinition = { id: "scaling-dots", name: "Scaling dots", category: "dots", kind: "pulse", description: "Scaling dots", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "scaling-dots" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const scalingDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

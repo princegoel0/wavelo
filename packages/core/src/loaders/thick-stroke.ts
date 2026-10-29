@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "thick-stroke", name: "Thick stroke", category: "spinner", kind: "ring", description: "Bold heavy-stroke ring", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","width"], supportsProgress: false, stability: "stable", visualSignature: "thick-stroke" };
+const definition: LoaderDefinition = { id: "thick-stroke", name: "Thick stroke", category: "spinner", kind: "ring", description: "Bold heavy-stroke ring", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "thick-stroke" };
 const styles = `${baseCss}${ringCss}`;
 
 export const thickStroke = (config: Omit<LoaderConfig, 'type'> = {}) =>
