@@ -31,7 +31,27 @@ const PART_COUNTS: Record<string, number> = {
   'expanding-circles': 3,
   'nested-squares': 3,
   'concentric-pulse': 3,
-  helix: 6
+  helix: 6,
+  'typing-dots': 3,
+  'trip-orbit': 3,
+  'thinking-glow': 1,
+  'stream-cursor': 1,
+  'neural-grid': 9,
+  'comet-orbit': 1
+};
+
+/**
+ * Tracks a composite skeleton draws when the caller gives no `count`. An inbox row is
+ * an avatar and a subject, so its default is three rows of two; a metric card is
+ * number, label and trend chip; a thread is three bubbles.
+ */
+const SKELETON_TRACKS: Record<string, number> = {
+  'skeleton-card': 3,
+  'skeleton-table': 6,
+  'skeleton-inbox': 6,
+  'skeleton-code': 6,
+  'skeleton-chat': 3,
+  'skeleton-metric': 3
 };
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
@@ -43,9 +63,9 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
     // Line, avatar and image placeholders are painted by the element itself; only
     // the composite layouts have child tracks. A line with a `count` becomes a
     // stack of tracks, because that is what a block of placeholder text is.
-    if (type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    if (type === 'skeleton-avatar' || type === 'image-placeholder' || type === 'ai-shimmer') return '';
     if (type === 'skeleton-line') return config.count && config.count > 1 ? many(config.count) : '';
-    return many(config.count ?? (type === 'skeleton-card' ? 3 : type === 'skeleton-table' ? 6 : 5));
+    return many(config.count ?? SKELETON_TRACKS[type] ?? 5);
   }
   if (kind === 'progress') {
     if (type === 'progress-steps') {

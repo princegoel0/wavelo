@@ -57,7 +57,7 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 83 public IDs, each with its own implementation, built from
+The catalog holds 98 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
@@ -195,7 +195,7 @@ The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
   `tests/framework.test.mjs`, part of `npm test` and CI.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 83
+  `theme`, style-slice injection counts, per-design slice isolation for all 98
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —

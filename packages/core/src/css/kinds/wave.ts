@@ -6,6 +6,7 @@ import { css as waveformReverseFrames } from '../keyframes/waveform-reverse.js';
 import { css as horizontalPulseFrames } from '../keyframes/horizontal-pulse.js';
 import { css as helixFrames } from '../keyframes/helix.js';
 import { css as helixLineFrames } from '../keyframes/helix-line.js';
+import { css as tokenFrames } from '../keyframes/token.js';
 
 export const waveCss = `
 .wavelo--wave{gap:var(--wavelo-gap,3px)}
@@ -29,4 +30,12 @@ export const waveCss = `
 .wavelo--helix .wavelo__part:nth-child(5){transform:translate(-28px,16px)}
 .wavelo--helix .wavelo__part:nth-child(6){transform:translate(28px,26px)}
 .wavelo--helix:before,.wavelo--helix:after{content:"";position:absolute;left:25%;top:46%;width:50%;height:8%;border-top:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;animation:wavelo-helix-line var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${highlightFrames}${stripeFrames}${waveFrames}${waveformFrames}${waveformReverseFrames}${horizontalPulseFrames}${helixFrames}${helixLineFrames}`;
+/* Tokens arriving: five short dashes light up at the left, travel right and dim, each
+   a fifth of a cycle behind the last, so the row reads as output being appended. */
+.wavelo--token-stream{gap:var(--wavelo-gap,3px);justify-content:flex-start}
+.wavelo--token-stream .wavelo__part{width:18%;height:calc(var(--wavelo-stroke,3px) * 1.5);border-radius:var(--wavelo-radius,1px);animation:wavelo-token calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--token-stream .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.32)}
+.wavelo--token-stream .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.64)}
+.wavelo--token-stream .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.96)}
+.wavelo--token-stream .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -1.28)}
+${highlightFrames}${stripeFrames}${waveFrames}${waveformFrames}${waveformReverseFrames}${horizontalPulseFrames}${helixFrames}${helixLineFrames}${tokenFrames}`;

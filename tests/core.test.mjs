@@ -12,7 +12,7 @@ test('catalog has distinct metadata and required categories', () => {
     assert.ok(loader.aliasOf);
     assert.ok(loaderRegistry.some((candidate) => candidate.id === loader.aliasOf && !candidate.deprecated));
   }
-  for (const category of ['spinner', 'dots', 'bars', 'skeleton', 'progress', 'application']) {
+  for (const category of ['spinner', 'dots', 'bars', 'skeleton', 'progress', 'application', 'ai']) {
     assert.ok(loaderRegistry.some((loader) => loader.category === category));
   }
 });
@@ -53,7 +53,16 @@ test('designs whose names promise a count render that many parts', () => {
     helix: 6,
     'skeleton-card': 3,
     'skeleton-table': 6,
-    'progress-steps': 5
+    'progress-steps': 5,
+    'typing-dots': 3,
+    'trip-orbit': 3,
+    'neural-grid': 9,
+    'thinking-glow': 1,
+    'stream-cursor': 1,
+    'comet-orbit': 1,
+    'ai-shimmer': 0,
+    'skeleton-chat': 3,
+    'skeleton-metric': 3
   };
   for (const [id, expected] of Object.entries(counts)) {
     const result = renderLoader({ type: id, value: 50, max: 100, label: id });

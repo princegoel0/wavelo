@@ -36,6 +36,50 @@ A server-rendered page that skips the sheet still renders correct markup — wit
 styling. That is the deliberate trade for not shipping one copy of the stylesheet per
 component instance.
 
+## React Server Components
+
+`@wavelo/react`'s `Loader` is a client component: it injects its stylesheet slice in an
+effect, so importing it from a Server Component crosses a client boundary. Two ways to
+keep the server tree on the server.
+
+Render the markup with the core, which is a function that returns strings and uses no
+hooks, and import the sheet once through the bundler:
+
+```tsx
+// app/thread-preview.tsx — a Server Component
+import { renderLoader } from '@wavelo/core';
+
+const loader = renderLoader({ type: 'typing-dots', label: 'Assistant is typing' });
+
+export default function Preview() {
+  return <div dangerouslySetInnerHTML={{ __html: loader.html }} />;
+}
+```
+
+```css
+/* app/globals.css, imported by the root layout */
+@import '@wavelo/core/styles.css';
+```
+
+That ships no JavaScript for the loader at all, which is the right trade when the state
+is known while the page is being rendered. When it arrives after hydration, wrap the
+client component once and import the wrapper instead:
+
+```tsx
+// components/wavelo-loader.tsx
+'use client';
+export { Loader } from '@wavelo/react';
+```
+
+`renderStylesheets(slices)` is the narrower variant of the first shape: it emits only the
+slices the page actually rendered, so a route that shows one ring does not send the sheet
+for the other 97 designs.
+
+Verified: the server render and the markup/stylesheet split are tested in
+`tests/framework.test.mjs` (React `renderToStaticMarkup`), and slice injection is tested
+in Chromium. The App Router wiring itself is documented, not executed here — there is no
+Next.js fixture in this repository.
+
 ## Content security policy
 
 Under `style-src` without `'unsafe-inline'`, an injected `<style>` needs the page's

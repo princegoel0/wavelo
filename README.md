@@ -5,9 +5,14 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 83 designs, each visually distinct, built from 12
+The catalog holds 98 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
+
+Nine of them are the streaming lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
+`token-stream`, `ai-shimmer`, `neural-grid`, plus the composite `skeleton-chat`,
+`skeleton-code` and `skeleton-inbox` layouts): what an assistant shows while it is
+composing an answer, which no loading library has as a category.
 
 ## Development
 
@@ -18,6 +23,7 @@ npm run check          # build, typecheck, unit tests, catalog drift, documentat
 npm run test:browser   # Chromium suite: computed styles, style injection, axe, gallery
 npm run test:browser:firefox   # Gecko smoke suite: the sheet applies, fallbacks hold
 npm run docs:build
+npm run docs:verify    # the built gallery holds every design and embeds its stylesheet
 ```
 
 The package is not published by these commands. See [docs/RELEASE.md](docs/RELEASE.md)
@@ -278,6 +284,24 @@ rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 tracks in the designs that are built from repeating tracks — a stack of skeleton
 lines, the rows of a skeleton table, the steps of a progress bar — and a design that
 draws something else does not advertise it. `inline` puts the box on the text line.
+
+The designs built from repeating tracks are where `count` pays. Each one is laid out
+like the screen it stands in for, so the placeholder is the shape, not a grey box:
+
+```tsx
+import { loaderFor } from '@wavelo/react';
+
+const Inbox = loaderFor('skeleton-inbox');
+const Thread = loaderFor('skeleton-chat');
+const CodeBlock = loaderFor('skeleton-code');
+
+<Inbox count={4} />          {/* four rows: avatar, subject */}
+<Thread count={5} />         {/* five bubbles, the newest lifts */}
+<CodeBlock count={8} />      {/* lines beside a numbered gutter */}
+```
+
+The same three work through the core, where a value fills whole steps:
+`renderLoader({ type: 'progress-steps', count: 6, value: 3 })` renders step 3 of 6.
 
 Which of them a given design actually uses is measured rather than claimed.
 `npm run audit:customization` renders every design in Chromium with each key set

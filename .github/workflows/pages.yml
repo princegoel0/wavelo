@@ -1,0 +1,51 @@
+name: Gallery
+
+# The documentation gallery is one self-contained HTML file built from the registry, so
+# publishing it is a build and an upload. It deploys only from `main`, and only once the
+# owner has pointed Pages at "GitHub Actions" in the repository settings and set the
+# repository variable GALLERY_ENABLED to `true`. Until then both jobs skip, so pushing
+# this file cannot fail a run on `main` or publish anything by accident.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: gallery
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: vars.GALLERY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run docs:build
+      - run: npm run docs:verify
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/docs/dist
+
+  deploy:
+    if: vars.GALLERY_ENABLED == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

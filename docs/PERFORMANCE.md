@@ -18,14 +18,14 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**80 of the 83 designs cost no layout per frame.** Three do, each for a reason a
+**95 of the 98 designs cost no layout per frame.** Three do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
 | --- | --- | --- |
 | `progress-scroll` | 121 | the fill *is* the reading position, and a `scaleX` would squash the leading dot that marks it with the bar |
-| `waveform` | 81 | the bar slides while it grows, and the slide is a percentage of the height it is growing |
-| `multi-wave` | 80 | the same two frames, in opposite phase |
+| `multi-wave` | 67 | the same two frames, in opposite phase |
+| `waveform` | 56 | the bar slides while it grows, and the slide is a percentage of the height it is growing |
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden.
@@ -64,22 +64,30 @@ Gzipped together, as shipped — the cheapest design in each kind:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,322 | `dots` | 1,602 |
-| `pulse` | 1,338 | `wave` | 1,651 |
-| `orbit` | 1,393 | `shape` | 1,658 |
-| `ring` | 1,445 | `scroll` | 1,678 |
-| `bars` | 1,499 | `rings` | 1,717 |
-| `progress` | 1,511 | `skeleton` | 1,747 |
+| `overlay` | 1,322 | `orbit` | 1,766 |
+| `bars` | 1,499 | `ring` | 1,773 |
+| `progress` | 1,511 | `shape` | 1,841 |
+| `pulse` | 1,677 | `wave` | 1,903 |
+| `scroll` | 1,678 | `dots` | 2,159 |
+| `rings` | 1,717 | `skeleton` | 2,557 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,025 bytes of that. The whole catalog
-sheet is 5,897 bytes gzipped, loaded once, for all 83 designs.
+sheet is 8,343 bytes gzipped, loaded once, for all 98 designs.
+
+A kind's cost is the thing to watch when the catalog grows: it is shared by every
+design in that kind, which is why the five new skeleton designs took `skeleton` from
+1,747 to 2,557 bytes and the three new dot-based designs took `dots` from 1,602 to
+2,159. A design in a crowded kind costs more than a design in a quiet one, whatever
+its own rules.
 
 Importing one design's entry point costs the renderer, validation and that slice:
-`ring` 5,018 bytes, `equalizer` 5,121, `progress-view` 5,248, `skeleton-card` 5,303 —
-all inside the 5,632-byte budget `npm run measure` enforces. Importing `renderLoader`,
-which chooses by string at runtime, costs 12.4 KB because it must be able to draw
-anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
+`ring` 5,482 bytes, `equalizer` 5,236, `progress-view` 5,360, `skeleton-card` 6,248.
+`npm run measure` enforces both ends of that range: 6,144 bytes for the sampled ring
+and 7,168 for the busiest kind, so a new skeleton cannot grow the skeleton slice without
+a number moving. Importing `renderLoader`, which chooses by string at runtime, costs
+15.7 KB because it must be able to draw anything. See
+[BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader
 

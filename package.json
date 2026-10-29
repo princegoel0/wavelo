@@ -27,6 +27,7 @@
     "audit:visual:correctness": "node scripts/audit-loader-visual-correctness.mjs",
     "release:validate": "node scripts/validate-release.mjs",
     "docs:build": "npm run build --workspace @wavelo/docs",
+    "docs:verify": "node scripts/verify-gallery.mjs",
     "pack:check": "npm pack --dry-run --workspaces --if-present",
     "pack:verify": "node scripts/verify-packed.mjs",
     "test:browser": "node tests/browser.test.mjs",

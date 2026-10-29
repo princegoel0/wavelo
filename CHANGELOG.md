@@ -9,9 +9,17 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 83 public IDs, each with its own implementation and no deprecated aliases. A
+- 98 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
+- The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,
+  `ai-shimmer` and `neural-grid` under a new `ai` category, for the state between
+  sending a prompt and receiving an answer. Four composite skeletons join them —
+  `skeleton-inbox`, `skeleton-chat`, `skeleton-code` and `skeleton-metric` — plus five
+  single-box designs: `conic-ring` and `comet-orbit`, both carved out of a conic
+  gradient by a radial mask, `neon-ring`, which turns while its glow swells,
+  `liquid-blob`, whose corner radii keep changing while it stays in place, and
+  `trip-orbit`, three arcs a third of a turn apart.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.
@@ -35,7 +43,14 @@ Not yet published.
   option list and the documentation: `skeleton-card` no longer advertises a
   `strokeWidth` it never reads, `ring` no longer advertises `secondaryColor`, and a
   static track no longer advertises `duration`. `npm run audit:customization`
-  re-measures the table and fails CI when it drifts.
+  re-measures the table and fails CI when it drifts. The probe now settles two frames
+  before it reads, because a scroll- or view-driven animation is sampled while frames
+  render and the frozen transform differed between two identical pages; the mask is one
+  of the properties it compares, so a stroke that carves a ring rather than drawing a
+  border is measured as honoured. `npm run audit:layout` keeps every copy it measures
+  inside the viewport for the same reason: Chromium does not animate boxes it cannot
+  see, so 150 copies stacked in normal flow let one design report 120 layouts on a run
+  and 0 on the next, and the 0 looked like a design that had stopped costing layout.
 - Pattern presets resolve: `renderLoader({ type: 'download-progress' })` renders
   `progress-upload`, reports `resolution: 'preset'`, and is not a fallback. An
   unknown ID reports `resolution: 'default'` with `fallback: true`, which is now the

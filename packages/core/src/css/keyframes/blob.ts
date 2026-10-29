@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-blob{0%,100%{border-radius:58% 42% 55% 45%/48% 56% 44% 52%}34%{border-radius:44% 56% 38% 62%/62% 38% 60% 40%}67%{border-radius:64% 36% 52% 48%/36% 58% 42% 64%}}`;
