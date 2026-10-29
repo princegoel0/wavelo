@@ -1096,11 +1096,14 @@ test('a container-query size resolves against the loader’s own container', asy
     const read = (id) => {
       const container = document.querySelector(`#${id}`);
       const element = container.querySelector('.wavelo');
+      const style = getComputedStyle(element);
       return {
-        loader: Math.round(element.getBoundingClientRect().width),
+        // The used width, not the bounding rect: a spinning ring's rect is the box
+        // that contains its rotation, which grows and shrinks with the angle.
+        loader: Math.round(Number.parseFloat(style.width)),
         container: Math.round(container.getBoundingClientRect().width),
-        computed: getComputedStyle(element).width,
-        size: getComputedStyle(element).getPropertyValue('--wavelo-size').trim(),
+        computed: style.width,
+        size: style.getPropertyValue('--wavelo-size').trim(),
         type: getComputedStyle(container).containerType
       };
     };
