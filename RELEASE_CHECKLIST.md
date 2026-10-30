@@ -96,6 +96,20 @@ Audited version: `0.1.0`
   designs run on the document clock. Measured on Firefox 157: `scroll()` and `view()`
   timelines are unsupported, so the documented fallback is what that engine gets.
   Wired into both CI jobs.
+- [x] Ran `npm run test:browser:webkit`: passed; 7 WebKit smoke tests in the same shape.
+  Measured on WebKit 27.2 (Playwright's build of Safari's engine, not an Apple-shipped
+  browser): `scroll()` and `view()` **are** supported, so `progress-scroll` and
+  `progress-view` run on a real `ScrollTimeline` and `ViewTimeline` there rather than on
+  the document clock — which is how each timeline path came to be measured on a browser,
+  one on each side of the support line. The suite also asserts that a conic gradient is
+  carved by a mask and that a registered `<integer>` reaches a CSS counter. Wired into
+  both CI jobs.
+- [x] Mirrored the versioning policy into `docs/RELEASE.md`: what semver means for this
+  surface, what a `0.x` may change, and the one thing it never does — leave a caller
+  guessing about an option that stopped applying.
+- [x] Asserted PRD 13.4 item 8 in `pack:verify`: every adapter declares its framework as
+  a peer, lists none of them as a dependency, carries no nested copy, and depends on
+  nothing outside the workspace.
 - [x] Verified an unknown `type` leaves a trace in the DOM: the element carries
   `data-wavelo-fallback="<asked for>"` beside the default design, while a resolved
   preset and an absent type carry nothing. Asserted in the unit suite and through the

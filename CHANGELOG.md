@@ -270,6 +270,13 @@ Not yet published.
   `animation-timeline: scroll()` and `view()` are unsupported, so the fallback this
   library documents is what that engine actually gets — previously it was a claim
   with one engine behind it.
+- A WebKit smoke suite (`npm run test:browser:webkit`, in CI beside the other two),
+  standing in for Safari with Playwright's build of the same engine. It closes the other
+  half of that claim: measured on WebKit 27.2, `scroll()` and `view()` are supported, so
+  the two timeline designs run on a real `ScrollTimeline` and `ViewTimeline` there. Each
+  path is now measured on a browser, one on each side of the support line. The suite also
+  checks that a conic gradient is carved by a mask and that a registered `<integer>`
+  reaches a CSS counter, both of which the progress tranche depends on.
 - Registry-driven static documentation gallery, axe-checked in a real browser.
 - Test suites: unit (markup, validation, catalog, entry points),
   adapter (SSR rendering, prop parity), and browser (computed styles, style

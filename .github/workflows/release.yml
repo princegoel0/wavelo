@@ -28,9 +28,10 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run docs:build
-      - run: npx playwright install --with-deps chromium firefox
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run test:browser
       - run: npm run test:browser:firefox
+      - run: npm run test:browser:webkit
       - run: npm run audit:customization
       - run: npm run audit:layout
       - run: npm run audit:visual:correctness

@@ -24,9 +24,15 @@ sheet applies and the geometry, stroke, palette, `paused`, `direction`,
 `reducedMotion` and ancestor tokens all reach Gecko, that every design paints, and
 that the timeline designs run on the document clock there. Measured on Firefox 157:
 `animation-timeline: scroll()` and `view()` are **not** supported, so the documented
-fallback is what that engine actually gets. Safari has not been exercised; the
-versions above are the requirement implied by the CSS features used, not a claim that
-they were tested.
+fallback is what that engine actually gets. WebKit is exercised by the same shape of
+smoke suite (`npm run test:browser:webkit`, also in CI) and stands in for Safari: the
+same engine, Playwright's own build, version 27.2 measured here. Measured on it:
+`scroll()` and `view()` **are** supported, so those two designs run on a real
+`ScrollTimeline` and `ViewTimeline` rather than the fallback — which is how both paths
+came to be measured on a browser rather than reasoned about. A conic gradient carved by
+a mask and a registered `<integer>` interpolated into a CSS counter also carry there.
+This is not a Safari test: no Apple-shipped browser was run, and the versions above
+remain the requirement implied by the CSS features used.
 
 ## Where a value comes from
 
