@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-dot-orbit{to{transform:rotate(360deg)}}`;
+export const css = `@keyframes wavelo-dot-orbit{from{transform:rotate(0) translateY(calc(var(--wavelo-size,2.5rem) * -.34))}to{transform:rotate(360deg) translateY(calc(var(--wavelo-size,2.5rem) * -.34))}}`;

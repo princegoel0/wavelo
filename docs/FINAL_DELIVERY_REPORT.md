@@ -37,7 +37,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   129 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 20 `--wavelo-*`
-  custom properties, 76 `@keyframes`, 183 named presets. Eight categories, one of
+  custom properties, 80 `@keyframes`, 183 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by

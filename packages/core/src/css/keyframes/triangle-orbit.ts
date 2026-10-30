@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-triangle-orbit{to{transform:rotate(360deg) translateY(-45%)}}`;
+export const css = `@keyframes wavelo-triangle-orbit{from{transform:rotate(var(--a)) translateY(calc(var(--wavelo-size,2.5rem) * -.34))}to{transform:rotate(calc(var(--a) + 360deg)) translateY(calc(var(--wavelo-size,2.5rem) * -.34))}}`;

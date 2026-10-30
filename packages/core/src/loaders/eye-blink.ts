@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "eye-blink", name: "Eye blink", category: "creative", kind: "shape", description: "A wide oval that closes to a line and opens again", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "eye-blink" };
+const definition: LoaderDefinition = { id: "eye-blink", name: "Eye blink", category: "creative", kind: "shape", description: "An eye that glances aside and blinks, its lid closing over the opening", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "eye-blink" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const eyeBlink = (config: Omit<LoaderConfig, 'type'> = {}) =>

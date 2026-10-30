@@ -194,8 +194,8 @@ test('a design keeps its own fill, display and duration when another kind shares
     };
     return { hourglass: pick('sand-timer'), stars: pick('constellation'), arm: pick('metronome') };
   });
-  assert.equal(measured.hourglass.background, 'rgb(99, 102, 241)', 'the shape slice fills the hourglass with currentColor');
-  assert.equal(measured.hourglass.duration, '2s', 'the hourglass flips on twice the configured duration');
+  assert.notEqual(measured.hourglass.background, 'rgba(0, 0, 0, 0)', 'the glass keeps its own tint instead of the later base copy of a transparent background');
+  assert.equal(measured.hourglass.duration, '6s', 'the hourglass drains over six times the configured duration');
   assert.equal(measured.stars.display, 'block', 'constellation positions its own parts');
   assert.equal(measured.arm.duration, '1.2s', 'the metronome swings on its own clock');
   assert.notEqual(measured.arm.width, '40px', 'the arm is narrower than the box it swings in');
@@ -581,6 +581,46 @@ test('every design paints something visible', async () => {
   }
 });
 
+test('no design has two parts sharing a box while it animates', async () => {
+  // Four designs rendered a single blob for exactly one reason: a keyframe that animates
+  // `transform` replaces the static transform that placed the part, so parts authored at
+  // four angles or six heights arrived on top of one another. A computed-style signature
+  // still differed, and the parts were still there in the DOM, so nothing else noticed.
+  // Concentric rings legitimately share a centre, so a hit means same position *and* same
+  // size.
+  const markup = loaderRegistry
+    .map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id }).html}</div>`)
+    .join('');
+  await setContentPage(markup);
+  for (const phase of [0, 0.25, 0.5, 0.75]) {
+    const stacked = await page.evaluate((p) => {
+      const out = [];
+      for (const wrap of document.querySelectorAll('[data-design]')) {
+        const parts = [...wrap.querySelectorAll('.wavelo__part')];
+        if (parts.length < 3) continue;
+        for (const animation of document.getAnimations()) {
+          try {
+            const duration = animation.effect?.getTiming?.().duration;
+            if (typeof duration !== 'number') continue;
+            animation.pause();
+            animation.currentTime = p * duration;
+          } catch {
+            // scroll- and view-driven timelines reject absolute time; none of them is
+            // what this scan is about.
+          }
+        }
+        const boxes = parts.map((part) => part.getBoundingClientRect());
+        for (let i = 0; i < boxes.length; i++)
+          for (let j = i + 1; j < boxes.length; j++)
+            if (Math.hypot(boxes[i].x - boxes[j].x, boxes[i].y - boxes[j].y) < 0.6 && Math.abs(boxes[i].width - boxes[j].width) < 0.6)
+              out.push(`${wrap.dataset.design} parts ${i + 1} and ${j + 1} at ${p * 100}%`);
+      }
+      return out;
+    }, phase);
+    assert.deepEqual(stacked, [], `parts stacked on top of each other: ${stacked.join('; ')}`);
+  }
+});
+
 function paintReport() {
   const paints = (element) => {
     const style = getComputedStyle(element);
@@ -615,7 +655,7 @@ test('each design renders what its name says', async () => {
     'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
-    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit',
+    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse',
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
     'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
     'progress-skill', 'progress-timer', 'progress-orbit-fill',
@@ -658,6 +698,7 @@ test('each design renders what its name says', async () => {
         radius: style.borderRadius,
         borderImage: style.borderImageSource,
         backgroundImage: style.backgroundImage,
+        backgroundColor: style.backgroundColor,
         gridColumns: style.gridTemplateColumns,
         animation: style.animationName,
         clipPath: style.clipPath,
@@ -822,14 +863,26 @@ test('each design renders what its name says', async () => {
   // that some animation exists.
   assert.equal(at('rubber-band').animation, 'wavelo-rubber');
   assert.equal(at('rubber-band').radius, '50%', 'a rubber band is still a ring');
+  assert.ok(Number.parseFloat(at('ellipse').boxWidth) > Number.parseFloat(at('ellipse').boxHeight), 'an ellipse is wider than it is tall');
+  assert.equal(at('ellipse').sides, 4, 'a closed hoop, not an arc with a gap taken out of it');
+  assert.equal(at('ellipse').animation, 'wavelo-ellipse', 'it turns about its own axis; spinning flat leaves a uniform ring looking still');
   assert.equal(at('snake').animation, 'wavelo-snake');
   assert.equal(at('snake').sides, 2, 'a snake is a short arc, not a full ring');
   assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');
   assert.equal(at('clock-spinner').after.animation, 'wavelo-spin', 'the hour hand must turn');
   assert.notEqual(at('clock-spinner').before.duration, at('clock-spinner').after.duration, 'both hands turn at the same rate, so it is not a clock');
   assert.match(at('sand-timer').clipPath, /polygon/, 'an hourglass is a clipped silhouette');
-  assert.equal(at('sand-timer').animation, 'wavelo-sand');
-  assert.equal(at('eye-blink').animation, 'wavelo-blink-eye');
+  assert.equal(at('sand-timer').animation, 'wavelo-sand', 'the glass itself is what turns over');
+  assert.ok(Number.parseFloat(at('sand-timer').backgroundColor.match(/[\d.]+\)$/)[0]) < 1, 'the empty glass must be translucent, or it reads as a solid silhouette rather than as glass');
+  assert.equal(at('sand-timer').before.animation, 'wavelo-sand-top', 'the upper chamber drains');
+  assert.equal(at('sand-timer').after.animation, 'wavelo-sand-bottom', 'the lower chamber fills');
+  assert.match(at('sand-timer').before.clip, /polygon/, 'the upper sand is clipped to its own chamber');
+  assert.notEqual(at('sand-timer').before.clip, at('sand-timer').after.clip, 'one chamber, drawn twice, is not an hourglass');
+  assert.match(at('eye-blink').clipPath, /polygon/, 'the opening is an almond, not an ellipse');
+  assert.equal(at('eye-blink').animation, 'none', 'the eye holds still; the lid and the iris move');
+  assert.equal(at('eye-blink').before.animation, 'wavelo-eye-look', 'the iris glances aside');
+  assert.equal(at('eye-blink').after.animation, 'wavelo-blink-eye', 'the lid closes over the opening');
+  assert.equal(at('eye-blink').after.inset, '0px', 'the lid is the whole opening, so closing it hides the eye');
   assert.ok(Number.parseFloat(at('eye-blink').boxWidth) > Number.parseFloat(at('eye-blink').boxHeight), 'an eye is wider than it is tall');
   assert.equal(at('metronome').animation, 'wavelo-metronome');
   assert.equal(at('magnetic-dots').parts, 5);

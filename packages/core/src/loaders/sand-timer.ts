@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "sand-timer", name: "Sand timer", category: "creative", kind: "shape", description: "An hourglass silhouette turning end over end", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "sand-timer" };
+const definition: LoaderDefinition = { id: "sand-timer", name: "Sand timer", category: "creative", kind: "shape", description: "Sand falls from the upper glass to the lower one, then the timer turns over", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "sand-timer" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const sandTimer = (config: Omit<LoaderConfig, 'type'> = {}) =>

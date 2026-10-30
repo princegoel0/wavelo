@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-ellipse{from{transform:perspective(calc(var(--wavelo-size,2.5rem) * 2.5)) rotate3d(0.18, 1, 0.5, 0deg)}to{transform:perspective(calc(var(--wavelo-size,2.5rem) * 2.5)) rotate3d(0.18, 1, 0.5, 360deg)}}`;
