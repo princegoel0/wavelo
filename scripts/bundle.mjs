@@ -4,11 +4,13 @@ import { readFile } from 'node:fs/promises';
 
 const entries = {
   'individual-loader': "import { ring } from '@wavelo/core/loaders/ring'; console.log(ring({ label: 'Loading' }));",
-  // The most crowded kind decides what "one design" costs, so it is sampled too. It
-  // moved with the progress tranche: twelve determinate designs made `progress` the
-  // largest slice gzipped (2,820 B), and it still is, though the six dots designs the
-  // motion tranche added gave `dots` more raw bytes and more selectors than any other.
-  'busiest-loader': "import { progressBattery } from '@wavelo/core/loaders/progress-battery'; console.log(progressBattery());",
+  // The most crowded kind decides what "one design" costs, so it is sampled too — which
+  // means this probe has to follow the measurement, not the history. It was pointed at
+  // `progress` when twelve determinate designs made that the largest slice; the motion
+  // and skeleton tranches then pushed `dots` (4,935 B gzipped with the base) and
+  // `skeleton` (4,545) past it, leaving `progress` fourth at 4,017. Sampling the old kind
+  // would let the actual worst case grow unnoticed, so it samples the largest slice now.
+  'busiest-loader': "import { bubbleRise } from '@wavelo/core/loaders/bubble-rise'; console.log(bubbleRise());",
   'two-loaders': "import { ring } from '@wavelo/core/loaders/ring'; import { skeletonCard } from '@wavelo/core/loaders/skeleton-card'; console.log(ring(), skeletonCard());",
   'core-renderer': "import { renderLoader } from '@wavelo/core'; console.log(renderLoader({ type: 'orbiting-dots' }));",
   'full-catalog': "import { loaderRegistry, renderLoader } from '@wavelo/core'; console.log(loaderRegistry.map(({ id }) => renderLoader({ type: id })));",
@@ -33,37 +35,48 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 //    from a value needed per-part state in the renderer, and that cost every design
 //    ~227 B gzipped, including a ring, which uses none of it.
 // 2. Adapters and `renderLoader` select by string at runtime, so they carry every
-//    slice, the registry and the measured option table, and grow by roughly 210-220 B
-//    gzipped per design added (13 designs: 17,013 B to 19,872 B; 18 designs: 19,011 B
-//    to 22,797 B).
+//    slice, the registry and the measured option table. The marginal cost of a design
+//    here is not one number: it is the slice delta plus a registry entry plus a row in
+//    the option table, and it is largest when the design brings a `@keyframes` module
+//    nobody had imported yet. Measured at three checkpoints — 129 designs at 24,582 B,
+//    143 at 28,678 B, 155 at 32,907 B — which is 293 B and 353 B per design for the two
+//    most recent tranches, against the 210 B the first eight-design tranche cost when
+//    every design joined an already-shipping frame. Redrawing two designs already in the
+//    catalog moved the same number by 862 B without adding either: a sixteen-stop
+//    lemniscate and an eighteen-part helix are new rules in two slices, and every runtime
+//    bundle carries every slice.
 //
 // Budgets are set from those two realities with ~12% headroom, not from a per-design
 // ideal.
-const runtime = 26 * 1024;
+const runtime = 38 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
   // reach it: 3,542 B before that change, 4,612 B after, 5,018 B with the visibility,
   // track-count and inline options, 5,482 B once the conic and neon rings joined the ring
   // slice, 5,709 B once the renderer learned to fill a design from a value, 6,237 B once
-  // the motion tranche's three ring designs joined it too. The saving lands per page
-  // instead — a default loader now carries no `style` attribute at all, where it used to
-  // carry about 180 bytes of tokens, and a loader with `loading: false` carries nothing.
+  // the motion tranche's three ring designs joined it too, and 8,440 B after the ring
+  // slice gained a clock dial, a masked gradient ring and a snake room. The saving lands
+  // per page instead — a default loader now carries no `style` attribute at all, where it
+  // used to carry about 180 bytes of tokens, and a loader with `loading: false` carries
+  // nothing.
   //
   // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
   // and are re-based deliberately when a feature adds surface: a configuration key
   // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
   // keys cost a single design 407 B and why the styling tokens cost more than that —
   // they are new rules in every slice, not new reads of existing ones.
-  'individual-loader': 7 * 1024,
-  'busiest-loader': 8.5 * 1024,
-  'two-loaders': 8.5 * 1024,
+  'individual-loader': 9.5 * 1024,
+  'busiest-loader': 10.5 * 1024,
+  'two-loaders': 13 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
-  // Angular compiles its component metadata into the bundle.
-  angular: 27 * 1024,
+  // Angular compiles its component metadata into the bundle, so it sits above the
+  // runtime budget the other five adapters share: 35,519 B measured against their
+  // 34,712 at the same design count.
+  angular: 39 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,
@@ -71,11 +84,14 @@ const budgets = {
 };
 
 // A single loader must not carry other kinds' rules or the full catalog table. The
-// busiest-loader case matters most: it is the design that pays for every skeleton in
-// its kind, so a new skeleton has to show up here rather than silently elsewhere.
+// busiest-loader case matters most: it is the design that pays for every sibling in the
+// largest slice, so a new dots design has to show up here rather than silently elsewhere.
+// Its markers are chosen from kinds the dots slice does not contain — note that
+// `wavelo-typing-dot` cannot be one of them, because `typing-dots` is itself a dots-kind
+// design and its class is a substring match inside this very slice.
 const notIn = {
   'individual-loader': ['.wavelo--skeleton-card', '.wavelo--helix', 'DNA helix', 'Circular border'],
-  'busiest-loader': ['.wavelo--ring', '.wavelo--dots', 'wavelo-typing-dot'],
+  'busiest-loader': ['.wavelo--ring', '.wavelo--skeleton-card', '.wavelo--helix', 'Circular border'],
   'two-loaders': ['.wavelo--helix', 'DNA helix']
 };
 

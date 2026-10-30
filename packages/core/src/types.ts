@@ -18,6 +18,8 @@ export interface WaveloTokens {
   '--wavelo-height'?: string | number;
   '--wavelo-color'?: string;
   '--wavelo-secondary-color'?: string;
+  '--wavelo-success-color'?: string;
+  '--wavelo-error-color'?: string;
   '--wavelo-background'?: string;
   '--wavelo-duration'?: string;
   '--wavelo-stroke'?: string | number;

@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "constellation", name: "Constellation", category: "dots", kind: "dots", description: "Five nodes brightening while two lines between them fade in and out", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "constellation" };
+const definition: LoaderDefinition = { id: "constellation", name: "Constellation", category: "dots", kind: "dots", description: "Astronomical star pattern with connecting lines (Ursa Major, Orion, Cassiopeia, Cygnus, Ursa Minor)", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "constellation" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const constellation = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -178,3 +178,61 @@ router.afterEach(() => bar.done());
 See [FRAMEWORKS.md](FRAMEWORKS.md) for the React, Vue and Angular wiring, and
 [../packages/core/README.md](../packages/core/README.md) for `set()`, `destroy()` and
 why the bar carries no label by default.
+
+## Stateful micro-interactions (`data-wavelo-state`)
+
+Loaders designed for lifecycle feedback (`success-ring`, `error-shake`, `button-confirm`) react to `data-wavelo-state="loading | success | error | idle"`. All `data-*` attributes pass through untouched:
+
+```tsx
+import { useState } from 'react';
+import { Loader } from '@wavelo/react';
+
+function SubmitButton() {
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'idle'>('loading');
+
+  return (
+    <button disabled={status === 'loading'}>
+      <Loader type="button-confirm" data-wavelo-state={status} />
+      <span>Submit</span>
+    </button>
+  );
+}
+```
+
+The success state displays `--wavelo-success-color` (default `#22c55e`), while the error state displays `--wavelo-error-color` (default `#ef4444`).
+
+## Constellation patterns (`data-wavelo-constellation`)
+
+`constellation` is the one design whose geometry comes from the page rather than the
+catalog. Five star patterns ship with it, each a block of rules in the dots slice keyed on
+the attribute. The renderer always emits seven star slots; a pattern places five or seven
+of them and hides the rest.
+
+| Value | Stars | Pattern |
+| --- | --- | --- |
+| `ursa-major` | 7 | The Big Dipper — the default, and what an unrecognised name falls back to |
+| `orion` | 7 | The Hunter: Betelgeuse tinted orange at the shoulder, Rigel blue at the foot |
+| `cassiopeia` | 5 | The Queen's W |
+| `cygnus` | 5 | The Northern Cross, on two perpendicular line segments |
+| `ursa-minor` | 7 | The Little Dipper, with Polaris as the brightest star at the handle's end |
+
+Both routes render the same sheet, so pick whichever the call site already has:
+
+```tsx
+<Loader type="constellation" data-wavelo-constellation="orion" />
+
+{/* or ask for the pattern by name and let the preset registry resolve it */}
+<Loader type="constellation-orion" />
+```
+
+```js
+import { renderLoader } from '@wavelo/core';
+
+renderLoader({ type: 'constellation', 'data-wavelo-constellation': 'cassiopeia' });
+```
+
+The attribute is validated, not forwarded blind: a value outside the five would leave the
+seven stars stacked at the box origin, so an unknown name renders `ursa-major`. The sheet
+is the same whichever pattern is asked for — the patterns are rules in one slice, so a
+page mixing constellations injects the dots slice once.
+

@@ -5,7 +5,7 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 129 designs, each visually distinct, built from 12
+The catalog holds 155 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 
@@ -137,6 +137,8 @@ overrides that one loader:
 | `--wavelo-width` / `--wavelo-height` | `width` / `height`, on the designs that are not a square | each design's own shape (a bar is `8rem` by `.5rem`) |
 | `--wavelo-color` | `color`, and everything painted through `currentColor` | `#6366f1`, or `#a5b4fc` on a dark theme |
 | `--wavelo-secondary-color` | `secondaryColor`, on the designs that layer a second colour | `#a5b4fc` |
+| `--wavelo-success-color` | the accent colour of success states (`success-ring`, `button-confirm`, etc.) | `#22c55e` |
+| `--wavelo-error-color` | the alert colour of error states (`error-shake`, `button-confirm`, etc.) | `#ef4444` |
 | `--wavelo-background` | `backgroundColor` | `transparent`; the overlay designs fall back to the scrim |
 | `--wavelo-scrim` | the translucent layer of `overlay` and `fullscreen`, normally via `theme` | `#fff`, or `#0f172a` on a dark theme |
 | `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
@@ -307,6 +309,39 @@ const CodeBlock = loaderFor('skeleton-code');
 
 The same three work through the core, where a value fills whole steps:
 `renderLoader({ type: 'progress-steps', count: 6, value: 3 })` renders step 3 of 6.
+
+### Stateful Micro-Interactions (`data-wavelo-state`)
+
+Loaders designed for state transitions (`success-ring`, `error-shake`, `button-confirm`) respond natively to `data-wavelo-state`:
+
+* `"loading"` (default): Runs the active spinner or progress animation.
+* `"success"`: Transitions into a confirmation checkmark and turns to `--wavelo-success-color`.
+* `"error"`: Triggers a vibration alert glyph and turns to `--wavelo-error-color`.
+* `"idle"`: Displays at a calm, static resting state.
+
+Because Wavelo passes all `data-*` attributes through directly to the rendered element, setting `data-wavelo-state` works uniformly across React, Vue, Svelte, Angular, Vanilla DOM, and Web Components:
+
+```tsx
+<Loader type="button-confirm" data-wavelo-state={submissionState} />
+```
+
+### Constellation patterns (`data-wavelo-constellation`)
+
+`constellation` places stars and the lines between them, and which constellation that
+is, is chosen from the page. It renders seven star slots, of which each pattern uses five
+to seven; the geometries ship in the dots slice — `ursa-major` (the default), `orion`,
+`cassiopeia`, `cygnus`, `ursa-minor` — reachable either way:
+
+```tsx
+<Loader type="constellation" data-wavelo-constellation="cygnus" />
+<Loader type="constellation-cygnus" />   {/* the same render, as a preset */}
+```
+
+The renderer always writes the attribute, so the geometry rule always matches and the
+element never depends on a stylesheet `:not()` fallback to look right. An unrecognised
+name selects no pattern — the stars would stack at the box origin — so the value is
+checked against the list and an unknown one renders `ursa-major`, the same way an unknown
+`type` renders the default design instead of nothing.
 
 Which of them a given design actually uses is measured rather than claimed.
 `npm run audit:customization` renders every design in Chromium with each key set

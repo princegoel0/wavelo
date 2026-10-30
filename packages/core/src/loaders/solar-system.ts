@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "solar-system", name: "Solar system", category: "dots", kind: "orbit", description: "Three orbits at three radii around a sun", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "solar-system" };
+const definition: LoaderDefinition = { id: "solar-system", name: "Solar system", category: "dots", kind: "orbit", description: "The Solar System with central Sun, orbital rings, and orbiting planets", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "solar-system" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const solarSystem = (config: Omit<LoaderConfig, 'type'> = {}) =>

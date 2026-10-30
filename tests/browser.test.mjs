@@ -384,13 +384,16 @@ test('every determinate design reflects its value in the browser', async () => {
   // A liquid level is a height rather than a width.
   const heights = values.map((value) => at('progress-wave-fill', value).partHeight);
   assert.ok(heights[0] < heights[1] && heights[1] < heights[2], `wave fill is not monotonic: ${heights}`);
-  // A gauge and a gradient ring each sweep half a turn, so the stop is half the value.
+  // A gauge sweeps half a turn, so the stop is half the value.
+  // A gradient ring sweeps the full circle, so its stop matches the value.
   for (const value of values) {
-    for (const id of ['progress-half-ring', 'progress-gradient-ring']) {
-      const image = at(id, value).backgroundImage;
-      assert.ok(image.includes('conic-gradient'), `${id}@${value} has no conic fill: ${image}`);
-      assert.ok(image.includes(`${value / 2}%`), `${id}@${value} does not sweep ${value / 2}% of a turn: ${image}`);
-    }
+    const halfImage = at('progress-half-ring', value).backgroundImage;
+    assert.ok(halfImage.includes('conic-gradient'), `progress-half-ring@${value} has no conic fill`);
+    assert.ok(halfImage.includes(`${value / 2}%`), `progress-half-ring@${value} does not sweep ${value / 2}% of a turn: ${halfImage}`);
+
+    const gradImage = at('progress-gradient-ring', value).backgroundImage;
+    assert.ok(gradImage.includes('conic-gradient'), `progress-gradient-ring@${value} has no conic fill`);
+    assert.ok(gradImage.includes(`${value}%`), `progress-gradient-ring@${value} does not sweep ${value}% of a turn: ${gradImage}`);
   }
   // Discrete units, counted.
   const discrete = {
@@ -543,7 +546,7 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
   const rows = await page.evaluate(() =>
     [...document.querySelectorAll('[data-key]')].map((wrap) => {
       const style = getComputedStyle(wrap.querySelector('.wavelo'));
-      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor };
+      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor, backgroundImage: style.backgroundImage, mask: `${style.maskImage} ${style.webkitMaskImage}` };
     })
   );
   const at = (key) => rows.find((row) => row.key === key);
@@ -551,7 +554,8 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
   assert.equal(at('ring').color, 'rgb(99, 102, 241)', 'the documented default colour must paint without configuration');
   assert.equal(at('explicit').color, 'rgb(18, 52, 86)', 'an explicit colour must win');
   assert.equal(at('inherited').color, 'rgb(0, 255, 0)', 'a page-level --wavelo-color must still override the default');
-  assert.match(at('gradient-ring').borderImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.match(at('gradient-ring').backgroundImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.match(at('gradient-ring').mask, /radial-gradient/, 'and carve it into a ring, because border-image ignores border-radius');
   assert.notEqual(at('overlay').background, 'rgba(0, 0, 0, 0)', 'the section overlay must have a scrim');
 });
 
@@ -581,7 +585,7 @@ test('every design paints something visible', async () => {
   }
 });
 
-test('no design has two parts sharing a box while it animates', async () => {
+test('no design has parts stacked on one another or squeezed out of round', async () => {
   // Four designs rendered a single blob for exactly one reason: a keyframe that animates
   // `transform` replaces the static transform that placed the part, so parts authored at
   // four angles or six heights arrived on top of one another. A computed-style signature
@@ -610,6 +614,14 @@ test('no design has two parts sharing a box while it animates', async () => {
           }
         }
         const boxes = parts.map((part) => part.getBoundingClientRect());
+        // A part rounded by border-radius:50% is only a dot if its box is square. These
+        // are flex items, so any row whose parts overflow the loader gets squeezed
+        // sideways and draws an ellipse while still being called a dot.
+        for (const [index, box] of boxes.entries()) {
+          const round = getComputedStyle(parts[index]).borderTopLeftRadius.endsWith('%');
+          if (round && box.width > 1 && Math.abs(box.width / box.height - 1) > 0.06)
+            out.push(`${wrap.dataset.design} part ${index + 1} is ${box.width.toFixed(1)}x${box.height.toFixed(1)}`);
+        }
         for (let i = 0; i < boxes.length; i++)
           for (let j = i + 1; j < boxes.length; j++)
             if (Math.hypot(boxes[i].x - boxes[j].x, boxes[i].y - boxes[j].y) < 0.6 && Math.abs(boxes[i].width - boxes[j].width) < 0.6)
@@ -655,13 +667,15 @@ test('each design renders what its name says', async () => {
     'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
-    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse',
+    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse', 'rotating-square', 'rotating-diamond',
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
     'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
     'progress-skill', 'progress-timer', 'progress-orbit-fill',
     'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
     'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
-    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing'
+    'orbiting-dots', 'orbiting-circles',
+    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing',
+    'dot-wave'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
     .join('');
@@ -744,7 +758,7 @@ test('each design renders what its name says', async () => {
   assert.equal(at('segmented-ring').borderStyle, 'dashed');
   assert.equal(at('segmented-ring').sides, 4, 'a segmented ring is a complete dashed circle');
   assert.match(at('monochrome').backgroundImage, /conic-gradient/, 'monochrome must be a half-filled disc');
-  assert.match(at('gradient-ring').borderImage ?? '', /linear-gradient/);
+  assert.match(at('gradient-ring').backgroundImage ?? '', /linear-gradient/);
 
   // Layered arcs: the element plus both pseudo-elements, at three insets.
   const multi = at('multi-arc');
@@ -866,9 +880,19 @@ test('each design renders what its name says', async () => {
   assert.ok(Number.parseFloat(at('ellipse').boxWidth) > Number.parseFloat(at('ellipse').boxHeight), 'an ellipse is wider than it is tall');
   assert.equal(at('ellipse').sides, 4, 'a closed hoop, not an arc with a gap taken out of it');
   assert.equal(at('ellipse').animation, 'wavelo-ellipse', 'it turns about its own axis; spinning flat leaves a uniform ring looking still');
-  assert.equal(at('snake').animation, 'wavelo-snake');
-  assert.equal(at('snake').sides, 2, 'a snake is a short arc, not a full ring');
+  assert.equal(at('rotating-square').animation, 'wavelo-square', 'the kind default morphs to a circle, which is not a rotating square');
+  assert.ok(Number.parseFloat(at('rotating-square').radius) < 15, 'a square keeps its corners; the kind default is 20% and its morph reaches 50%, i.e. a circle');
+  assert.equal(at('rotating-diamond').animation, 'wavelo-diamond');
+  assert.equal(at('gradient-ring').borderImage, 'none', 'border-image is not clipped by border-radius, so it drew a square, not a ring');
+  assert.match(at('gradient-ring').mask, /radial-gradient/, 'the ring is carved from a gradient fill by a radial mask');
+  assert.equal(at('comet-orbit').animation, 'wavelo-spin', 'the root turns, so the tail and its head cannot drift apart');
+  assert.equal(at('comet-orbit').partAnimations.join(','), 'none', 'the dot rides the tail rather than orbiting on its own');
+  assert.equal(at('snake').sides, 4, 'the room is closed on all four sides');
+  assert.equal(at('snake').animation, 'none', 'the room holds still; the body moves inside it');
+  assert.equal(at('snake').parts, 5, 'a head and four body segments');
+  assert.deepEqual(at('snake').partAnimations, ['wavelo-snake'], 'every segment runs the same path');
   assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');
+  assert.ok(Number.parseFloat(at('clock-spinner').borderWidth) > 0, 'hands need a dial to be a clock');
   assert.equal(at('clock-spinner').after.animation, 'wavelo-spin', 'the hour hand must turn');
   assert.notEqual(at('clock-spinner').before.duration, at('clock-spinner').after.duration, 'both hands turn at the same rate, so it is not a clock');
   assert.match(at('sand-timer').clipPath, /polygon/, 'an hourglass is a clipped silhouette');
@@ -889,19 +913,27 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('magnetic-dots').partAnimations, ['wavelo-magnet']);
   assert.equal(at('pendulum').parts, 1, 'one bob, not a row');
   assert.deepEqual(at('pendulum').partAnimations, ['wavelo-pendulum']);
-  assert.equal(at('constellation').parts, 5);
+  assert.equal(at('constellation').parts, 7);
   assert.ok(at('constellation').before && at('constellation').after, 'a constellation must draw its connecting lines');
   assert.equal(at('constellation').before.animation, 'wavelo-constellation-line');
   assert.deepEqual(at('constellation').partAnimations, ['wavelo-constellation']);
   assert.deepEqual(at('bubble-rise').partAnimations, ['wavelo-bubble']);
-  assert.equal(new Set(at('bubble-rise').partDelays).size, 5, 'bubbles must leave at different times');
-  assert.equal(at('fireflies').parts, 6);
+  assert.equal(new Set(at('bubble-rise').partDelays).size, 8, 'bubbles must leave at different times');
+  assert.equal(at('fireflies').parts, 10);
   assert.deepEqual(at('fireflies').partAnimations, ['wavelo-firefly']);
-  assert.equal(new Set(at('fireflies').partDelays).size, 6, 'six motes on six different paths');
-  assert.equal(at('solar-system').parts, 3);
+  assert.equal(new Set(at('fireflies').partDelays).size, 10, 'ten motes on different paths');
+  assert.equal(at('solar-system').parts, 5);
   assert.ok(at('solar-system').before, 'a solar system needs its sun');
   assert.deepEqual(at('solar-system').partAnimations, ['wavelo-orbit-ring']);
-  assert.equal(new Set(at('solar-system').partDurations).size, 3, 'three orbits must take three different periods');
+  assert.equal(new Set(at('solar-system').partDurations).size, 5, 'five planetary orbits must take five different periods');
+  assert.equal(at('orbiting-dots').parts, 5, 'orbiting-dots renders 5 stations');
+  assert.ok(at('orbiting-dots').before, 'orbiting-dots has a central reference anchor');
+  assert.deepEqual(at('orbiting-dots').partAnimations, ['wavelo-orbit']);
+  assert.equal(new Set(at('orbiting-dots').partDelays).size, 1, 'orbiting-dots shares one timeline without delay collisions');
+  assert.equal(at('orbiting-circles').parts, 5, 'orbiting-circles renders 5 stations');
+  assert.ok(at('orbiting-circles').before, 'orbiting-circles has a central reference anchor');
+  assert.deepEqual(at('orbiting-circles').partAnimations, ['wavelo-orbit']);
+  assert.equal(new Set(at('orbiting-circles').partDelays).size, 1, 'orbiting-circles shares one timeline without delay collisions');
   assert.equal(at('signal-bars').parts, 4, 'signal bars are four steps');
   assert.deepEqual(at('signal-bars').partAnimations, ['wavelo-signal']);
   const signalHeights = at('signal-bars').partHeights.map((value) => Number.parseFloat(value));
@@ -917,6 +949,10 @@ test('each design renders what its name says', async () => {
   assert.equal(at('heartbeat').before.animation, 'wavelo-heart');
   assert.equal(at('breathing').parts, 1, 'one bar, breathing');
   assert.deepEqual(at('breathing').partAnimations, ['wavelo-breathe']);
+  assert.equal(at('dot-wave').parts, 5, 'dot-wave is five dots');
+  assert.equal(at('dot-wave').partRadius, '50%', 'dot-wave renders circular dots');
+  assert.deepEqual(at('dot-wave').partAnimations, ['wavelo-dot-wave']);
+  assert.equal(new Set(at('dot-wave').partDelays).size, 5, 'five dots staggered along the wave');
 });
 
 test('no two designs in the catalog render identically', async () => {
@@ -1507,4 +1543,180 @@ test('tokens.css declares the defaults without changing any design', async () =>
   const colorOf = (row) => /color:([^;]*)/.exec(row)[1];
   assert.equal(colorOf(themed[ids.indexOf('ring')]), 'rgb(18, 52, 86)', 'a :root token override must reach an unconfigured loader');
   assert.notEqual(colorOf(plain[ids.indexOf('ring')]), 'rgb(18, 52, 86)');
+});
+
+test('specialized skeletons and micro-interactions render distinct geometry and react to data-wavelo-state', async () => {
+  const specializedSkeletons = [
+    'skeleton-product-card',
+    'skeleton-product-page',
+    'skeleton-cart',
+    'skeleton-review',
+    'skeleton-chart-bar',
+    'skeleton-chart-line',
+    'skeleton-chart-donut',
+    'skeleton-data-table',
+    'skeleton-kanban',
+    'skeleton-timeline',
+    'skeleton-calendar'
+  ];
+
+  const body = specializedSkeletons
+    .map((id) => `<div data-skeleton="${id}">${renderLoader({ type: id }).html}</div>`)
+    .join('');
+  await setContentPage(body);
+  await nextFrame();
+
+  const partsCounts = await page.evaluate(() => {
+    return Object.fromEntries(
+      [...document.querySelectorAll('[data-skeleton]')].map((wrap) => {
+        const id = wrap.dataset.skeleton;
+        const parts = wrap.querySelectorAll('.wavelo__part');
+        return [id, parts.length];
+      })
+    );
+  });
+
+  assert.equal(partsCounts['skeleton-product-card'], 4);
+  assert.equal(partsCounts['skeleton-product-page'], 5);
+  assert.equal(partsCounts['skeleton-cart'], 4);
+  assert.equal(partsCounts['skeleton-review'], 4);
+  assert.equal(partsCounts['skeleton-chart-bar'], 5);
+  assert.equal(partsCounts['skeleton-chart-line'], 4);
+  assert.equal(partsCounts['skeleton-chart-donut'], 3);
+  assert.equal(partsCounts['skeleton-data-table'], 6);
+  assert.equal(partsCounts['skeleton-kanban'], 6);
+  assert.equal(partsCounts['skeleton-timeline'], 4);
+  assert.equal(partsCounts['skeleton-calendar'], 7);
+
+  // Micro-interactions state tests
+  const microBody = [
+    `<div id="ring-loading">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="ring-success">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="shake-loading">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="shake-error">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="button-loading">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="button-success">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="offline-loading">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="offline-success">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="offline-error">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="save-loading">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="save-success">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="save-error">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="undo-loading">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="undo-success">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="undo-error">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'error' }).html}</div>`
+  ].join('');
+
+  await setContentPage(microBody);
+  await nextFrame();
+
+  const states = await page.evaluate(() => {
+    const ringLoadingAnim = getComputedStyle(document.querySelector('#ring-loading .wavelo')).animationName;
+    const ringSuccessAnim = getComputedStyle(document.querySelector('#ring-success .wavelo')).animationName;
+    const ringSuccessColor = getComputedStyle(document.querySelector('#ring-success .wavelo')).borderColor;
+
+    const shakeLoadingColor = getComputedStyle(document.querySelector('#shake-loading .wavelo')).backgroundColor;
+    const shakeErrorColor = getComputedStyle(document.querySelector('#shake-error .wavelo')).backgroundColor;
+
+    const buttonLoadingParts = document.querySelector('#button-loading .wavelo__part');
+    const buttonSuccessParts = document.querySelector('#button-success .wavelo__part');
+    const buttonSuccessDisplay = getComputedStyle(buttonSuccessParts).display;
+
+    const offlineLoadingPartAnim = getComputedStyle(document.querySelector('#offline-loading .wavelo__part')).animationName;
+    const offlineSuccessPartAnim = getComputedStyle(document.querySelector('#offline-success .wavelo__part')).animationName;
+    const offlineSuccessColor = getComputedStyle(document.querySelector('#offline-success .wavelo__part')).backgroundColor;
+    const offlineErrorColor = getComputedStyle(document.querySelector('#offline-error .wavelo__part')).backgroundColor;
+
+    const saveLoadingAnim = getComputedStyle(document.querySelector('#save-loading .wavelo')).animationName;
+    const saveSuccessAnim = getComputedStyle(document.querySelector('#save-success .wavelo')).animationName;
+    const saveSuccessColor = getComputedStyle(document.querySelector('#save-success .wavelo')).borderColor;
+    const saveErrorColor = getComputedStyle(document.querySelector('#save-error .wavelo')).borderColor;
+
+    const undoLoadingPartAnim = getComputedStyle(document.querySelector('#undo-loading .wavelo__part')).animationName;
+    const undoSuccessColor = getComputedStyle(document.querySelector('#undo-success .wavelo__part')).backgroundColor;
+    const undoErrorColor = getComputedStyle(document.querySelector('#undo-error .wavelo__part')).backgroundColor;
+
+    return {
+      ringLoadingAnim,
+      ringSuccessAnim,
+      ringSuccessColor,
+      shakeLoadingColor,
+      shakeErrorColor,
+      buttonSuccessDisplay,
+      offlineLoadingPartAnim,
+      offlineSuccessPartAnim,
+      offlineSuccessColor,
+      offlineErrorColor,
+      saveLoadingAnim,
+      saveSuccessAnim,
+      saveSuccessColor,
+      saveErrorColor,
+      undoLoadingPartAnim,
+      undoSuccessColor,
+      undoErrorColor
+    };
+  });
+
+  assert.equal(states.ringLoadingAnim, 'wavelo-spin');
+  assert.equal(states.ringSuccessAnim, 'none');
+  assert.equal(states.ringSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.shakeErrorColor, 'rgb(239, 68, 68)');
+  assert.equal(states.buttonSuccessDisplay, 'none');
+
+  assert.equal(states.offlineLoadingPartAnim, 'wavelo-pulse');
+  assert.equal(states.offlineSuccessPartAnim, 'none');
+  assert.equal(states.offlineSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.offlineErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.saveLoadingAnim, 'wavelo-spin');
+  assert.equal(states.saveSuccessAnim, 'none');
+  assert.equal(states.saveSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.saveErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.undoLoadingPartAnim, 'wavelo-drain');
+  assert.equal(states.undoSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.undoErrorColor, 'rgb(239, 68, 68)');
+});
+
+test('constellations render distinct astronomical star maps and connecting lines', async () => {
+  const constellations = ['ursa-major', 'orion', 'cassiopeia', 'cygnus', 'ursa-minor'];
+  const html = constellations
+    .map((name) => `<div id="c-${name}">${renderLoader({ type: `constellation-${name}`, label: name }).html}</div>`)
+    .join('');
+
+  await setContentPage(html);
+
+  const results = await page.evaluate(() => {
+    const names = ['ursa-major', 'orion', 'cassiopeia', 'cygnus', 'ursa-minor'];
+    return names.map((name) => {
+      const el = document.querySelector(`#c-${name} .wavelo`);
+      const before = getComputedStyle(el, '::before');
+      const parts = Array.from(el.querySelectorAll('.wavelo__part'));
+      const visibleParts = parts.filter((p) => getComputedStyle(p).display !== 'none');
+      const firstStarLeft = getComputedStyle(parts[0]).left;
+      return {
+        name,
+        attr: el.getAttribute('data-wavelo-constellation'),
+        totalParts: parts.length,
+        visibleParts: visibleParts.length,
+        hasBeforeClip: before.clipPath !== 'none' && before.clipPath !== '',
+        firstStarLeft
+      };
+    });
+  });
+
+  assert.equal(results.length, 5);
+  for (const r of results) {
+    assert.equal(r.attr, r.name);
+    assert.equal(r.totalParts, 7);
+    assert.ok(r.hasBeforeClip, `${r.name} must have a clip-path for connecting lines`);
+  }
+  assert.equal(results.find((r) => r.name === 'ursa-major').visibleParts, 7);
+  assert.equal(results.find((r) => r.name === 'orion').visibleParts, 7);
+  assert.equal(results.find((r) => r.name === 'cassiopeia').visibleParts, 5);
+  assert.equal(results.find((r) => r.name === 'cygnus').visibleParts, 5);
+  assert.equal(results.find((r) => r.name === 'ursa-minor').visibleParts, 7);
+
+  const firstStarPositions = new Set(results.map((r) => r.firstStarLeft));
+  assert.ok(firstStarPositions.size >= 4, 'Constellations must have unique star placements');
 });

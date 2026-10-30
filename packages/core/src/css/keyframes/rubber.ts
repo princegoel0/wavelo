@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-rubber{0%,100%{transform:scale(1,1)}28%{transform:scale(1.22,.78)}52%{transform:scale(.82,1.18)}76%{transform:scale(1.08,.92)}}`;
+export const css = `@keyframes wavelo-rubber{0%{transform:scale(1,1)}14%{transform:scale(.68,1.38)}30%{transform:scale(1.3,.72)}44%{transform:scale(.86,1.14)}58%{transform:scale(1.1,.92)}70%{transform:scale(.97,1.03)}80%,100%{transform:scale(1,1)}}`;

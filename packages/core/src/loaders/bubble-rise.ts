@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "bubble-rise", name: "Bubble rise", category: "dots", kind: "dots", description: "Bubbles rising, growing and fading out before the top", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "bubble-rise" };
+const definition: LoaderDefinition = { id: "bubble-rise", name: "Bubble rise", category: "dots", kind: "dots", description: "Eight bubbles rising, growing and floating upward at varying speeds", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "bubble-rise" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const bubbleRise = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "snake", name: "Snake", category: "spinner", kind: "ring", description: "A short arc chasing its own tail around the circle", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "snake" };
+const definition: LoaderDefinition = { id: "snake", name: "Snake", category: "spinner", kind: "ring", description: "A segmented snake chasing its tail around the walls of a room", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "snake" };
 const styles = `${baseCss}${ringCss}`;
 
 export const snake = (config: Omit<LoaderConfig, 'type'> = {}) =>

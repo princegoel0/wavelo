@@ -62,4 +62,111 @@ export const skeletonCss = `
 .wavelo--skeleton-metric .wavelo__part:nth-child(1){width:56%;height:32px}
 .wavelo--skeleton-metric .wavelo__part:nth-child(2){width:78%;height:12px}
 .wavelo--skeleton-metric .wavelo__part:nth-child(3){width:26%;height:12px;border-radius:999px}
+/* Specialized Skeletons: E-Commerce, Analytics & Dashboards, SaaS & Productivity */
+.wavelo--skeleton-product-card,.wavelo--skeleton-product-page,.wavelo--skeleton-cart,.wavelo--skeleton-review,.wavelo--skeleton-chart-bar,.wavelo--skeleton-chart-line,.wavelo--skeleton-chart-donut,.wavelo--skeleton-data-table,.wavelo--skeleton-kanban,.wavelo--skeleton-timeline,.wavelo--skeleton-calendar,.wavelo--skeleton-sidebar,.wavelo--skeleton-notification,.wavelo--skeleton-command,.wavelo--skeleton-feed,.wavelo--skeleton-filter-panel,.wavelo--skeleton-map,.wavelo--page-skeleton{background:transparent;animation:none;padding:8px}
+.wavelo--skeleton-product-card .wavelo__part,.wavelo--skeleton-product-page .wavelo__part,.wavelo--skeleton-cart .wavelo__part,.wavelo--skeleton-review .wavelo__part,.wavelo--skeleton-chart-bar .wavelo__part,.wavelo--skeleton-chart-line .wavelo__part,.wavelo--skeleton-chart-donut .wavelo__part,.wavelo--skeleton-data-table .wavelo__part,.wavelo--skeleton-kanban .wavelo__part,.wavelo--skeleton-timeline .wavelo__part,.wavelo--skeleton-calendar .wavelo__part,.wavelo--skeleton-sidebar .wavelo__part,.wavelo--skeleton-notification .wavelo__part,.wavelo--skeleton-command .wavelo__part,.wavelo--skeleton-feed .wavelo__part,.wavelo--skeleton-filter-panel .wavelo__part,.wavelo--skeleton-map .wavelo__part,.wavelo--page-skeleton .wavelo__part{display:block;border-radius:var(--wavelo-radius,4px);background:linear-gradient(90deg,var(--wavelo-skeleton-base),var(--wavelo-skeleton-highlight),var(--wavelo-skeleton-base));background-size:200% 100%;animation:wavelo-shimmer var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--skeleton-product-card.wavelo-inline,.wavelo--skeleton-product-page.wavelo-inline,.wavelo--skeleton-cart.wavelo-inline,.wavelo--skeleton-review.wavelo-inline,.wavelo--skeleton-chart-line.wavelo-inline,.wavelo--skeleton-chart-donut.wavelo-inline,.wavelo--skeleton-data-table.wavelo-inline,.wavelo--skeleton-kanban.wavelo-inline,.wavelo--skeleton-timeline.wavelo-inline,.wavelo--skeleton-calendar.wavelo-inline,.wavelo--skeleton-sidebar.wavelo-inline,.wavelo--skeleton-notification.wavelo-inline,.wavelo--skeleton-command.wavelo-inline,.wavelo--skeleton-feed.wavelo-inline,.wavelo--skeleton-filter-panel.wavelo-inline,.wavelo--page-skeleton.wavelo-inline{display:inline-grid}
+.wavelo--skeleton-map.wavelo-inline{display:inline-block}
+.wavelo--skeleton-chart-bar.wavelo-inline{display:inline-flex}
+.wavelo--skeleton-product-card{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,10rem));height:auto}
+.wavelo--skeleton-product-card .wavelo__part:nth-child(1){width:100%;height:64px;border-radius:var(--wavelo-radius,6px)}
+.wavelo--skeleton-product-card .wavelo__part:nth-child(2){width:88%;height:10px}
+.wavelo--skeleton-product-card .wavelo__part:nth-child(3){width:45%;height:10px}
+.wavelo--skeleton-product-card .wavelo__part:nth-child(4){width:100%;height:22px;border-radius:var(--wavelo-radius,4px);margin-top:2px}
+.wavelo--skeleton-product-page{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--wavelo-gap,8px);width:var(--wavelo-width,var(--wavelo-size,16rem));height:auto}
+.wavelo--skeleton-product-page .wavelo__part:nth-child(1){grid-row:span 4;width:100%;height:100%;min-height:80px;border-radius:var(--wavelo-radius,6px)}
+.wavelo--skeleton-product-page .wavelo__part:nth-child(2){width:50%;height:8px}
+.wavelo--skeleton-product-page .wavelo__part:nth-child(3){width:92%;height:14px}
+.wavelo--skeleton-product-page .wavelo__part:nth-child(4){width:60%;height:10px}
+.wavelo--skeleton-product-page .wavelo__part:nth-child(5){width:100%;height:24px;border-radius:var(--wavelo-radius,4px)}
+.wavelo--skeleton-cart{display:grid;grid-template-columns:44px minmax(0,1fr) 36px;gap:var(--wavelo-gap,6px) 8px;align-items:center;width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-cart .wavelo__part:nth-child(1){grid-row:span 2;width:44px;height:44px;border-radius:var(--wavelo-radius,4px)}
+.wavelo--skeleton-cart .wavelo__part:nth-child(2){grid-column:2;width:82%;height:10px}
+.wavelo--skeleton-cart .wavelo__part:nth-child(3){grid-column:2;width:48%;height:14px;border-radius:999px}
+.wavelo--skeleton-cart .wavelo__part:nth-child(4){grid-row:span 2;grid-column:3;width:100%;height:12px}
+.wavelo--skeleton-review{display:grid;grid-template-columns:36px minmax(0,1fr);gap:var(--wavelo-gap,6px) 8px;align-items:center;width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-review .wavelo__part:nth-child(1){width:36px;height:36px;border-radius:50%}
+.wavelo--skeleton-review .wavelo__part:nth-child(2){width:65%;height:10px}
+.wavelo--skeleton-review .wavelo__part:nth-child(3){grid-column:span 2;width:100%;height:9px}
+.wavelo--skeleton-review .wavelo__part:nth-child(4){grid-column:span 2;width:72%;height:9px}
+.wavelo--skeleton-chart-bar{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,11rem));height:var(--wavelo-height,var(--wavelo-size,5rem))}
+.wavelo--skeleton-chart-bar .wavelo__part{flex:1;border-radius:var(--wavelo-radius,3px) var(--wavelo-radius,3px) 0 0}
+.wavelo--skeleton-chart-bar .wavelo__part:nth-child(1){height:40%}
+.wavelo--skeleton-chart-bar .wavelo__part:nth-child(2){height:75%}
+.wavelo--skeleton-chart-bar .wavelo__part:nth-child(3){height:30%}
+.wavelo--skeleton-chart-bar .wavelo__part:nth-child(4){height:90%}
+.wavelo--skeleton-chart-bar .wavelo__part:nth-child(5){height:55%}
+.wavelo--skeleton-chart-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,11rem));height:var(--wavelo-height,var(--wavelo-size,5rem));position:relative}
+.wavelo--skeleton-chart-line:before{content:"";position:absolute;left:8px;right:8px;bottom:8px;height:1px;background:var(--wavelo-skeleton-base)}
+.wavelo--skeleton-chart-line .wavelo__part{height:4px;border-radius:2px;transform-origin:bottom left}
+.wavelo--skeleton-chart-line .wavelo__part:nth-child(1){margin-bottom:12px;transform:rotate(-18deg)}
+.wavelo--skeleton-chart-line .wavelo__part:nth-child(2){margin-bottom:28px;transform:rotate(12deg)}
+.wavelo--skeleton-chart-line .wavelo__part:nth-child(3){margin-bottom:18px;transform:rotate(-22deg)}
+.wavelo--skeleton-chart-line .wavelo__part:nth-child(4){margin-bottom:34px;transform:rotate(8deg)}
+.wavelo--skeleton-chart-donut{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:var(--wavelo-gap,10px);width:var(--wavelo-width,var(--wavelo-size,11rem));height:var(--wavelo-height,var(--wavelo-size,4.5rem))}
+.wavelo--skeleton-chart-donut .wavelo__part:nth-child(1){width:52px;height:52px;border-radius:50%;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px));mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px))}
+.wavelo--skeleton-chart-donut .wavelo__part:nth-child(2){width:85%;height:10px}
+.wavelo--skeleton-chart-donut .wavelo__part:nth-child(3){width:60%;height:10px}
+.wavelo--skeleton-data-table{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(1){width:100%;height:14px;border-radius:var(--wavelo-radius,4px)}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(2){width:94%;height:8px}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(3){width:78%;height:8px}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(4){width:88%;height:8px}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(5){width:82%;height:8px}
+.wavelo--skeleton-data-table .wavelo__part:nth-child(6){width:36%;height:10px;justify-self:end;border-radius:999px}
+.wavelo--skeleton-kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(1){height:32px}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(2){height:22px}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(3){height:44px}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(4){height:26px}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(5){height:36px}
+.wavelo--skeleton-kanban .wavelo__part:nth-child(6){height:18px}
+.wavelo--skeleton-timeline{display:grid;grid-template-columns:14px minmax(0,1fr);gap:var(--wavelo-gap,8px) 10px;align-items:center;width:var(--wavelo-width,var(--wavelo-size,12rem));position:relative}
+.wavelo--skeleton-timeline:before{content:"";position:absolute;top:10px;bottom:10px;left:14px;width:2px;background:var(--wavelo-skeleton-base)}
+.wavelo--skeleton-timeline .wavelo__part:nth-child(odd){width:14px;height:14px;border-radius:50%}
+.wavelo--skeleton-timeline .wavelo__part:nth-child(even){width:84%;height:11px}
+.wavelo--skeleton-timeline .wavelo__part:nth-child(4){width:62%}
+.wavelo--skeleton-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--wavelo-gap,4px);width:var(--wavelo-width,var(--wavelo-size,13rem));height:auto}
+.wavelo--skeleton-calendar .wavelo__part{height:24px;border-radius:var(--wavelo-radius,3px)}
+.wavelo--skeleton-calendar .wavelo__part:nth-child(3){border-radius:50%}
+.wavelo--skeleton-sidebar{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,8px);width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,var(--wavelo-size,12rem));align-content:space-between}
+.wavelo--skeleton-sidebar .wavelo__part:nth-child(1){width:45%;height:22px;border-radius:var(--wavelo-radius,4px);margin-bottom:6px}
+.wavelo--skeleton-sidebar .wavelo__part:nth-child(2){width:90%;height:12px}
+.wavelo--skeleton-sidebar .wavelo__part:nth-child(3){width:80%;height:12px}
+.wavelo--skeleton-sidebar .wavelo__part:nth-child(4){width:85%;height:12px}
+.wavelo--skeleton-sidebar .wavelo__part:nth-child(5){width:100%;height:28px;border-radius:var(--wavelo-radius,6px);margin-top:10px}
+.wavelo--skeleton-notification{display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--wavelo-gap,6px) 10px;align-items:center;width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-notification .wavelo__part:nth-child(1){grid-row:span 2;width:32px;height:32px;border-radius:50%;align-self:start}
+.wavelo--skeleton-notification .wavelo__part:nth-child(2){width:65%;height:12px}
+.wavelo--skeleton-notification .wavelo__part:nth-child(3){grid-column:2;width:95%;height:9px}
+.wavelo--skeleton-notification .wavelo__part:nth-child(4){grid-column:span 2;width:80%;height:9px}
+.wavelo--skeleton-command{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto;border:1px solid var(--wavelo-skeleton-base);border-radius:var(--wavelo-radius,8px)}
+.wavelo--skeleton-command .wavelo__part:nth-child(1){width:100%;height:26px;border-radius:var(--wavelo-radius,4px);margin-bottom:4px}
+.wavelo--skeleton-command .wavelo__part:nth-child(2){width:88%;height:12px}
+.wavelo--skeleton-command .wavelo__part:nth-child(3){width:72%;height:12px}
+.wavelo--skeleton-command .wavelo__part:nth-child(4){width:94%;height:12px}
+.wavelo--skeleton-command .wavelo__part:nth-child(5){width:60%;height:12px}
+.wavelo--skeleton-feed{display:grid;grid-template-columns:36px minmax(0,1fr);gap:var(--wavelo-gap,6px) 10px;align-items:center;width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto}
+.wavelo--skeleton-feed .wavelo__part:nth-child(1){width:36px;height:36px;border-radius:50%}
+.wavelo--skeleton-feed .wavelo__part:nth-child(2){width:55%;height:12px}
+.wavelo--skeleton-feed .wavelo__part:nth-child(3){grid-column:span 2;width:96%;height:10px}
+.wavelo--skeleton-feed .wavelo__part:nth-child(4){grid-column:span 2;width:100%;height:64px;border-radius:var(--wavelo-radius,6px)}
+.wavelo--skeleton-feed .wavelo__part:nth-child(5){grid-column:span 2;width:45%;height:12px;border-radius:999px}
+.wavelo--skeleton-filter-panel{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,8px);width:var(--wavelo-width,var(--wavelo-size,11rem));height:auto}
+.wavelo--skeleton-filter-panel .wavelo__part:nth-child(1){width:50%;height:14px}
+.wavelo--skeleton-filter-panel .wavelo__part:nth-child(2){width:88%;height:18px;border-radius:999px}
+.wavelo--skeleton-filter-panel .wavelo__part:nth-child(3){width:78%;height:11px}
+.wavelo--skeleton-filter-panel .wavelo__part:nth-child(4){width:65%;height:11px}
+.wavelo--skeleton-filter-panel .wavelo__part:nth-child(5){width:100%;height:8px;border-radius:4px;margin-top:4px}
+.wavelo--skeleton-map{display:block;position:relative;width:var(--wavelo-width,var(--wavelo-size,14rem));height:var(--wavelo-height,var(--wavelo-size,8rem));border-radius:var(--wavelo-radius,8px);overflow:hidden}
+.wavelo--skeleton-map .wavelo__part:nth-child(1){width:100%;height:100%;border-radius:var(--wavelo-radius,6px)}
+.wavelo--skeleton-map .wavelo__part:nth-child(2){position:absolute;left:35%;top:30%;width:16px;height:16px;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.wavelo--skeleton-map .wavelo__part:nth-child(3){position:absolute;left:68%;top:55%;width:14px;height:14px;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.wavelo--skeleton-map .wavelo__part:nth-child(4){position:absolute;right:14px;top:14px;width:16px;height:32px;border-radius:var(--wavelo-radius,4px)}
+.wavelo--page-skeleton{display:grid;grid-template-columns:28% minmax(0,1fr);grid-template-rows:22px repeat(2,minmax(0,1fr));gap:var(--wavelo-gap,8px);width:var(--wavelo-width,var(--wavelo-size,16rem));height:var(--wavelo-height,var(--wavelo-size,10rem))}
+.wavelo--page-skeleton .wavelo__part:nth-child(1){grid-column:span 2;width:100%;height:22px}
+.wavelo--page-skeleton .wavelo__part:nth-child(2){grid-row:span 2;width:100%;height:100%;min-height:60px}
+.wavelo--page-skeleton .wavelo__part:nth-child(3){width:85%;height:16px;margin-top:2px}
+.wavelo--page-skeleton .wavelo__part:nth-child(4){width:95%;height:26px}
+.wavelo--page-skeleton .wavelo__part:nth-child(5){width:70%;height:22px}
 ${shimmerFrames}${responseShimmerFrames}${chatTypingFrames}`;

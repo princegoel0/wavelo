@@ -1,11 +1,12 @@
 import { css as uploadFrames } from '../keyframes/upload.js';
 import { css as transitionFrames } from '../keyframes/transition.js';
 import { css as waveRollFrames } from '../keyframes/wave-roll.js';
+import { css as drainFrames } from '../keyframes/drain.js';
 
 export const progressCss = `
 .wavelo--progress{width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);overflow:hidden;border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 18%,transparent)}
 .wavelo--progress .wavelo__part{height:100%;width:var(--wavelo-progress,35%);border-radius:inherit;transition:width .2s ease}
-.wavelo--progress-ring{width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);overflow:visible;border:var(--wavelo-stroke,3px) solid color-mix(in srgb,currentColor 18%,transparent);border-radius:50%;background:conic-gradient(currentColor var(--wavelo-progress,35%),color-mix(in srgb,currentColor 18%,transparent) 0);animation:none}
+.wavelo--progress-ring{width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);overflow:visible;border:0;border-radius:50%;background:conic-gradient(currentColor var(--wavelo-progress,35%),color-mix(in srgb,currentColor 18%,transparent) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:none}
 .wavelo--progress-ring .wavelo__part{display:none}
 .wavelo--progress-steps{width:var(--wavelo-width,var(--wavelo-size,8rem));gap:var(--wavelo-gap,3px);border-radius:var(--wavelo-radius,3px);background:transparent}
 .wavelo--progress-steps .wavelo__part{flex:1 1 0;width:auto;height:100%;margin:0;border-radius:var(--wavelo-radius,2px);background:color-mix(in srgb,currentColor 18%,transparent);transition:none}
@@ -45,9 +46,8 @@ export const progressCss = `
    element is given as aria-valuetext, so the label and the announcement cannot drift. */
 .wavelo--progress-label-inline{overflow:visible}
 .wavelo--progress-label-inline:after{content:attr(data-wavelo-value-text);position:absolute;left:var(--wavelo-progress,35%);bottom:calc(100% + 4px);padding:0 2px;font:inherit;font-variant-numeric:tabular-nums;color:currentColor;white-space:nowrap;transform:translateX(-50%)}
-/* A ring whose filled arc is a gradient rather than a flat colour, masked to a band.
-   Half the progress, because the sweep covers a full turn. */
-.wavelo--progress-gradient-ring{overflow:visible;width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);border:0;border-radius:50%;background:conic-gradient(from 0deg,var(--wavelo-secondary-color,#a5b4fc),currentColor calc(var(--wavelo-progress,35%) / 2),color-mix(in srgb,currentColor 15%,transparent) calc(var(--wavelo-progress,35%) / 2));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)))}
+/* A ring whose filled arc is a gradient rather than a flat colour, masked to a band. */
+.wavelo--progress-gradient-ring{overflow:visible;width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);border:0;border-radius:50%;background:conic-gradient(from 0deg,var(--wavelo-secondary-color,#a5b4fc),currentColor var(--wavelo-progress,35%),color-mix(in srgb,currentColor 15%,transparent) var(--wavelo-progress,35%));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)))}
 .wavelo--progress-gradient-ring .wavelo__part{display:none}
 /* Steps that number themselves. The counter increments per part, so the numbers are the
    renderer's part count rather than a string the caller keeps in step with it — and a
@@ -68,15 +68,23 @@ export const progressCss = `
 /* Time remaining: the track empties as the value climbs, so the caller keeps reporting
    elapsed progress and the design reads it backwards. */
 .wavelo--progress-timer .wavelo__part{width:calc(100% - var(--wavelo-progress,35%));background:color-mix(in srgb,currentColor 70%,transparent)}
-/* Six stations around a ring, switched off one by one by the value. The positions are
+/* Six stations around a ring, filled one by one as the value climbs. The positions are
    static, so unlike the orbit spinners this is a level rather than a motion. */
 .wavelo--progress-orbit-fill{overflow:visible;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent;border-radius:50%}
 .wavelo--progress-orbit-fill .wavelo__part{position:absolute;left:50%;top:50%;width:16%;height:16%;margin:calc(var(--wavelo-size,2.5rem) * -.08);border-radius:50%;background:color-mix(in srgb,currentColor 22%,transparent);transition:none}
 .wavelo--progress-orbit-fill .wavelo__part[data-wavelo-step="filled"]{background:currentColor}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(1){transform:rotate(0deg) translateY(-38%)}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(2){transform:rotate(60deg) translateY(-38%)}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(3){transform:rotate(120deg) translateY(-38%)}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(4){transform:rotate(180deg) translateY(-38%)}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(5){transform:rotate(240deg) translateY(-38%)}
-.wavelo--progress-orbit-fill .wavelo__part:nth-child(6){transform:rotate(300deg) translateY(-38%)}
-${uploadFrames}${transitionFrames}${waveRollFrames}`;
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(1){transform:rotate(0deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(2){transform:rotate(60deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(3){transform:rotate(120deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(4){transform:rotate(180deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(5){transform:rotate(240deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--progress-orbit-fill .wavelo__part:nth-child(6){transform:rotate(300deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
+.wavelo--undo-progress{width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,.5rem);border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 15%,transparent);position:relative;overflow:hidden}
+.wavelo--undo-progress .wavelo__part{height:100%;width:100%;border-radius:inherit;background:currentColor;transform-origin:left;animation:wavelo-drain var(--wavelo-duration,5s) linear forwards var(--wavelo-play-state,running)}
+.wavelo--undo-progress[data-wavelo-state="success"]{background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 20%,transparent)}
+.wavelo--undo-progress[data-wavelo-state="success"] .wavelo__part{background:var(--wavelo-success-color,#22c55e);animation:none;transform:scaleX(1)}
+.wavelo--undo-progress[data-wavelo-state="error"]{background:color-mix(in srgb,var(--wavelo-error-color,#ef4444) 20%,transparent);opacity:.5}
+.wavelo--undo-progress[data-wavelo-state="error"] .wavelo__part{background:var(--wavelo-error-color,#ef4444);animation:none;transform:scaleX(0)}
+.wavelo--undo-progress[data-wavelo-state="idle"]{opacity:.7}
+.wavelo--undo-progress[data-wavelo-state="idle"] .wavelo__part{animation:none;transform:scaleX(1)}
+${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}`;
