@@ -21,6 +21,7 @@ function tiles(theme) {
     .join('');
 }
 
+const step = Number(process.env.WAVELO_STEP ?? 300);
 const page = `<!doctype html><meta charset=utf8><style>
 ${[...new Set(ids.map((id) => renderLoader({ type: id }).css))].join('\n')}
 body{margin:0;font:12px system-ui;background:#fff;color:#0b1020}
@@ -31,7 +32,7 @@ body{margin:0;font:12px system-ui;background:#fff;color:#0b1020}
 .dark{background:#0f172a;color:#e2e8f0}
 .phase{position:sticky;top:0;background:#f3f5ff;font-weight:700;padding:.2rem .5rem}
 </style>
-<div class="phase">columns are the same design frozen at 0, 300, 600 and 900 ms of wall-clock time</div>
+<div class="phase">columns are the same design frozen at ${cols.map((c, index) => `${index * step} ms`).join(', ')} of wall-clock time</div>
 ${tiles('light')}
 `;
 
@@ -40,16 +41,16 @@ for (const theme of ['light', 'dark']) {
   const shot = await browser.newPage({ viewport: { width: 1100, height: 900 }, deviceScaleFactor: 2 });
   await shot.setContent(page);
   if (theme === 'dark') await shot.addStyleTag({ content: 'body{background:#0f172a;color:#e2e8f0}' });
-  await shot.evaluate(() => {
+  await shot.evaluate((step) => {
     for (const animation of document.getAnimations()) {
       const cell = animation.effect?.target?.closest?.('.cell');
       if (!cell) continue;
       // Absolute time, not a fraction of each animation's own cycle: a design with two
       // speeds (a clock's hands) must keep their ratio, or the filmstrip hides it.
       animation.pause();
-      animation.currentTime = Number(cell.dataset.col) * 300;
+      animation.currentTime = Number(cell.dataset.col) * step;
     }
-  });
+  }, Number(process.env.WAVELO_STEP ?? 300));
   const path = `release-audit/tranche1-${theme}.png`;
   await shot.screenshot({ path, fullPage: true });
   const painted = await shot.evaluate(() => {

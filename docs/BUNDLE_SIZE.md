@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 17,953 | 6.3 KB (6,439 B) | 7,168 |
-| `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,086 | 7,786 | 8,704 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 26,442 | 7,983 | 8,704 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 107,905 | 22.5 KB (23,018 B) | 26,624 |
-| `@wavelo/core` + registry walk over all 129 designs | 107,908 | 23,025 | 26,624 |
-| `@wavelo/react` | 108,737 | 23,444 | 26,624 |
-| `@wavelo/vue` | 109,722 | 23,880 | 26,624 |
-| `@wavelo/angular` | 111,679 | 24,738 | 27,648 |
-| `@wavelo/svelte` | 108,097 | 23,121 | 26,624 |
-| `@wavelo/web-components` | 110,164 | 23,931 | 26,624 |
-| `@wavelo/vanilla` | 108,427 | 23,275 | 26,624 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 79,817 raw | 13,628 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 18,824 | 6.5 KB (6,690 B) | 7,168 |
+| `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,213 | 7,809 | 8,704 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 27,313 | 8,226 | 8,704 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 113,464 | 24.0 KB (24,582 B) | 26,624 |
+| `@wavelo/core` + registry walk over all 129 designs | 113,467 | 24,591 | 26,624 |
+| `@wavelo/react` | 114,296 | 25,006 | 26,624 |
+| `@wavelo/vue` | 115,281 | 25,453 | 26,624 |
+| `@wavelo/angular` | 117,238 | 26,240 | 27,648 |
+| `@wavelo/svelte` | 113,656 | 24,675 | 26,624 |
+| `@wavelo/web-components` | 115,723 | 25,509 | 26,624 |
+| `@wavelo/vanilla` | 113,986 | 24,833 | 26,624 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 85,244 raw | 15,139 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -43,8 +43,9 @@ Runtime bundles additionally carry the registry and the 129-entry bitset those l
 are decoded from, which is why their budget is 26 KiB (27 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow by
 roughly 210 B per design added — the motion tranche's 18 designs took `core-renderer`
-from 19,011 B to 22,797 B, and putting the base defaults at zero specificity added a
-final 221 B, because the base is in all twelve slices. Budgets sit about 12% above the measured value,
+from 19,011 B to 22,797 B, putting the base defaults at zero specificity added 221 B
+more, and the five designs redrawn during the visual review a further 1,564 B, to
+24,582 B. Budgets sit about 12% above the measured value,
 rounded up to the next 512 B, and are re-based on purpose: a configuration key costs
 20-30 B gzipped in every bundle, which is what the four accessibility options cost a
 single design (4,205 → 4,612 B). The three ergonomics options (`loading`, `count`,
@@ -68,14 +69,14 @@ page that renders loaders without a route bar pays nothing.
 Styles and markup are separate. A design's stylesheet slice is `baseCss` plus the
 one render-kind slice it uses. The shared base carries the layout shell, the
 reduced-motion and theme rules, and the four `@keyframes` blocks that more than
-one kind animates with (3.1 KB, listed once for the whole catalog rather than
-repeated per kind). The other 72 frames each live in their own module under
+one kind animates with (3.2 KB, listed once for the whole catalog rather than
+repeated per kind). The other 76 frames each live in their own module under
 `css/keyframes/`, imported only by the kinds that animate with them, so a single
 design never pays for a frame it cannot run. `npm run catalog` fails if a slice
 animates with a frame nobody imports, or re-imports one the base already ships.
 
-- Importing one design costs its slice: the `ring` entry point ships 5.6 KB of ring
-  rules (2.4 KB gzipped together with the base) rather than the 79,817-byte sheet for
+- Importing one design costs its slice: the `ring` entry point ships its ring rules
+  (2.7 KB gzipped together with the base) rather than the 85,244-byte sheet for
   all 129 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can

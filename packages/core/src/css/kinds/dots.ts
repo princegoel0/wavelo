@@ -8,6 +8,7 @@ import { css as neuralFrames } from '../keyframes/neural.js';
 import { css as magnetFrames } from '../keyframes/magnet.js';
 import { css as pendulumFrames } from '../keyframes/pendulum.js';
 import { css as bubbleFrames } from '../keyframes/bubble.js';
+import { css as dotRingFrames } from '../keyframes/dot-ring.js';
 import { css as constellationFrames } from '../keyframes/constellation.js';
 import { css as constellationLineFrames } from '../keyframes/constellation-line.js';
 
@@ -20,15 +21,19 @@ export const dotsCss = `
 .wavelo--dots .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -5 / 6)}
 .wavelo--dotted-circle{display:block;border:0;background:transparent}
 .wavelo--dotted-circle.wavelo-inline{display:inline-block}
-.wavelo--dotted-circle .wavelo__part{position:absolute;width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);border-radius:50%;animation:wavelo-dot-orbit var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--dotted-circle .wavelo__part:nth-child(1){transform:rotate(0deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(2){transform:rotate(45deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(3){transform:rotate(90deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(4){transform:rotate(135deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(5){transform:rotate(180deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(6){transform:rotate(225deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(7){transform:rotate(270deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
-.wavelo--dotted-circle .wavelo__part:nth-child(8){transform:rotate(315deg) translateY(calc(var(--wavelo-size,2.5rem) * -.36))}
+/* Eight dots on a ring. Each one is centred in the box, turned to its own angle and
+   pushed out by the radius, and the animation touches only opacity — a keyframe that
+   animated transform would replace that placement the moment it started, which is what
+   this design used to do: the eight dots collapsed into a drifting cluster. The stagger
+   is the delay, so the bright dot walks round the circle. */
+.wavelo--dotted-circle .wavelo__part{position:absolute;left:50%;top:50%;width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);margin:calc(var(--wavelo-size,2.5rem) / -14);border-radius:50%;--a:0deg;transform:rotate(var(--a)) translateY(calc(var(--wavelo-size,2.5rem) * -.36));animation:wavelo-dot-ring calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--dotted-circle .wavelo__part:nth-child(2){--a:45deg;animation-delay:calc(var(--wavelo-duration,1s) * -.2)}
+.wavelo--dotted-circle .wavelo__part:nth-child(3){--a:90deg;animation-delay:calc(var(--wavelo-duration,1s) * -.4)}
+.wavelo--dotted-circle .wavelo__part:nth-child(4){--a:135deg;animation-delay:calc(var(--wavelo-duration,1s) * -.6)}
+.wavelo--dotted-circle .wavelo__part:nth-child(5){--a:180deg;animation-delay:calc(var(--wavelo-duration,1s) * -.8)}
+.wavelo--dotted-circle .wavelo__part:nth-child(6){--a:225deg;animation-delay:calc(var(--wavelo-duration,1s) * -1)}
+.wavelo--dotted-circle .wavelo__part:nth-child(7){--a:270deg;animation-delay:calc(var(--wavelo-duration,1s) * -1.2)}
+.wavelo--dotted-circle .wavelo__part:nth-child(8){--a:315deg;animation-delay:calc(var(--wavelo-duration,1s) * -1.4)}
 .wavelo--bouncing-dots .wavelo__part{animation:wavelo-bounce-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--fading-dots .wavelo__part{animation:wavelo-fade-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(odd){animation:wavelo-alt-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -92,4 +97,4 @@ export const dotsCss = `
 .wavelo--constellation:before,.wavelo--constellation:after{content:"";position:absolute;height:var(--wavelo-stroke,1px);background:currentColor;transform-origin:0 50%;animation:wavelo-constellation-line calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--constellation:before{left:15%;top:22%;width:48%;transform:rotate(14deg)}
 .wavelo--constellation:after{left:38%;top:48%;width:42%;transform:rotate(24deg)}
-${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}`;
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}`;

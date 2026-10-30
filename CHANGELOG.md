@@ -27,6 +27,19 @@ Not yet published.
   `signal-bars`, `piano-keys`, `fire-rise`, `spectrum` and `breathing` for bars, plus
   `heartbeat`, an ECG trace that scrolls by half its own width. Two presets join them,
   `survey-progress` and `vitals`.
+- Five designs redone because they did not render what their names say. `dotted-circle`
+  showed a drifting cluster rather than a ring: its dots were never centred, and the
+  shared `wavelo-dot-orbit` keyframe animated `transform`, which replaced the per-dot
+  placement as soon as it started. `rotating-dots` had five dots at one point of one
+  circle because nothing staggered them; `helix` placed its dots with pixel offsets that
+  ignored `size` and were overwritten anyway; `triangles` showed one triangle because the
+  root's own `clip-path` clips its subtree, so the three orbiting parts were cut away;
+  `ellipse` inherited the ring's open side, so it was a squashed arc rather than an
+  ellipse and its in-plane turn was imperceptible. The rule they now share: place parts
+  with `top`, `left` and `margin`, and let a keyframe own only the motion, with any
+  radius written against the loader's size rather than the part's own box. A browser test
+  now freezes every design across its cycle and fails if two parts share a position and a
+  size, which is what found four of the five.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.

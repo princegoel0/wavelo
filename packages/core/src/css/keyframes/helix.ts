@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-helix{0%,100%{transform:translateX(-35%)}50%{transform:translateX(35%)}}`;
+export const css = `@keyframes wavelo-helix{0%,100%{transform:translateX(calc(var(--wavelo-size,2.5rem) * -.3)) scale(.6)}50%{transform:translateX(calc(var(--wavelo-size,2.5rem) * .3)) scale(1.15)}}`;

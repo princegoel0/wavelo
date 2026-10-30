@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-eye-look{0%,24%{transform:translateX(0)}38%,62%{transform:translateX(calc(var(--wavelo-size,2.5rem) * -.11))}76%,100%{transform:translateX(calc(var(--wavelo-size,2.5rem) * .11))}}`;

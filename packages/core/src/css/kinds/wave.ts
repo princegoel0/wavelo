@@ -23,15 +23,18 @@ export const waveCss = `
 .wavelo--horizontal-pulse-bars .wavelo__part{animation:wavelo-horizontal-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--multi-wave .wavelo__part:nth-child(odd){animation:wavelo-waveform var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--multi-wave .wavelo__part:nth-child(even){animation:wavelo-waveform-reverse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--helix .wavelo__part{width:12%;height:12%;border-radius:50%;animation:wavelo-helix var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--helix .wavelo__part{position:absolute;left:50%;width:12%;height:12%;margin-left:-6%;border-radius:50%;animation:wavelo-helix var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--helix{display:block;background:transparent}
-.wavelo--helix .wavelo__part{position:absolute;left:44%;top:45%;width:12%;height:12%;border-radius:50%}
-.wavelo--helix .wavelo__part:nth-child(1){transform:translate(-28px,-24px)}
-.wavelo--helix .wavelo__part:nth-child(2){transform:translate(28px,-14px)}
-.wavelo--helix .wavelo__part:nth-child(3){transform:translate(-28px,-4px)}
-.wavelo--helix .wavelo__part:nth-child(4){transform:translate(28px,6px)}
-.wavelo--helix .wavelo__part:nth-child(5){transform:translate(-28px,16px)}
-.wavelo--helix .wavelo__part:nth-child(6){transform:translate(28px,26px)}
+/* Six dots spread down the box, each a sixth of a turn behind the last, so the swing
+   reads as a strand turning. The spread is top, not a transform: a keyframe that animates
+   transform replaces whatever static translate the dot carried, which is what had these
+   six dots stacked at one point. */
+.wavelo--helix .wavelo__part:nth-child(1){top:6%;animation-delay:calc(var(--wavelo-duration,1s) * -.83)}
+.wavelo--helix .wavelo__part:nth-child(2){top:21%;animation-delay:calc(var(--wavelo-duration,1s) * -.67)}
+.wavelo--helix .wavelo__part:nth-child(3){top:36%;animation-delay:calc(var(--wavelo-duration,1s) * -.5)}
+.wavelo--helix .wavelo__part:nth-child(4){top:51%;animation-delay:calc(var(--wavelo-duration,1s) * -.33)}
+.wavelo--helix .wavelo__part:nth-child(5){top:66%;animation-delay:calc(var(--wavelo-duration,1s) * -.17)}
+.wavelo--helix .wavelo__part:nth-child(6){top:81%}
 .wavelo--helix:before,.wavelo--helix:after{content:"";position:absolute;left:25%;top:46%;width:50%;height:8%;border-top:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;animation:wavelo-helix-line var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Tokens arriving: five short dashes light up at the left, travel right and dim, each
    a fifth of a cycle behind the last, so the row reads as output being appended. */
