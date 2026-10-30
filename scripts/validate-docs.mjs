@@ -99,6 +99,32 @@ for (const token of tokensDeclared) {
   if (!tokensRead.has(token)) failures.push(`WaveloTokens declares ${token}, which no rule in the sheet reads`);
 }
 
+// A count restated in prose is a second source of truth, and one of them was already
+// wrong: a document said "149 named presets" after arithmetic on an older total rather
+// than a measurement, and `npm run catalog` only requires at least 100, so nothing
+// noticed until another document copied it. Any number written next to "presets" in a
+// document that reports the current state has to be the built count.
+const { patternPresets } = await import('../packages/core/dist/catalog.js');
+const countDocuments = [
+  'README.md', 'CHANGELOG.md', 'RELEASE_CHECKLIST.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
+  'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/IMPLEMENTATION_PLAN.md', 'docs/MIGRATION.md',
+  'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md'
+];
+for (const file of countDocuments) {
+  const text = (await readFile(file, 'utf8').catch(() => '')).replace(/\s+/g, ' ');
+  for (const [, stated] of text.matchAll(/(\d+) named presets/g)) {
+    if (Number(stated) !== presetRegistry.length) failures.push(`${file} states ${stated} named presets; the build has ${presetRegistry.length}`);
+  }
+  // A bare number directly before "presets" is a total; "20 skeleton presets" or
+  // "35 pattern presets" name a subset and are not this claim.
+  for (const [, stated] of text.matchAll(/(\d+) presets\b/g)) {
+    if (Number(stated) !== presetRegistry.length) failures.push(`${file} states ${stated} presets; the build has ${presetRegistry.length}`);
+  }
+  for (const [, stated] of text.matchAll(/(\d+) pattern presets/g)) {
+    if (Number(stated) !== patternPresets.length) failures.push(`${file} states ${stated} pattern presets; the build has ${patternPresets.length}`);
+  }
+}
+
 if (failures.length) {
   console.error(`Documentation check failed with ${failures.length} problem(s):`);
   for (const failure of failures) console.error(`  - ${failure}`);
