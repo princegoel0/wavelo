@@ -11,8 +11,13 @@ export const baseCss = `
    @property ignore both rules and fall back to those. */
 @property --wavelo-progress{syntax:"<percentage>";inherits:true;initial-value:35%}
 @property --wavelo-count{syntax:"<integer>";inherits:true;initial-value:0}
-.wavelo{display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);transition:--wavelo-progress .2s ease;animation-duration:var(--wavelo-duration,1s);animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
-.wavelo__part{box-sizing:border-box;background:currentColor}
+/* Every slice carries this base, so a page with two render kinds gets two copies and
+   the second lands after the first kind's rules. At equal specificity it would win
+   there and a design would lose the fill, display and duration its own rule set: a
+   shape loader on a page that also draws a ring rendered hollow. :where() keeps these
+   defaults at zero specificity, so a kind or design rule wins in any order. */
+:where(.wavelo){display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);transition:--wavelo-progress .2s ease;animation-duration:var(--wavelo-duration,1s);animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
+:where(.wavelo__part){box-sizing:border-box;background:currentColor}
 /* "inline" aligns an inline-level box with its text line; block and grid designs
    get an inline twin in their own slice. */
 .wavelo-inline{vertical-align:middle}

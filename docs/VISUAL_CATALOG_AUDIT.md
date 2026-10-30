@@ -3,7 +3,7 @@
 ## Review scope
 
 - **Artifact:** [catalog-contact-sheet.png](../release-audit/catalog-contact-sheet.png)
-- **Source of truth:** `loaderRegistry` (111 entries)
+- **Source of truth:** `loaderRegistry` (129 entries)
 - **Preview contract:** the production documentation gallery, one consistent card
   size, shared preview dimensions, labels, descriptions, and the same generated
   core markup used by consumers.
@@ -18,11 +18,11 @@
 
 ## Decisions
 
-All 111 entries rendered correctly in the review artifact with consistent card
+All 129 entries rendered correctly in the review artifact with consistent card
 dimensions, readable labels, and no desktop or mobile horizontal overflow.
 None of them renders something other than what its name and description promise:
 the name-contract test asserts the promised geometry per design, and the
-distinctness test asserts that no two of the 111 share a rendered signature. What the decisions below
+distinctness test asserts that no two of the 129 share a rendered signature. What the decisions below
 still flag is a taste question — whether a count or orientation variant earns its
 own public ID — not a defect, and it is a post-release judgement rather than a
 release blocker. No entry was removed during this audit because doing so requires
@@ -47,6 +47,9 @@ coordinated preset/API deprecation work.
 | `gradient-ring` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `conic-ring` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `neon-ring` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `rubber-band` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `snake` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `clock-spinner` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `thin-line` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Measured hairline stroke (1px against the ring’s 3px); retain as the documented weight pair with thick-stroke. |
 | `thick-stroke` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Measured heavy stroke, asserted at more than twice the ring’s; retain as the documented weight pair with thin-line. |
 | `monochrome` | spinner | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Half-filled rotating conic disc, asserted by the name contract; no longer a colour-only variant. |
@@ -67,6 +70,12 @@ coordinated preset/API deprecation work.
 | `ripple-dot` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `staggered-dots` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `vertical-dots` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Orientation variant of dot wave; retain only if vertical motion remains perceptually distinct. |
+| `magnetic-dots` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `pendulum` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `constellation` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `bubble-rise` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `fireflies` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `solar-system` | dots | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `equalizer` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `bouncing-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with equalizer/growing bars; improve rhythm or merge. |
 | `vertical-pulse-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with bouncing/growing bars; improve rhythm or merge. |
@@ -77,6 +86,12 @@ coordinated preset/API deprecation work.
 | `growing-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `alternating-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Shares bar primitive with equalizer/fading bars; improve grouping or merge. |
 | `gradient-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Gradient-filled bars, asserted against the equalizer’s flat fill; retain as the colour variant, and a theme preset would still be useful. |
+| `signal-bars` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `piano-keys` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `fire-rise` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `spectrum` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; bars primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `heartbeat` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `breathing` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `segmented-bar` | progress | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; progress primitive, progress semantics enabled. | Retain; rendered correctly and no immediate layout defect found. |
 | `moving-stripe` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `traveling-highlight` | bars | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; wave primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
@@ -95,6 +110,9 @@ coordinated preset/API deprecation work.
 | `concentric-pulse` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Three circles at 12/28/44% insets pulsing with staggered delays; retain. |
 | `trip-orbit` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; dots primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `liquid-blob` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `sand-timer` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `eye-blink` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
+| `metronome` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; shape primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `spiral` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `radar` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; ring-family primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
 | `particle-orbit` | creative | Automated evidence; human motion-quality review pending | Rendered in the consistent gallery card; orbit primitive, indeterminate semantics. | Retain; rendered correctly and no immediate layout defect found. |
@@ -147,7 +165,7 @@ coordinated preset/API deprecation work.
 A screenshot cannot judge taste, but distinctness and motion are no longer taken
 from one. The browser suite compares a computed-style signature for every design
 (geometry, drawn borders, gradients, animation identity and timing, part layout)
-and requires all 111 to differ, and the correctness audit samples each design's
+and requires all 129 to differ, and the correctness audit samples each design's
 animations twice, 250ms apart, so a frozen or duplicated design fails a test
 rather than relying on a reviewer's memory. What remains genuinely unproven is
 perceptual quality: whether a count or orientation variant deserves its own public

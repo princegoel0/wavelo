@@ -78,7 +78,7 @@ test('React component renders every configuration key without inlining styles', 
 test('React server helper returns the design slice for head injection', () => {
   const result = renderReactLoader({ type: 'ring', label: 'Loading' });
   assert.equal(result.css, renderLoader({ type: 'ring', label: 'Loading' }).css);
-  assert.match(result.css, /\.wavelo\{/);
+  assert.match(result.css, /:where\(\.wavelo\)\{/);
   assert.doesNotMatch(result.css, /\.wavelo--skeleton-card/);
 });
 

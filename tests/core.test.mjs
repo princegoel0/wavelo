@@ -67,7 +67,15 @@ test('designs whose names promise a count render that many parts', () => {
     'progress-multi-step': 5,
     'progress-orbit-fill': 6,
     'progress-upload-multi': 3,
-    'progress-ai-generate': 1
+    'progress-ai-generate': 1,
+    pendulum: 1,
+    constellation: 5,
+    fireflies: 6,
+    'solar-system': 3,
+    'signal-bars': 4,
+    spectrum: 8,
+    breathing: 1,
+    heartbeat: 1
   };
   for (const [id, expected] of Object.entries(counts)) {
     const result = renderLoader({ type: id, value: 50, max: 100, label: id });
@@ -189,8 +197,8 @@ test('each design ships only its own stylesheet slice', () => {
   assert.ok(ring.css.length < card.css.length + 4000, 'ring slice unexpectedly large');
   assert.doesNotMatch(ring.css, /\.wavelo--skeleton-card/);
   assert.doesNotMatch(card.css, /\.wavelo--ring\{/);
-  assert.match(ring.css, /\.wavelo\{/);
-  assert.match(card.css, /\.wavelo\{/);
+  assert.match(ring.css, /:where\(\.wavelo\)\{/);
+  assert.match(card.css, /:where\(\.wavelo\)\{/);
 });
 
 test('every determinate design exposes progressbar semantics, and only those do', () => {

@@ -1,5 +1,7 @@
 import { css as orbitFrames } from '../keyframes/orbit.js';
 import { css as cometTailFrames } from '../keyframes/comet-tail.js';
+import { css as fireflyFrames } from '../keyframes/firefly.js';
+import { css as orbitRingFrames } from '../keyframes/orbit-ring.js';
 
 export const orbitCss = `
 .wavelo--orbit .wavelo__part{position:absolute;width:25%;height:25%;border-radius:50%;transform-origin:200% 200%;animation:wavelo-orbit var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -24,4 +26,20 @@ export const orbitCss = `
 .wavelo--comet-orbit.wavelo-inline{display:inline-block}
 .wavelo--comet-orbit:before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 40%,color-mix(in srgb,currentColor 25%,transparent) 62%,currentColor 90%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-comet-tail calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--comet-orbit .wavelo__part{left:auto;top:auto;right:2%;width:18%;height:18%;transform-origin:-90% 50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${orbitFrames}${cometTailFrames}`;
+/* Six motes drifting on uneven paths and fading as they go, so the group never beats
+   as one. */
+.wavelo--fireflies .wavelo__part{width:9%;height:9%;animation:wavelo-firefly calc(var(--wavelo-duration,1s) * 3) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--fireflies .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.5)}
+.wavelo--fireflies .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -1.1)}
+.wavelo--fireflies .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1.7)}
+.wavelo--fireflies .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -2.2)}
+.wavelo--fireflies .wavelo__part:nth-child(6){animation-delay:calc(var(--wavelo-duration,1s) * -2.7)}
+/* Three orbits at three radii around a sun. The turn is the same shape at every
+   distance; only the radius and the period differ, which is what a solar system looks
+   like rather than a ring of dots. */
+.wavelo--solar-system:before{content:"";position:absolute;left:50%;top:50%;width:20%;height:20%;margin:-10% 0 0 -10%;border-radius:50%;background:var(--wavelo-secondary-color,#a5b4fc)}
+.wavelo--solar-system .wavelo__part{width:8%;height:8%;animation:wavelo-orbit-ring calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--solar-system .wavelo__part:nth-child(1){--angle:0deg;--radius:.18;animation-duration:calc(var(--wavelo-duration,1s) * .8)}
+.wavelo--solar-system .wavelo__part:nth-child(2){--angle:120deg;--radius:.3;animation-duration:calc(var(--wavelo-duration,1s) * 1.6)}
+.wavelo--solar-system .wavelo__part:nth-child(3){--angle:240deg;--radius:.42;animation-duration:calc(var(--wavelo-duration,1s) * 2.6)}
+${orbitFrames}${cometTailFrames}${fireflyFrames}${orbitRingFrames}`;

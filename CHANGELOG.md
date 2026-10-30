@@ -9,7 +9,7 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 111 public IDs, each with its own implementation and no deprecated aliases. A
+- 129 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,
@@ -20,6 +20,13 @@ Not yet published.
   gradient by a radial mask, `neon-ring`, which turns while its glow swells,
   `liquid-blob`, whose corner radii keep changing while it stays in place, and
   `trip-orbit`, three arcs a third of a turn apart.
+- Eighteen designs that move like something rather than spinning: `rubber-band`,
+  `snake`, `clock-spinner` (two hands a factor of twelve apart), `sand-timer`,
+  `eye-blink` and `metronome` for the spinner lane; `magnetic-dots`, `pendulum`,
+  `constellation`, `bubble-rise`, `fireflies` and `solar-system` for the dots lane;
+  `signal-bars`, `piano-keys`, `fire-rise`, `spectrum` and `breathing` for bars, plus
+  `heartbeat`, an ECG trace that scrolls by half its own width. Two presets join them,
+  `survey-progress` and `vitals`.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.
@@ -44,6 +51,13 @@ Not yet published.
   the scroll range.
 - Stylesheets are injected into the document head once per distinct slice rather
   than inlined into every component instance.
+- Every slice carries the shared base, so a page with two render kinds injects it
+  twice and the second copy lands after the first kind's rules. The base also sets
+  `background`, `display` and `animation-duration`, so at equal specificity a design
+  lost all three to a later sibling: a shape loader on a page that also drew a ring
+  rendered hollow and on the wrong clock. The base's defaults now sit at zero
+  specificity, which leaves a single-slice page exactly as it was and makes the
+  injection order unable to matter.
 - 27 configuration keys: `type`, `size`, `width`, `height`, `color`,
   `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
   `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,

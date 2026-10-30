@@ -155,7 +155,26 @@ const SELF_CHECKS = [
   ['progress-upload-multi', 'count', true],
   ['progress-orbit-fill', 'count', true],
   ['progress-timer', 'value', true],
-  ['progress-skill', 'value', true]
+  ['progress-skill', 'value', true],
+  // The motion tranche. Anything whose shape is pinned by its own name must refuse
+  // `count`, and a design that reads the stroke for something other than a border —
+  // a constellation's line, a clock hand's width — still has to report it.
+  ['rubber-band', 'strokeWidth', true],
+  ['clock-spinner', 'secondaryColor', true],
+  ['clock-spinner', 'duration', true],
+  ['solar-system', 'secondaryColor', true],
+  ['constellation', 'strokeWidth', true],
+  ['heartbeat', 'strokeWidth', false],
+  ['heartbeat', 'width', true],
+  ['sand-timer', 'strokeWidth', false],
+  ['spectrum', 'strokeWidth', false],
+  ['eye-blink', 'height', true],
+  ['metronome', 'width', true],
+  ['breathing', 'width', true],
+  ['pendulum', 'count', false],
+  ['fireflies', 'count', false],
+  ['signal-bars', 'count', false],
+  ['spectrum', 'count', false]
 ];
 
 async function fingerprintPage(browser, overrides) {

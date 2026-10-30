@@ -176,6 +176,31 @@ test('the same slice requested twice adds no element', async () => {
   assert.equal(tags, 1, 'ring and gradient-ring share the ring slice');
 });
 
+test('a design keeps its own fill, display and duration when another kind shares the page', async () => {
+  // Every slice carries the base, so two render kinds on one page means two copies of
+  // it, and the second lands *after* the first kind's rules. The base also sets
+  // `background`, `display` and `animation-duration`, so at equal specificity a design
+  // would lose all three to a later sibling's copy: the hourglass rendered hollow and
+  // on the wrong clock. The defaults sit at zero specificity to keep that impossible.
+  const hosts = Array.from({ length: 6 }, (_, index) => `<div id="host-${index}"></div>`).join('');
+  await setContentPage(hosts, '');
+  const measured = await page.evaluate(() => {
+    const types = ['sand-timer', 'ring', 'three-dots', 'constellation', 'metronome', 'progress-bar'];
+    types.forEach((type, index) => window.Wavelo.mountLoader(document.getElementById(`host-${index}`), { type }));
+    const pick = (type) => {
+      const element = [...document.querySelectorAll('.wavelo')].find((node) => node.classList.contains(`wavelo--${type}`));
+      const style = getComputedStyle(element);
+      return { background: style.backgroundColor, display: style.display, duration: style.animationDuration, width: style.width };
+    };
+    return { hourglass: pick('sand-timer'), stars: pick('constellation'), arm: pick('metronome') };
+  });
+  assert.equal(measured.hourglass.background, 'rgb(99, 102, 241)', 'the shape slice fills the hourglass with currentColor');
+  assert.equal(measured.hourglass.duration, '2s', 'the hourglass flips on twice the configured duration');
+  assert.equal(measured.stars.display, 'block', 'constellation positions its own parts');
+  assert.equal(measured.arm.duration, '1.2s', 'the metronome swings on its own clock');
+  assert.notEqual(measured.arm.width, '40px', 'the arm is narrower than the box it swings in');
+});
+
 test('a design renders the same with only the stylesheet slice its entry point ships', async () => {
   const properties = ['animationName', 'animationDuration', 'animationTimingFunction', 'animationDelay', 'animationTimeline', 'width', 'height', 'borderRadius', 'borderTopWidth', 'borderRightColor', 'backgroundImage', 'transform', 'opacity', 'display', 'position', 'gap'];
   // A view-timeline design takes its fill from where the element sits in the
@@ -531,39 +556,57 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
 });
 
 test('every design paints something visible', async () => {
-  await setContentPage(
-    loaderRegistry
-      .map((loader) => `<div data-design="${loader.id}">${renderLoader({ type: loader.id, label: loader.name }).html}</div>`)
-      .join('')
-  );
-  const invisible = await page.evaluate(() => {
-    const paints = (element) => {
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      if (rect.width < 0.5 || rect.height < 0.5) return false;
-      const filled =
-        style.backgroundImage !== 'none' ||
-        !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor) ||
-        // SVG designs paint through `fill`, not background or border.
-        !['', 'none', 'rgba(0, 0, 0, 0)', 'transparent'].includes(style.fill);
-      const bordered = parseFloat(style.borderTopWidth) > 0 && style.borderTopStyle !== 'none' && !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.borderTopColor);
-      return filled || bordered;
-    };
-    const pseudoPaints = (element, which) => {
-      const style = getComputedStyle(element, which);
-      if (style.content === 'none') return false;
-      return parseFloat(style.borderTopWidth) > 0 || style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
-    };
-    return [...document.querySelectorAll('[data-design]')]
-      .filter((wrap) => {
-        const root = wrap.querySelector('.wavelo');
-        const parts = [...root.querySelectorAll('.wavelo__part')];
-        return !(paints(root) || parts.some(paints) || pseudoPaints(root, '::before') || pseudoPaints(root, '::after'));
-      })
-      .map((wrap) => wrap.dataset.design);
-  });
-  assert.deepEqual(invisible, [], `these designs render nothing visible: ${invisible.join(', ')}`);
+  // The head is built the way `ensureStyles` builds one: each render kind contributes
+  // its own slice, and every slice carries its own copy of the base. A page's slice
+  // order is its first-use order, so the same catalog can be styled more than one way,
+  // and this checks both. It is a permissive test — a design counts as painting if any
+  // of its root, parts or pseudos paints — so it is the targeted test above that pins
+  // which of them must.
+  const slices = [];
+  const injected = new Set();
+  const markup = loaderRegistry
+    .map((loader) => {
+      const result = renderLoader({ type: loader.id, label: loader.name });
+      if (!injected.has(result.styleKey)) {
+        injected.add(result.styleKey);
+        slices.push(result.css);
+      }
+      return `<div data-design="${loader.id}">${result.html}</div>`;
+    })
+    .join('');
+  for (const set of [slices, [...slices].reverse()]) {
+    await setContentPage(markup, set.map((css) => `<style>${css}</style>`).join(''));
+    const invisible = await page.evaluate(paintReport);
+    assert.deepEqual(invisible, [], `these designs render nothing visible: ${invisible.join(', ')}`);
+  }
 });
+
+function paintReport() {
+  const paints = (element) => {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    if (rect.width < 0.5 || rect.height < 0.5) return false;
+    const filled =
+      style.backgroundImage !== 'none' ||
+      !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor) ||
+      // SVG designs paint through `fill`, not background or border.
+      !['', 'none', 'rgba(0, 0, 0, 0)', 'transparent'].includes(style.fill);
+    const bordered = parseFloat(style.borderTopWidth) > 0 && style.borderTopStyle !== 'none' && !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.borderTopColor);
+    return filled || bordered;
+  };
+  const pseudoPaints = (element, which) => {
+    const style = getComputedStyle(element, which);
+    if (style.content === 'none') return false;
+    return parseFloat(style.borderTopWidth) > 0 || style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
+  };
+  return [...document.querySelectorAll('[data-design]')]
+    .filter((wrap) => {
+      const root = wrap.querySelector('.wavelo');
+      const parts = [...root.querySelectorAll('.wavelo__part')];
+      return !(paints(root) || parts.some(paints) || pseudoPaints(root, '::before') || pseudoPaints(root, '::after'));
+    })
+    .map((wrap) => wrap.dataset.design);
+}
 
 test('each design renders what its name says', async () => {
   const body = [
@@ -575,7 +618,10 @@ test('each design renders what its name says', async () => {
     'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit',
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
     'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
-    'progress-skill', 'progress-timer', 'progress-orbit-fill'
+    'progress-skill', 'progress-timer', 'progress-orbit-fill',
+    'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
+    'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
+    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
     .join('');
@@ -599,7 +645,7 @@ test('each design renders what its name says', async () => {
       const partStyle = parts.length ? getComputedStyle(parts[0]) : null;
       const pseudo = (which) => {
         const s = getComputedStyle(root, which);
-        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth, mask: `${s.maskImage} ${s.webkitMaskImage}`, content: s.content };
+        return s.content === 'none' ? null : { inset: s.inset, animation: s.animationName, direction: s.animationDirection, background: s.backgroundImage + s.backgroundColor, border: s.borderTopWidth, mask: `${s.maskImage} ${s.webkitMaskImage}`, content: s.content, duration: s.animationDuration, clip: s.clipPath };
       };
       return {
         id: wrap.dataset.case,
@@ -625,6 +671,10 @@ test('each design renders what its name says', async () => {
         partCounter: partStyle ? partStyle.counterIncrement : '-',
         partAfterContent: partStyle ? getComputedStyle(parts[0], '::after').content : '-',
         partTransforms: parts.map((part) => getComputedStyle(part).transform),
+        partDurations: parts.map((part) => getComputedStyle(part).animationDuration),
+        partHeights: parts.map((part) => getComputedStyle(part).height),
+        boxWidth: style.width,
+        boxHeight: style.height,
         partDelays: parts.map((part) => getComputedStyle(part).animationDelay),
         partAnimations: [...new Set(parts.map((part) => getComputedStyle(part).animationName))],
         before: pseudo('::before'),
@@ -766,6 +816,54 @@ test('each design renders what its name says', async () => {
   assert.equal(at('progress-timer').parts, 1);
   assert.equal(at('progress-orbit-fill').parts, 6, 'six stations around the ring');
   assert.equal(new Set(at('progress-orbit-fill').partTransforms).size, 6, 'each station sits at its own angle');
+
+  // The motion tranche. These are all named after a thing that moves in a particular
+  // way, so each assertion is about the motion the name promises rather than the fact
+  // that some animation exists.
+  assert.equal(at('rubber-band').animation, 'wavelo-rubber');
+  assert.equal(at('rubber-band').radius, '50%', 'a rubber band is still a ring');
+  assert.equal(at('snake').animation, 'wavelo-snake');
+  assert.equal(at('snake').sides, 2, 'a snake is a short arc, not a full ring');
+  assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');
+  assert.equal(at('clock-spinner').after.animation, 'wavelo-spin', 'the hour hand must turn');
+  assert.notEqual(at('clock-spinner').before.duration, at('clock-spinner').after.duration, 'both hands turn at the same rate, so it is not a clock');
+  assert.match(at('sand-timer').clipPath, /polygon/, 'an hourglass is a clipped silhouette');
+  assert.equal(at('sand-timer').animation, 'wavelo-sand');
+  assert.equal(at('eye-blink').animation, 'wavelo-blink-eye');
+  assert.ok(Number.parseFloat(at('eye-blink').boxWidth) > Number.parseFloat(at('eye-blink').boxHeight), 'an eye is wider than it is tall');
+  assert.equal(at('metronome').animation, 'wavelo-metronome');
+  assert.equal(at('magnetic-dots').parts, 5);
+  assert.deepEqual(at('magnetic-dots').partAnimations, ['wavelo-magnet']);
+  assert.equal(at('pendulum').parts, 1, 'one bob, not a row');
+  assert.deepEqual(at('pendulum').partAnimations, ['wavelo-pendulum']);
+  assert.equal(at('constellation').parts, 5);
+  assert.ok(at('constellation').before && at('constellation').after, 'a constellation must draw its connecting lines');
+  assert.equal(at('constellation').before.animation, 'wavelo-constellation-line');
+  assert.deepEqual(at('constellation').partAnimations, ['wavelo-constellation']);
+  assert.deepEqual(at('bubble-rise').partAnimations, ['wavelo-bubble']);
+  assert.equal(new Set(at('bubble-rise').partDelays).size, 5, 'bubbles must leave at different times');
+  assert.equal(at('fireflies').parts, 6);
+  assert.deepEqual(at('fireflies').partAnimations, ['wavelo-firefly']);
+  assert.equal(new Set(at('fireflies').partDelays).size, 6, 'six motes on six different paths');
+  assert.equal(at('solar-system').parts, 3);
+  assert.ok(at('solar-system').before, 'a solar system needs its sun');
+  assert.deepEqual(at('solar-system').partAnimations, ['wavelo-orbit-ring']);
+  assert.equal(new Set(at('solar-system').partDurations).size, 3, 'three orbits must take three different periods');
+  assert.equal(at('signal-bars').parts, 4, 'signal bars are four steps');
+  assert.deepEqual(at('signal-bars').partAnimations, ['wavelo-signal']);
+  const signalHeights = at('signal-bars').partHeights.map((value) => Number.parseFloat(value));
+  assert.ok(signalHeights.every((value, index) => index === 0 || value > signalHeights[index - 1]), `signal bars must grow: ${signalHeights.join(', ')}`);
+  assert.deepEqual(at('piano-keys').partAnimations, ['wavelo-piano']);
+  assert.equal(new Set(at('piano-keys').partDelays).size, 5, 'keys land at different points in the cycle');
+  assert.deepEqual(at('fire-rise').partAnimations, ['wavelo-fire']);
+  assert.equal(at('spectrum').parts, 8, 'a spectrum analyser is eight bars');
+  assert.deepEqual(at('spectrum').partAnimations, ['wavelo-spectrum']);
+  assert.equal(new Set(at('spectrum').partDelays).size, 8);
+  assert.ok(at('heartbeat').before, 'the trace is drawn by the element itself');
+  assert.match(at('heartbeat').before.clip, /polygon/, 'an ECG trace is a clipped polyline');
+  assert.equal(at('heartbeat').before.animation, 'wavelo-heart');
+  assert.equal(at('breathing').parts, 1, 'one bar, breathing');
+  assert.deepEqual(at('breathing').partAnimations, ['wavelo-breathe']);
 });
 
 test('no two designs in the catalog render identically', async () => {

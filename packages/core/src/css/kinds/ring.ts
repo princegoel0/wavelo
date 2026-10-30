@@ -1,5 +1,7 @@
 import { css as radarFrames } from '../keyframes/radar.js';
 import { css as glowFrames } from '../keyframes/glow.js';
+import { css as rubberFrames } from '../keyframes/rubber.js';
+import { css as snakeFrames } from '../keyframes/snake.js';
 
 export const ringCss = `
 .wavelo--ring{border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -21,4 +23,17 @@ export const ringCss = `
 .wavelo--conic-ring{border:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 55%,color-mix(in srgb,currentColor 28%,transparent) 70%,currentColor 92%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The same ring, but lit: it turns and throws a glow that swells and fades. */
 .wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${radarFrames}${glowFrames}`;
+/* Elastic: the ring holds still and the stroke travels instead, squashing along one
+   axis and stretching along the other. */
+.wavelo--rubber-band{animation:wavelo-rubber calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* A short arc chasing its own tail: it turns while it shrinks and turns back out, so
+   the open end appears to swallow the ring and then release it. */
+.wavelo--snake{border-color:transparent;border-top-color:currentColor;border-right-color:currentColor;animation:wavelo-snake var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* Two hands on one dial. The minute hand turns with the duration and the hour hand is
+   the same sweep twelve times slower, which is what makes it read as a clock rather
+   than a spinner. */
+.wavelo--clock-spinner{border:0;background:transparent;animation:none}
+.wavelo--clock-spinner:before,.wavelo--clock-spinner:after{content:"";position:absolute;left:50%;bottom:50%;width:var(--wavelo-stroke,2px);border-radius:var(--wavelo-radius,2px);background:currentColor;transform-origin:50% 100%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--clock-spinner:before{height:38%}
+.wavelo--clock-spinner:after{height:26%;background:var(--wavelo-secondary-color,#a5b4fc);animation-duration:calc(var(--wavelo-duration,1s) * 12)}
+${radarFrames}${glowFrames}${rubberFrames}${snakeFrames}`;
