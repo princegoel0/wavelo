@@ -582,7 +582,7 @@ test('every design paints something visible', async () => {
   }
 });
 
-test('no design has two parts sharing a box while it animates', async () => {
+test('no design has parts stacked on one another or squeezed out of round', async () => {
   // Four designs rendered a single blob for exactly one reason: a keyframe that animates
   // `transform` replaces the static transform that placed the part, so parts authored at
   // four angles or six heights arrived on top of one another. A computed-style signature
@@ -611,6 +611,14 @@ test('no design has two parts sharing a box while it animates', async () => {
           }
         }
         const boxes = parts.map((part) => part.getBoundingClientRect());
+        // A part rounded by border-radius:50% is only a dot if its box is square. These
+        // are flex items, so any row whose parts overflow the loader gets squeezed
+        // sideways and draws an ellipse while still being called a dot.
+        for (const [index, box] of boxes.entries()) {
+          const round = getComputedStyle(parts[index]).borderTopLeftRadius.endsWith('%');
+          if (round && box.width > 1 && Math.abs(box.width / box.height - 1) > 0.06)
+            out.push(`${wrap.dataset.design} part ${index + 1} is ${box.width.toFixed(1)}x${box.height.toFixed(1)}`);
+        }
         for (let i = 0; i < boxes.length; i++)
           for (let j = i + 1; j < boxes.length; j++)
             if (Math.hypot(boxes[i].x - boxes[j].x, boxes[i].y - boxes[j].y) < 0.6 && Math.abs(boxes[i].width - boxes[j].width) < 0.6)
@@ -874,9 +882,11 @@ test('each design renders what its name says', async () => {
   assert.match(at('gradient-ring').mask, /radial-gradient/, 'the ring is carved from a gradient fill by a radial mask');
   assert.equal(at('comet-orbit').animation, 'wavelo-spin', 'the root turns, so the tail and its head cannot drift apart');
   assert.equal(at('comet-orbit').partAnimations.join(','), 'none', 'the dot rides the tail rather than orbiting on its own');
-  assert.equal(at('snake').animation, 'wavelo-snake');
-  assert.equal(at('snake').sides, 2, 'a snake is a short arc, not a full ring');
+  assert.match(at('snake').animation, /wavelo-snake/, 'the body lengthens on its own clock while the head travels on another');
+  assert.match(at('snake').mask, /radial-gradient/, 'the snake is an arc carved from a sweep, not a bordered ring');
+  assert.equal(at('snake').sides, 0, 'no border sides remain to rotate rigidly');
   assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');
+  assert.ok(Number.parseFloat(at('clock-spinner').borderWidth) > 0, 'hands need a dial to be a clock');
   assert.equal(at('clock-spinner').after.animation, 'wavelo-spin', 'the hour hand must turn');
   assert.notEqual(at('clock-spinner').before.duration, at('clock-spinner').after.duration, 'both hands turn at the same rate, so it is not a clock');
   assert.match(at('sand-timer').clipPath, /polygon/, 'an hourglass is a clipped silhouette');

@@ -34,14 +34,25 @@ export const ringCss = `
 .wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Elastic: the ring holds still and the stroke travels instead, squashing along one
    axis and stretching along the other. */
-.wavelo--rubber-band{animation:wavelo-rubber calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* A rubber band is a loop, so it cannot have a side missing — the inherited open border
+   made this a wobbling C. Closed, and the deformation is now a pluck: stretched tall,
+   snapped back past flat, two shrinking overshoots, and a rest, so each cycle reads as
+   one release rather than a continuous wobble. */
+.wavelo--rubber-band{border-color:currentColor;animation:wavelo-rubber calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* A short arc chasing its own tail: it turns while it shrinks and turns back out, so
    the open end appears to swallow the ring and then release it. */
-.wavelo--snake{border-color:transparent;border-top-color:currentColor;border-right-color:currentColor;animation:wavelo-snake var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* A rigid arc on a constant rotation is a spinner, not a snake. The head now travels at
+   one rate while the body lengthens and shortens at another, so the tail catches up and
+   falls behind: the arc grows from a stub to almost a full turn and shrinks back as it
+   goes. A gradient stop interpolates smoothly, which four border sides cannot. */
+.wavelo--snake{border:0;background:conic-gradient(currentColor 0 25%,transparent 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin calc(var(--wavelo-duration,1s) * 2) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-snake var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Two hands on one dial. The minute hand turns with the duration and the hour hand is
    the same sweep twelve times slower, which is what makes it read as a clock rather
    than a spinner. */
-.wavelo--clock-spinner{border:0;background:transparent;animation:none}
+/* Two hands needed a dial to be a clock: without one they were two bars sweeping in
+   empty space. The face is a faint ring at 22% so it never competes with the hands, and
+   the four markers are background layers, which costs no element. */
+.wavelo--clock-spinner{border:var(--wavelo-stroke,3px) solid color-mix(in srgb,currentColor 22%,transparent);background:radial-gradient(circle at 50% 7%,currentColor 0 4.5%,transparent 4.5%),radial-gradient(circle at 93% 50%,currentColor 0 4.5%,transparent 4.5%),radial-gradient(circle at 50% 93%,currentColor 0 4.5%,transparent 4.5%),radial-gradient(circle at 7% 50%,currentColor 0 4.5%,transparent 4.5%);animation:none}
 .wavelo--clock-spinner:before,.wavelo--clock-spinner:after{content:"";position:absolute;left:50%;bottom:50%;width:var(--wavelo-stroke,2px);border-radius:var(--wavelo-radius,2px);background:currentColor;transform-origin:50% 100%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--clock-spinner:before{height:38%}
 .wavelo--clock-spinner:after{height:26%;background:var(--wavelo-secondary-color,#a5b4fc);animation-duration:calc(var(--wavelo-duration,1s) * 12)}

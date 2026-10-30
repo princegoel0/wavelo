@@ -13,8 +13,13 @@ import { css as constellationFrames } from '../keyframes/constellation.js';
 import { css as constellationLineFrames } from '../keyframes/constellation-line.js';
 
 export const dotsCss = `
-.wavelo--dots{gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 7))}
-.wavelo--dots .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 5);height:calc(var(--wavelo-size,2.5rem) / 5);border-radius:50%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* The dots are flex items, and N of them at a fifth of the box plus gaps at a seventh
+   overflowed the box, so flex shrank them sideways — 8px tall by 3.4px wide — and
+   border-radius:50% on a non-square box draws an ellipse. That is why every "dots" design
+   in this family read as ovals. flex:none stops the squeeze, and the size and gap are set
+   so five dots actually fit the box they are given. */
+.wavelo--dots{gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 20))}
+.wavelo--dots .wavelo__part{flex:none;width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);border-radius:50%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--dots .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--dots .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1 / 3)}

@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "clock-spinner", name: "Clock spinner", category: "spinner", kind: "ring", description: "Two hands turning at twelve to one", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "clock-spinner" };
+const definition: LoaderDefinition = { id: "clock-spinner", name: "Clock spinner", category: "spinner", kind: "ring", description: "A dial with two hands turning twelve to one", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "clock-spinner" };
 const styles = `${baseCss}${ringCss}`;
 
 export const clockSpinner = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 19,407 | 6.7 KB (6,832 B) | 7,168 |
-| `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,213 | 7,809 | 8,704 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 27,896 | 8,361 | 8,704 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 115,710 | 24.6 KB (25,223 B) | 26,624 |
-| `@wavelo/core` + registry walk over all 129 designs | 115,713 | 25,233 | 26,624 |
-| `@wavelo/react` | 116,542 | 25,653 | 26,624 |
-| `@wavelo/vue` | 117,527 | 26,065 | 26,624 |
-| `@wavelo/angular` | 119,484 | 26,853 | 27,648 |
-| `@wavelo/svelte` | 115,902 | 25,336 | 26,624 |
-| `@wavelo/web-components` | 117,969 | 26,132 | 26,624 |
-| `@wavelo/vanilla` | 116,232 | 25,495 | 26,624 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 87,460 raw | 15,830 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 21,169 | 7.2 KB (7,330 B) | 8,704 |
+| `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,213 | 7,809 | 9,216 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 29,658 | 8,853 | 10,240 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 118,313 | 25.5 KB (26,078 B) | 30,720 |
+| `@wavelo/core` + registry walk over all 129 designs | 118,316 | 26,086 | 30,720 |
+| `@wavelo/react` | 119,145 | 26,487 | 30,720 |
+| `@wavelo/vue` | 120,130 | 26,926 | 30,720 |
+| `@wavelo/angular` | 122,087 | 27,703 | 31,232 |
+| `@wavelo/svelte` | 118,505 | 26,168 | 30,720 |
+| `@wavelo/web-components` | 120,572 | 26,995 | 30,720 |
+| `@wavelo/vanilla` | 118,835 | 26,329 | 30,720 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 90,006 raw | 16,663 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -40,7 +40,7 @@ them the same trade — configuration that a page can set once instead of per lo
 - The colour and dimension grammar got wider.
 
 Runtime bundles additionally carry the registry and the 129-entry bitset those lists
-are decoded from, which is why their budget is 26 KiB (27 for Angular). Adapters
+are decoded from, which is why their budget is 30 KiB (30.5 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow by
 roughly 210 B per design added — the motion tranche's 18 designs took `core-renderer`
 from 19,011 B to 22,797 B, putting the base defaults at zero specificity added 221 B

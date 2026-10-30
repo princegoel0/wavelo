@@ -28,7 +28,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "conic-ring": "27dbff6",
    "neon-ring": "27dbff7",
    "rubber-band": "27dbff7",
-   "snake": "27dbff7",
+   "snake": "27dbff6",
    "clock-spinner": "27fbff6",
    "thin-line": "26dbff7",
    "thick-stroke": "27dbff7",
