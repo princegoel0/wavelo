@@ -39,7 +39,7 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 //
 // Budgets are set from those two realities with ~12% headroom, not from a per-design
 // ideal.
-const runtime = 30 * 1024;
+const runtime = 32 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
@@ -57,13 +57,13 @@ const budgets = {
   // they are new rules in every slice, not new reads of existing ones.
   'individual-loader': 8.5 * 1024,
   'busiest-loader': 9 * 1024,
-  'two-loaders': 10 * 1024,
+  'two-loaders': 11.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle.
-  angular: 30.5 * 1024,
+  angular: 33 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

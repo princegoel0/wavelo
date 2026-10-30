@@ -46,7 +46,10 @@ const PART_COUNTS: Record<string, number> = {
   'signal-bars': 4,
   spectrum: 8,
   breathing: 1,
-  heartbeat: 1
+  heartbeat: 1,
+  'success-ring': 1,
+  'error-shake': 1,
+  'button-confirm': 3
 };
 
 /**
@@ -60,7 +63,18 @@ const SKELETON_TRACKS: Record<string, number> = {
   'skeleton-inbox': 6,
   'skeleton-code': 6,
   'skeleton-chat': 3,
-  'skeleton-metric': 3
+  'skeleton-metric': 3,
+  'skeleton-product-card': 4,
+  'skeleton-product-page': 5,
+  'skeleton-cart': 4,
+  'skeleton-review': 4,
+  'skeleton-chart-bar': 5,
+  'skeleton-chart-line': 4,
+  'skeleton-chart-donut': 3,
+  'skeleton-data-table': 6,
+  'skeleton-kanban': 6,
+  'skeleton-timeline': 4,
+  'skeleton-calendar': 7
 };
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };

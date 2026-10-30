@@ -111,6 +111,17 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "skeleton-code": "26dbdfe",
    "skeleton-metric": "26dbdfe",
    "skeleton-dashboard": "26dbffe",
+   "skeleton-product-card": "26dbdf6",
+   "skeleton-product-page": "26dbdfe",
+   "skeleton-cart": "26dbdf6",
+   "skeleton-review": "26dbdf6",
+   "skeleton-chart-bar": "26dbffe",
+   "skeleton-chart-line": "26dbff6",
+   "skeleton-chart-donut": "26dbffe",
+   "skeleton-data-table": "26dbdfe",
+   "skeleton-kanban": "26dbdfe",
+   "skeleton-timeline": "26dbff6",
+   "skeleton-calendar": "26dbdfe",
    "progress-bar": "3e57e76",
    "progress-ring": "1f57c76",
    "progress-steps": "3e57e7e",
@@ -138,5 +149,8 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "page-transition": "1e9fff6",
    "image-placeholder": "26dbff6",
    "infinite-scroll": "26dbff7",
-   "background-operation": "26dbff7"
+   "background-operation": "26dbff7",
+   "success-ring": "27fbff7",
+   "error-shake": "26dbff6",
+   "button-confirm": "26dbff6"
   };

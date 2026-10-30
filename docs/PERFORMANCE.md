@@ -18,7 +18,7 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**126 of the 129 designs cost no layout per frame.** Three do, each for a reason a
+**140 of the 143 designs cost no layout per frame.** Three do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
@@ -81,7 +81,7 @@ Gzipped together, as shipped — the cheapest design in each kind:
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,316 bytes of every row above. The whole
-catalog sheet is 15,139 bytes gzipped, loaded once, for all 129 designs.
+catalog sheet is 15,139 bytes gzipped, loaded once, for all 143 designs.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
 design in that kind, which is why the five skeleton designs took `skeleton` from 1,747

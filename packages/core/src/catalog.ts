@@ -116,7 +116,18 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['skeleton-chat', 'Skeleton chat', 'skeleton', 'skeleton', 'Alternating bubbles, the newest lifting while the reply is written'],
   ['skeleton-code', 'Skeleton code', 'skeleton', 'skeleton', 'Code lines beside a numbered gutter, the last one short'],
   ['skeleton-metric', 'Skeleton metric', 'skeleton', 'skeleton', 'Metric card: number, label and trend chip'],
-  ['skeleton-dashboard', 'Skeleton dashboard', 'skeleton', 'skeleton', 'Dashboard placeholder'],
+    ['skeleton-dashboard', 'Skeleton dashboard', 'skeleton', 'skeleton', 'Dashboard placeholder'],
+  ['skeleton-product-card', 'Skeleton product card', 'skeleton', 'skeleton', 'Product card placeholder with image, title, price, and action'],
+  ['skeleton-product-page', 'Skeleton product page', 'skeleton', 'skeleton', 'Product detail page placeholder with gallery, breadcrumb, and CTA'],
+  ['skeleton-cart', 'Skeleton cart', 'skeleton', 'skeleton', 'Shopping cart row with thumbnail, details, quantity, and price'],
+  ['skeleton-review', 'Skeleton review', 'skeleton', 'skeleton', 'Review card with avatar, rating, and body text'],
+  ['skeleton-chart-bar', 'Skeleton bar chart', 'skeleton', 'skeleton', 'Bar chart placeholder with varying height columns'],
+  ['skeleton-chart-line', 'Skeleton line chart', 'skeleton', 'skeleton', 'Line chart placeholder with trend line and grid baseline'],
+  ['skeleton-chart-donut', 'Skeleton donut chart', 'skeleton', 'skeleton', 'Donut chart placeholder with masked radial ring and legend'],
+  ['skeleton-data-table', 'Skeleton data table', 'skeleton', 'skeleton', 'Data table placeholder with header, alternating rows, and pagination'],
+  ['skeleton-kanban', 'Skeleton kanban board', 'skeleton', 'skeleton', 'Three-column kanban board placeholder with cards'],
+  ['skeleton-timeline', 'Skeleton timeline', 'skeleton', 'skeleton', 'Vertical activity timeline placeholder with nodes and events'],
+  ['skeleton-calendar', 'Skeleton calendar', 'skeleton', 'skeleton', 'Seven-column calendar view placeholder with day cells'],
   ['progress-bar', 'Progress bar', 'progress', 'progress', 'Determinate progress bar'],
   ['progress-ring', 'Progress ring', 'progress', 'progress', 'Determinate circular progress'],
   ['progress-steps', 'Progress steps', 'progress', 'progress', 'Multi-step progress'],
@@ -136,7 +147,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['progress-ai-generate', 'Generating', 'progress', 'wave', 'A bright band travelling an empty track, with no percentage to report'],
   ['progress-skill', 'Skill bar', 'progress', 'progress', 'A level that overshoots and settles'],
   ['progress-timer', 'Countdown', 'progress', 'progress', 'The track empties as the value climbs'],
-  ['progress-orbit-fill', 'Orbit level', 'progress', 'progress', 'Six stations around a ring, switched off one by one'],
+  ['progress-orbit-fill', 'Orbit level', 'progress', 'progress', 'Six stations around a ring, filled one by one'],
   ['inline', 'Inline loading', 'application', 'pulse', 'Inline application loading'],
   ['button', 'Button loading', 'application', 'pulse', 'Button loading state'],
   ['overlay', 'Section overlay', 'application', 'overlay', 'Section loading overlay'],
@@ -144,7 +155,10 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['page-transition', 'Page transition', 'application', 'progress', 'Page transition indicator'],
   ['image-placeholder', 'Image placeholder', 'application', 'skeleton', 'Image loading placeholder'],
   ['infinite-scroll', 'Infinite scroll', 'application', 'dots', 'Infinite-scroll indicator'],
-  ['background-operation', 'Background operation', 'application', 'pulse', 'Background operation indicator']
+    ['background-operation', 'Background operation', 'application', 'pulse', 'Background operation indicator'],
+  ['success-ring', 'Success ring', 'application', 'ring', 'Stateful ring spinner that morphs into a checkmark on completion'],
+  ['error-shake', 'Error shake', 'application', 'shape', 'Stateful shape indicator that shakes horizontally on error'],
+  ['button-confirm', 'Button confirm', 'application', 'pulse', 'Stateful button loader that contracts into a confirmation tick']
 ];
 
 /**
@@ -181,7 +195,14 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['static-reduced-motion', 'inline'], ['classic-collection', 'ring'],
   ['creative-collection', 'morphing-shapes'], ['skeleton-collection', 'skeleton-card'],
   ['progress-collection', 'progress-bar'], ['ecommerce-collection', 'skeleton-card'],
-  ['dashboard-collection', 'skeleton-dashboard']
+    ['dashboard-collection', 'skeleton-dashboard'],
+  ['product-card', 'skeleton-product-card'], ['product-page', 'skeleton-product-page'],
+  ['cart-drawer', 'skeleton-cart'], ['review-card', 'skeleton-review'],
+  ['chart-bar', 'skeleton-chart-bar'], ['chart-line', 'skeleton-chart-line'],
+  ['chart-donut', 'skeleton-chart-donut'], ['data-grid', 'skeleton-data-table'],
+  ['kanban-board', 'skeleton-kanban'], ['timeline-feed', 'skeleton-timeline'],
+  ['calendar-grid', 'skeleton-calendar'], ['action-success', 'success-ring'],
+  ['form-error', 'error-shake'], ['submit-confirm', 'button-confirm']
 ];
 
 /** The design rendered when a caller omits `type` or names an unknown one. */

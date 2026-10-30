@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-orbit-fill", name: "Orbit level", category: "progress", kind: "progress", description: "Six stations around a ring, switched off one by one", options: ["className","color","count","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-orbit-fill" };
+const definition: LoaderDefinition = { id: "progress-orbit-fill", name: "Orbit level", category: "progress", kind: "progress", description: "Six stations around a ring, filled one by one", options: ["className","color","count","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-orbit-fill" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressOrbitFill = (config: Omit<LoaderConfig, 'type'> = {}) =>

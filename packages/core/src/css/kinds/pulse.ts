@@ -2,6 +2,7 @@ import { css as scaleDotFrames } from '../keyframes/scale-dot.js';
 import { css as thinkFrames } from '../keyframes/think.js';
 import { css as thinkHaloFrames } from '../keyframes/think-halo.js';
 import { css as blinkFrames } from '../keyframes/blink.js';
+import { css as confirmFrames } from '../keyframes/confirm.js';
 
 export const pulseCss = `
 .wavelo--pulse .wavelo__part{width:55%;height:55%;border-radius:50%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -26,4 +27,15 @@ export const pulseCss = `
 /* The caret at the end of a streamed answer. It is a block, not a round dot, and it
    spends the first half of the cycle lit. */
 .wavelo--stream-cursor .wavelo__part{width:42%;height:72%;border-radius:var(--wavelo-radius,2px);animation:wavelo-blink var(--wavelo-duration,1s) var(--wavelo-ease,steps(1,end)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${scaleDotFrames}${thinkFrames}${thinkHaloFrames}${blinkFrames}`;
+.wavelo--button-confirm{width:var(--wavelo-width,var(--wavelo-size,5.5rem));height:var(--wavelo-height,2rem);border-radius:999px;background:var(--wavelo-color,#6366f1);position:relative;display:inline-flex;align-items:center;justify-content:center}
+.wavelo--button-confirm .wavelo__part{flex:none;width:6px;height:6px;border-radius:50%;margin:0 2px;background:#fff;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--button-confirm .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
+.wavelo--button-confirm .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
+.wavelo--button-confirm[data-wavelo-state="success"]{background:#22c55e;animation:wavelo-confirm calc(var(--wavelo-duration,1s) * .4) ease forwards}
+.wavelo--button-confirm[data-wavelo-state="success"] .wavelo__part{display:none}
+.wavelo--button-confirm[data-wavelo-state="success"]:after{content:"\\2713";color:#fff;font-size:1.1rem;font-weight:700;line-height:1}
+.wavelo--button-confirm[data-wavelo-state="error"]{background:#ef4444;animation:none}
+.wavelo--button-confirm[data-wavelo-state="error"] .wavelo__part{display:none}
+.wavelo--button-confirm[data-wavelo-state="error"]:after{content:"\\00d7";color:#fff;font-size:1.3rem;font-weight:700;line-height:1}
+.wavelo--button-confirm[data-wavelo-state="idle"]{opacity:.7}
+${scaleDotFrames}${thinkFrames}${thinkHaloFrames}${blinkFrames}${confirmFrames}`;

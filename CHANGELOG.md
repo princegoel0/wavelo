@@ -9,7 +9,7 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 129 public IDs, each with its own implementation and no deprecated aliases. A
+- 143 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,

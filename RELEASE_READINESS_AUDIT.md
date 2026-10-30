@@ -254,16 +254,16 @@ Re-run 2026-10-29 against the current build, after the Phases B–J work.
 | Command | Result |
 |---|---|
 | `npm run check` | Passed: build with catalog generation, strict typecheck, 45 unit tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
-| `npm run catalog` | Passed: 129 public IDs, 129 active designs, 183 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run catalog` | Passed: 143 public IDs, 143 active designs, 211 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
 | `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages, across 12 documents |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: 33 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 129 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 129 designs, the name contract, distinctness of all 129 designs, gallery with option chips and playground + axe |
+| `npm run test:browser` | Passed: 33 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 143 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 143 designs, the name contract, distinctness of all 143 designs, gallery with option chips and playground + axe |
 | `npm run test:browser:firefox` | Passed: 6 Gecko smoke tests — the sheet applies, the options and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` measured unsupported on Firefox 157) |
-| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 129 designs |
-| `npm run audit:layout` | Passed: 126 of 129 designs cost no layout per frame; the three that do are each recorded with a reason |
-| `npm run audit:visual` | Passed: 129 designs, contact sheet regenerated |
-| `npm run audit:visual:correctness` | Passed: 129 active designs (111 animating, 16 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
+| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 143 designs |
+| `npm run audit:layout` | Passed: 126 of 143 designs cost no layout per frame; the three that do are each recorded with a reason |
+| `npm run audit:visual` | Passed: 143 designs, contact sheet regenerated |
+| `npm run audit:visual:correctness` | Passed: 143 active designs (111 animating, 16 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
 | `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |

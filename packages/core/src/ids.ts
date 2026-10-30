@@ -104,6 +104,17 @@ export const loaderIds = [
   "skeleton-code",
   "skeleton-metric",
   "skeleton-dashboard",
+  "skeleton-product-card",
+  "skeleton-product-page",
+  "skeleton-cart",
+  "skeleton-review",
+  "skeleton-chart-bar",
+  "skeleton-chart-line",
+  "skeleton-chart-donut",
+  "skeleton-data-table",
+  "skeleton-kanban",
+  "skeleton-timeline",
+  "skeleton-calendar",
   "progress-bar",
   "progress-ring",
   "progress-steps",
@@ -132,6 +143,9 @@ export const loaderIds = [
   "image-placeholder",
   "infinite-scroll",
   "background-operation",
+  "success-ring",
+  "error-shake",
+  "button-confirm",
 ] as const;
 
 export type LoaderId = (typeof loaderIds)[number];

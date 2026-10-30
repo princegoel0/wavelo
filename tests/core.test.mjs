@@ -75,7 +75,21 @@ test('designs whose names promise a count render that many parts', () => {
     'signal-bars': 4,
     spectrum: 8,
     breathing: 1,
-    heartbeat: 1
+    heartbeat: 1,
+    'skeleton-product-card': 4,
+    'skeleton-product-page': 5,
+    'skeleton-cart': 4,
+    'skeleton-review': 4,
+    'skeleton-chart-bar': 5,
+    'skeleton-chart-line': 4,
+    'skeleton-chart-donut': 3,
+    'skeleton-data-table': 6,
+    'skeleton-kanban': 6,
+    'skeleton-timeline': 4,
+    'skeleton-calendar': 7,
+    'success-ring': 1,
+    'error-shake': 1,
+    'button-confirm': 3
   };
   for (const [id, expected] of Object.entries(counts)) {
     const result = renderLoader({ type: id, value: 50, max: 100, label: id });
@@ -496,5 +510,16 @@ test('inline puts the box on the text line where a text line exists', () => {
   assert.ok(!options('fullscreen').includes('inline'), 'fullscreen advertises an inline it cannot use');
   for (const id of ['ring', 'skeleton-card', 'progress-scroll']) {
     assert.ok(options(id).includes('inline'), `${id} lost its inline alignment`);
+  }
+});
+
+test('micro-interactions pass through data-wavelo-state', () => {
+  for (const state of ['idle', 'loading', 'success', 'error']) {
+    const ring = renderLoader({ type: 'success-ring', 'data-wavelo-state': state });
+    assert.match(ring.html, new RegExp(`data-wavelo-state="${state}"`));
+    const shake = renderLoader({ type: 'error-shake', 'data-wavelo-state': state });
+    assert.match(shake.html, new RegExp(`data-wavelo-state="${state}"`));
+    const confirm = renderLoader({ type: 'button-confirm', 'data-wavelo-state': state });
+    assert.match(confirm.html, new RegExp(`data-wavelo-state="${state}"`));
   }
 });

@@ -6,11 +6,11 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 21,575 | 7.3 KB (7,480 B) | 8,704 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 21,575 | 7.9 KB (7,815 B) | 8,704 |
 | `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,213 | 7,809 | 9,216 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 29,658 | 8,853 | 10,240 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 118,313 | 25.5 KB (26,078 B) | 30,720 |
-| `@wavelo/core` + registry walk over all 129 designs | 118,316 | 26,086 | 30,720 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 118,313 | 28.2 KB (28,678 B) | 30,720 |
+| `@wavelo/core` + registry walk over all 143 designs | 118,316 | 26,086 | 30,720 |
 | `@wavelo/react` | 119,145 | 26,487 | 30,720 |
 | `@wavelo/vue` | 120,130 | 26,926 | 30,720 |
 | `@wavelo/angular` | 122,087 | 27,703 | 31,232 |
@@ -39,7 +39,7 @@ them the same trade — configuration that a page can set once instead of per lo
   `npm run audit:customization`) rather than a hand-written kind guess.
 - The colour and dimension grammar got wider.
 
-Runtime bundles additionally carry the registry and the 129-entry bitset those lists
+Runtime bundles additionally carry the registry and the 143-entry bitset those lists
 are decoded from, which is why their budget is 30 KiB (30.5 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow by
 roughly 210 B per design added — the motion tranche's 18 designs took `core-renderer`

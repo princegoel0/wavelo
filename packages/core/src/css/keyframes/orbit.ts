@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-orbit{from{transform:rotate(var(--orbit-angle)) translateX(calc(var(--wavelo-size,2.5rem) * .32))}to{transform:rotate(calc(var(--orbit-angle) + 360deg)) translateX(calc(var(--wavelo-size,2.5rem) * .32))}}`;
+export const css = `@keyframes wavelo-orbit{from{transform:rotate(var(--orbit-angle)) translateX(calc(var(--wavelo-size,2.5rem) * .32)) translate(-50%,-50%)}to{transform:rotate(calc(var(--orbit-angle) + 360deg)) translateX(calc(var(--wavelo-size,2.5rem) * .32)) translate(-50%,-50%)}}`;

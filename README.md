@@ -5,7 +5,7 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 129 designs, each visually distinct, built from 12
+The catalog holds 143 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 

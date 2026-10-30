@@ -3,6 +3,7 @@ import { css as glowFrames } from '../keyframes/glow.js';
 import { css as rubberFrames } from '../keyframes/rubber.js';
 import { css as snakeFrames } from '../keyframes/snake.js';
 import { css as ellipseFrames } from '../keyframes/ellipse.js';
+import { css as checkFrames } from '../keyframes/check.js';
 
 export const ringCss = `
 .wavelo--ring{border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -46,12 +47,14 @@ export const ringCss = `
    body follows the head through all four corners and the tail is always where the head
    was. The travel is inset by the border and by the segment's own width, because the
    parts are placed in the content box, not over the frame. */
-.wavelo--snake{border:var(--wavelo-stroke,3px) solid color-mix(in srgb,currentColor 22%,transparent);border-radius:0;background:transparent;animation:none}
-.wavelo--snake .wavelo__part{position:absolute;left:0;top:0;width:18%;height:18%;border-radius:2px;background:currentColor;animation:wavelo-snake calc(var(--wavelo-duration,1s) * 4) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--snake .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.27)}
-.wavelo--snake .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.54)}
-.wavelo--snake .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.81)}
-.wavelo--snake .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -1.08)}
+.wavelo--snake{border:var(--wavelo-stroke,3px) solid color-mix(in srgb,currentColor 22%,transparent);border-radius:var(--wavelo-radius,6px);background:transparent;animation:none}
+.wavelo--snake .wavelo__part{position:absolute;left:0;top:0;width:18%;height:18%;border-radius:50%;background:currentColor;transform-origin:center;animation:wavelo-snake calc(var(--wavelo-duration,1s) * 6) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--snake .wavelo__part:first-child{animation-delay:calc(var(--wavelo-duration,1s) * -.96);z-index:5;box-shadow:0 0 6px color-mix(in srgb,currentColor 35%,transparent)}
+.wavelo--snake .wavelo__part:first-child:after{content:"";position:absolute;right:18%;top:20%;width:22%;height:60%;background:radial-gradient(circle at 50% 25%,#fff 0 35%,#0b1020 40%),radial-gradient(circle at 50% 75%,#fff 0 35%,#0b1020 40%)}
+.wavelo--snake .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.72);z-index:4}
+.wavelo--snake .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.48);width:17%;height:17%;z-index:3}
+.wavelo--snake .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.24);width:15%;height:15%;opacity:.9;z-index:2}
+.wavelo--snake .wavelo__part:nth-child(5){animation-delay:0s;width:13%;height:13%;opacity:.75;z-index:1}
 /* Two hands on one dial. The minute hand turns with the duration and the hour hand is
    the same sweep twelve times slower, which is what makes it read as a clock rather
    than a spinner. */
@@ -62,4 +65,10 @@ export const ringCss = `
 .wavelo--clock-spinner:before,.wavelo--clock-spinner:after{content:"";position:absolute;left:50%;bottom:50%;width:var(--wavelo-stroke,2px);border-radius:var(--wavelo-radius,2px);background:currentColor;transform-origin:50% 100%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--clock-spinner:before{height:38%}
 .wavelo--clock-spinner:after{height:26%;background:var(--wavelo-secondary-color,#a5b4fc);animation-duration:calc(var(--wavelo-duration,1s) * 12)}
-${radarFrames}${glowFrames}${rubberFrames}${snakeFrames}${ellipseFrames}`;
+.wavelo--success-ring{border:var(--wavelo-stroke,3px) solid var(--wavelo-secondary-color,color-mix(in srgb,currentColor 22%,transparent));border-top-color:currentColor;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);position:relative}
+.wavelo--success-ring:after{content:"";position:absolute;box-sizing:border-box;left:28%;top:18%;width:35%;height:55%;border-right:var(--wavelo-stroke,3px) solid #22c55e;border-bottom:var(--wavelo-stroke,3px) solid #22c55e;transform:scale(0) rotate(45deg);opacity:0;transition:transform .2s ease,opacity .2s ease}
+.wavelo--success-ring[data-wavelo-state="success"]{border-color:#22c55e;animation:none}
+.wavelo--success-ring[data-wavelo-state="success"]:after{opacity:1;transform:scale(1) rotate(45deg);animation:wavelo-check calc(var(--wavelo-duration,1s) * .4) cubic-bezier(.175,.885,.32,1.275) forwards}
+.wavelo--success-ring[data-wavelo-state="error"]{border-color:#ef4444;animation:none}
+.wavelo--success-ring[data-wavelo-state="idle"]{border-color:color-mix(in srgb,currentColor 35%,transparent);animation:none}
+${radarFrames}${glowFrames}${rubberFrames}${snakeFrames}${ellipseFrames}${checkFrames}`;

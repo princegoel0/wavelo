@@ -384,13 +384,16 @@ test('every determinate design reflects its value in the browser', async () => {
   // A liquid level is a height rather than a width.
   const heights = values.map((value) => at('progress-wave-fill', value).partHeight);
   assert.ok(heights[0] < heights[1] && heights[1] < heights[2], `wave fill is not monotonic: ${heights}`);
-  // A gauge and a gradient ring each sweep half a turn, so the stop is half the value.
+  // A gauge sweeps half a turn, so the stop is half the value.
+  // A gradient ring sweeps the full circle, so its stop matches the value.
   for (const value of values) {
-    for (const id of ['progress-half-ring', 'progress-gradient-ring']) {
-      const image = at(id, value).backgroundImage;
-      assert.ok(image.includes('conic-gradient'), `${id}@${value} has no conic fill: ${image}`);
-      assert.ok(image.includes(`${value / 2}%`), `${id}@${value} does not sweep ${value / 2}% of a turn: ${image}`);
-    }
+    const halfImage = at('progress-half-ring', value).backgroundImage;
+    assert.ok(halfImage.includes('conic-gradient'), `progress-half-ring@${value} has no conic fill`);
+    assert.ok(halfImage.includes(`${value / 2}%`), `progress-half-ring@${value} does not sweep ${value / 2}% of a turn: ${halfImage}`);
+
+    const gradImage = at('progress-gradient-ring', value).backgroundImage;
+    assert.ok(gradImage.includes('conic-gradient'), `progress-gradient-ring@${value} has no conic fill`);
+    assert.ok(gradImage.includes(`${value}%`), `progress-gradient-ring@${value} does not sweep ${value}% of a turn: ${gradImage}`);
   }
   // Discrete units, counted.
   const discrete = {
@@ -670,6 +673,7 @@ test('each design renders what its name says', async () => {
     'progress-skill', 'progress-timer', 'progress-orbit-fill',
     'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
     'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
+    'orbiting-dots', 'orbiting-circles',
     'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
@@ -921,6 +925,14 @@ test('each design renders what its name says', async () => {
   assert.ok(at('solar-system').before, 'a solar system needs its sun');
   assert.deepEqual(at('solar-system').partAnimations, ['wavelo-orbit-ring']);
   assert.equal(new Set(at('solar-system').partDurations).size, 3, 'three orbits must take three different periods');
+  assert.equal(at('orbiting-dots').parts, 5, 'orbiting-dots renders 5 stations');
+  assert.ok(at('orbiting-dots').before, 'orbiting-dots has a central reference anchor');
+  assert.deepEqual(at('orbiting-dots').partAnimations, ['wavelo-orbit']);
+  assert.equal(new Set(at('orbiting-dots').partDelays).size, 1, 'orbiting-dots shares one timeline without delay collisions');
+  assert.equal(at('orbiting-circles').parts, 5, 'orbiting-circles renders 5 stations');
+  assert.ok(at('orbiting-circles').before, 'orbiting-circles has a central reference anchor');
+  assert.deepEqual(at('orbiting-circles').partAnimations, ['wavelo-orbit']);
+  assert.equal(new Set(at('orbiting-circles').partDelays).size, 1, 'orbiting-circles shares one timeline without delay collisions');
   assert.equal(at('signal-bars').parts, 4, 'signal bars are four steps');
   assert.deepEqual(at('signal-bars').partAnimations, ['wavelo-signal']);
   const signalHeights = at('signal-bars').partHeights.map((value) => Number.parseFloat(value));
@@ -1526,4 +1538,89 @@ test('tokens.css declares the defaults without changing any design', async () =>
   const colorOf = (row) => /color:([^;]*)/.exec(row)[1];
   assert.equal(colorOf(themed[ids.indexOf('ring')]), 'rgb(18, 52, 86)', 'a :root token override must reach an unconfigured loader');
   assert.notEqual(colorOf(plain[ids.indexOf('ring')]), 'rgb(18, 52, 86)');
+});
+
+test('specialized skeletons and micro-interactions render distinct geometry and react to data-wavelo-state', async () => {
+  const specializedSkeletons = [
+    'skeleton-product-card',
+    'skeleton-product-page',
+    'skeleton-cart',
+    'skeleton-review',
+    'skeleton-chart-bar',
+    'skeleton-chart-line',
+    'skeleton-chart-donut',
+    'skeleton-data-table',
+    'skeleton-kanban',
+    'skeleton-timeline',
+    'skeleton-calendar'
+  ];
+
+  const body = specializedSkeletons
+    .map((id) => `<div data-skeleton="${id}">${renderLoader({ type: id }).html}</div>`)
+    .join('');
+  await setContentPage(body);
+  await nextFrame();
+
+  const partsCounts = await page.evaluate(() => {
+    return Object.fromEntries(
+      [...document.querySelectorAll('[data-skeleton]')].map((wrap) => {
+        const id = wrap.dataset.skeleton;
+        const parts = wrap.querySelectorAll('.wavelo__part');
+        return [id, parts.length];
+      })
+    );
+  });
+
+  assert.equal(partsCounts['skeleton-product-card'], 4);
+  assert.equal(partsCounts['skeleton-product-page'], 5);
+  assert.equal(partsCounts['skeleton-cart'], 4);
+  assert.equal(partsCounts['skeleton-review'], 4);
+  assert.equal(partsCounts['skeleton-chart-bar'], 5);
+  assert.equal(partsCounts['skeleton-chart-line'], 4);
+  assert.equal(partsCounts['skeleton-chart-donut'], 3);
+  assert.equal(partsCounts['skeleton-data-table'], 6);
+  assert.equal(partsCounts['skeleton-kanban'], 6);
+  assert.equal(partsCounts['skeleton-timeline'], 4);
+  assert.equal(partsCounts['skeleton-calendar'], 7);
+
+  // Micro-interactions state tests
+  const microBody = [
+    `<div id="ring-loading">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="ring-success">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="shake-loading">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="shake-error">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="button-loading">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="button-success">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'success' }).html}</div>`
+  ].join('');
+
+  await setContentPage(microBody);
+  await nextFrame();
+
+  const states = await page.evaluate(() => {
+    const ringLoadingAnim = getComputedStyle(document.querySelector('#ring-loading .wavelo')).animationName;
+    const ringSuccessAnim = getComputedStyle(document.querySelector('#ring-success .wavelo')).animationName;
+    const ringSuccessColor = getComputedStyle(document.querySelector('#ring-success .wavelo')).borderColor;
+
+    const shakeLoadingColor = getComputedStyle(document.querySelector('#shake-loading .wavelo')).backgroundColor;
+    const shakeErrorColor = getComputedStyle(document.querySelector('#shake-error .wavelo')).backgroundColor;
+
+    const buttonLoadingParts = document.querySelector('#button-loading .wavelo__part');
+    const buttonSuccessParts = document.querySelector('#button-success .wavelo__part');
+    const buttonSuccessDisplay = getComputedStyle(buttonSuccessParts).display;
+
+    return {
+      ringLoadingAnim,
+      ringSuccessAnim,
+      ringSuccessColor,
+      shakeLoadingColor,
+      shakeErrorColor,
+      buttonSuccessDisplay
+    };
+  });
+
+  assert.equal(states.ringLoadingAnim, 'wavelo-spin');
+  assert.equal(states.ringSuccessAnim, 'none');
+  assert.equal(states.ringSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.shakeErrorColor, 'rgb(239, 68, 68)');
+  assert.equal(states.buttonSuccessDisplay, 'none');
 });
