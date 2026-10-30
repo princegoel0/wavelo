@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-snake{0%,100%{background:conic-gradient(currentColor 0 12%,transparent 0)}50%{background:conic-gradient(currentColor 0 88%,transparent 0)}}`;
+export const css = `@keyframes wavelo-snake{0%{transform:translate(0,0)}25%{transform:translate(calc(var(--wavelo-size,2.5rem) * .67),0)}50%{transform:translate(calc(var(--wavelo-size,2.5rem) * .67),calc(var(--wavelo-size,2.5rem) * .67))}75%{transform:translate(0,calc(var(--wavelo-size,2.5rem) * .67))}100%{transform:translate(0,0)}}`;

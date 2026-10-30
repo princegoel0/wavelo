@@ -17,6 +17,7 @@ const SVG_STAR =
 
 /** Part count for designs whose name promises a specific number of elements. */
 const PART_COUNTS: Record<string, number> = {
+  snake: 5,
   'three-dots': 3,
   'four-dots': 4,
   'five-dots': 5,

@@ -6,7 +6,7 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 21,169 | 7.2 KB (7,330 B) | 8,704 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 21,575 | 7.3 KB (7,480 B) | 8,704 |
 | `@wavelo/core/loaders/progress-battery` — the busiest kind | 24,213 | 7,809 | 9,216 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 29,658 | 8,853 | 10,240 |
 | `@wavelo/core` — `renderLoader`, design chosen at runtime | 118,313 | 25.5 KB (26,078 B) | 30,720 |

@@ -882,9 +882,10 @@ test('each design renders what its name says', async () => {
   assert.match(at('gradient-ring').mask, /radial-gradient/, 'the ring is carved from a gradient fill by a radial mask');
   assert.equal(at('comet-orbit').animation, 'wavelo-spin', 'the root turns, so the tail and its head cannot drift apart');
   assert.equal(at('comet-orbit').partAnimations.join(','), 'none', 'the dot rides the tail rather than orbiting on its own');
-  assert.match(at('snake').animation, /wavelo-snake/, 'the body lengthens on its own clock while the head travels on another');
-  assert.match(at('snake').mask, /radial-gradient/, 'the snake is an arc carved from a sweep, not a bordered ring');
-  assert.equal(at('snake').sides, 0, 'no border sides remain to rotate rigidly');
+  assert.equal(at('snake').sides, 4, 'the room is closed on all four sides');
+  assert.equal(at('snake').animation, 'none', 'the room holds still; the body moves inside it');
+  assert.equal(at('snake').parts, 5, 'a head and four body segments');
+  assert.deepEqual(at('snake').partAnimations, ['wavelo-snake'], 'every segment runs the same path');
   assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');
   assert.ok(Number.parseFloat(at('clock-spinner').borderWidth) > 0, 'hands need a dial to be a clock');
   assert.equal(at('clock-spinner').after.animation, 'wavelo-spin', 'the hour hand must turn');

@@ -32,7 +32,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['conic-ring', 'Conic ring', 'spinner', 'ring', 'Conic sweep carved into a ring by a radial mask'],
   ['neon-ring', 'Neon ring', 'spinner', 'ring', 'Ring that turns while its glow swells and fades'],
   ['rubber-band', 'Rubber band', 'spinner', 'ring', 'A closed band stretched tall and snapped back through its own overshoots'],
-  ['snake', 'Snake', 'spinner', 'ring', 'An arc that gathers up and stretches out as it travels, the way a snake moves'],
+  ['snake', 'Snake', 'spinner', 'ring', 'A segmented snake chasing its tail around the walls of a room'],
   ['clock-spinner', 'Clock spinner', 'spinner', 'ring', 'A dial with two hands turning twelve to one'],
   ['thin-line', 'Thin line', 'spinner', 'ring', 'Minimal hairline ring'],
   ['thick-stroke', 'Thick stroke', 'spinner', 'ring', 'Bold heavy-stroke ring'],

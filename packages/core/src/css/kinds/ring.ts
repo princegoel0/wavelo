@@ -41,11 +41,17 @@ export const ringCss = `
 .wavelo--rubber-band{border-color:currentColor;animation:wavelo-rubber calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* A short arc chasing its own tail: it turns while it shrinks and turns back out, so
    the open end appears to swallow the ring and then release it. */
-/* A rigid arc on a constant rotation is a spinner, not a snake. The head now travels at
-   one rate while the body lengthens and shortens at another, so the tail catches up and
-   falls behind: the arc grows from a stub to almost a full turn and shrinks back as it
-   goes. A gradient stop interpolates smoothly, which four border sides cannot. */
-.wavelo--snake{border:0;background:conic-gradient(currentColor 0 25%,transparent 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin calc(var(--wavelo-duration,1s) * 2) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-snake var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* The snake game: a bordered room and five segments chasing each other around its
+   perimeter. Every segment runs the same path a fifth of a cycle behind the last, so the
+   body follows the head through all four corners and the tail is always where the head
+   was. The travel is inset by the border and by the segment's own width, because the
+   parts are placed in the content box, not over the frame. */
+.wavelo--snake{border:var(--wavelo-stroke,3px) solid color-mix(in srgb,currentColor 22%,transparent);border-radius:0;background:transparent;animation:none}
+.wavelo--snake .wavelo__part{position:absolute;left:0;top:0;width:18%;height:18%;border-radius:2px;background:currentColor;animation:wavelo-snake calc(var(--wavelo-duration,1s) * 4) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--snake .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.27)}
+.wavelo--snake .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.54)}
+.wavelo--snake .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.81)}
+.wavelo--snake .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -1.08)}
 /* Two hands on one dial. The minute hand turns with the duration and the hour hand is
    the same sweep twelve times slower, which is what makes it read as a clock rather
    than a spinner. */
