@@ -1,6 +1,6 @@
 # Wavelo — Progress Tracker & Comprehensive Analysis Report
 
-> **Last verified against code & tests:** 2026-10-30 (IST), working tree on `dev` at `9aaf779` plus an uncommitted batch
+> **Last verified against code & tests:** 2026-10-30 (IST), on branch `dev` at `c8c72f8`
 > **Catalog size:** **155 active designs / 228 named presets** (started at 83/120)
 > **Quality gates:** `npm run check` green — build, strict typecheck, 50 unit/adapter tests, catalog drift, 7-package metadata validation, documentation sync, bundle budgets.
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
@@ -10,8 +10,7 @@
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and one catalog figure
-did not survive that check; see [Corrections](#corrections). The batch described here is
-**not yet committed**.
+did not survive that check; see [Corrections](#corrections).
 
 ---
 
@@ -142,7 +141,7 @@ at a `progress` design.
 ### 🔴 Before 0.1.0 — Owner Actions
 These are external infrastructure and governance gates. None can be done from the
 repository, and publishing seven packages is irreversible and permanently reserves the
-names — it happens only on explicit instruction. This batch is also still uncommitted.
+names — it happens only on explicit instruction.
 | # | Item | Action |
 |---|---|---|
 | P0-1 | npm Trusted Publishing | Establish for `@wavelo` scope against `princegoel0/wavelo`, `.github/workflows/release.yml`, environment `npm`. |
