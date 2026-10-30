@@ -50,7 +50,7 @@ test('designs whose names promise a count render that many parts', () => {
     'expanding-dot': 1,
     'audio-waveform': 7,
     'dotted-circle': 8,
-    helix: 6,
+    helix: 18,
     'skeleton-card': 3,
     'skeleton-table': 6,
     'progress-steps': 5,
@@ -69,9 +69,10 @@ test('designs whose names promise a count render that many parts', () => {
     'progress-upload-multi': 3,
     'progress-ai-generate': 1,
     pendulum: 1,
-    constellation: 5,
-    fireflies: 6,
-    'solar-system': 3,
+    constellation: 7,
+    fireflies: 10,
+    'solar-system': 5,
+    'bubble-rise': 8,
     'signal-bars': 4,
     spectrum: 8,
     breathing: 1,
@@ -89,7 +90,19 @@ test('designs whose names promise a count render that many parts', () => {
     'skeleton-calendar': 7,
     'success-ring': 1,
     'error-shake': 1,
-    'button-confirm': 3
+    'button-confirm': 3,
+    'skeleton-sidebar': 5,
+    'skeleton-notification': 4,
+    'skeleton-command': 5,
+    'skeleton-feed': 5,
+    'skeleton-filter-panel': 5,
+    'skeleton-map': 4,
+    'page-skeleton': 5,
+    'toast-loading': 2,
+    'drag-drop-pulse': 1,
+    'offline-dot': 1,
+    'save-indicator': 1,
+    'undo-progress': 1
   };
   for (const [id, expected] of Object.entries(counts)) {
     const result = renderLoader({ type: id, value: 50, max: 100, label: id });
@@ -360,6 +373,42 @@ test('pattern presets render the design they name', () => {
   }
 });
 
+test('constellation supports astronomical patterns via preset or data attribute', () => {
+  const defaultConst = renderLoader({ type: 'constellation', label: 'Loading' });
+  assert.match(defaultConst.html, /data-wavelo-constellation="ursa-major"/);
+  assert.equal(defaultConst.html.split('wavelo__part').length - 1, 7);
+
+  const orionPreset = renderLoader({ type: 'constellation-orion', label: 'Loading' });
+  assert.match(orionPreset.html, /data-wavelo-constellation="orion"/);
+  assert.equal(orionPreset.definition.id, 'constellation');
+  assert.equal(orionPreset.resolution, 'preset');
+
+  const cassiopeiaPreset = renderLoader({ type: 'constellation-cassiopeia', label: 'Loading' });
+  assert.match(cassiopeiaPreset.html, /data-wavelo-constellation="cassiopeia"/);
+
+  const cygnusPreset = renderLoader({ type: 'constellation-cygnus', label: 'Loading' });
+  assert.match(cygnusPreset.html, /data-wavelo-constellation="cygnus"/);
+
+  const ursaMinorPreset = renderLoader({ type: 'constellation-ursa-minor', label: 'Loading' });
+  assert.match(ursaMinorPreset.html, /data-wavelo-constellation="ursa-minor"/);
+
+  const customAttr = renderLoader({
+    type: 'constellation',
+    label: 'Loading',
+    'data-wavelo-constellation': 'cygnus'
+  });
+  assert.match(customAttr.html, /data-wavelo-constellation="cygnus"/);
+
+  // A name with no geometry rule behind it would leave every star at the box origin,
+  // so the attribute is checked against the pattern list rather than passed through.
+  const unknown = renderLoader({ type: 'constellation', label: 'Loading', 'data-wavelo-constellation': 'lyra' });
+  assert.match(unknown.html, /data-wavelo-constellation="ursa-major"/);
+  assert.equal(unknown.resolution, 'exact', 'the design resolved; only the pattern name did not');
+
+  const attributeWins = renderLoader({ type: 'constellation-orion', label: 'Loading', 'data-wavelo-constellation': 'cygnus' });
+  assert.match(attributeWins.html, /data-wavelo-constellation="cygnus"/);
+});
+
 test('an unknown ID is a fallback, which is not the same as a preset hit', () => {
   const unknown = renderLoader({ type: 'not-a-design-at-all', label: 'Loading' });
   assert.equal(unknown.resolution, 'default');
@@ -521,5 +570,11 @@ test('micro-interactions pass through data-wavelo-state', () => {
     assert.match(shake.html, new RegExp(`data-wavelo-state="${state}"`));
     const confirm = renderLoader({ type: 'button-confirm', 'data-wavelo-state': state });
     assert.match(confirm.html, new RegExp(`data-wavelo-state="${state}"`));
+    const offline = renderLoader({ type: 'offline-dot', 'data-wavelo-state': state });
+    assert.match(offline.html, new RegExp(`data-wavelo-state="${state}"`));
+    const save = renderLoader({ type: 'save-indicator', 'data-wavelo-state': state });
+    assert.match(save.html, new RegExp(`data-wavelo-state="${state}"`));
+    const undo = renderLoader({ type: 'undo-progress', 'data-wavelo-state': state });
+    assert.match(undo.html, new RegExp(`data-wavelo-state="${state}"`));
   }
 });

@@ -18,7 +18,7 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**140 of the 143 designs cost no layout per frame.** Three do, each for a reason a
+**152 of the 155 designs cost no layout per frame.** Three do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
@@ -30,7 +30,7 @@ transform would take away:
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 126.
+frame for a design that animates a box property, and zero for the other 152.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -72,37 +72,41 @@ Gzipped together, as shipped — the cheapest design in each kind:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,609 | `ring` | 2,718 |
-| `pulse` | 1,961 | `skeleton` | 2,834 |
-| `scroll` | 1,961 | `wave` | 3,019 |
-| `rings` | 2,011 | `shape` | 3,432 |
-| `bars` | 2,442 | `dots` | 3,454 |
-| `orbit` | 2,592 | `progress` | 3,866 |
+| `overlay` | 1,609 | `orbit` | 3,075 |
+| `scroll` | 1,961 | `wave` | 3,657 |
+| `rings` | 2,399 | `shape` | 3,942 |
+| `bars` | 2,442 | `progress` | 4,017 |
+| `pulse` | 2,750 | `ring` | 4,110 |
+| `skeleton` | 4,545 | `dots` | 4,935 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,316 bytes of every row above. The whole
-catalog sheet is 15,139 bytes gzipped, loaded once, for all 143 designs.
+catalog sheet is 22,601 bytes gzipped, loaded once, for all 155 designs.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
-design in that kind, which is why the five skeleton designs took `skeleton` from 1,747
-to 2,611 bytes, the twelve determinate designs made `progress` the largest slice in the
-library, and the motion tranche's eighteen designs took `dots` from 2,212 to 2,986 and
-`bars` from 1,552 to 2,212. The visual review then redrew five designs so they match
-their names, and that moved `shape` from 2,452 to 3,432 (a running hourglass is four
-rules where a silhouette was one), `dots` to 3,454, `wave` to 3,019, `ring` to 2,718 and
-`orbit` to 2,592. A design in a crowded kind costs more than a design in a quiet one,
-whatever its own rules — and a change to the renderer, which every design imports, costs
-all of them: the determinate fill path added 227 bytes to every single-design bundle.
+design in that kind, and it is not stable. Since the 129-design checkpoint, `dots` has
+gone from 3,454 to 4,935 bytes and `skeleton` from 2,834 to 4,545 as the motion and
+skeleton tranches joined them, which pushed `progress` — the largest slice then, at
+3,866 — to fourth at 4,017. That re-ordering is exactly why `busiest-loader` in
+`npm run measure` samples a dots design today: a probe pinned to whatever kind held the
+record when it was written stops measuring the worst case the moment another kind
+overtakes it, and the budget still passes. Redrawing a design moves its kind too, and not
+in proportion to the design's own size: `infinity` is one loader's worth of markup and put
+388 bytes on `rings` because the figure eight is sixteen keyframe stops, and `helix` put
+410 on `wave` because a DNA twist needs eighteen parts in six rows. A design in a crowded
+kind costs more than a design in a quiet one, whatever its own rules — and a change to the
+renderer, which every design imports, costs all of them: the determinate fill path added
+227 bytes to every single-design bundle.
 
 Importing one design's entry point costs the renderer, validation and that slice, and
-the five samples below are strictly ordered by the slice they pay for: `progress-view`
-(`scroll`) 5,867 bytes, `equalizer` (`bars`) 6,459, `ring` 6,688, `skeleton-card` 6,762
-and `progress-battery` (`progress`) 7,816 — the largest, because `progress` is still
-the most crowded slice. `npm run measure` enforces both ends of that range: 7,168 bytes
-for the sampled ring and 8,704 for the busiest kind, so a new determinate design cannot
-grow the progress slice without a number moving. Importing `renderLoader`, which chooses
-by string at runtime, costs 24.0 KB because it must be able to draw anything. See
-[BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
+the six samples below are strictly ordered by the slice they pay for: `progress-view`
+(`scroll`) 6,187 bytes, `equalizer` (`bars`) 6,778, `progress-battery` (`progress`)
+8,301, `ring` 8,432, `skeleton-card` (`skeleton`) 8,848 and `bubble-rise` (`dots`) 9,319
+— the largest, because `dots` is now the most crowded slice. `npm run measure` enforces
+both ends of that range: 9,728 bytes for the sampled `ring` and 10,752 for the busiest
+kind, so a new dots design cannot grow that slice without a number moving. Importing
+`renderLoader`, which chooses by string at runtime, costs 33.0 KB because it must be able
+to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader
 

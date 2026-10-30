@@ -115,6 +115,12 @@ export const loaderIds = [
   "skeleton-kanban",
   "skeleton-timeline",
   "skeleton-calendar",
+  "skeleton-sidebar",
+  "skeleton-notification",
+  "skeleton-command",
+  "skeleton-feed",
+  "skeleton-filter-panel",
+  "skeleton-map",
   "progress-bar",
   "progress-ring",
   "progress-steps",
@@ -146,6 +152,12 @@ export const loaderIds = [
   "success-ring",
   "error-shake",
   "button-confirm",
+  "toast-loading",
+  "drag-drop-pulse",
+  "page-skeleton",
+  "offline-dot",
+  "save-indicator",
+  "undo-progress",
 ] as const;
 
 export type LoaderId = (typeof loaderIds)[number];

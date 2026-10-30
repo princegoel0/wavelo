@@ -9,7 +9,7 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 143 public IDs, each with its own implementation and no deprecated aliases. A
+- 155 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
 - The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,
@@ -40,6 +40,20 @@ Not yet published.
   radius written against the loader's size rather than the part's own box. A browser test
   now freezes every design across its cycle and fails if two parts share a position and a
   size, which is what found four of the five.
+- A second fidelity pass on two designs that had been redrawn once and still did not
+  read as their names. `infinity` printed the `∞` character as text and slid two
+  ellipses past each other, so at a glance it was a cluster of circles with a glyph in
+  it; the track is now two circle outlines that touch at the centre of the box, and
+  three nodes run that path on a sixteen-stop lemniscate — eight stops per lobe, 45
+  degrees apart, which is the coarsest sampling whose chord error is invisible and keeps
+  the speed constant because equal angles on equal radii are equal arcs. `helix` was six
+  dots in one column swinging left and right: one strand swinging is a sine wave, not a
+  double helix. It is now eighteen parts in six rows of base pair, far node and near
+  node, each row a fifth of a turn behind the one above so the twist travels downward;
+  the far strand runs half a turn behind its own pair, smaller and dimmer, and each base
+  pair is widest when its two nodes are at opposite edges and closes to nothing as they
+  cross. The box is two sizes tall, as the fallback of `--wavelo-height` rather than as
+  an override, so setting a height still works.
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.

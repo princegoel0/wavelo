@@ -1,4 +1,5 @@
 import type { LoaderCategory, RenderKind } from './types.js';
+import { constellationPatterns } from './constellations.js';
 
 /**
  * The one authored description of every design in the library. `registry.ts`
@@ -55,11 +56,11 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['staggered-dots', 'Staggered dots', 'dots', 'dots', 'Staggered dot timing'],
   ['vertical-dots', 'Vertical bouncing dots', 'dots', 'wave', 'Vertical dot bounce'],
   ['magnetic-dots', 'Magnetic dots', 'dots', 'dots', 'Five dots pulled toward the centre and released'],
-  ['pendulum', 'Pendulum', 'dots', 'dots', 'A single bob swinging on an arc from a pivot above it'],
-  ['constellation', 'Constellation', 'dots', 'dots', 'Five nodes brightening while two lines between them fade in and out'],
-  ['bubble-rise', 'Bubble rise', 'dots', 'dots', 'Bubbles rising, growing and fading out before the top'],
-  ['fireflies', 'Fireflies', 'dots', 'orbit', 'Six motes drifting on uneven paths and fading as they go'],
-  ['solar-system', 'Solar system', 'dots', 'orbit', 'Three orbits at three radii around a sun'],
+  ['pendulum', 'Pendulum', 'dots', 'dots', 'A suspension rod and bob swinging in a realistic harmonic arc from a top pivot'],
+  ['constellation', 'Constellation', 'dots', 'dots', 'Astronomical star pattern with connecting lines (Ursa Major, Orion, Cassiopeia, Cygnus, Ursa Minor)'],
+  ['bubble-rise', 'Bubble rise', 'dots', 'dots', 'Eight bubbles rising, growing and floating upward at varying speeds'],
+  ['fireflies', 'Fireflies', 'dots', 'orbit', 'Ten glowing fireflies drifting on uneven paths and fading as they go'],
+  ['solar-system', 'Solar system', 'dots', 'orbit', 'The Solar System with central Sun, orbital rings, and orbiting planets'],
   ['equalizer', 'Equalizer bars', 'bars', 'bars', 'Audio equalizer bars'],
   ['bouncing-bars', 'Bouncing bars', 'bars', 'bars', 'Bouncing vertical bars'],
   ['vertical-pulse-bars', 'Vertical pulse bars', 'bars', 'bars', 'Vertical pulse bars'],
@@ -74,7 +75,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['piano-keys', 'Piano keys', 'bars', 'bars', 'Bars landing one after another at uneven points in the cycle'],
   ['fire-rise', 'Fire rise', 'bars', 'bars', 'Bars rising, stretching and burning out at the top'],
   ['spectrum', 'Spectrum', 'bars', 'bars', 'Eight bars running an uneven ladder of heights out of phase'],
-  ['heartbeat', 'Heartbeat', 'bars', 'wave', 'An ECG trace running across the element'],
+  ['heartbeat', 'Heartbeat', 'bars', 'wave', 'A realistic medical ECG cardiac trace sweeping across the monitor'],
   ['breathing', 'Breathing', 'bars', 'wave', 'One bar widening and narrowing on a slow cycle'],
   ['segmented-bar', 'Segmented bar', 'progress', 'progress', 'Segmented progress bar'],
   ['moving-stripe', 'Moving stripe', 'bars', 'wave', 'Traveling stripe'],
@@ -84,8 +85,8 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['ripple-circles', 'Ripple circles', 'creative', 'rings', 'Expanding ripple circles'],
   ['expanding-circles', 'Expanding circles', 'creative', 'rings', 'Expanding concentric circles'],
   ['morphing-shapes', 'Morphing shapes', 'creative', 'shape', 'Shape morphing between square, triangle and diamond'],
-  ['infinity', 'Infinity loop', 'creative', 'rings', 'Infinity loop'],
-  ['helix', 'DNA helix', 'creative', 'wave', 'DNA-style helix'],
+  ['infinity', 'Infinity loop', 'creative', 'rings', 'Two nodes run a figure-eight track drawn as two circles touching at the centre'],
+  ['helix', 'DNA helix', 'creative', 'wave', 'Two strands of nodes twist around each other, joined by base pairs that close as they cross'],
   ['cube', 'Cube rotation', 'creative', 'shape', 'Cube rotation'],
   ['polygon', 'Rotating polygon', 'creative', 'shape', 'Rotating polygon'],
   ['triangles', 'Rotating triangles', 'creative', 'shape', 'Rotating triangles'],
@@ -128,6 +129,12 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['skeleton-kanban', 'Skeleton kanban board', 'skeleton', 'skeleton', 'Three-column kanban board placeholder with cards'],
   ['skeleton-timeline', 'Skeleton timeline', 'skeleton', 'skeleton', 'Vertical activity timeline placeholder with nodes and events'],
   ['skeleton-calendar', 'Skeleton calendar', 'skeleton', 'skeleton', 'Seven-column calendar view placeholder with day cells'],
+  ['skeleton-sidebar', 'Skeleton sidebar', 'skeleton', 'skeleton', 'Sidebar navigation placeholder with logo, nav links and user footer'],
+  ['skeleton-notification', 'Skeleton notification', 'skeleton', 'skeleton', 'Notification card placeholder with status icon, header, and multi-line message'],
+  ['skeleton-command', 'Skeleton command palette', 'skeleton', 'skeleton', 'Command palette modal placeholder with search input and shortcut list rows'],
+  ['skeleton-feed', 'Skeleton feed post', 'skeleton', 'skeleton', 'Social feed post placeholder with avatar, author header, media box, and action bar'],
+  ['skeleton-filter-panel', 'Skeleton filter panel', 'skeleton', 'skeleton', 'Faceted search filter panel placeholder with chips, checkbox groups, and range slider'],
+  ['skeleton-map', 'Skeleton map view', 'skeleton', 'skeleton', 'Geographic map view placeholder with pin markers, route path, and zoom controls'],
   ['progress-bar', 'Progress bar', 'progress', 'progress', 'Determinate progress bar'],
   ['progress-ring', 'Progress ring', 'progress', 'progress', 'Determinate circular progress'],
   ['progress-steps', 'Progress steps', 'progress', 'progress', 'Multi-step progress'],
@@ -158,7 +165,13 @@ export const catalogEntries: readonly CatalogEntry[] = [
     ['background-operation', 'Background operation', 'application', 'pulse', 'Background operation indicator'],
   ['success-ring', 'Success ring', 'application', 'ring', 'Stateful ring spinner that morphs into a checkmark on completion'],
   ['error-shake', 'Error shake', 'application', 'shape', 'Stateful shape indicator that shakes horizontally on error'],
-  ['button-confirm', 'Button confirm', 'application', 'pulse', 'Stateful button loader that contracts into a confirmation tick']
+  ['button-confirm', 'Button confirm', 'application', 'pulse', 'Stateful button loader that contracts into a confirmation tick'],
+  ['toast-loading', 'Toast loading', 'application', 'pulse', 'Floating notification badge with spinner and message line'],
+  ['drag-drop-pulse', 'Drag and drop pulse', 'application', 'pulse', 'Dropzone boundary with breathing dashed border and upload prompt'],
+  ['page-skeleton', 'Page skeleton', 'application', 'skeleton', 'Full viewport page skeleton with header navbar, sidebar navigation, and main canvas'],
+  ['offline-dot', 'Offline status dot', 'application', 'pulse', 'Network connectivity indicator transitioning between online, offline alert, and reconnecting wave'],
+  ['save-indicator', 'Save indicator', 'application', 'ring', 'Document save status transitioning from spinning sync to saved check or error'],
+  ['undo-progress', 'Undo progress', 'application', 'progress', 'Action toast bar that drains its time track and morphs to undone or dismissed state']
 ];
 
 /**
@@ -202,7 +215,8 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['chart-donut', 'skeleton-chart-donut'], ['data-grid', 'skeleton-data-table'],
   ['kanban-board', 'skeleton-kanban'], ['timeline-feed', 'skeleton-timeline'],
   ['calendar-grid', 'skeleton-calendar'], ['action-success', 'success-ring'],
-  ['form-error', 'error-shake'], ['submit-confirm', 'button-confirm']
+  ['form-error', 'error-shake'], ['submit-confirm', 'button-confirm'],
+  ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 
 /** The design rendered when a caller omits `type` or names an unknown one. */

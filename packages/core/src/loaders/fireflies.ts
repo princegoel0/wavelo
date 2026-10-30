@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "fireflies", name: "Fireflies", category: "dots", kind: "orbit", description: "Six motes drifting on uneven paths and fading as they go", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "fireflies" };
+const definition: LoaderDefinition = { id: "fireflies", name: "Fireflies", category: "dots", kind: "orbit", description: "Ten glowing fireflies drifting on uneven paths and fading as they go", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "fireflies" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const fireflies = (config: Omit<LoaderConfig, 'type'> = {}) =>

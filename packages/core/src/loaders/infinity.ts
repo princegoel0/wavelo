@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "infinity", name: "Infinity loop", category: "creative", kind: "rings", description: "Infinity loop", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "infinity" };
+const definition: LoaderDefinition = { id: "infinity", name: "Infinity loop", category: "creative", kind: "rings", description: "Two nodes run a figure-eight track drawn as two circles touching at the centre", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "infinity" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const infinity = (config: Omit<LoaderConfig, 'type'> = {}) =>

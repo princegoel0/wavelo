@@ -674,7 +674,8 @@ test('each design renders what its name says', async () => {
     'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
     'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
     'orbiting-dots', 'orbiting-circles',
-    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing'
+    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing',
+    'dot-wave'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
     .join('');
@@ -912,19 +913,19 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('magnetic-dots').partAnimations, ['wavelo-magnet']);
   assert.equal(at('pendulum').parts, 1, 'one bob, not a row');
   assert.deepEqual(at('pendulum').partAnimations, ['wavelo-pendulum']);
-  assert.equal(at('constellation').parts, 5);
+  assert.equal(at('constellation').parts, 7);
   assert.ok(at('constellation').before && at('constellation').after, 'a constellation must draw its connecting lines');
   assert.equal(at('constellation').before.animation, 'wavelo-constellation-line');
   assert.deepEqual(at('constellation').partAnimations, ['wavelo-constellation']);
   assert.deepEqual(at('bubble-rise').partAnimations, ['wavelo-bubble']);
-  assert.equal(new Set(at('bubble-rise').partDelays).size, 5, 'bubbles must leave at different times');
-  assert.equal(at('fireflies').parts, 6);
+  assert.equal(new Set(at('bubble-rise').partDelays).size, 8, 'bubbles must leave at different times');
+  assert.equal(at('fireflies').parts, 10);
   assert.deepEqual(at('fireflies').partAnimations, ['wavelo-firefly']);
-  assert.equal(new Set(at('fireflies').partDelays).size, 6, 'six motes on six different paths');
-  assert.equal(at('solar-system').parts, 3);
+  assert.equal(new Set(at('fireflies').partDelays).size, 10, 'ten motes on different paths');
+  assert.equal(at('solar-system').parts, 5);
   assert.ok(at('solar-system').before, 'a solar system needs its sun');
   assert.deepEqual(at('solar-system').partAnimations, ['wavelo-orbit-ring']);
-  assert.equal(new Set(at('solar-system').partDurations).size, 3, 'three orbits must take three different periods');
+  assert.equal(new Set(at('solar-system').partDurations).size, 5, 'five planetary orbits must take five different periods');
   assert.equal(at('orbiting-dots').parts, 5, 'orbiting-dots renders 5 stations');
   assert.ok(at('orbiting-dots').before, 'orbiting-dots has a central reference anchor');
   assert.deepEqual(at('orbiting-dots').partAnimations, ['wavelo-orbit']);
@@ -948,6 +949,10 @@ test('each design renders what its name says', async () => {
   assert.equal(at('heartbeat').before.animation, 'wavelo-heart');
   assert.equal(at('breathing').parts, 1, 'one bar, breathing');
   assert.deepEqual(at('breathing').partAnimations, ['wavelo-breathe']);
+  assert.equal(at('dot-wave').parts, 5, 'dot-wave is five dots');
+  assert.equal(at('dot-wave').partRadius, '50%', 'dot-wave renders circular dots');
+  assert.deepEqual(at('dot-wave').partAnimations, ['wavelo-dot-wave']);
+  assert.equal(new Set(at('dot-wave').partDelays).size, 5, 'five dots staggered along the wave');
 });
 
 test('no two designs in the catalog render identically', async () => {
@@ -1590,7 +1595,16 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     `<div id="shake-loading">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="shake-error">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'error' }).html}</div>`,
     `<div id="button-loading">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'loading' }).html}</div>`,
-    `<div id="button-success">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'success' }).html}</div>`
+    `<div id="button-success">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="offline-loading">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="offline-success">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="offline-error">${renderLoader({ type: 'offline-dot', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="save-loading">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="save-success">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="save-error">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="undo-loading">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="undo-success">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="undo-error">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'error' }).html}</div>`
   ].join('');
 
   await setContentPage(microBody);
@@ -1608,13 +1622,38 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     const buttonSuccessParts = document.querySelector('#button-success .wavelo__part');
     const buttonSuccessDisplay = getComputedStyle(buttonSuccessParts).display;
 
+    const offlineLoadingPartAnim = getComputedStyle(document.querySelector('#offline-loading .wavelo__part')).animationName;
+    const offlineSuccessPartAnim = getComputedStyle(document.querySelector('#offline-success .wavelo__part')).animationName;
+    const offlineSuccessColor = getComputedStyle(document.querySelector('#offline-success .wavelo__part')).backgroundColor;
+    const offlineErrorColor = getComputedStyle(document.querySelector('#offline-error .wavelo__part')).backgroundColor;
+
+    const saveLoadingAnim = getComputedStyle(document.querySelector('#save-loading .wavelo')).animationName;
+    const saveSuccessAnim = getComputedStyle(document.querySelector('#save-success .wavelo')).animationName;
+    const saveSuccessColor = getComputedStyle(document.querySelector('#save-success .wavelo')).borderColor;
+    const saveErrorColor = getComputedStyle(document.querySelector('#save-error .wavelo')).borderColor;
+
+    const undoLoadingPartAnim = getComputedStyle(document.querySelector('#undo-loading .wavelo__part')).animationName;
+    const undoSuccessColor = getComputedStyle(document.querySelector('#undo-success .wavelo__part')).backgroundColor;
+    const undoErrorColor = getComputedStyle(document.querySelector('#undo-error .wavelo__part')).backgroundColor;
+
     return {
       ringLoadingAnim,
       ringSuccessAnim,
       ringSuccessColor,
       shakeLoadingColor,
       shakeErrorColor,
-      buttonSuccessDisplay
+      buttonSuccessDisplay,
+      offlineLoadingPartAnim,
+      offlineSuccessPartAnim,
+      offlineSuccessColor,
+      offlineErrorColor,
+      saveLoadingAnim,
+      saveSuccessAnim,
+      saveSuccessColor,
+      saveErrorColor,
+      undoLoadingPartAnim,
+      undoSuccessColor,
+      undoErrorColor
     };
   });
 
@@ -1623,4 +1662,61 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.ringSuccessColor, 'rgb(34, 197, 94)');
   assert.equal(states.shakeErrorColor, 'rgb(239, 68, 68)');
   assert.equal(states.buttonSuccessDisplay, 'none');
+
+  assert.equal(states.offlineLoadingPartAnim, 'wavelo-pulse');
+  assert.equal(states.offlineSuccessPartAnim, 'none');
+  assert.equal(states.offlineSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.offlineErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.saveLoadingAnim, 'wavelo-spin');
+  assert.equal(states.saveSuccessAnim, 'none');
+  assert.equal(states.saveSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.saveErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.undoLoadingPartAnim, 'wavelo-drain');
+  assert.equal(states.undoSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.undoErrorColor, 'rgb(239, 68, 68)');
+});
+
+test('constellations render distinct astronomical star maps and connecting lines', async () => {
+  const constellations = ['ursa-major', 'orion', 'cassiopeia', 'cygnus', 'ursa-minor'];
+  const html = constellations
+    .map((name) => `<div id="c-${name}">${renderLoader({ type: `constellation-${name}`, label: name }).html}</div>`)
+    .join('');
+
+  await setContentPage(html);
+
+  const results = await page.evaluate(() => {
+    const names = ['ursa-major', 'orion', 'cassiopeia', 'cygnus', 'ursa-minor'];
+    return names.map((name) => {
+      const el = document.querySelector(`#c-${name} .wavelo`);
+      const before = getComputedStyle(el, '::before');
+      const parts = Array.from(el.querySelectorAll('.wavelo__part'));
+      const visibleParts = parts.filter((p) => getComputedStyle(p).display !== 'none');
+      const firstStarLeft = getComputedStyle(parts[0]).left;
+      return {
+        name,
+        attr: el.getAttribute('data-wavelo-constellation'),
+        totalParts: parts.length,
+        visibleParts: visibleParts.length,
+        hasBeforeClip: before.clipPath !== 'none' && before.clipPath !== '',
+        firstStarLeft
+      };
+    });
+  });
+
+  assert.equal(results.length, 5);
+  for (const r of results) {
+    assert.equal(r.attr, r.name);
+    assert.equal(r.totalParts, 7);
+    assert.ok(r.hasBeforeClip, `${r.name} must have a clip-path for connecting lines`);
+  }
+  assert.equal(results.find((r) => r.name === 'ursa-major').visibleParts, 7);
+  assert.equal(results.find((r) => r.name === 'orion').visibleParts, 7);
+  assert.equal(results.find((r) => r.name === 'cassiopeia').visibleParts, 5);
+  assert.equal(results.find((r) => r.name === 'cygnus').visibleParts, 5);
+  assert.equal(results.find((r) => r.name === 'ursa-minor').visibleParts, 7);
+
+  const firstStarPositions = new Set(results.map((r) => r.firstStarLeft));
+  assert.ok(firstStarPositions.size >= 4, 'Constellations must have unique star placements');
 });

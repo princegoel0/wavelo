@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "heartbeat", name: "Heartbeat", category: "bars", kind: "wave", description: "An ECG trace running across the element", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "heartbeat" };
+const definition: LoaderDefinition = { id: "heartbeat", name: "Heartbeat", category: "bars", kind: "wave", description: "A realistic medical ECG cardiac trace sweeping across the monitor", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "heartbeat" };
 const styles = `${baseCss}${waveCss}`;
 
 export const heartbeat = (config: Omit<LoaderConfig, 'type'> = {}) =>

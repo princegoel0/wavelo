@@ -1,6 +1,7 @@
 import { css as uploadFrames } from '../keyframes/upload.js';
 import { css as transitionFrames } from '../keyframes/transition.js';
 import { css as waveRollFrames } from '../keyframes/wave-roll.js';
+import { css as drainFrames } from '../keyframes/drain.js';
 
 export const progressCss = `
 .wavelo--progress{width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);overflow:hidden;border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 18%,transparent)}
@@ -78,4 +79,12 @@ export const progressCss = `
 .wavelo--progress-orbit-fill .wavelo__part:nth-child(4){transform:rotate(180deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
 .wavelo--progress-orbit-fill .wavelo__part:nth-child(5){transform:rotate(240deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
 .wavelo--progress-orbit-fill .wavelo__part:nth-child(6){transform:rotate(300deg) translateY(calc(var(--wavelo-size,2.5rem) * -.38))}
-${uploadFrames}${transitionFrames}${waveRollFrames}`;
+.wavelo--undo-progress{width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,.5rem);border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 15%,transparent);position:relative;overflow:hidden}
+.wavelo--undo-progress .wavelo__part{height:100%;width:100%;border-radius:inherit;background:currentColor;transform-origin:left;animation:wavelo-drain var(--wavelo-duration,5s) linear forwards var(--wavelo-play-state,running)}
+.wavelo--undo-progress[data-wavelo-state="success"]{background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 20%,transparent)}
+.wavelo--undo-progress[data-wavelo-state="success"] .wavelo__part{background:var(--wavelo-success-color,#22c55e);animation:none;transform:scaleX(1)}
+.wavelo--undo-progress[data-wavelo-state="error"]{background:color-mix(in srgb,var(--wavelo-error-color,#ef4444) 20%,transparent);opacity:.5}
+.wavelo--undo-progress[data-wavelo-state="error"] .wavelo__part{background:var(--wavelo-error-color,#ef4444);animation:none;transform:scaleX(0)}
+.wavelo--undo-progress[data-wavelo-state="idle"]{opacity:.7}
+.wavelo--undo-progress[data-wavelo-state="idle"] .wavelo__part{animation:none;transform:scaleX(1)}
+${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}`;

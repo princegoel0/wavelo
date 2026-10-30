@@ -1,4 +1,5 @@
 import { escapeHtml, normalizeConfig } from './validation.js';
+import { defaultConstellation, isConstellationPattern } from './constellations.js';
 import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult, ResolutionSource } from './types.js';
 
 /** FNV-1a, used to identify a stylesheet slice so it is injected only once. */
@@ -26,13 +27,13 @@ const PART_COUNTS: Record<string, number> = {
   'expanding-dot': 1,
   'audio-waveform': 7,
   'dotted-circle': 8,
-  infinity: 2,
+  infinity: 3,
   triangles: 3,
   'ripple-circles': 3,
   'expanding-circles': 3,
   'nested-squares': 3,
   'concentric-pulse': 3,
-  helix: 6,
+  helix: 18,
   'typing-dots': 3,
   'trip-orbit': 3,
   'thinking-glow': 1,
@@ -41,15 +42,22 @@ const PART_COUNTS: Record<string, number> = {
   'comet-orbit': 1,
   'progress-ai-generate': 1,
   pendulum: 1,
-  fireflies: 6,
-  'solar-system': 3,
+  fireflies: 10,
+  'solar-system': 5,
+  constellation: 7,
+  'bubble-rise': 8,
   'signal-bars': 4,
   spectrum: 8,
   breathing: 1,
   heartbeat: 1,
   'success-ring': 1,
   'error-shake': 1,
-  'button-confirm': 3
+  'button-confirm': 3,
+  'toast-loading': 2,
+  'drag-drop-pulse': 1,
+  'offline-dot': 1,
+  'save-indicator': 1,
+  'undo-progress': 1
 };
 
 /**
@@ -74,7 +82,14 @@ const SKELETON_TRACKS: Record<string, number> = {
   'skeleton-data-table': 6,
   'skeleton-kanban': 6,
   'skeleton-timeline': 4,
-  'skeleton-calendar': 7
+  'skeleton-calendar': 7,
+  'skeleton-sidebar': 5,
+  'skeleton-notification': 4,
+  'skeleton-command': 5,
+  'skeleton-feed': 5,
+  'skeleton-filter-panel': 5,
+  'skeleton-map': 4,
+  'page-skeleton': 5
 };
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
@@ -199,6 +214,17 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     .join(' ');
   const motion = config.reducedMotion ?? 'auto';
   const dataAttributes = Object.fromEntries(Object.entries(config.dataAttributes).map(([name, value]) => [name, String(value)]));
+  if (definition.id === 'constellation') {
+    // The only design whose geometry is chosen from the page: the dots slice carries five
+    // star patterns, each keyed on this attribute, so a preset name or the attribute itself
+    // picks one. An unrecognised value would select no pattern and leave all seven stars
+    // stacked at the box origin, so it is checked against the list rather than passed
+    // through — the attribute stays a public contract with a defined failure mode.
+    const requested =
+      dataAttributes['data-wavelo-constellation'] ??
+      (typeof requestedType === 'string' && requestedType.startsWith('constellation-') ? requestedType.slice('constellation-'.length) : undefined);
+    dataAttributes['data-wavelo-constellation'] = isConstellationPattern(requested) ? requested : defaultConstellation;
+  }
   // A request that matched nothing is otherwise invisible once it reaches the page:
   // the element looks exactly like the default design. Naming what was asked for
   // turns "why is the wrong loader showing" into one look at the inspector, and it

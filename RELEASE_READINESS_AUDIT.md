@@ -254,7 +254,7 @@ Re-run 2026-10-29 against the current build, after the Phases B–J work.
 | Command | Result |
 |---|---|
 | `npm run check` | Passed: build with catalog generation, strict typecheck, 45 unit tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
-| `npm run catalog` | Passed: 143 public IDs, 143 active designs, 211 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run catalog` | Passed: 155 public IDs, 155 active designs, 228 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
 | `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages, across 12 documents |
 | `npm run docs:build` | Passed |

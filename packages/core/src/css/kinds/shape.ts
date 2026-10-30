@@ -68,9 +68,9 @@ export const shapeCss = `
 /* A metronome arm swinging about its foot. */
 .wavelo--metronome{width:var(--wavelo-width,calc(var(--wavelo-size,2.5rem) * .28));height:var(--wavelo-height,var(--wavelo-size,2.5rem));border-radius:var(--wavelo-radius,2px);transform-origin:50% 96%;animation:wavelo-metronome calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--error-shake{background:currentColor;border-radius:var(--wavelo-radius,8px);position:relative;display:inline-grid;place-items:center}
-.wavelo--error-shake[data-wavelo-state="error"]{background:#ef4444;animation:wavelo-shake calc(var(--wavelo-duration,1s) * .45) ease-in-out}
+.wavelo--error-shake[data-wavelo-state="error"]{background:var(--wavelo-error-color,#ef4444);animation:wavelo-shake calc(var(--wavelo-duration,1s) * .45) ease-in-out}
 .wavelo--error-shake[data-wavelo-state="error"]:after{content:"!";font-weight:700;font-size:calc(var(--wavelo-size,2.5rem) * .55);color:#fff;line-height:1}
-.wavelo--error-shake[data-wavelo-state="success"]{background:#22c55e;animation:none}
+.wavelo--error-shake[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:none}
 .wavelo--error-shake[data-wavelo-state="success"]:after{content:"\\2713";font-weight:700;font-size:calc(var(--wavelo-size,2.5rem) * .55);color:#fff;line-height:1}
 .wavelo--error-shake[data-wavelo-state="idle"]{animation:none;opacity:.7}
 ${shapeFrames}${squareFrames}${cubeFrames}${polygonFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}${blobFrames}${sandFrames}${sandTopFrames}${sandBottomFrames}${blinkEyeFrames}${eyeLookFrames}${metronomeFrames}${shakeFrames}`;

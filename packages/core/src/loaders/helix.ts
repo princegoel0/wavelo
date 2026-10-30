@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "helix", name: "DNA helix", category: "creative", kind: "wave", description: "DNA-style helix", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "helix" };
+const definition: LoaderDefinition = { id: "helix", name: "DNA helix", category: "creative", kind: "wave", description: "Two strands of nodes twist around each other, joined by base pairs that close as they cross", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "helix" };
 const styles = `${baseCss}${waveCss}`;
 
 export const helix = (config: Omit<LoaderConfig, 'type'> = {}) =>

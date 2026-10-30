@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "pendulum", name: "Pendulum", category: "dots", kind: "dots", description: "A single bob swinging on an arc from a pivot above it", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "pendulum" };
+const definition: LoaderDefinition = { id: "pendulum", name: "Pendulum", category: "dots", kind: "dots", description: "A suspension rod and bob swinging in a realistic harmonic arc from a top pivot", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "pendulum" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const pendulum = (config: Omit<LoaderConfig, 'type'> = {}) =>

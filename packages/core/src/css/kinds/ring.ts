@@ -66,9 +66,17 @@ export const ringCss = `
 .wavelo--clock-spinner:before{height:38%}
 .wavelo--clock-spinner:after{height:26%;background:var(--wavelo-secondary-color,#a5b4fc);animation-duration:calc(var(--wavelo-duration,1s) * 12)}
 .wavelo--success-ring{border:var(--wavelo-stroke,3px) solid var(--wavelo-secondary-color,color-mix(in srgb,currentColor 22%,transparent));border-top-color:currentColor;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);position:relative}
-.wavelo--success-ring:after{content:"";position:absolute;box-sizing:border-box;left:28%;top:18%;width:35%;height:55%;border-right:var(--wavelo-stroke,3px) solid #22c55e;border-bottom:var(--wavelo-stroke,3px) solid #22c55e;transform:scale(0) rotate(45deg);opacity:0;transition:transform .2s ease,opacity .2s ease}
-.wavelo--success-ring[data-wavelo-state="success"]{border-color:#22c55e;animation:none}
+.wavelo--success-ring:after{content:"";position:absolute;box-sizing:border-box;left:28%;top:18%;width:35%;height:55%;border-right:var(--wavelo-stroke,3px) solid var(--wavelo-success-color,#22c55e);border-bottom:var(--wavelo-stroke,3px) solid var(--wavelo-success-color,#22c55e);transform:scale(0) rotate(45deg);opacity:0;transition:transform .2s ease,opacity .2s ease}
+.wavelo--success-ring[data-wavelo-state="success"]{border-color:var(--wavelo-success-color,#22c55e);animation:none}
 .wavelo--success-ring[data-wavelo-state="success"]:after{opacity:1;transform:scale(1) rotate(45deg);animation:wavelo-check calc(var(--wavelo-duration,1s) * .4) cubic-bezier(.175,.885,.32,1.275) forwards}
-.wavelo--success-ring[data-wavelo-state="error"]{border-color:#ef4444;animation:none}
+.wavelo--success-ring[data-wavelo-state="error"]{border-color:var(--wavelo-error-color,#ef4444);animation:none}
 .wavelo--success-ring[data-wavelo-state="idle"]{border-color:color-mix(in srgb,currentColor 35%,transparent);animation:none}
+.wavelo--save-indicator{border:var(--wavelo-stroke,3px) solid var(--wavelo-secondary-color,color-mix(in srgb,currentColor 22%,transparent));border-top-color:currentColor;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);position:relative}
+.wavelo--save-indicator .wavelo__part{display:none}
+.wavelo--save-indicator:after{content:"";position:absolute;box-sizing:border-box;left:28%;top:18%;width:35%;height:55%;border-right:var(--wavelo-stroke,3px) solid var(--wavelo-success-color,#22c55e);border-bottom:var(--wavelo-stroke,3px) solid var(--wavelo-success-color,#22c55e);transform:scale(0) rotate(45deg);opacity:0;transition:transform .2s ease,opacity .2s ease}
+.wavelo--save-indicator[data-wavelo-state="success"]{border-color:var(--wavelo-success-color,#22c55e);animation:none}
+.wavelo--save-indicator[data-wavelo-state="success"]:after{opacity:1;transform:scale(1) rotate(45deg);animation:wavelo-check calc(var(--wavelo-duration,1s) * .4) cubic-bezier(.175,.885,.32,1.275) forwards}
+.wavelo--save-indicator[data-wavelo-state="error"]{border-color:var(--wavelo-error-color,#ef4444);animation:none}
+.wavelo--save-indicator[data-wavelo-state="error"]:after{content:"\\00d7";border:0;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--wavelo-error-color,#ef4444);font-size:1.1rem;font-weight:700;line-height:1;transform:scale(1);opacity:1}
+.wavelo--save-indicator[data-wavelo-state="idle"]{border-color:color-mix(in srgb,currentColor 35%,transparent);animation:none}
 ${radarFrames}${glowFrames}${rubberFrames}${snakeFrames}${ellipseFrames}${checkFrames}`;

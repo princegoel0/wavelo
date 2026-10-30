@@ -37,7 +37,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   129 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 20 `--wavelo-*`
-  custom properties, 80 `@keyframes`, 211 named presets. Eight categories, one of
+  custom properties, 80 `@keyframes`, 228 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by
@@ -64,7 +64,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
 | `npm test` | Passed: 45 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 129 IDs / 129 active / 211 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run catalog` | Passed: 155 IDs / 155 active / 228 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
 | `npm run docs:check` | Passed: 143 designs, 27 configuration keys, 20 custom properties and every bundle figure match the built packages, in 12 documents |
 | `npm run measure` | Passed: 12 entry points inside budget; `ring` 5,709 B gzip (budget 6,656), the busiest kind `progress-battery` 7,529 B (budget 8,704), runtime renderer 19,011 B (budget 22,528) |
