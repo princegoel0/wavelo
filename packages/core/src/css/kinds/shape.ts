@@ -7,6 +7,9 @@ import { css as triangleOrbitFrames } from '../keyframes/triangle-orbit.js';
 import { css as diamondFrames } from '../keyframes/diamond.js';
 import { css as morphFrames } from '../keyframes/morph.js';
 import { css as blobFrames } from '../keyframes/blob.js';
+import { css as sandFrames } from '../keyframes/sand.js';
+import { css as blinkEyeFrames } from '../keyframes/blink-eye.js';
+import { css as metronomeFrames } from '../keyframes/metronome.js';
 import { css as starFrames } from '../keyframes/star.js';
 
 export const shapeCss = `
@@ -27,4 +30,12 @@ export const shapeCss = `
 /* The shape never moves; only its corners keep changing their radii, which is what
    makes it read as a liquid rather than a rotating box. */
 .wavelo--liquid-blob{border-radius:58% 42% 55% 45%/48% 56% 44% 52%;animation:wavelo-blob calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${shapeFrames}${cubeFrames}${polygonFrames}${triangleFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}${blobFrames}`;
+/* An hourglass silhouette that turns end over end. The pinch in the middle is the
+   clip-path, so it stays an hourglass through the whole turn. */
+.wavelo--sand-timer{clip-path:polygon(14% 2%,86% 2%,52% 50%,86% 98%,14% 98%,48% 50%);border-radius:0;animation:wavelo-sand calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* An eye: a wide oval that closes to a line and opens again, on a long cycle so the
+   blink is a moment rather than a rhythm. */
+.wavelo--eye-blink{width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,calc(var(--wavelo-width,var(--wavelo-size,2.5rem)) * .62));border-radius:50%;animation:wavelo-blink-eye calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* A metronome arm swinging about its foot. */
+.wavelo--metronome{width:var(--wavelo-width,calc(var(--wavelo-size,2.5rem) * .28));height:var(--wavelo-height,var(--wavelo-size,2.5rem));border-radius:var(--wavelo-radius,2px);transform-origin:50% 96%;animation:wavelo-metronome calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${shapeFrames}${cubeFrames}${polygonFrames}${triangleFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}${blobFrames}${sandFrames}${blinkEyeFrames}${metronomeFrames}`;

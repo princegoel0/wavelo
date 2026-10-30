@@ -58,10 +58,10 @@ cards, and measured the new production bundles. The detailed evidence is in
 ## Visual correctness remediation
 
 - Rebuilt the renderer around ID-specific geometry and animation contracts for
-  all 111 designs; every ID renders its own geometry and animation contract.
+  all 129 designs; every ID renders its own geometry and animation contract.
 - Rebuilt `apps/docs/dist/index.html` and captured
   `release-audit/catalog-corrected-contact-sheet.png`.
-- Automated audit: all 111 designs located, CSS/DOM contracts
+- Automated audit: all 129 designs located, CSS/DOM contracts
   present, progress-ring value binding present, and desktop/mobile overflow
   checks passed.
 - Human screenshot review found no page-level overlay after the documentation

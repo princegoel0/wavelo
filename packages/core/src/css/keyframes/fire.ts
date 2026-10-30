@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-fire{0%{transform:translateY(22%) scaleY(.55);opacity:.3}45%{transform:translateY(-8%) scaleY(1.25);opacity:1}100%{transform:translateY(-30%) scaleY(.45);opacity:0}}`;

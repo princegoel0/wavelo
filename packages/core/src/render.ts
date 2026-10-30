@@ -38,7 +38,14 @@ const PART_COUNTS: Record<string, number> = {
   'stream-cursor': 1,
   'neural-grid': 9,
   'comet-orbit': 1,
-  'progress-ai-generate': 1
+  'progress-ai-generate': 1,
+  pendulum: 1,
+  fireflies: 6,
+  'solar-system': 3,
+  'signal-bars': 4,
+  spectrum: 8,
+  breathing: 1,
+  heartbeat: 1
 };
 
 /**

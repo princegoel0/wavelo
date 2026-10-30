@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-orbit-ring{from{transform:rotate(var(--angle,0deg)) translateX(calc(var(--wavelo-size,2.5rem) * var(--radius,.32)))}to{transform:rotate(calc(var(--angle,0deg) + 360deg)) translateX(calc(var(--wavelo-size,2.5rem) * var(--radius,.32)))}}`;

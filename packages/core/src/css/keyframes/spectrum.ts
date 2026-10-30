@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-spectrum{0%{transform:scaleY(.2)}14%{transform:scaleY(.92)}29%{transform:scaleY(.34)}43%{transform:scaleY(1)}58%{transform:scaleY(.26)}72%{transform:scaleY(.78)}86%{transform:scaleY(.42)}100%{transform:scaleY(.2)}}`;

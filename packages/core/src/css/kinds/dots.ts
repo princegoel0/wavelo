@@ -5,6 +5,11 @@ import { css as staggerDotFrames } from '../keyframes/stagger-dot.js';
 import { css as typingDotFrames } from '../keyframes/typing-dot.js';
 import { css as tripFrames } from '../keyframes/trip.js';
 import { css as neuralFrames } from '../keyframes/neural.js';
+import { css as magnetFrames } from '../keyframes/magnet.js';
+import { css as pendulumFrames } from '../keyframes/pendulum.js';
+import { css as bubbleFrames } from '../keyframes/bubble.js';
+import { css as constellationFrames } from '../keyframes/constellation.js';
+import { css as constellationLineFrames } from '../keyframes/constellation-line.js';
 
 export const dotsCss = `
 .wavelo--dots{gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 7))}
@@ -56,4 +61,35 @@ export const dotsCss = `
 .wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) / -4)}
 .wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(5),.wavelo--dot-matrix .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration,1s) / -2)}
 .wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,1s) * -3 / 4)}
-${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}`;
+/* Five dots pulled toward the middle and released. How far each one travels is its own,
+   so the row breathes inward from both ends and the middle dot only shrinks. */
+.wavelo--magnetic-dots .wavelo__part{animation:wavelo-magnet calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--magnetic-dots .wavelo__part:nth-child(1){--pull:-52%}
+.wavelo--magnetic-dots .wavelo__part:nth-child(2){--pull:-24%}
+.wavelo--magnetic-dots .wavelo__part:nth-child(4){--pull:24%}
+.wavelo--magnetic-dots .wavelo__part:nth-child(5){--pull:52%}
+/* A bob on an arm. The pivot is above the dot, so the swing describes the arc the name
+   promises rather than a side-to-side slide. */
+.wavelo--pendulum .wavelo__part{position:absolute;left:50%;top:14%;width:calc(var(--wavelo-size,2.5rem) / 4);height:calc(var(--wavelo-size,2.5rem) / 4);margin-left:calc(var(--wavelo-size,2.5rem) / -8);transform-origin:50% -150%;animation:wavelo-pendulum calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+/* Bubbles rising: each leaves the bottom, grows and fades out before it reaches the
+   top, so the column never looks like a row of dots bouncing. */
+.wavelo--bubble-rise{align-items:flex-end}
+.wavelo--bubble-rise .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);animation:wavelo-bubble calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--bubble-rise .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.36)}
+.wavelo--bubble-rise .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.72)}
+.wavelo--bubble-rise .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1.08)}
+.wavelo--bubble-rise .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -1.44)}
+/* A constellation: five fixed nodes brighten in turn while two lines drawn between
+   them appear and fade again. */
+.wavelo--constellation{display:block;background:transparent}
+.wavelo--constellation.wavelo-inline{display:inline-block}
+.wavelo--constellation .wavelo__part{position:absolute;width:11%;height:11%;border-radius:50%;animation:wavelo-constellation calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--constellation .wavelo__part:nth-child(1){left:10%;top:18%}
+.wavelo--constellation .wavelo__part:nth-child(2){left:58%;top:8%}
+.wavelo--constellation .wavelo__part:nth-child(3){left:34%;top:44%;animation-delay:calc(var(--wavelo-duration,1s) * -.5)}
+.wavelo--constellation .wavelo__part:nth-child(4){left:76%;top:62%;animation-delay:calc(var(--wavelo-duration,1s) * -1)}
+.wavelo--constellation .wavelo__part:nth-child(5){left:18%;top:74%;animation-delay:calc(var(--wavelo-duration,1s) * -1.5)}
+.wavelo--constellation:before,.wavelo--constellation:after{content:"";position:absolute;height:var(--wavelo-stroke,1px);background:currentColor;transform-origin:0 50%;animation:wavelo-constellation-line calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--constellation:before{left:15%;top:22%;width:48%;transform:rotate(14deg)}
+.wavelo--constellation:after{left:38%;top:48%;width:42%;transform:rotate(24deg)}
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}`;
