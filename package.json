@@ -31,7 +31,8 @@
     "pack:check": "npm pack --dry-run --workspaces --if-present",
     "pack:verify": "node scripts/verify-packed.mjs",
     "test:browser": "node tests/browser.test.mjs",
-    "test:browser:firefox": "node tests/browser-firefox.test.mjs"
+    "test:browser:firefox": "node tests/browser-firefox.test.mjs",
+    "test:browser:webkit": "node tests/browser-webkit.test.mjs"
   },
   "devDependencies": {
     "@angular/compiler": "^22.2.3",

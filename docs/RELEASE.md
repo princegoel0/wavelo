@@ -33,6 +33,21 @@ adapter inlines CSS, so a server-rendered page must include
 `@wavelo/core/styles.css` (or the slices it rendered) in its document head.
 State it in the release notes.
 
+## Versioning
+
+Semver applies to the public surface: patch for backward-compatible fixes, minor for
+backward-compatible functionality, major for breaking API changes. Prereleases are for
+integration testing.
+
+Until `1.0.0` the surface is still being found, so a minor version (`0.x`) may change
+configuration keys, option meanings or entry points. Every such change is recorded in
+`CHANGELOG.md` under a `Breaking` line and in [MIGRATION.md](MIGRATION.md). What `0.x`
+never does is leave a caller guessing: an option that stops applying is removed and
+reported, never silently ignored. From `1.0.0` the rules above apply in full, and
+"compatible" stops being an assertion — `npm run audit:customization` re-measures which
+options each design honours, and the Chromium, Gecko and WebKit suites re-render every
+design in the catalog.
+
 Two repository variables decide what a workflow is allowed to do, and both are
 the owner's to set:
 

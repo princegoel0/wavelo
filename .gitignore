@@ -5,3 +5,5 @@ coverage/
 *.tgz
 release-tarballs/
 release-consumer/
+
+.agency/

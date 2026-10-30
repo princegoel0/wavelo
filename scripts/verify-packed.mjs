@@ -185,6 +185,25 @@ check('every package ships a licence, a README and its declarations', () => {
   }
 });
 
+// PRD 13.4 item 8: installing an adapter must not drag a framework in behind it. The
+// peer is declared, never listed as a dependency, and no nested copy of it ends up
+// inside the installed package.
+check('each adapter declares its framework as a peer and bundles none of it', () => {
+  const peers = { react: ['react', 'react-dom'], vue: ['vue'], svelte: ['svelte'], angular: ['@angular/core'] };
+  for (const [name, expected] of Object.entries(peers)) {
+    const directory = resolve(consumer, 'node_modules/@wavelo', name);
+    const manifest = JSON.parse(readFileSync(resolve(directory, 'package.json'), 'utf8'));
+    for (const framework of expected) {
+      if (!(framework in (manifest.peerDependencies ?? {}))) throw new Error(`@wavelo/${name} does not declare ${framework} as a peer`);
+      if (framework in (manifest.dependencies ?? {})) throw new Error(`@wavelo/${name} lists ${framework} as a dependency, so consumers install two`);
+      if (existsSync(resolve(directory, 'node_modules', framework))) throw new Error(`@wavelo/${name} carries a nested copy of ${framework}`);
+    }
+    for (const dependency of Object.keys(manifest.dependencies ?? {})) {
+      if (!dependency.startsWith('@wavelo/')) throw new Error(`@wavelo/${name} depends on ${dependency}, outside the workspace`);
+    }
+  }
+});
+
 rmSync(consumer, { recursive: true, force: true });
 rmSync(tarballDirectory, { recursive: true, force: true });
 

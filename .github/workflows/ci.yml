@@ -45,11 +45,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run build
       - run: npm run test:browser
       - name: Gecko smoke test
         run: npm run test:browser:firefox
+      - name: WebKit smoke test
+        run: npm run test:browser:webkit
       - name: Verify the advertised options still match the render
         run: npm run audit:customization
       - name: Layout cost per frame

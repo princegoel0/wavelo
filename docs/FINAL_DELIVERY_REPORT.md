@@ -25,9 +25,12 @@ No package was published to npm and no registry setting was changed.
 
 Peer ranges are declared in [COMPATIBILITY.md](COMPATIBILITY.md). One version per
 declared range was tested; that does not prove compatibility across the whole range.
-Chromium is exercised fully; Firefox 157 by a smoke suite (sheet applied, geometry,
-palette, motion options, ancestor tokens, every design painting, the custom element,
-and the timeline designs on the document clock). Safari is not exercised here.
+Chromium is exercised fully; Firefox 157 and WebKit 27.2 each by a smoke suite (sheet
+applied, geometry, palette, motion options, ancestor tokens, every design painting, the
+custom element). The two differ on one point that matters: scroll- and view-driven
+animations are unsupported in Firefox 157, where the timeline designs run on the document
+clock, and supported in WebKit, where they run on a real `ScrollTimeline`/`ViewTimeline`.
+WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 
 ## What the library is
 
@@ -67,6 +70,7 @@ and the timeline designs on the document clock). Safari is not exercised here.
 | `npm run measure` | Passed: 12 entry points inside budget; `ring` 5,709 B gzip (budget 6,656), the busiest kind `progress-battery` 7,529 B (budget 8,704), runtime renderer 19,011 B (budget 22,528) |
 | `npm run test:browser` | Passed: 32 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
+| `npm run test:browser:webkit` | Passed: 7 WebKit tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, a conic gradient is carved by a mask, a registered integer reaches a CSS counter, and both timeline designs run on a real `ScrollTimeline`/`ViewTimeline` (`scroll()`/`view()` measured supported on WebKit 27.2, unlike Firefox 157) |
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 111 designs |
 | `npm run audit:layout` | Passed: 108 of the 111 designs cost no layout per frame; the three that do are each accounted for |
 | `npm run audit:visual` | Passed: 98-card contact sheet, desktop and 375px mobile |
@@ -189,12 +193,15 @@ describes the pre-remediation renderer and is kept as history.
    for each package.
 2. `RELEASE_ENABLED` is `false`, so the publish job is skipped on every run. Flipping
    it is the owner's decision and has not been made here.
-3. Firefox is exercised by a smoke suite, not the full one: 6 tests covering the
-   sheet applying, the motion and theme options, ancestor tokens, visibility of every
-   design, the custom element and the timeline fallbacks. Safari remains untested, and
-   the documented engine floor is inferred from the CSS features used — notably CSS
-   scroll-driven animations, which were measured as unsupported in Firefox 157, where
-   the timeline designs run on the document clock instead.
+3. Firefox and WebKit are exercised by smoke suites, not the full one: 6 and 7 tests
+   covering the sheet applying, the motion and theme options, ancestor tokens, visibility
+   of every design, and the custom element; WebKit additionally asserts the mask, the conic
+   gradient and the registered integer behind the counted bar. Safari itself is not run —
+   WebKit is Playwright's build of the same engine, and the documented engine floor is still
+   inferred from the CSS features used. What is no longer inferred is the timeline split,
+   measured both ways: unsupported in Firefox 157, where the designs run on the document
+   clock, and supported in WebKit 27.2, where they run on a `ScrollTimeline` and a
+   `ViewTimeline`.
 4. Framework compatibility is demonstrated at one version per declared peer range.
 5. Hydration is not implemented or claimed by the adapters.
 6. Subjective motion quality still needs a human pass in a browser; the automated
