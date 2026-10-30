@@ -60,6 +60,15 @@ Audited version: `0.1.0`
   checks only; it does not publish or mutate npm.
 - [x] Added a `verify-browser` CI job so computed-style and axe checks run on
   every push and pull request, not only in the release workflow.
+- [x] Confirmed on GitHub that both jobs are green for `dev` at `5068090` and for
+  `main` at `ae0e06d`, including the Playwright install step for all three engines on a
+  clean runner.
+- [x] Merged the WebKit suite, the versioning policy in `docs/RELEASE.md` and the
+  peer-isolation assertion as `ae0e06d` through pull request #18. The `verify-browser`
+  job's step list on that run names `Run npx playwright install --with-deps chromium
+  firefox webkit`, `Gecko smoke test` and `WebKit smoke test`, each successful — so the
+  third engine is evidence, not a file that exists. On `main`: `CI` passed, `Release
+  packages` validated and **skipped** publish, `Gallery` skipped both jobs.
 - [x] Confirmed on GitHub that both jobs are green for `dev` at `92e02f6` and for
   `main` at `8cbef17`, including the Playwright install step for both engines on a
   clean runner.
