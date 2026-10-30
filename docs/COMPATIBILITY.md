@@ -248,5 +248,5 @@ render identically, and every design must paint something visible.
 | `'default'` | an ID that matches nothing, rendering `inline` | `true` |
 
 `fallback` therefore means exactly "your request was not understood", and a preset
-hit is never reported as one. All 35 pattern presets resolve to the design they
+hit is never reported as one. All 51 pattern presets resolve to the design they
 declare; a unit test walks the whole table.
