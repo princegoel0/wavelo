@@ -28,10 +28,16 @@ export const orbitCss = `
    together, so the tail always trails the dot. The mask lives on the tail layer, so
    the head is not carved along with it, and the prefixed copy is there because the
    unprefixed mask shorthand is newer than the declared browser floor. */
-.wavelo--comet-orbit{display:block;background:transparent}
+/* The tail and the dot used to spin about different centres — the pseudo about its own
+   middle, the dot about a point 90% to its left — so the head slid away from the tail and
+   the design showed a crescent with an unrelated dot drifting past it. The spin now lives
+   on the root and both are placed inside it, so they turn as one object by construction.
+   The dot sits on the ring's mid-line at twelve o'clock, which is where the conic reaches
+   full strength, and the fade is a long ramp rather than two hard stops. */
+.wavelo--comet-orbit{display:block;background:transparent;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--comet-orbit.wavelo-inline{display:inline-block}
-.wavelo--comet-orbit:before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 40%,color-mix(in srgb,currentColor 25%,transparent) 62%,currentColor 90%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-comet-tail calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--comet-orbit .wavelo__part{left:auto;top:auto;right:2%;width:18%;height:18%;transform-origin:-90% 50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--comet-orbit:before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 26%,color-mix(in srgb,currentColor 8%,transparent) 48%,color-mix(in srgb,currentColor 42%,transparent) 76%,currentColor 99%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-comet-tail calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--comet-orbit .wavelo__part{left:50%;top:calc(var(--wavelo-stroke,3px) / 2 - var(--wavelo-size,2.5rem) * .09);margin-left:calc(var(--wavelo-size,2.5rem) * -.09);width:18%;height:18%;animation:none}
 /* Six motes drifting on uneven paths and fading as they go, so the group never beats
    as one. */
 .wavelo--fireflies .wavelo__part{width:9%;height:9%;animation:wavelo-firefly calc(var(--wavelo-duration,1s) * 3) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}

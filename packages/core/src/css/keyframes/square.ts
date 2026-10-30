@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-square{from{transform:perspective(calc(var(--wavelo-size,2.5rem) * 2.5)) rotate3d(0.2, 1, 0.45, 0deg)}to{transform:perspective(calc(var(--wavelo-size,2.5rem) * 2.5)) rotate3d(0.2, 1, 0.45, 360deg)}}`;

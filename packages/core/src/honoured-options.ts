@@ -24,7 +24,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "orbiting-dots": "26dbff6",
    "orbiting-circles": "27dbff6",
    "comet-orbit": "27dbff6",
-   "gradient-ring": "27fbff7",
+   "gradient-ring": "27fbff6",
    "conic-ring": "27dbff6",
    "neon-ring": "27dbff7",
    "rubber-band": "27dbff7",

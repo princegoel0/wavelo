@@ -543,7 +543,7 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
   const rows = await page.evaluate(() =>
     [...document.querySelectorAll('[data-key]')].map((wrap) => {
       const style = getComputedStyle(wrap.querySelector('.wavelo'));
-      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor };
+      return { key: wrap.dataset.key, color: style.color, borderImage: style.borderImageSource, background: style.backgroundColor, backgroundImage: style.backgroundImage, mask: `${style.maskImage} ${style.webkitMaskImage}` };
     })
   );
   const at = (key) => rows.find((row) => row.key === key);
@@ -551,7 +551,8 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
   assert.equal(at('ring').color, 'rgb(99, 102, 241)', 'the documented default colour must paint without configuration');
   assert.equal(at('explicit').color, 'rgb(18, 52, 86)', 'an explicit colour must win');
   assert.equal(at('inherited').color, 'rgb(0, 255, 0)', 'a page-level --wavelo-color must still override the default');
-  assert.match(at('gradient-ring').borderImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.match(at('gradient-ring').backgroundImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.match(at('gradient-ring').mask, /radial-gradient/, 'and carve it into a ring, because border-image ignores border-radius');
   assert.notEqual(at('overlay').background, 'rgba(0, 0, 0, 0)', 'the section overlay must have a scrim');
 });
 
@@ -655,7 +656,7 @@ test('each design renders what its name says', async () => {
     'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
-    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse',
+    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse', 'rotating-square', 'rotating-diamond',
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
     'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
     'progress-skill', 'progress-timer', 'progress-orbit-fill',
@@ -744,7 +745,7 @@ test('each design renders what its name says', async () => {
   assert.equal(at('segmented-ring').borderStyle, 'dashed');
   assert.equal(at('segmented-ring').sides, 4, 'a segmented ring is a complete dashed circle');
   assert.match(at('monochrome').backgroundImage, /conic-gradient/, 'monochrome must be a half-filled disc');
-  assert.match(at('gradient-ring').borderImage ?? '', /linear-gradient/);
+  assert.match(at('gradient-ring').backgroundImage ?? '', /linear-gradient/);
 
   // Layered arcs: the element plus both pseudo-elements, at three insets.
   const multi = at('multi-arc');
@@ -866,6 +867,13 @@ test('each design renders what its name says', async () => {
   assert.ok(Number.parseFloat(at('ellipse').boxWidth) > Number.parseFloat(at('ellipse').boxHeight), 'an ellipse is wider than it is tall');
   assert.equal(at('ellipse').sides, 4, 'a closed hoop, not an arc with a gap taken out of it');
   assert.equal(at('ellipse').animation, 'wavelo-ellipse', 'it turns about its own axis; spinning flat leaves a uniform ring looking still');
+  assert.equal(at('rotating-square').animation, 'wavelo-square', 'the kind default morphs to a circle, which is not a rotating square');
+  assert.ok(Number.parseFloat(at('rotating-square').radius) < 15, 'a square keeps its corners; the kind default is 20% and its morph reaches 50%, i.e. a circle');
+  assert.equal(at('rotating-diamond').animation, 'wavelo-diamond');
+  assert.equal(at('gradient-ring').borderImage, 'none', 'border-image is not clipped by border-radius, so it drew a square, not a ring');
+  assert.match(at('gradient-ring').mask, /radial-gradient/, 'the ring is carved from a gradient fill by a radial mask');
+  assert.equal(at('comet-orbit').animation, 'wavelo-spin', 'the root turns, so the tail and its head cannot drift apart');
+  assert.equal(at('comet-orbit').partAnimations.join(','), 'none', 'the dot rides the tail rather than orbiting on its own');
   assert.equal(at('snake').animation, 'wavelo-snake');
   assert.equal(at('snake').sides, 2, 'a snake is a short arc, not a full ring');
   assert.equal(at('clock-spinner').before.animation, 'wavelo-spin', 'the minute hand must turn');

@@ -6,7 +6,11 @@ import { css as ellipseFrames } from '../keyframes/ellipse.js';
 
 export const ringCss = `
 .wavelo--ring{border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--gradient-ring{border-image:linear-gradient(currentColor,var(--wavelo-secondary-color,#a5b4fc)) 1;border-radius:50%}
+/* border-image is not clipped by border-radius, so the gradient this design used to draw
+   its border came out as a square outline with rounded corners on nothing. The ring is
+   carved from a gradient fill by a radial mask instead, which is how the conic ring
+   already works, and the inherited spin turns the sweep round. */
+.wavelo--gradient-ring{border:0;background:linear-gradient(currentColor,var(--wavelo-secondary-color,#a5b4fc));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)))}
 .wavelo--half-circle{border-bottom-color:transparent}
 /* An ellipse, and it has to look like one. It inherits the ring's open side, which made
    this a squashed "C" spinning flat — a gap, not an ellipse. The border is closed and the
