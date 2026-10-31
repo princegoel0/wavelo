@@ -24,7 +24,22 @@ export const dotsCss = `
 .wavelo--dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--dots .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1 / 3)}
 .wavelo--dots .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -5 / 6)}
-
+/* three-dots is countable, so the row divides both its phase and its track width by
+   however many dots the page asked for. --i is the track index, and at the default of
+   three this reproduces exactly the three delays and the one-seventh diameter the rules
+   above already produced — a fourth dot is a quarter of a cycle behind, not a tail. */
+.wavelo--three-dots .wavelo__part:nth-child(n){width:calc(var(--wavelo-size,2.5rem) * 3 / (7 * var(--wavelo-parts,3)));height:calc(var(--wavelo-size,2.5rem) * 3 / (7 * var(--wavelo-parts,3)));animation-delay:calc(var(--wavelo-duration,1s) / var(--wavelo-parts,3) * var(--i,0) * -1)}
+.wavelo--three-dots .wavelo__part:nth-child(2){--i:1}
+.wavelo--three-dots .wavelo__part:nth-child(3){--i:2}
+.wavelo--three-dots .wavelo__part:nth-child(4){--i:3}
+.wavelo--three-dots .wavelo__part:nth-child(5){--i:4}
+.wavelo--three-dots .wavelo__part:nth-child(6){--i:5}
+.wavelo--three-dots .wavelo__part:nth-child(7){--i:6}
+.wavelo--three-dots .wavelo__part:nth-child(8){--i:7}
+.wavelo--three-dots .wavelo__part:nth-child(9){--i:8}
+.wavelo--three-dots .wavelo__part:nth-child(10){--i:9}
+.wavelo--three-dots .wavelo__part:nth-child(11){--i:10}
+.wavelo--three-dots .wavelo__part:nth-child(12){--i:11}
 .wavelo--dotted-circle{display:block;border:0;background:transparent}
 .wavelo--dotted-circle.wavelo-inline{display:inline-block}
 /* Eight dots on a ring. Each one is centred in the box, turned to its own angle and

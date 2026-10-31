@@ -121,6 +121,14 @@ function progressParts(type: string, config: NormalizedLoaderConfig): string {
   return part('');
 }
 
+/**
+ * Designs that are one repeated track in a row, so a page may say how many. Opt-in
+ * rather than universal: `snake` has five segments because a snake does, and a `count`
+ * that cannot change the render is a lie in the option list, which is what
+ * `npm run audit:customization` exists to catch.
+ */
+const COUNTABLE = new Set(['three-dots', 'equalizer']);
+
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
@@ -134,6 +142,7 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   }
   if (kind === 'progress') return progressParts(type, config);
   if (type === 'svg-star') return SVG_STAR;
+  if (COUNTABLE.has(type)) return many(config.count ?? PART_COUNTS[type] ?? KIND_COUNTS[kind] ?? 1);
   if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
   return many(KIND_COUNTS[kind] ?? 1);
 }
@@ -195,6 +204,9 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     // percentage to print. Only determinate designs pay for it, and it is the
     // percentage rather than `value` because a bar at 40 of 80 reads 50%.
     progressValue ? `--wavelo-count:${Math.round((config.value! / config.max) * 100)}` : '',
+    // How many tracks the row actually holds, so the sheet can divide the box by it.
+    // Only the countable designs write it, and only when the page asked for a count.
+    COUNTABLE.has(definition.id) && config.count ? `--wavelo-parts:${config.count}` : '',
     ...Object.entries(config.style).map(([name, value]) => `${name}:${value}`)
   ]
     .filter(Boolean)

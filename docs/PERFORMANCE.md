@@ -18,19 +18,18 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**152 of the 155 designs cost no layout per frame.** Three do, each for a reason a
+**131 of the 133 designs cost no layout per frame.** Two do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
 | --- | --- | --- |
 | `progress-scroll` | 120-122 | the fill *is* the reading position, and a `scaleX` would squash the leading dot that marks it with the bar |
 | `multi-wave` | 74-90 | the same two frames, in opposite phase |
-| `waveform` | 70-88 | the bar slides while it grows, and the slide is a percentage of the height it is growing |
 
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 152.
+frame for a design that animates a box property, and zero for the other 131.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -42,7 +41,8 @@ screen, and an off-screen sample reports zero layouts for a design that does cos
 
 Four designs — `equalizer`, `gradient-bars`, `growing-bars`, `alternating-bars` —
 animated `height: 20% → 100%` on their bars. They now animate
-`transform: scaleY(.2 → 1)` on a full-height box anchored to the bottom:
+`transform: scaleY(.2 → 1)` on a full-height box anchored to the bottom; `gradient-bars`
+has since been consolidated into `equalizer`, so three of the four remain:
 
 | 150 copies, 2 s | before | after |
 | --- | --- | --- |
@@ -58,8 +58,9 @@ largest channel difference is 84 on an antialiased edge, and the bars are moving
 
 The same conversion was then tried on `waveform` and **rejected by the geometry
 check**: its `translateY` is a percentage of a height that is itself animating, so the
-arc the bars draw came out 30 px off. It still animates `height`, and the row above
-says so.
+arc the bars draw came out 30 px off. It kept animating `height`, and the frame it used
+still does — `multi-wave` runs it on two layers in opposite phase, and it is one of the
+two exemptions above. `waveform` itself has since been consolidated into `equalizer`.
 
 The pass also found a dead keyframe: `wavelo-bars` was imported by the bars slice and
 referenced by the kind's default rule, which every design in that family overrides,
@@ -72,23 +73,24 @@ Gzipped together, as shipped — the cheapest design in each kind:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,609 | `orbit` | 3,075 |
-| `scroll` | 1,961 | `wave` | 3,657 |
-| `rings` | 2,399 | `shape` | 3,942 |
-| `bars` | 2,442 | `progress` | 4,017 |
-| `pulse` | 2,750 | `ring` | 4,110 |
-| `skeleton` | 4,545 | `dots` | 4,935 |
+| `overlay` | 1,609 | `wave` | 3,622 |
+| `scroll` | 1,961 | `shape` | 3,802 |
+| `bars` | 2,148 | `progress` | 3,858 |
+| `rings` | 2,341 | `ring` | 3,923 |
+| `pulse` | 2,737 | `skeleton` | 4,545 |
+| `orbit` | 3,043 | `dots` | 5,217 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,316 bytes of every row above. The whole
-catalog sheet is 22,601 bytes gzipped, loaded once, for all 155 designs.
+catalog sheet is 21,930 bytes gzipped, loaded once, for all 133 designs.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
-design in that kind, and it is not stable. Since the 129-design checkpoint, `dots` has
-gone from 3,454 to 4,935 bytes and `skeleton` from 2,834 to 4,545 as the motion and
-skeleton tranches joined them, which pushed `progress` — the largest slice then, at
-3,866 — to fourth at 4,017. That re-ordering is exactly why `busiest-loader` in
-`npm run measure` samples a dots design today: a probe pinned to whatever kind held the
+design in that kind, and it moves in both directions. Since the 129-design checkpoint,
+`dots` has gone from 3,454 to 5,217 bytes as the motion tranche and a countable dot row
+joined it, while `ring` fell from 4,110 to 3,923 and `progress` from 4,017 to 3,858 when
+their duplicate designs were consolidated away — which is why `progress`, the largest
+slice at 3,866 back then, is now fourth. That re-ordering is exactly why `busiest-loader`
+in `npm run measure` samples a dots design today: a probe pinned to whatever kind held the
 record when it was written stops measuring the worst case the moment another kind
 overtakes it, and the budget still passes. Redrawing a design moves its kind too, and not
 in proportion to the design's own size: `infinity` is one loader's worth of markup and put
@@ -100,12 +102,12 @@ renderer, which every design imports, costs all of them: the determinate fill pa
 
 Importing one design's entry point costs the renderer, validation and that slice, and
 the six samples below are strictly ordered by the slice they pay for: `progress-view`
-(`scroll`) 6,187 bytes, `equalizer` (`bars`) 6,778, `progress-battery` (`progress`)
-8,301, `ring` 8,432, `skeleton-card` (`skeleton`) 8,848 and `bubble-rise` (`dots`) 9,319
+(`scroll`) 6,237 bytes, `equalizer` (`bars`) 6,493, `progress-battery` (`progress`)
+8,191, `ring` 8,292, `skeleton-card` (`skeleton`) 8,894 and `bubble-rise` (`dots`) 9,648
 — the largest, because `dots` is now the most crowded slice. `npm run measure` enforces
-both ends of that range: 9,728 bytes for the sampled `ring` and 10,752 for the busiest
+both ends of that range: 9,728 bytes for the sampled `ring` and 11,264 for the busiest
 kind, so a new dots design cannot grow that slice without a number moving. Importing
-`renderLoader`, which chooses by string at runtime, costs 33.0 KB because it must be able
+`renderLoader`, which chooses by string at runtime, costs 31.8 KB because it must be able
 to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader

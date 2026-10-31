@@ -1,7 +1,7 @@
 # Migrating to Wavelo
 
 Mappings from the loaders people replace, and the differences that will bite. The
-design ids below all exist in the catalog — browse all 155 designs with their measured options
+design ids below all exist in the catalog — browse all 133 designs with their measured options
 in the gallery (`npm run docs:build`, then open `apps/docs/dist/index.html`) before
 choosing.
 
@@ -22,16 +22,21 @@ choosing.
 | `MoonLoader` | `orbiting-dots` |
 | `PulseLoader` | `three-dots` |
 | `SyncLoader` | `pulsing-dots` |
-| `BeatLoader`, `DotLoader` | `bouncing-dots` |
-| `RiseLoader` | `vertical-dots` |
+| `BeatLoader`, `DotLoader` | `pulsing-dots` |
+| `RiseLoader` | `bubble-rise` |
 | `HashLoader` | `grid-pulse` |
 | `RotatingSquareLoader` | `rotating-square` |
 | `ScaleLoader` | `growing-bars` |
 | `BarLoader` | `moving-stripe` |
-| `ClockLoader` | `arc` |
+| `ClockLoader` | `clock-spinner` |
 
 Two incumbents can map to one design (`BeatLoader` and `DotLoader` above), and no
-mapping claims pixel parity — it names the design that reads the same way.
+mapping claims pixel parity — it names the design that reads the same way. Four of
+these targets moved when visually duplicate designs were consolidated: `arc` and
+`half-circle` are `ring` variants now reachable through `strokeWidth`, and
+`bouncing-dots` and `vertical-dots` are gone, so their rows point at the surviving
+design that reads the same. A row of dots that needs four or five tracks rather than
+three is `three-dots` with `count`, which divides the row's width and its phase.
 
 ## loaders.css
 
@@ -41,10 +46,10 @@ The class-based sheet maps to a design id plus the tokens that sheet hardcoded:
 | --- | --- |
 | `ball-pulse` | `pulsing-dots` |
 | `ball-grid-pulse` | `grid-pulse` |
-| `ball-beat` | `bouncing-dots` |
+| `ball-beat` | `pulsing-dots` |
 | `square-spin` | `rotating-square` |
 | `triangle-skew-spin` | `triangles` |
-| `semi-circle-spin` | `half-circle` |
+| `semi-circle-spin` | `multi-arc` |
 | `line-spin-fade-loader` | `fading-bars` |
 | `ball-spin-fade-loader` | `fading-dots` |
 | `spinner` | `multi-arc` |

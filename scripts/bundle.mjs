@@ -46,20 +46,27 @@ const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte'];
 //    lemniscate and an eighteen-part helix are new rules in two slices, and every runtime
 //    bundle carries every slice.
 //
+// The curve runs backwards too, and the budget has to follow it in that direction or it
+// stops being a gate: taking 22 designs out of the catalog (155 to 133) pulled
+// `core-renderer` from 32,907 B to 32,084 B, and a budget left at 38,912 would then have
+// sat 21% above the measurement — loose enough to absorb a regression of the size that
+// the dedup just saved.
+//
 // Budgets are set from those two realities with ~12% headroom, not from a per-design
 // ideal.
-const runtime = 38 * 1024;
+const runtime = 37 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
   // reach it: 3,542 B before that change, 4,612 B after, 5,018 B with the visibility,
   // track-count and inline options, 5,482 B once the conic and neon rings joined the ring
   // slice, 5,709 B once the renderer learned to fill a design from a value, 6,237 B once
-  // the motion tranche's three ring designs joined it too, and 8,440 B after the ring
-  // slice gained a clock dial, a masked gradient ring and a snake room. The saving lands
-  // per page instead — a default loader now carries no `style` attribute at all, where it
-  // used to carry about 180 bytes of tokens, and a loader with `loading: false` carries
-  // nothing.
+  // the motion tranche's three ring designs joined it too, 8,440 B after the ring slice
+  // gained a clock dial, a masked gradient ring and a snake room, and 8,300 B back down
+  // again once the duplicated ring and bar designs were consolidated away. The saving
+  // lands per page instead — a default loader now carries no `style` attribute at all,
+  // where it used to carry about 180 bytes of tokens, and a loader with `loading: false`
+  // carries nothing.
   //
   // Budgets sit about 12% above the measured value, rounded up to the next 512 B,
   // and are re-based deliberately when a feature adds surface: a configuration key
@@ -67,16 +74,19 @@ const budgets = {
   // keys cost a single design 407 B and why the styling tokens cost more than that —
   // they are new rules in every slice, not new reads of existing ones.
   'individual-loader': 9.5 * 1024,
-  'busiest-loader': 10.5 * 1024,
+  // Raised while the budgets came down elsewhere: `three-dots` and `equalizer` learned to
+  // divide their row by a `count`, which is twelve index rules in the dots slice, and this
+  // probe samples that slice.
+  'busiest-loader': 11 * 1024,
   'two-loaders': 13 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
   vue: runtime,
   // Angular compiles its component metadata into the bundle, so it sits above the
-  // runtime budget the other five adapters share: 35,519 B measured against their
-  // 34,712 at the same design count.
-  angular: 39 * 1024,
+  // runtime budget the other five adapters share: 34,369 B measured against their
+  // 33,576 at the same design count.
+  angular: 38 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,

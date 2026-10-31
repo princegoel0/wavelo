@@ -112,7 +112,7 @@ fails if the committed table drifts. A design therefore cannot advertise an opti
 that does nothing: `skeleton-card` has no `strokeWidth`, `ring` has no
 `secondaryColor`, `progress-bar` has no `duration`, `progress-scroll` has no
 `speed` because its fill follows the scroll position rather than the clock,
-`three-dots` has no `count` because three dots are three dots, and `fullscreen` has
+`dot-matrix` has no `count` because nine dots are a grid, and `fullscreen` has
 no `inline` because a fixed overlay sits on nobody's line of text. The class name a
 key switches on is left out of the comparison, so what is measured is the effect,
 not the mechanism.
