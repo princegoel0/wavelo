@@ -119,7 +119,6 @@ const SELF_CHECKS = [
   // The tranche added with the streaming lane. Two of the new designs carve their ring
   // out of a conic gradient with a mask, so a stroke that never touches a border still
   // has to be measured as honoured — which is why the mask is one of the properties.
-  ['conic-ring', 'strokeWidth', true],
   ['comet-orbit', 'strokeWidth', true],
   ['neon-ring', 'strokeWidth', true],
   ['thinking-glow', 'strokeWidth', true],
@@ -146,15 +145,12 @@ const SELF_CHECKS = [
   ['progress-battery', 'strokeWidth', true],
   ['progress-half-ring', 'strokeWidth', true],
   ['progress-half-ring', 'value', true],
-  ['progress-gradient-ring', 'secondaryColor', true],
-  ['progress-gradient-ring', 'value', true],
   ['progress-wave-fill', 'value', true],
   ['progress-wave-fill', 'duration', true],
   ['progress-dots-fill', 'count', true],
   ['progress-multi-step', 'count', true],
   ['progress-upload-multi', 'count', true],
   ['progress-orbit-fill', 'count', true],
-  ['progress-timer', 'value', true],
   ['progress-skill', 'value', true],
   // The motion tranche. Anything whose shape is pinned by its own name must refuse
   // `count`, and a design that reads the stroke for something other than a border —
@@ -167,14 +163,11 @@ const SELF_CHECKS = [
   ['heartbeat', 'strokeWidth', false],
   ['heartbeat', 'width', true],
   ['sand-timer', 'strokeWidth', false],
-  ['spectrum', 'strokeWidth', false],
   ['eye-blink', 'height', true],
   ['metronome', 'width', true],
   ['breathing', 'width', true],
   ['pendulum', 'count', false],
-  ['fireflies', 'count', false],
-  ['signal-bars', 'count', false],
-  ['spectrum', 'count', false]
+  ['fireflies', 'count', false]
 ];
 
 async function fingerprintPage(browser, overrides) {

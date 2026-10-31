@@ -9,24 +9,25 @@ Not yet published.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 155 public IDs, each with its own implementation and no deprecated aliases. A
+- 133 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
-  whose names promise a count (four dots, a 3x3 matrix, seven bars) render it.
+  whose names promise a count (a 3x3 matrix, a ring of eight dots, six orbiting units)
+  render it.
 - The streaming lane: `typing-dots`, `thinking-glow`, `stream-cursor`, `token-stream`,
   `ai-shimmer` and `neural-grid` under a new `ai` category, for the state between
   sending a prompt and receiving an answer. Four composite skeletons join them —
   `skeleton-inbox`, `skeleton-chat`, `skeleton-code` and `skeleton-metric` — plus five
-  single-box designs: `conic-ring` and `comet-orbit`, both carved out of a conic
-  gradient by a radial mask, `neon-ring`, which turns while its glow swells,
+  single-box designs: `comet-orbit`, carved out of a conic gradient by a radial mask,
+  `neon-ring`, which turns while its glow swells,
   `liquid-blob`, whose corner radii keep changing while it stays in place, and
   `trip-orbit`, three arcs a third of a turn apart.
 - Eighteen designs that move like something rather than spinning: `rubber-band`,
   `snake`, `clock-spinner` (two hands a factor of twelve apart), `sand-timer`,
   `eye-blink` and `metronome` for the spinner lane; `magnetic-dots`, `pendulum`,
   `constellation`, `bubble-rise`, `fireflies` and `solar-system` for the dots lane;
-  `signal-bars`, `piano-keys`, `fire-rise`, `spectrum` and `breathing` for bars, plus
-  `heartbeat`, an ECG trace that scrolls by half its own width. Two presets join them,
-  `survey-progress` and `vitals`.
+  `piano-keys`, `fire-rise` and `breathing` for bars, plus `heartbeat`, an ECG trace
+  that scrolls by half its own width. Two presets join them, `survey-progress` and
+  `vitals`.
 - Five designs redone because they did not render what their names say. `dotted-circle`
   showed a drifting cluster rather than a ring: its dots were never centred, and the
   shared `wavelo-dot-orbit` keyframe animated `transform`, which replaced the per-dot
@@ -54,6 +55,26 @@ Not yet published.
   pair is widest when its two nodes are at opposite edges and closes to nothing as they
   cross. The box is two sizes tall, as the fallback of `--wavelo-height` rather than as
   an override, so setting a height still works.
+- Twenty-two designs consolidated away after every one of them was rendered and compared
+  with its neighbours: the ring variants `thin-line`, `thick-stroke`, `arc` and
+  `half-circle` are `ring` with `strokeWidth`; `conic-ring` and `rotating-diamond` were
+  mask and rotation variants of designs that remain; `expanding-circles` is
+  `ripple-circles`; `orbiting-circles` is `orbiting-dots`; `waveform`, `bouncing-bars`,
+  `vertical-pulse-bars`, `audio-waveform`, `gradient-bars`, `spectrum` and `signal-bars`
+  are bar-row variants of `equalizer` and `growing-bars`; `four-dots`, `five-dots`,
+  `bouncing-dots`, `scaling-dots` and `vertical-dots` are dot-row variants of
+  `three-dots` and `pulsing-dots`; `progress-gradient-ring` and `progress-timer` are
+  `progress-ring` and `progress-bar` at a value. Seven keyframe modules went with them.
+  Nothing is published yet, so this is a catalog shape decision rather than a breaking
+  change, and `docs/MIGRATION.md` points at surviving designs only.
+- `count` reaches the two families whose whole design is a repeated track: `three-dots`
+  and `equalizer` now divide both the track width and the animation phase by the number
+  the page asked for, through a twenty-third custom property, `--wavelo-parts`, that the
+  renderer writes only when a count is set. It is opt-in per design rather than universal,
+  because a `snake` has five segments and a `count` that cannot change the render is a
+  lie in the option list — which is exactly what `npm run audit:customization` exists to
+  catch, and both designs now appear in that measured table with `count` honoured.
+
 - 12 render kinds and 12 stylesheet slices, so importing one design ships its own
   rules instead of the whole catalog's. `@wavelo/core/styles.css` carries the
   complete sheet for server rendering.

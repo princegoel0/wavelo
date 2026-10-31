@@ -46,9 +46,6 @@ export const progressCss = `
    element is given as aria-valuetext, so the label and the announcement cannot drift. */
 .wavelo--progress-label-inline{overflow:visible}
 .wavelo--progress-label-inline:after{content:attr(data-wavelo-value-text);position:absolute;left:var(--wavelo-progress,35%);bottom:calc(100% + 4px);padding:0 2px;font:inherit;font-variant-numeric:tabular-nums;color:currentColor;white-space:nowrap;transform:translateX(-50%)}
-/* A ring whose filled arc is a gradient rather than a flat colour, masked to a band. */
-.wavelo--progress-gradient-ring{overflow:visible;width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);border:0;border-radius:50%;background:conic-gradient(from 0deg,var(--wavelo-secondary-color,#a5b4fc),currentColor var(--wavelo-progress,35%),color-mix(in srgb,currentColor 15%,transparent) var(--wavelo-progress,35%));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)))}
-.wavelo--progress-gradient-ring .wavelo__part{display:none}
 /* Steps that number themselves. The counter increments per part, so the numbers are the
    renderer's part count rather than a string the caller keeps in step with it — and a
    bare number is what fits beneath a track this narrow. */
@@ -65,9 +62,6 @@ export const progressCss = `
    from the bar. It also reads as one: the level is a gradient toward the accent colour,
    so the end of the fill is where the skill reaches its peak. */
 .wavelo--progress-skill .wavelo__part{background:linear-gradient(90deg,currentColor,var(--wavelo-secondary-color,#a5b4fc));transition:width .6s cubic-bezier(.3,1.6,.5,1)}
-/* Time remaining: the track empties as the value climbs, so the caller keeps reporting
-   elapsed progress and the design reads it backwards. */
-.wavelo--progress-timer .wavelo__part{width:calc(100% - var(--wavelo-progress,35%));background:color-mix(in srgb,currentColor 70%,transparent)}
 /* Six stations around a ring, filled one by one as the value climbs. The positions are
    static, so unlike the orbit spinners this is a level rather than a motion. */
 .wavelo--progress-orbit-fill{overflow:visible;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent;border-radius:50%}

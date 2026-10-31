@@ -5,7 +5,7 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 155 designs, each visually distinct, built from 12
+The catalog holds 133 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 
@@ -149,6 +149,7 @@ overrides that one loader:
 | `--wavelo-play-state` | `paused` | `running` |
 | `--wavelo-progress` | `value` / `max` on the determinate designs | `35%`, and it interpolates |
 | `--wavelo-count` | the same `value` as a whole percentage, for the design that prints it | `0`, registered as an integer so a count can animate |
+| `--wavelo-parts` | `count` on the designs built from a row of tracks (`three-dots`, `equalizer`): the sheet divides both the track width and the phase by it | that design's own row length, so a default render writes nothing |
 | `--wavelo-radius` | the corner radius of tracks, bars, steps and placeholders — not a design's own shape | each rule's own |
 | `--wavelo-gap` | the space between the parts of a composite design | each rule's own |
 | `--wavelo-z-index` | the layer of the fixed top bars and the full-screen overlay | `9999` |
@@ -289,8 +290,9 @@ rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 
 `loading` decides whether there is a loader at all. `count` sets the number of
 tracks in the designs that are built from repeating tracks — a stack of skeleton
-lines, the rows of a skeleton table, the steps of a progress bar — and a design that
-draws something else does not advertise it. `inline` puts the box on the text line.
+lines, the rows of a skeleton table, the steps of a progress bar, the length of a
+dot row, the number of bars in an equalizer — and a design that draws something
+else does not advertise it. `inline` puts the box on the text line.
 
 The designs built from repeating tracks are where `count` pays. Each one is laid out
 like the screen it stands in for, so the placeholder is the shape, not a grey box:
@@ -347,8 +349,8 @@ Which of them a given design actually uses is measured rather than claimed.
 `npm run audit:customization` renders every design in Chromium with each key set
 and unset, and `loader.options` is built from what changed the render — so `ring`
 reports `strokeWidth` but not `secondaryColor`, `skeleton-card` reports neither,
-a static `progress-bar` reports no `duration`, `three-dots` reports no `count`
-because three dots are three dots, and `fullscreen` reports no `inline` because a
+a static `progress-bar` reports no `duration`, `dot-matrix` reports no `count`
+because nine dots are a grid, and `fullscreen` reports no `inline` because a
 fixed overlay is not on anybody's line of text.
 
 `direction` and `paused` drive the CSS animation controls; `reducedMotion:

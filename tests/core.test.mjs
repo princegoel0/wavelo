@@ -43,12 +43,9 @@ test('every catalog ID renders its own design', () => {
 test('designs whose names promise a count render that many parts', () => {
   const counts = {
     'three-dots': 3,
-    'four-dots': 4,
-    'five-dots': 5,
     'dot-matrix': 9,
     'grid-pulse': 4,
     'expanding-dot': 1,
-    'audio-waveform': 7,
     'dotted-circle': 8,
     helix: 18,
     'skeleton-card': 3,
@@ -73,8 +70,6 @@ test('designs whose names promise a count render that many parts', () => {
     fireflies: 10,
     'solar-system': 5,
     'bubble-rise': 8,
-    'signal-bars': 4,
-    spectrum: 8,
     breathing: 1,
     heartbeat: 1,
     'skeleton-product-card': 4,
@@ -537,12 +532,21 @@ test('count repeats the tracks of the designs that are built from them', () => {
   assert.equal(tracks({ type: 'progress-steps', count: 4 }), 4);
   assert.equal(tracks({ type: 'ring', count: 4 }), 1, 'a ring is not a row of tracks');
   const options = (id) => loaderRegistry.find((loader) => loader.id === id).options;
-  for (const id of ['ring', 'skeleton-avatar', 'image-placeholder', 'three-dots', 'dot-matrix']) {
+  for (const id of ['ring', 'skeleton-avatar', 'image-placeholder', 'dot-matrix', 'snake']) {
     assert.ok(!options(id).includes('count'), `${id} advertises a count of tracks it cannot draw`);
   }
-  for (const id of ['skeleton-line', 'skeleton-card', 'skeleton-table', 'skeleton-dashboard', 'progress-steps']) {
+  for (const id of ['skeleton-line', 'skeleton-card', 'skeleton-table', 'skeleton-dashboard', 'progress-steps', 'three-dots', 'equalizer']) {
     assert.ok(options(id).includes('count'), `${id} lost its track count`);
   }
+  // A counted row is not just more elements: the sheet divides the box and the phase by
+  // the number the page asked for, which is what `--wavelo-parts` carries. Without it a
+  // fifth dot would sit at phase zero, and eight of them would overflow the box.
+  assert.equal(tracks({ type: 'three-dots' }), 3, 'the default row is three');
+  assert.equal(tracks({ type: 'three-dots', count: 5 }), 5);
+  assert.doesNotMatch(renderLoader({ type: 'three-dots' }).html, /--wavelo-parts/, 'the default writes nothing');
+  assert.match(renderLoader({ type: 'three-dots', count: 5 }).html, /--wavelo-parts:5/);
+  assert.equal(tracks({ type: 'equalizer', count: 8 }), 8);
+  assert.match(renderLoader({ type: 'equalizer', count: 8 }).html, /--wavelo-parts:8/);
   assert.throws(() => renderLoader({ type: 'skeleton-line', count: 2.5 }), LoaderConfigurationError, 'half a track is a mistake');
   assert.throws(() => renderLoader({ type: 'skeleton-line', count: 0 }), LoaderConfigurationError);
 });

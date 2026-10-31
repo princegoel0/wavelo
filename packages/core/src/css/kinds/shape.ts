@@ -4,7 +4,6 @@ import { css as cubeFrames } from '../keyframes/cube.js';
 import { css as polygonFrames } from '../keyframes/polygon.js';
 import { css as foldFrames } from '../keyframes/fold.js';
 import { css as triangleOrbitFrames } from '../keyframes/triangle-orbit.js';
-import { css as diamondFrames } from '../keyframes/diamond.js';
 import { css as morphFrames } from '../keyframes/morph.js';
 import { css as blobFrames } from '../keyframes/blob.js';
 import { css as sandFrames } from '../keyframes/sand.js';
@@ -32,10 +31,6 @@ export const shapeCss = `
    rotation visible on a four-fold symmetric shape: an in-plane spin of a square looks
    identical every quarter turn. */
 .wavelo--rotating-square{border-radius:8%;animation:wavelo-square var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-/* A rhombus, not a square caught at 45 degrees. A square spun in-plane is a square again
-   every quarter turn, so half of this design's cycle read as rotating-square; making it
-   taller than wide means every orientation is still a diamond. */
-.wavelo--rotating-diamond{width:calc(var(--wavelo-width,var(--wavelo-size,2.5rem)) * .72);border-radius:12%;animation:wavelo-diamond var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--morphing-shapes{border-radius:0;animation:wavelo-morph var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--svg-star{background:transparent;border:0;clip-path:none;animation:none}
 .wavelo--svg-star .wavelo__part{display:block;width:100%;height:100%;background:transparent;fill:currentColor;animation:wavelo-star var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -73,4 +68,4 @@ export const shapeCss = `
 .wavelo--error-shake[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:none}
 .wavelo--error-shake[data-wavelo-state="success"]:after{content:"\\2713";font-weight:700;font-size:calc(var(--wavelo-size,2.5rem) * .55);color:#fff;line-height:1}
 .wavelo--error-shake[data-wavelo-state="idle"]{animation:none;opacity:.7}
-${shapeFrames}${squareFrames}${cubeFrames}${polygonFrames}${foldFrames}${triangleOrbitFrames}${diamondFrames}${morphFrames}${starFrames}${blobFrames}${sandFrames}${sandTopFrames}${sandBottomFrames}${blinkEyeFrames}${eyeLookFrames}${metronomeFrames}${shakeFrames}`;
+${shapeFrames}${squareFrames}${cubeFrames}${polygonFrames}${foldFrames}${triangleOrbitFrames}${morphFrames}${starFrames}${blobFrames}${sandFrames}${sandTopFrames}${sandBottomFrames}${blinkEyeFrames}${eyeLookFrames}${metronomeFrames}${shakeFrames}`;

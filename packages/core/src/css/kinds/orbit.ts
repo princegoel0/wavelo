@@ -12,8 +12,7 @@ export const orbitCss = `
 .wavelo--orbit .wavelo__part:nth-child(3){--orbit-angle:144deg}
 .wavelo--orbit .wavelo__part:nth-child(4){--orbit-angle:216deg}
 .wavelo--orbit .wavelo__part:nth-child(5){--orbit-angle:288deg}
-.wavelo--orbiting-dots:before,.wavelo--orbiting-circles:before{content:"";position:absolute;left:50%;top:50%;width:12%;height:12%;margin:-6% 0 0 -6%;border-radius:50%;background:color-mix(in srgb,currentColor 35%,transparent)}
-.wavelo--orbiting-circles .wavelo__part{width:25%;height:25%;background:transparent;border:var(--wavelo-stroke,3px) solid currentColor}
+.wavelo--orbiting-dots:before{content:"";position:absolute;left:50%;top:50%;width:12%;height:12%;margin:-6% 0 0 -6%;border-radius:50%;background:color-mix(in srgb,currentColor 35%,transparent)}
 .wavelo--particle-orbit .wavelo__part{width:10%;height:10%;box-shadow:0 0 0 2px color-mix(in srgb,currentColor 30%,transparent)}
 .wavelo--rotating-dots .wavelo__part{animation:wavelo-dot-orbit var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The ring is one radius wide and the dots ride it a fifth of a turn apart; without the

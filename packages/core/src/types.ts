@@ -20,6 +20,9 @@ export interface WaveloTokens {
   '--wavelo-secondary-color'?: string;
   '--wavelo-success-color'?: string;
   '--wavelo-error-color'?: string;
+  /** How many tracks a counted row holds. Written by the renderer for the designs that
+   *  take a `count`; a page may set it, but it is the `count` option that is documented. */
+  '--wavelo-parts'?: string | number;
   '--wavelo-background'?: string;
   '--wavelo-duration'?: string;
   '--wavelo-stroke'?: string | number;

@@ -19,7 +19,6 @@ const seconds = 2;
  * width appears here without being listed, so this stays the whole truth.
  */
 const accepted = {
-  waveform: 'the bar slides while it grows, and the slide is a percentage of the height it is growing',
   'multi-wave': 'the same two frames run in opposite phase',
   'progress-scroll': 'the fill is the reading position, and a scaleX would squash the leading dot that marks it'
 };
