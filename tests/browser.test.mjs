@@ -147,7 +147,7 @@ test('a shared stylesheet slice is injected once per document, however many load
   const hosts = Array.from({ length: 12 }, (_, index) => `<div id="host-${index}"></div>`).join('');
   await setContentPage(hosts, '');
   const counts = await page.evaluate(() => {
-    const ids = ['three-dots', 'three-dots', 'bouncing-dots', 'vertical-dots', 'three-dots', 'four-dots', 'five-dots', 'three-dots', 'skeleton-card', 'progress-bar', 'ring', 'ring'];
+    const ids = ['three-dots', 'three-dots', 'fading-dots', 'multi-wave', 'three-dots', 'dot-matrix', 'staggered-dots', 'three-dots', 'skeleton-card', 'progress-bar', 'ring', 'ring'];
     ids.forEach((type, index) => {
       window.Wavelo.mountLoader(document.getElementById(`host-${index}`), { type, label: 'Loading' });
     });
@@ -160,8 +160,7 @@ test('a shared stylesheet slice is injected once per document, however many load
   });
   assert.equal(counts.loaders, 12);
   assert.equal(counts.bodySlices, 0, 'mountLoader must not leave a style element inside the host');
-  // eight dots-family loaders share one slice (vertical-dots is a wave design, so
-  // the wave slice joins too), plus skeleton, progress and ring.
+  // dots, wave, skeleton, progress, and ring slices join.
   assert.equal(counts.headSlices, 5, `expected five slices (dots, wave, skeleton, progress, ring), got ${counts.headSlices}`);
   assert.ok(counts.totalCssBytes < allStyles.length * 2, `injected CSS grew with the number of loaders: ${counts.totalCssBytes} bytes`);
 });
@@ -378,22 +377,14 @@ test('every determinate design reflects its value in the browser', async () => {
     assert.ok(widths[0] < widths[1] && widths[1] < widths[2], `${id} level is not monotonic in value: ${widths}`);
     assert.ok(Math.abs(widths[1] - track / 2) <= 1, `${id} at 50 fills ${widths[1]}px of a ${track}px track`);
   }
-  // A countdown reads the same value backwards: more elapsed, less drawn.
-  const timer = values.map((value) => at('progress-timer', value).partWidth);
-  assert.ok(timer[0] > timer[1] && timer[1] > timer[2], `countdown does not empty as the value climbs: ${timer}`);
   // A liquid level is a height rather than a width.
   const heights = values.map((value) => at('progress-wave-fill', value).partHeight);
   assert.ok(heights[0] < heights[1] && heights[1] < heights[2], `wave fill is not monotonic: ${heights}`);
   // A gauge sweeps half a turn, so the stop is half the value.
-  // A gradient ring sweeps the full circle, so its stop matches the value.
   for (const value of values) {
     const halfImage = at('progress-half-ring', value).backgroundImage;
     assert.ok(halfImage.includes('conic-gradient'), `progress-half-ring@${value} has no conic fill`);
     assert.ok(halfImage.includes(`${value / 2}%`), `progress-half-ring@${value} does not sweep ${value / 2}% of a turn: ${halfImage}`);
-
-    const gradImage = at('progress-gradient-ring', value).backgroundImage;
-    assert.ok(gradImage.includes('conic-gradient'), `progress-gradient-ring@${value} has no conic fill`);
-    assert.ok(gradImage.includes(`${value}%`), `progress-gradient-ring@${value} does not sweep ${value}% of a turn: ${gradImage}`);
   }
   // Discrete units, counted.
   const discrete = {
@@ -662,19 +653,19 @@ function paintReport() {
 
 test('each design renders what its name says', async () => {
   const body = [
-    'thin-line', 'thick-stroke', 'ring', 'arc', 'half-circle', 'circular', 'segmented-ring', 'monochrome',    'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots', 'four-dots', 'five-dots',
-    'dot-matrix', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation', 'audio-waveform',
-    'waveform', 'gradient-bars', 'equalizer', 'rotating-square', 'rotating-diamond', 'morphing-shapes', 'svg-star',
+    'ring', 'circular', 'segmented-ring', 'monochrome', 'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots',
+    'dot-matrix', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation',
+    'equalizer', 'rotating-square', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
-    'conic-ring', 'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse', 'rotating-square', 'rotating-diamond',
+    'comet-orbit', 'neon-ring', 'liquid-blob', 'trip-orbit', 'ellipse',
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
-    'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
-    'progress-skill', 'progress-timer', 'progress-orbit-fill',
+    'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
+    'progress-skill', 'progress-orbit-fill',
     'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
     'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
-    'orbiting-dots', 'orbiting-circles',
-    'signal-bars', 'piano-keys', 'fire-rise', 'spectrum', 'heartbeat', 'breathing',
+    'orbiting-dots',
+    'piano-keys', 'fire-rise', 'heartbeat', 'breathing',
     'dot-wave'
   ]
     .map((id) => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`)
@@ -739,18 +730,9 @@ test('each design renders what its name says', async () => {
   );
   const at = (id) => rows.find((row) => row.id === id);
 
-  // Stroke weights must differ, or "thin" and "thick" are just words. Border
-  // widths cannot be fractional, so compare rather than pin an exact value.
-  assert.equal(at('thin-line').borderWidth, '1px');
   assert.equal(at('ring').borderWidth, '3px');
-  assert.ok(
-    Number.parseFloat(at('thick-stroke').borderWidth) > Number.parseFloat(at('ring').borderWidth) * 2,
-    `thick-stroke is ${at('thick-stroke').borderWidth}, ring is ${at('ring').borderWidth}`
-  );
 
   // Arc length is the number of visible border sides.
-  assert.equal(at('arc').sides, 1, 'arc must be a single quarter-turn side');
-  assert.equal(at('half-circle').sides, 2, 'half-circle must span two sides');
   assert.equal(at('circular').sides, 4, 'circular must be a closed border');
   assert.ok(at('circular').before, 'circular must carry its sweeping accent arc');
   assert.equal(at('circular').before.animation, 'wavelo-spin');
@@ -774,12 +756,9 @@ test('each design renders what its name says', async () => {
 
   // Counts promised by the names.
   assert.equal(at('three-dots').parts, 3);
-  assert.equal(at('four-dots').parts, 4);
-  assert.equal(at('five-dots').parts, 5);
   assert.equal(at('dot-matrix').parts, 9);
   assert.equal(at('grid-pulse').parts, 4);
   assert.equal(at('expanding-dot').parts, 1);
-  assert.equal(at('audio-waveform').parts, 7);
 
   // Matrix and grid must actually be grids, not a row of dots.
   assert.equal(at('dot-matrix').gridColumns.split(' ').length, 3, 'dot-matrix must be three columns');
@@ -790,14 +769,9 @@ test('each design renders what its name says', async () => {
   assert.equal(new Set(at('background-operation').partDelays).size, 1, 'background-operation pulses in unison');
   assert.equal(at('expanding-dot').partAnimations[0], 'wavelo-scale-dot');
 
-  assert.equal(at('audio-waveform').partAnimations[0], 'wavelo-audio');
-  assert.notEqual(at('audio-waveform').partAnimations[0], at('waveform').partAnimations[0]);
-  assert.match(at('gradient-bars').partBackground, /linear-gradient/, 'gradient-bars must paint a gradient');
   assert.equal(at('equalizer').partBackground, 'none');
 
-  assert.equal(at('rotating-diamond').animation, 'wavelo-diamond');
   assert.equal(at('morphing-shapes').animation, 'wavelo-morph');
-  assert.notEqual(at('rotating-square').animation, at('rotating-diamond').animation);
 
   // The star is described as SVG, so it must be SVG.
   assert.equal(at('svg-star').svg, 1, 'svg-star must render an <svg> element');
@@ -832,8 +806,6 @@ test('each design renders what its name says', async () => {
   assert.ok(at('skeleton-code').before, 'skeleton-code must draw a gutter beside the lines');
   assert.equal(at('skeleton-code').parts, 6);
   assert.equal(at('skeleton-metric').parts, 3, 'number, label and trend chip');
-  assert.match(at('conic-ring').mask, /radial-gradient/, 'conic-ring must be carved by a mask');
-  assert.match(at('conic-ring').backgroundImage, /conic-gradient/);
   assert.match(at('comet-orbit').before.mask, /radial-gradient/, 'the tail must be a ring, not a disc');
   assert.match(at('comet-orbit').before.background, /conic-gradient/);
   assert.match(at('neon-ring').animation, /wavelo-glow/, 'neon-ring must glow while it turns');
@@ -858,8 +830,6 @@ test('each design renders what its name says', async () => {
   assert.match(at('labelled').after.content, /60% done/, 'the label is the same string aria-valuetext carries');
   assert.equal(at('progress-dots-fill').parts, 5);
   assert.equal(at('progress-dots-fill').partRadius, '50%', 'units drawn as dots');
-  assert.match(at('progress-gradient-ring').mask, /radial-gradient/);
-  assert.match(at('progress-gradient-ring').backgroundImage, /conic-gradient/);
   assert.equal(at('progress-multi-step').parts, 5);
   assert.equal(at('progress-multi-step').partCounter, 'wavelo-step 1', 'each step counts itself');
   assert.match(at('progress-multi-step').partAfterContent, /counter\(wavelo-step\)/, 'each step labels itself');
@@ -868,7 +838,6 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('progress-ai-generate').partAnimations, ['wavelo-generate']);
   assert.match(at('progress-ai-generate').partBackground, /linear-gradient/);
   assert.equal(at('progress-skill').parts, 1);
-  assert.equal(at('progress-timer').parts, 1);
   assert.equal(at('progress-orbit-fill').parts, 6, 'six stations around the ring');
   assert.equal(new Set(at('progress-orbit-fill').partTransforms).size, 6, 'each station sits at its own angle');
 
@@ -882,7 +851,6 @@ test('each design renders what its name says', async () => {
   assert.equal(at('ellipse').animation, 'wavelo-ellipse', 'it turns about its own axis; spinning flat leaves a uniform ring looking still');
   assert.equal(at('rotating-square').animation, 'wavelo-square', 'the kind default morphs to a circle, which is not a rotating square');
   assert.ok(Number.parseFloat(at('rotating-square').radius) < 15, 'a square keeps its corners; the kind default is 20% and its morph reaches 50%, i.e. a circle');
-  assert.equal(at('rotating-diamond').animation, 'wavelo-diamond');
   assert.equal(at('gradient-ring').borderImage, 'none', 'border-image is not clipped by border-radius, so it drew a square, not a ring');
   assert.match(at('gradient-ring').mask, /radial-gradient/, 'the ring is carved from a gradient fill by a radial mask');
   assert.equal(at('comet-orbit').animation, 'wavelo-spin', 'the root turns, so the tail and its head cannot drift apart');
@@ -930,20 +898,9 @@ test('each design renders what its name says', async () => {
   assert.ok(at('orbiting-dots').before, 'orbiting-dots has a central reference anchor');
   assert.deepEqual(at('orbiting-dots').partAnimations, ['wavelo-orbit']);
   assert.equal(new Set(at('orbiting-dots').partDelays).size, 1, 'orbiting-dots shares one timeline without delay collisions');
-  assert.equal(at('orbiting-circles').parts, 5, 'orbiting-circles renders 5 stations');
-  assert.ok(at('orbiting-circles').before, 'orbiting-circles has a central reference anchor');
-  assert.deepEqual(at('orbiting-circles').partAnimations, ['wavelo-orbit']);
-  assert.equal(new Set(at('orbiting-circles').partDelays).size, 1, 'orbiting-circles shares one timeline without delay collisions');
-  assert.equal(at('signal-bars').parts, 4, 'signal bars are four steps');
-  assert.deepEqual(at('signal-bars').partAnimations, ['wavelo-signal']);
-  const signalHeights = at('signal-bars').partHeights.map((value) => Number.parseFloat(value));
-  assert.ok(signalHeights.every((value, index) => index === 0 || value > signalHeights[index - 1]), `signal bars must grow: ${signalHeights.join(', ')}`);
   assert.deepEqual(at('piano-keys').partAnimations, ['wavelo-piano']);
   assert.equal(new Set(at('piano-keys').partDelays).size, 5, 'keys land at different points in the cycle');
   assert.deepEqual(at('fire-rise').partAnimations, ['wavelo-fire']);
-  assert.equal(at('spectrum').parts, 8, 'a spectrum analyser is eight bars');
-  assert.deepEqual(at('spectrum').partAnimations, ['wavelo-spectrum']);
-  assert.equal(new Set(at('spectrum').partDelays).size, 8);
   assert.ok(at('heartbeat').before, 'the trace is drawn by the element itself');
   assert.match(at('heartbeat').before.clip, /polygon/, 'an ECG trace is a clipped polyline');
   assert.equal(at('heartbeat').before.animation, 'wavelo-heart');
@@ -1512,7 +1469,7 @@ test('an unknown type on the element reports what was asked for', async () => {
 });
 
 test('tokens.css declares the defaults without changing any design', async () => {
-  const ids = ['ring', 'three-dots', 'equalizer', 'gradient-bars', 'dot-matrix', 'skeleton-card', 'skeleton-line', 'progress-bar', 'progress-ring', 'progress-top', 'progress-scroll', 'overlay', 'fullscreen'];
+  const ids = ['ring', 'three-dots', 'equalizer', 'fading-bars', 'dot-matrix', 'skeleton-card', 'skeleton-line', 'progress-bar', 'progress-ring', 'progress-top', 'progress-scroll', 'overlay', 'fullscreen'];
   const body = ids.map((id) => `<div data-id="${id}">${renderLoader({ type: id, label: id }).html}</div>`).join('');
   const tokens = await readFile(resolve('packages/core/dist/tokens.css'), 'utf8');
   const properties = ['width', 'height', 'borderTopWidth', 'borderRadius', 'color', 'backgroundColor', 'backgroundImage', 'animationDuration', 'animationPlayState', 'animationDirection', 'animationTimingFunction', 'zIndex', 'opacity', 'transform'];

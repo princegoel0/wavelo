@@ -12,7 +12,6 @@ export const ringCss = `
    carved from a gradient fill by a radial mask instead, which is how the conic ring
    already works, and the inherited spin turns the sweep round. */
 .wavelo--gradient-ring{border:0;background:linear-gradient(currentColor,var(--wavelo-secondary-color,#a5b4fc));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)))}
-.wavelo--half-circle{border-bottom-color:transparent}
 /* An ellipse, and it has to look like one. It inherits the ring's open side, which made
    this a squashed "C" spinning flat — a gap, not an ellipse. The border is closed and the
    turn is about the vertical axis with perspective, so the hoop foreshortens through the
@@ -22,15 +21,8 @@ export const ringCss = `
 .wavelo--spiral{background:conic-gradient(transparent 0 20deg,currentColor 25deg 35deg,transparent 40deg 80deg,currentColor 85deg 95deg,transparent 100deg);border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--circular{border-color:currentColor}
 .wavelo--circular:before{content:"";position:absolute;inset:calc(var(--wavelo-stroke,3px) * -1);border:var(--wavelo-stroke,3px) solid transparent;border-top-color:var(--wavelo-secondary-color,#a5b4fc);border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--thin-line{border-width:1px}
-.wavelo--thick-stroke{border-width:calc(var(--wavelo-stroke,3px) * 2.5)}
-.wavelo--arc{border-color:transparent;border-top-color:currentColor}
 .wavelo--segmented-ring{border-style:dashed;border-right-color:currentColor}
 .wavelo--monochrome{border:0;background:conic-gradient(currentColor 0 50%,color-mix(in srgb,currentColor 22%,transparent) 50% 100%);border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-/* A conic sweep carved into a ring by a radial mask, so the stroke width is the ring
-   and the gradient is the motion. No border is drawn here. The prefixed mask is for
-   the declared floor: the unprefixed mask shorthand landed after Chrome 111. */
-.wavelo--conic-ring{border:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 55%,color-mix(in srgb,currentColor 28%,transparent) 70%,currentColor 92%,transparent);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The same ring, but lit: it turns and throws a glow that swells and fades. */
 .wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Elastic: the ring holds still and the stroke travels instead, squashing along one

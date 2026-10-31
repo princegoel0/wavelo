@@ -20,8 +20,8 @@ const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
 const staticTypes = new Set([
   'segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top',
   'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline',
-  'progress-gradient-ring', 'progress-multi-step', 'progress-upload-multi', 'progress-skill',
-  'progress-timer', 'progress-orbit-fill'
+  'progress-multi-step', 'progress-upload-multi', 'progress-skill',
+  'progress-orbit-fill'
 ]);
 /** Designs whose fill comes from a timeline the browser drives, not the clock. */
 const timelineTypes = new Map([['progress-scroll', 'ScrollTimeline'], ['progress-view', 'ViewTimeline']]);
@@ -31,12 +31,10 @@ function expectedBehavior(loader) {
     ring: 'An open circular stroke rotates around its center.',
     'dual-ring': 'Two concentric strokes rotate in opposite directions.',
     'dotted-circle': 'Eight dots travel around a circular path.',
-    'half-circle': 'A partial circular arc sweeps around its center.',
     ellipse: 'An elliptical stroke rotates on its long axis.',
     'rotating-square': 'A square morphs and rotates as one solid shape.',
     'rotating-diamond': 'A diamond rotates as a four-sided shape.',
     'orbiting-dots': 'Five solid dots visibly orbit a central point.',
-    'orbiting-circles': 'Outlined circles visibly orbit a central point.',
     'gradient-ring': 'A ring with a secondary-color gradient rotates.',
     'svg-star': 'A star silhouette rotates and morphs.',
     'three-dots': 'Three dots pulse in sequence.',
@@ -66,7 +64,6 @@ function expectedBehavior(loader) {
     'oscillating-line': 'A line oscillates vertically.',
     'multi-wave': 'Multiple bars move in opposing wave phases.',
     'ripple-circles': 'Several expanding circular ripples are emitted.',
-    'expanding-circles': 'Concentric circles expand and contract.',
     'morphing-shapes': 'A solid shape changes radius and rotation.',
     infinity: 'Nodes run a figure-eight track drawn as two circles touching at the centre.',
     helix: 'Two strands of nodes twist in opposition, joined by base pairs that close as they cross.',

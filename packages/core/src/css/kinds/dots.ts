@@ -24,6 +24,7 @@ export const dotsCss = `
 .wavelo--dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--dots .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1 / 3)}
 .wavelo--dots .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1s) * -5 / 6)}
+
 .wavelo--dotted-circle{display:block;border:0;background:transparent}
 .wavelo--dotted-circle.wavelo-inline{display:inline-block}
 /* Eight dots on a ring. Each one is centred in the box, turned to its own angle and
@@ -39,7 +40,6 @@ export const dotsCss = `
 .wavelo--dotted-circle .wavelo__part:nth-child(6){--a:225deg;animation-delay:calc(var(--wavelo-duration,1s) * -1)}
 .wavelo--dotted-circle .wavelo__part:nth-child(7){--a:270deg;animation-delay:calc(var(--wavelo-duration,1s) * -1.2)}
 .wavelo--dotted-circle .wavelo__part:nth-child(8){--a:315deg;animation-delay:calc(var(--wavelo-duration,1s) * -1.4)}
-.wavelo--bouncing-dots .wavelo__part{animation:wavelo-bounce-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--fading-dots .wavelo__part{animation:wavelo-fade-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(odd){animation:wavelo-alt-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(even){animation:wavelo-alt-dot-reverse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}

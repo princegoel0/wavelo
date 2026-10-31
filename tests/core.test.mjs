@@ -43,12 +43,9 @@ test('every catalog ID renders its own design', () => {
 test('designs whose names promise a count render that many parts', () => {
   const counts = {
     'three-dots': 3,
-    'four-dots': 4,
-    'five-dots': 5,
     'dot-matrix': 9,
     'grid-pulse': 4,
     'expanding-dot': 1,
-    'audio-waveform': 7,
     'dotted-circle': 8,
     helix: 18,
     'skeleton-card': 3,
@@ -73,8 +70,6 @@ test('designs whose names promise a count render that many parts', () => {
     fireflies: 10,
     'solar-system': 5,
     'bubble-rise': 8,
-    'signal-bars': 4,
-    spectrum: 8,
     breathing: 1,
     heartbeat: 1,
     'skeleton-product-card': 4,
