@@ -17,7 +17,7 @@ No package was published to npm and no registry setting was changed.
 
 ## Scope and versions actually tested
 
-- Node.js `v24.21.0`, npm `11.19.0`, TypeScript `5.7.x`
+- Node.js `v24.21.0`, npm `11.19.0`, TypeScript `5.9.x`; CI pins Node 20
 - React and React DOM `19.3.1`, Vue `3.5.44`, Svelte `5.57.3`,
   Angular core/compiler/platform `22.2.3`
 - Playwright with the Chromium build it pins, axe-core `4.14.0`, esbuild `0.28.2`,
@@ -37,7 +37,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   133 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 22 `--wavelo-*`
-  custom properties, 88 `@keyframes`, 206 named presets. Eight categories, one of
+  custom properties, 81 `@keyframes`, 206 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by
@@ -67,7 +67,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `npm run catalog` | Passed: 133 IDs / 133 active / 206 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
 | `npm run docs:check` | Passed: 133 designs, 27 configuration keys, 22 custom properties and every bundle figure match the built packages, in 12 documents |
-| `npm run measure` | Passed: 12 entry points inside budget; `ring` 5,709 B gzip (budget 6,656), the busiest kind `progress-battery` 7,529 B (budget 8,704), runtime renderer 19,011 B (budget 22,528) |
+| `npm run measure` | Passed: 11 entry points inside budget; `ring` 8,300 B gzipped (budget 9,728), the busiest kind `bubble-rise` 9,648 B (budget 11,264), runtime renderer 32,613 B (budget 37,888) |
 | `npm run test:browser` | Passed: 36 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run test:browser:webkit` | Passed: 7 WebKit tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, a conic gradient is carved by a mask, a registered integer reaches a CSS counter, and both timeline designs run on a real `ScrollTimeline`/`ViewTimeline` (`scroll()`/`view()` measured supported on WebKit 27.2, unlike Firefox 157) |
@@ -84,6 +84,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `dev` → `main` merge | Done as merge commit `ae0e06d` through pull request #18 (the WebKit suite, the versioning policy in `docs/RELEASE.md`, the peer-isolation assertion in `pack:verify`); earlier passes landed as `8cbef17` (#16, progress tranche), `3f13ea8` (#17, docs), `f3e6dd7` (#14, streaming tranche), `9361edc` (#15), `7aa8c19` (#13), `f1c47a0` (#12, Tier 1 gaps), `138b1f1` (#11), `5dcbdf2` (#10, Phases B–J) and `603ecfc` (#6) |
 | GitHub Actions, `main` at `ae0e06d` | `CI` passed (`verify`, `verify-browser`); `Release packages`: `Validate release` success, **`Publish npm packages` skipped** because `RELEASE_ENABLED` is `false`; `Gallery` **skipped** both jobs because `GALLERY_ENABLED` is unset — nothing was published and no site was deployed |
 | npm registry state | `0.1.0` not present for any of the seven names (`npm view @wavelo/core version` returns a 404) |
+| GitHub Actions, `main` at `ff57baf` (pull request #24, the consolidation + `count` + documentation pass) | `CI` passed: `verify` 42s and `verify-browser` 6m23s on both the push and pull-request runs. `Release packages`: `Validate release` success with all three engines, `audit:customization`, `audit:layout` and `audit:visual:correctness` green, and **`Publish npm packages` skipped**; `Gallery` **skipped** both jobs. `npm view @wavelo/core version` still returns 404 — nothing published, `RELEASE_ENABLED` untouched |
 
 ## Browser evidence
 
@@ -174,7 +175,7 @@ nothing is fetched from the registry), and asserts there that:
   `dist/index.d.ts`.
 
 Sizes from this build: base slice 2,521 B raw, ring slice 2,240 B, scroll slice
-2,139 B, combined sheet 39,384 B raw and 5,897 B gzipped.
+2,139 B, combined sheet 126,068 B raw and 21,930 B gzipped.
 
 ## Visual correctness history
 
@@ -207,7 +208,8 @@ describes the pre-remediation renderer and is kept as history.
 6. Subjective motion quality still needs a human pass in a browser; the automated
    evidence proves each design animates and costs no layout it can avoid, not that each
    animation looks right.
-7. The `waveform` and `multi-wave` designs animate `height` rather than a transform,
+7. `multi-wave` animates `height` rather than a transform (`waveform` was consolidated
+   into `equalizer`, and the frame it used survives on `multi-wave`),
    and `progress-scroll` animates `width`: each is recorded with its reason in
    [PERFORMANCE.md](PERFORMANCE.md), and `npm run audit:layout` fails if a fourth
    appears without one.

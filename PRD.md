@@ -176,6 +176,9 @@ The following names are provisional and must be checked for npm availability.
 | `@wavelo/vue` | Vue components and composables |
 | `@wavelo/svelte` | Svelte components and bindings |
 | `@wavelo/web-components` | Native custom elements for framework-independent browser usage |
+| `@wavelo/vanilla` | `mountLoader` and `createWavelo` for plain-DOM apps, with no framework peer |
+
+Seven packages publish: the six above plus `@wavelo/core`.
 
 If a suitable npm scope is unavailable, select a consistent alternative naming scheme.
 
@@ -228,6 +231,17 @@ The release target is:
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
 Every entry must have a documented purpose, working implementation and gallery preview.
+
+> **Status of the numbered lists in §5.2–§5.9.** They are the original requirement set, and
+> they still describe what the library must cover. Twenty-two of the named shapes have since
+> been consolidated into a surviving design because they rendered the same thing — the ring
+> thickness and mask variants, five dot rows, seven bar rows, the concentric-circle pair, the
+> orbiting-circle and the two determinate forms. The full list, with what each one was folded
+> into and whether configuration genuinely reproduces it, is in
+> `docs/VISUAL_DEDUPLICATION_REPORT.md`; `docs/LOADER_AUDIT.md` §5 marks each affected row
+> **consolidated** in place. Nothing in this section should be read as "unimplemented"
+> because a name is absent from the catalog: coverage is the requirement, the specific ID is
+> not.
 
 ## 5.2 Category A — Classic Spinners
 
@@ -537,7 +551,7 @@ Provide a stable set of CSS custom properties, for example:
   --wavelo-secondary-color: #a5b4fc;
   --wavelo-size: 2.5rem;
   --wavelo-duration: 1s;
-  --wavelo-stroke-width: 3px;
+  --wavelo-stroke: 3px;
   --wavelo-skeleton-base: #e5e7eb;
   --wavelo-skeleton-highlight: #f9fafb;
 }
@@ -596,7 +610,7 @@ import { Loader } from '@wavelo/react';
 export function Example() {
   return (
     <Loader
-      type="orbit"
+      type="orbiting-dots"
       size={48}
       color="#6366f1"
       label="Loading data"
@@ -630,7 +644,7 @@ Illustrative usage:
 
 ```html
 <wavelo-loader
-  type="dots"
+  type="three-dots"
   [size]="48"
   color="#6366f1"
   label="Loading data">
@@ -679,7 +693,7 @@ Illustrative usage:
 </script>
 
 <wavelo-loader
-  type="pulse"
+  type="pulsing-dots"
   size="48"
   color="#6366f1"
   label="Loading data">
@@ -905,6 +919,14 @@ Initial proposed targets:
 - Adapter overhead: target 5 KB or less of additional library code where technically practical, excluding framework runtimes.
 
 These are initial targets, not guaranteed measurements.
+
+> **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 9,728 B for a
+> single design chosen at build time (measured 8,300 B gzipped) and 37,888 B for the runtime
+> renderer (measured 32,613 B). The 5 KB loader target is met at the small end of the catalog
+> and missed by designs that share a crowded render kind, because a design imports its whole
+> kind's rules; the 10 KB core target is missed by design — a runtime-selected renderer has to
+> carry all twelve slices. The gap is recorded rather than closed quietly:
+> `docs/BUNDLE_SIZE.md` states both targets' real outcome and why.
 
 The project must establish real baseline measurements, define what is included in each budget, and revise targets only with documented justification.
 

@@ -79,14 +79,14 @@ The following options are honoured strictly by loaders engineered to read them:
 
 | Option | Type | Consumers | Effect |
 |---|---|---|---|
-| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, etc. (42 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
-| `value` | `number` | Determinate progress bars, rings, battery, meters, counters (20 loaders) | Current completion number between `0` and `max`. Sets `--wavelo-progress` and `aria-valuenow`. |
-| `max` | `number` | Determinate progress loaders (20 loaders) | Maximum completion range (default 100). Sets `aria-valuemax`. |
-| `valueText` | `string` | Determinate progress loaders (20 loaders) | Humanized reading (e.g., `"4 of 12 items"`). Sets `aria-valuetext` and visual counters. |
-| `count` | `number` | Skeleton text lines, data tables, multi-step progress, upload queues (24 loaders) | Controls repeating child elements (e.g. lines of text, step chips, file items). |
-| `secondaryColor` | `string` | Dual-color rings, clock hands, solar system, thinking glow (10 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
-| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays (61 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
-| `data-wavelo-state` | `'idle' | 'loading' | 'success' | 'error'` | Micro-interactions (8 loaders) | Triggers reactive visual morphs (spin -> checkmark, pulse -> alert). |
+| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, etc. (35 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
+| `value` | `number` | Determinate progress bars, rings, battery, meters, counters (18 loaders) | Current completion number between `0` and `max`. Sets `--wavelo-progress` and `aria-valuenow`. |
+| `max` | `number` | Determinate progress loaders (18 loaders) | Maximum completion range (default 100). Sets `aria-valuemax`. |
+| `valueText` | `string` | Determinate progress loaders (18 loaders) | Humanized reading (e.g., `"4 of 12 items"`). Sets `aria-valuetext` and visual counters. |
+| `count` | `number` | Skeleton text lines and composite layouts, multi-step progress, upload queues, and the two repeated-track designs `three-dots` and `equalizer` (26 loaders) | Controls repeating child elements (lines of text, step chips, file items) and, on the two track designs, the length of the row: the sheet divides track width and animation phase by `--wavelo-parts`. |
+| `secondaryColor` | `string` | Dual-color rings, clock hands, solar system, thinking glow (8 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
+| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays (44 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
+| `data-wavelo-state` | `'idle' | 'loading' | 'success' | 'error'` | Micro-interactions (6 loaders: `success-ring`, `error-shake`, `button-confirm`, `offline-dot`, `save-indicator`, `undo-progress`) | Triggers reactive visual morphs (spin -> checkmark, pulse -> alert). |
 | `data-wavelo-constellation` | `'ursa-major' | 'orion' | 'cassiopeia' | 'cygnus' | 'ursa-minor'` | Constellation loader | Selects celestial star pattern and geometric line matrix. |
 
 ---
@@ -284,6 +284,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Render Kind (Slice):** `orbit`
 - **Description:** Dots orbiting a center
 - **DOM & Technical Construction:** 5 internal DOM child `.wavelo__part` element(s). Motion engine: GPU Compositor-only (transform / opacity).
+- **Associated Pattern Presets:** `large-display` (moved here when `orbiting-circles` was consolidated)
 
 **Configuration Options:**
 
@@ -300,7 +301,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Render Kind (Slice):** `orbit`
 - **Description:** Circles orbiting a center
 - **DOM & Technical Construction:** 5 internal DOM child `.wavelo__part` element(s). Motion engine: GPU Compositor-only (transform / opacity).
-- **Associated Pattern Presets:** `large-display`
+- **Associated Pattern Presets:** `large-display` — **consolidated**; the preset now resolves to `orbiting-dots`.
 
 **Configuration Options:**
 
@@ -979,6 +980,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Render Kind (Slice):** `bars`
 - **Description:** Growing and shrinking bars
 - **DOM & Technical Construction:** 5 internal DOM child `.wavelo__part` element(s). Motion engine: GPU Compositor-only (transform / opacity).
+- **Associated Pattern Presets:** `connection-quality` (moved here when `signal-bars` was consolidated)
 
 **Configuration Options:**
 
@@ -1027,7 +1029,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Render Kind (Slice):** `bars`
 - **Description:** Four bars of increasing height filling in sequence
 - **DOM & Technical Construction:** 4 internal DOM child `.wavelo__part` element(s). Motion engine: GPU Compositor-only (transform / opacity).
-- **Associated Pattern Presets:** `connection-quality`
+- **Associated Pattern Presets:** `connection-quality` — **consolidated**; the preset now resolves to `growing-bars`.
 
 **Configuration Options:**
 
@@ -1217,7 +1219,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Description:** Determinate progress bar
 - **DOM & Technical Construction:** 1 internal DOM child `.wavelo__part` element(s). Motion engine: Determinate progress fill via CSS Custom Property (--wavelo-progress).
 - **Progress Semantics:** Determinate progress component with `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`.
-- **Associated Pattern Presets:** `file-processing`, `progress-collection`
+- **Associated Pattern Presets:** `file-processing`, `progress-collection`, `time-remaining`
 
 **Configuration Options:**
 
@@ -1530,7 +1532,7 @@ The following options are honoured strictly by loaders engineered to read them:
 - **Description:** The track empties as the value climbs
 - **DOM & Technical Construction:** 1 internal DOM child `.wavelo__part` element(s). Motion engine: Determinate progress fill via CSS Custom Property (--wavelo-progress).
 - **Progress Semantics:** Determinate progress component with `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`.
-- **Associated Pattern Presets:** `time-remaining`
+- **Associated Pattern Presets:** `time-remaining` — **consolidated**; the preset now resolves to `progress-bar`.
 
 **Configuration Options:**
 

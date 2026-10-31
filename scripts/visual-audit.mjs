@@ -6,7 +6,10 @@ import { chromium } from 'playwright';
 
 const outputDirectory = resolve('release-audit');
 const screenshotPath = resolve(outputDirectory, 'catalog-contact-sheet.png');
-const reportPath = resolve('docs', 'VISUAL_CATALOG_AUDIT.md');
+// The review sheet this script writes is an artifact of a run, not documentation that
+// anyone maintains: it was regenerated against a 129-design catalog and then sat in `docs/`
+// describing designs that no longer ship. It now lands beside the contact sheet.
+const reportPath = resolve(outputDirectory, 'VISUAL_CATALOG_AUDIT.md');
 await mkdir(outputDirectory, { recursive: true });
 
 const html = await readFile(resolve('apps/docs/dist/index.html'), 'utf8');
