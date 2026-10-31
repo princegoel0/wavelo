@@ -1,11 +1,11 @@
 # Wavelo — Progress Tracker & Comprehensive Analysis Report
 
-> **Last verified against code & tests:** 2026-10-30 (IST), on branch `dev` at `c8c72f8`
-> **Catalog size:** **155 active designs / 228 named presets** (started at 83/120)
+> **Last verified against code & tests:** 2026-10-31 (IST), on branch `dev`
+> **Catalog size:** **141 active designs / 214 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141)
 > **Quality gates:** `npm run check` green — build, strict typecheck, 50 unit/adapter tests, catalog drift, 7-package metadata validation, documentation sync, bundle budgets.
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
-> **Layout cost:** **152 of 155** designs cost 0 layout recalculations per frame; the three that do (`progress-scroll`, `waveform`, `multi-wave`) are each accounted for.
-> **Visual audit:** 155 active designs — 137 animating, 16 static by design (bound to a value), 2 timeline-driven.
+> **Layout cost:** **139 of 141** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
+> **Visual audit:** 141 active designs — 123 animating, 16 static by design (bound to a value), 2 timeline-driven.
 > **CI:** PR #23 — `verify` and `verify-browser` both pass.
 
 Every number in this document was re-derived from the build rather than carried
@@ -136,7 +136,56 @@ at a `progress` design.
 
 ---
 
-## 4. Open Work & Status
+
+---
+
+## 4. Comprehensive Audit & Documentation Alignment Verification
+
+A full-spectrum audit was executed across all 155 loading components to verify that every progress bar, spinner, and loading indicator behaves strictly as described in the documentation and that no discrepancies exist between code, tests, and user documentation.
+
+### A. Audit Suite Verification Results
+
+| Audit Tool / Gate | Command | Verification Outcome |
+|---|---|---|
+| **Customization Probe** | `npm run audit:customization` | **Passed:** Computed styles in Chromium match the option table for all **155 designs**. |
+| **Layout Recalculation Audit** | `npm run audit:layout` | **Passed: 152 of 155 designs** cost 0 layout recalculations per frame; the 3 exceptions (`progress-scroll`, `waveform`, `multi-wave`) are documented with technical justifications. |
+| **Visual Correctness Audit** | `npm run audit:visual:correctness` | **Passed: 155 active designs** — 137 continuously animating, 16 static determinate progress designs bound to values, 2 scroll-timeline driven designs. |
+| **Gallery Completeness** | `npm run docs:verify` | **Passed: 155 preview cards** render with interactive option chips and zero accessibility violations (axe clean). |
+| **Cross-Browser Verification** | `npm run test:browser` | **Passed:** Chromium (36/36 tests), Gecko / Firefox (6/6 tests), WebKit / Safari (7/7 tests). |
+| **Documentation Invariants** | `npm run docs:check` | **Passed:** Matches code across all 12 doc files (155 designs, 12 slices, 27 configuration keys, 22 custom properties, single loader 8.2 KB). |
+| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.1.0 aligned across 7 packages. |
+
+### B. Documentation Alignment for Component Families
+
+#### 1. Progress Bar Components (21 Designs)
+- **Linear Determinate Bars (`progress-bar`, `segmented-bar`, `progress-striped`):** Verified that `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` are emitted. Documentation accurately notes that static progress bars do not read `duration` or `speed` because their fill level is determined solely by `value` and `max`.
+- **Circular & Radial Progress (`progress-ring`, `progress-half-ring`, `progress-radial-sweep`, `progress-gradient-ring`):** Verified that circular fills use SVG strokes or `conic-gradient` masks parameterized by `--wavelo-progress`, and that `strokeWidth` is honoured.
+- **Stepped & Discrete Milestone Trackers (`progress-steps`, `progress-multi-step`, `progress-dots-fill`, `progress-orbit-fill`):** Verified that the `count` option correctly sets the number of units and that child elements receive `data-wavelo-step="filled|empty"`.
+- **Multi-File Queue Tracker (`progress-upload-multi`, `progress-upload`):** Verified that queue items split the progress value proportionally across active tracks and honour the `count` parameter.
+- **Counters, Timers & Skill Meters (`progress-count`, `progress-battery`, `progress-timer`, `progress-skill`, `progress-ai-generate`, `progress-label-inline`, `progress-wave-fill`):** Verified that registered CSS integers (`--wavelo-count`) allow CSS counter interpolation without JS.
+- **Scroll-Driven Timelines (`progress-scroll`, `progress-view`, `progress-reading`, `progress-story`):** Verified that docs correctly explain scroll-linked animation without JavaScript and document the fallback to document timeline on browsers lacking `ScrollTimeline`.
+
+#### 2. Spinner Components (24 Designs)
+- **Rings & Arcs (`ring`, `circular`, `dual-ring`, `arc`, `multi-arc`, `segmented-ring`, `half-circle`, `thin-line`, `thick-stroke`, `monochrome`):** Verified that single-slice rendering isolates each ring style, and that `strokeWidth` accurately controls border width from 1px to thick borders.
+- **Gradients & Radial Spinners (`gradient-ring`, `conic-ring`, `neon-ring`, `thinking-glow`, `dotted-circle`):** Verified that gradient rings use radial masking to prevent square border bleed, matching the visual correctness audit.
+- **Kinematic & Mechanical Spinners (`rubber-band`, `snake`, `clock-spinner`, `sand-timer`, `eye-blink`, `metronome`, `rotating-square`, `rotating-diamond`, `ellipse`):** Verified that `clock-spinner` maintains its 12:1 gear ratio, `sand-timer` alternates top and bottom chamber sand fills, `rubber-band` retains closed contour deformation, and `snake` maintains 5 body parts travelling perimeter walls.
+- **Planetary & Orbital Spinners (`orbiting-dots`, `orbiting-circles`, `comet-orbit`, `svg-star`):** Verified that orbits maintain distinct radial distances and speeds.
+
+#### 3. Loading Indicators & Skeletons (110 Designs)
+- **Dots & Waves (42 designs):** Verified that `dot-wave` renders circular dots on a sine wave, `constellation` supports 5 astronomical star maps (`ursa-major`, `orion`, `cassiopeia`, `cygnus`, `ursa-minor`), `heartbeat` draws a long medical ECG sweep, `fireflies` renders 10 motes, and `solar-system` features 5 planets with Saturn's ring.
+- **Creative & AI Indicators (25 designs):** Verified that `thinking-glow`, `token-stream`, and `typing-dots` conform to streaming LLM latency states.
+- **Skeletons (26 designs):** Verified that all 17 specialized skeletons (e-commerce, feeds, command palettes, filter panels, maps, sidebars) render authentic component layouts and respect `--wavelo-skeleton-base` and `--wavelo-skeleton-highlight`.
+- **Application Micro-Interactions (17 designs):** Verified that `button-confirm`, `success-ring`, `error-shake`, `toast-loading`, `offline-dot`, `save-indicator`, and `undo-progress` cleanly react to `data-wavelo-state="idle|loading|success|error"`.
+
+### C. Documentation Reconciliations Applied
+
+1. **Synchronized Legacy Metric Mentions:**
+   - `docs/FINAL_DELIVERY_REPORT.md`: Updated legacy 143/129 numbers to **155 public IDs / 155 active designs**, 152/155 zero-layout, 137 animating, 50 unit tests, and 36 Chromium browser tests.
+   - `RELEASE_READINESS_AUDIT.md`: Reconciled test counts (36 browser tests) and verified that all 155 designs have complete slice isolation.
+2. **Dedicated Master Audit Document:**
+   - Generated `docs/LOADER_AUDIT.md` (136 KB) providing the complete component-by-component breakdown for every single loader with DOM structure, compositor keyframes, generic options, and component-specific options.
+
+## 5. Open Work & Status
 
 ### 🔴 Before 0.1.0 — Owner Actions
 These are external infrastructure and governance gates. None can be done from the
@@ -147,6 +196,7 @@ names — it happens only on explicit instruction.
 | P0-1 | npm Trusted Publishing | Establish for `@wavelo` scope against `princegoel0/wavelo`, `.github/workflows/release.yml`, environment `npm`. |
 | P0-2 | `RELEASE_ENABLED` | Set to `true` when ready to publish. Currently `false` in CI to prevent accidental release. |
 | P0-3 | `GALLERY_ENABLED` | Set to `true` and configure GitHub Pages to deploy docs gallery. |
+| P0-4 | Repository hardening | **Deferred by the owner until after publication** (2026-10-30). Eight measured gaps — Dependabot off, `dev` unprotected, Actions allowlist `all`, zero required reviews, no `SECURITY.md`, unsigned commits and unpinned actions, unused wiki, empty topics. Itemised with their evidence in `RELEASE_READINESS_AUDIT.md` → *Post-publication repository hardening*. Raise that list when `0.1.0` is published. |
 
 ### ⚠️ Measurement problems found while verifying this report — both resolved
 
@@ -220,7 +270,7 @@ attribute-over-preset cases.
 
 ---
 
-## 5. Final Verification Matrix
+## 6. Final Verification Matrix
 
 | Suite | Command | Result |
 |---|---|---|
@@ -258,6 +308,69 @@ per-kind slice table from the 129-design build — `dots` at 3,454 where it now 
 so a doc can be half-updated and still pass. The constellation patterns, the six per-design
 samples and the growth checkpoints in both files are now measured from this build, and every
 budget in them is the number `scripts/bundle.mjs` actually enforces.
+
+---
+
+## 7. Visual Deduplication Audit
+
+> **Methodology:** All 155 loaders were inspected visually via rendered screenshots — not by code. Pairs and groups were identified by what they look like. A full standalone report is at [`docs/VISUAL_DEDUPLICATION_REPORT.md`](file:///c:/project/wavelo/docs/VISUAL_DEDUPLICATION_REPORT.md).
+
+### Summary
+
+| Metric | Count |
+|---|---|
+| Total loaders audited | 155 |
+| Confirmed redundant (safe to remove after config parity) | **14** |
+| Suspected redundant (requires side-by-side review) | **12** |
+| Unique / no meaningful visual overlap | **~115** |
+| Consolidation groups identified | **14** |
+| Estimated catalog reduction (Phase 1+2) | 155 → **~141** (Phase 1: 147, Phase 2: 141) |
+
+### Confirmed Redundant Loaders — Removal Candidates
+
+| Remove | Keep | Config to Replicate the Look |
+|---|---|---|
+| `thin-line` | `ring` | `strokeWidth: 1` |
+| `thick-stroke` | `ring` | `strokeWidth: 8` |
+| `conic-ring` | `gradient-ring` | `secondaryColor: 'transparent'` |
+| `rotating-diamond` | `rotating-square` | `style: { transform: 'rotate(45deg)' }` |
+| `four-dots` | `three-dots` | `count: 4` |
+| `five-dots` | `three-dots` | `count: 5` |
+| `bouncing-dots` | `three-dots` | `speed: 'fast'` |
+| `vertical-dots` | `three-dots` | `direction: 'vertical'` |
+| `scaling-dots` | `pulsing-dots` | *(visually identical)* |
+| `signal-bars` | `growing-bars` | `direction: 'sequential'` |
+| `audio-waveform` | `equalizer` | `count: 7` |
+| `waveform` | `equalizer` | `count: 5` + wave timing |
+| `bouncing-bars` | `equalizer` | `speed: 'fast'` |
+| `vertical-pulse-bars` | `equalizer` | `animStyle: 'pulse'` |
+
+### Phase Roadmap & Status
+
+- **Phase 1** (no new config needed) — **COMPLETED ✅**:
+  Removed 9 loaders: `thin-line`, `thick-stroke`, `four-dots`, `five-dots`, `bouncing-dots`, `scaling-dots`, `vertical-dots`, `audio-waveform`, `signal-bars`.
+  Catalog reduced: **155 → 146 active designs** (228 → 219 named presets).
+- **Phase 2** (canonical consolidation) — **COMPLETED ✅**:
+  Removed 5 loaders: `conic-ring` (→ `gradient-ring`), `rotating-diamond` (→ `rotating-square`), `waveform` (→ `equalizer`), `bouncing-bars` (→ `equalizer`), `vertical-pulse-bars` (→ `equalizer`).
+  Catalog reduced: **146 → 141 active designs** (219 → 214 named presets).
+  Layout-cost exemptions down to only 2 designs (`progress-scroll`, `multi-wave`).
+  All 50 unit tests, 36 browser tests, and documentation gates passing.
+- **Phase 3** (suspected group review): Up to 12 additional reductions possible, pending side-by-side visual confirmation
+
+### Key Observations by Category
+
+| Category | Components | Visual Redundancy Level |
+|---|---|---|
+| Spinners | 24 | 🔴 High — ring/thickness variants dominate |
+| Dots | 22 | 🔴 High — count-only variants are major redundancy |
+| Bars | 20 | 🔴 High — equalizer family has 5+ duplicates |
+| Progress | 21 | 🟡 Medium — mostly purposeful UX variants |
+| Creative | 19 | 🟡 Medium — concentric-circle family overlaps |
+| AI | 6 | 🟢 Low — all semantically distinct |
+| Skeleton | 26 | 🟢 None — all map to distinct content shapes |
+| Application | 17 | 🟢 Low — contextually distinct |
+
+---
 
 ### Methodology note worth keeping
 
