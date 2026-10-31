@@ -57,7 +57,36 @@ const forbiddenTerms = [
 ];
 const forbiddenPatterns = [/\bvariant\s*[:=]/, /result\.css into every component/, /styles? are inlined per component/];
 
+/**
+ * Design IDs retired by the visual consolidation. A document that describes the *current*
+ * catalog must not name one as reachable: `docs/MIGRATION.md` did exactly that for five
+ * rows, so a reader following it got the fallback loader and no gate noticed. The history
+ * documents — the dedup report, the master audit's index, the changelog — name them on
+ * purpose, so they are not scanned. Only the code-quoted form matches, which keeps prose
+ * like "bars and waveforms" out of the check.
+ */
+const retiredDesignIds = [
+  'arc', 'half-circle', 'rotating-diamond', 'orbiting-circles', 'conic-ring', 'thin-line', 'thick-stroke',
+  'four-dots', 'five-dots', 'bouncing-dots', 'scaling-dots', 'vertical-dots',
+  'bouncing-bars', 'vertical-pulse-bars', 'waveform', 'audio-waveform', 'gradient-bars', 'signal-bars', 'spectrum',
+  'expanding-circles', 'progress-gradient-ring', 'progress-timer'
+];
+const currentCatalogDocs = [
+  'README.md', 'docs/BUNDLE_SIZE.md', 'docs/PERFORMANCE.md', 'docs/COMPATIBILITY.md',
+  'docs/MIGRATION.md', 'docs/RECIPES.md', 'docs/FRAMEWORKS.md', 'docs/RELEASE.md',
+  'packages/core/README.md', 'packages/react/README.md', 'packages/vue/README.md',
+  'packages/svelte/README.md', 'packages/angular/README.md', 'packages/vanilla/README.md',
+  'packages/web-components/README.md'
+];
 const failures = [];
+for (const file of currentCatalogDocs) {
+  const text = await readFile(file, 'utf8').catch(() => '');
+  for (const id of retiredDesignIds) {
+    if (new RegExp(`[\`'"]${id}[\`'"]`).test(text)) {
+      failures.push(`${file} documents \`${id}\`, a design that was consolidated away`);
+    }
+  }
+}
 const files = new Set(required.map(([file]) => file));
 for (const [file, strings] of required) {
   const text = await readFile(file, 'utf8').catch(() => undefined);
@@ -107,8 +136,12 @@ for (const token of tokensDeclared) {
 const { patternPresets } = await import('../packages/core/dist/catalog.js');
 const countDocuments = [
   'README.md', 'CHANGELOG.md', 'RELEASE_CHECKLIST.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
-  'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/IMPLEMENTATION_PLAN.md', 'docs/MIGRATION.md',
-  'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md'
+  'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/MIGRATION.md',
+  'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
+  // These three restate catalog totals and were never compared to anything, so each one
+  // drifted: the master audit claimed 133 shipped in its scope line and 155 in every
+  // section header, and the progress tracker carried two builds of stale figures.
+  'docs/LOADER_AUDIT.md', 'docs/VISUAL_DEDUPLICATION_REPORT.md', 'docs/wavelo-analysis.md'
 ];
 for (const file of countDocuments) {
   const text = (await readFile(file, 'utf8').catch(() => '')).replace(/\s+/g, ' ');

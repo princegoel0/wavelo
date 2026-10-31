@@ -9,7 +9,7 @@
 | Metric | Original | Phase 1 | Phase 2 | Phase 3 (Option 2) | Total Reduction |
 |---|---|---|---|---|---|
 | **Active Designs** | 155 | 146 | 141 | **133** | **-22 designs (-14.2%)** |
-| **Named Presets** | 228 | 219 | 214 | **206** | **-22 presets** |
+| **Named Presets** | 228 | 219 | 214 | **206** | **22 fewer entries** |
 | **Stylesheet Slices** | 12 | 12 | 12 | **12** | Maintained modularity |
 | **Bundle Size (Core Gzip)** | 33.3 KB | 32.7 KB | 32.0 KB | **31.8 KB** | **-1.5 KB (-4.5%)** |
 | **Layout Cost (0/frame)** | 152 / 155 | 144 / 146 | 139 / 141 | **131 / 133** | Only 2 justified exemptions (`progress-scroll`, `multi-wave`) |

@@ -32,9 +32,9 @@ choosing.
 
 Two incumbents can map to one design (`BeatLoader` and `DotLoader` above), and no
 mapping claims pixel parity — it names the design that reads the same way. Four of
-these targets moved when visually duplicate designs were consolidated: `arc` and
-`half-circle` are `ring` variants now reachable through `strokeWidth`, and
-`bouncing-dots` and `vertical-dots` are gone, so their rows point at the surviving
+these targets moved when visually duplicate designs were consolidated: arc and
+half-circle are `ring` variants now reachable through `strokeWidth`, and
+bouncing-dots and vertical-dots are gone, so their rows point at the surviving
 design that reads the same. A row of dots that needs four or five tracks rather than
 three is `three-dots` with `count`, which divides the row's width and its phase.
 

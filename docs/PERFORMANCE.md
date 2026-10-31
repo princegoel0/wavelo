@@ -39,9 +39,9 @@ screen, and an off-screen sample reports zero layouts for a design that does cos
 
 ### What the measurement changed
 
-Four designs — `equalizer`, `gradient-bars`, `growing-bars`, `alternating-bars` —
+Four designs — `equalizer`, gradient-bars, `growing-bars`, `alternating-bars` —
 animated `height: 20% → 100%` on their bars. They now animate
-`transform: scaleY(.2 → 1)` on a full-height box anchored to the bottom; `gradient-bars`
+`transform: scaleY(.2 → 1)` on a full-height box anchored to the bottom; gradient-bars
 has since been consolidated into `equalizer`, so three of the four remain:
 
 | 150 copies, 2 s | before | after |
@@ -56,11 +56,11 @@ bit-identical: about 0.5% of them differ, all of them on the caps, because a ver
 scale also compresses the 2 px corner radius to 0.4 px while the box is short. The
 largest channel difference is 84 on an antialiased edge, and the bars are moving.
 
-The same conversion was then tried on `waveform` and **rejected by the geometry
+The same conversion was then tried on waveform and **rejected by the geometry
 check**: its `translateY` is a percentage of a height that is itself animating, so the
 arc the bars draw came out 30 px off. It kept animating `height`, and the frame it used
 still does — `multi-wave` runs it on two layers in opposite phase, and it is one of the
-two exemptions above. `waveform` itself has since been consolidated into `equalizer`.
+two exemptions above. waveform itself has since been consolidated into `equalizer`.
 
 The pass also found a dead keyframe: `wavelo-bars` was imported by the bars slice and
 referenced by the kind's default rule, which every design in that family overrides,

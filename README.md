@@ -374,6 +374,22 @@ supplies the reading of a determinate value (`70 of 100 MB`, not `70`), and
 `decorative` hides the loader from assistive technology when something else already
 announces it. Passing `aria-*` or `role` directly is rejected rather than ignored.
 
+The rules the library is built to keep, and what each one costs:
+
+- **No runtime dependencies in `@wavelo/core`.** Adapters declare frameworks as peers
+  and bundle none of them.
+- **No arbitrary HTML or JavaScript from configuration.** `style` accepts only
+  `--wavelo-*` properties, `aria-*` and `role` are refused, and a key that cannot be
+  applied throws rather than being dropped quietly.
+- **No invented progress values.** A determinate design renders the `value` it is given;
+  nothing animates toward a number the page did not supply.
+- **No global selectors and no registration at module evaluation time.** Importing a
+  design defines nothing and touches no browser global.
+- **Every loader entry stays independently importable.** One design ships its own kind's
+  rules and no other kind's, which `npm run measure` asserts per bundle.
+- **CSS animation, not a JavaScript loop.** Markup is deterministic, so a design renders
+  the same on a server, in a test and on a page with scripting off.
+
 See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for the integration boundary,
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) for verified usage examples,
 [docs/RECIPES.md](docs/RECIPES.md) for server rendering, CSP, Tailwind and container

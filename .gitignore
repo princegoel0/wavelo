@@ -5,5 +5,11 @@ coverage/
 *.tgz
 release-tarballs/
 release-consumer/
+# Review artifacts: contact sheets, filmstrips and per-design screenshots written by
+# audit:visual, audit:visual:correctness, scripts/filmstrip.mjs and
+# scripts/capture-constellations.mjs. Every one is reproducible from the current build,
+# and a committed screenshot goes stale the moment a design is redrawn — which is how
+# 4.6 MB of PNGs describing a catalog that no longer ships ended up in the repository.
+release-audit/
 
 .agency/
