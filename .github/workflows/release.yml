@@ -101,14 +101,26 @@ jobs:
           set -euo pipefail
           provenance=()
           if [[ "$RELEASE_PROVENANCE" == "true" ]]; then provenance=(--provenance); fi
-          for package in \
-            wavelo-core \
-            wavelo-vanilla \
-            wavelo-web-components \
-            wavelo-react \
-            wavelo-vue \
-            wavelo-svelte \
+          packages=(
+            wavelo-core
+            wavelo-vanilla
+            wavelo-web-components
+            wavelo-react
+            wavelo-vue
+            wavelo-svelte
             wavelo-angular
-          do
-            npm publish "release-tarballs/${package}-${{ needs.validate.outputs.version }}.tgz" --access public ${provenance[@]+"${provenance[@]}"}
+          )
+          version="${{ needs.validate.outputs.version }}"
+          # The `./` is not decoration. npm reads `dir/name.tgz` as the GitHub shorthand
+          # `user/repo` and runs `git ls-remote` on it, which is how the first attempt at
+          # 0.1.0 failed with "Permission denied (publickey)" before reaching the registry.
+          # Resolve and check every tarball before publishing any of them, so a bad path
+          # cannot leave a partial release behind: these seven versions are permanent.
+          for package in "${packages[@]}"; do
+            tarball="./release-tarballs/${package}-${version}.tgz"
+            test -f "$tarball" || { echo "missing $tarball"; exit 1; }
+            npm publish --dry-run --access public "$tarball" > /dev/null
+          done
+          for package in "${packages[@]}"; do
+            npm publish --access public "./release-tarballs/${package}-${version}.tgz" ${provenance[@]+"${provenance[@]}"}
           done
