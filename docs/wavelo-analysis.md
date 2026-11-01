@@ -7,7 +7,7 @@
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.  
 > **Layout cost:** **131 of 133** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.  
 > **Visual audit:** 133 active designs — 117 animating, 14 static by design (bound to a value), 2 timeline-driven.  
-> **CI & Release Status:** the last merge to `main` is PR #25 as `a29ef59`; `verify` and `verify-browser` pass there, and `Release packages` validates with `Publish npm packages` skipped. Version `0.1.0` aligned across 7 packages and not yet published.
+> **CI & Release Status:** **`0.1.0` is published** — all seven packages are live on npm, tagged as [`v0.1.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.1.0), and the gallery is deployed at https://princegoel0.github.io/wavelo/. `npm run release:validate` now reports the exact versions as already published, which is the tool working as designed until the next version bump.
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and catalog figures
@@ -218,8 +218,8 @@ A full-spectrum audit was executed across all 133 loading components to verify t
 | **Visual Correctness Audit** | `npm run audit:visual:correctness` | **Passed: 133 active designs** — 117 continuously animating, 14 static determinate progress designs bound to values, 2 timeline-driven designs. |
 | **Gallery Completeness** | `npm run docs:verify` | **Passed: 133 preview cards** render with interactive option chips and zero accessibility violations (axe clean). |
 | **Cross-Browser Verification** | `npm run test:browser` | **Passed:** Chromium (36/36 tests), Gecko / Firefox (6/6 tests), WebKit / Safari (7/7 tests). |
-| **Documentation Invariants** | `npm run docs:check` | **Passed:** Matches code across all 12 doc files (133 designs, 12 slices, 27 configuration keys, 23 custom properties, single loader 8.1 KB gzipped). |
-| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.1.0 aligned across 7 packages and not published. |
+| **Documentation Invariants** | `npm run docs:check` | **Passed:** 133 designs, 12 slices, 27 configuration keys, 23 custom properties, single loader 8.1 KB gzipped — and it recomputes the slice costs, the sheet size, both quoted bundle figures and every per-design option bullet rather than trusting the document. |
+| **Release Validation** | `npm run release:validate` | Version aligned across 7 packages; since the release it reports `0.1.0` as already published, which is the expected state until the next version bump. |
 | **Package Tarballs** | `npm run pack:check` | **Passed:** 7 publishable tarballs verified (dry-run). |
 
 ### B. What each family's documentation claims, and what proves it
@@ -656,7 +656,7 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 | Documentation sync | `npm run docs:check` | ✅ pass — and it now re-measures what it checks: the per-kind slice costs, the whole-catalog sheet size, both quoted bundle figures (built from the same entry points the budget gate uses), the option claims of every design section in `COMPONENT_CUSTOMIZATION_API.md`, and the retired-design names |
 | Gallery | `npm run docs:verify` | ✅ pass (133 cards) |
 | Bundle budgets | `npm run measure` | ✅ all 11 entries inside budget |
-| Release validation | `npm run release:validate` | ✅ pass — "version 0.1.0 is aligned across 7 packages and is not published" |
+| Release validation | `npm run release:validate` | ✅ version aligned across 7 packages; since the release it reports `0.1.0` as already published, which is the expected state until the tree carries an unreleased version |
 
 ### Corrections
 

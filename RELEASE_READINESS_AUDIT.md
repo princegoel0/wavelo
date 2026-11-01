@@ -256,9 +256,10 @@ been run.
 ## Post-publication repository hardening
 
 Deferred by the owner on 2026-10-30: *"I will do that after we publish package."*
-Every item below was measured against the live repository on that date, not assumed, and
-none of them blocks `0.1.0` — they govern what happens when someone who is not the owner
-touches the repository. Raise this list at the point of publication.
+**`0.1.0` published on 2026-11-01, so this list is now due.** Every item below was measured
+against the live repository on that earlier date, not assumed, and none of them blocked
+`0.1.0` — they govern what happens when someone who is not the owner touches the repository.
+Re-measure before acting: a month of settings changes could have moved any of these.
 
 - [ ] **Dependabot is off entirely.** The dependency-graph endpoint returns `404` (no
   snapshot submitted), `GET /vulnerability-alerts` reports "Vulnerability alerts are
@@ -309,7 +310,7 @@ Re-run 2026-11-01 against the current build, after the publication blockers were
 | `npm run audit:visual:correctness` | Passed: 133 active designs (117 animating, 14 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
-| `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |
+| `npm run release:validate` | Ran clean before the release; now reports the seven `0.1.0` versions as already published, which is the expected state until the next version bump |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
