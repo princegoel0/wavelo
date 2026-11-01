@@ -42,5 +42,7 @@ const bar = createRouteProgress();
 window.addEventListener('hashchange', () => { bar.start(); render().then(() => bar.done()); });
 ```
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

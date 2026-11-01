@@ -16,6 +16,13 @@
 | **Unit Tests Passed** | 50 / 50 | 50 / 50 | 50 / 50 | **50 / 50** | 100% green |
 | **Browser Tests Passed** | 36 / 36 | 36 / 36 | 36 / 36 | **36 / 36** | 100% green |
 
+The columns above are the checkpoints taken as each phase landed. The same metrics on the
+current build, which has moved on since the last phase: **133 designs, 206 named presets,
+12 slices, `core-renderer` 33.5 KB (34,259 B) gzipped, 131 of 133 designs cost no layout per
+frame, 52 unit and adapter tests, Chromium 36 / Gecko 6 / WebKit 7**. `npm run docs:check`
+compares the design and preset counts in this document with the registry on every run; the
+size and test columns are history and are labelled as such.
+
 ---
 
 ## Category-by-Category Findings & Consolidation

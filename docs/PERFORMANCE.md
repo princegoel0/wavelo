@@ -69,46 +69,47 @@ so no design ever ran it. Removing it took 126 bytes off the catalog sheet.
 ## What one design costs
 
 A design's stylesheet is the shared base plus the one render-kind slice it uses.
-Gzipped together, as shipped — the cheapest design in each kind:
+Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,609 | `wave` | 3,622 |
-| `scroll` | 1,961 | `shape` | 3,802 |
-| `bars` | 2,148 | `progress` | 3,858 |
-| `rings` | 2,341 | `ring` | 3,923 |
-| `pulse` | 2,737 | `skeleton` | 4,545 |
-| `orbit` | 3,043 | `dots` | 5,217 |
+| `overlay` | 1,737 | `ring` | 3,923 |
+| `scroll` | 1,961 | `wave` | 3,963 |
+| `bars` | 2,170 | `progress` | 4,134 |
+| `rings` | 2,721 | `shape` | 4,301 |
+| `pulse` | 2,748 | `skeleton` | 4,550 |
+| `orbit` | 3,045 | `dots` | 5,243 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,316 bytes of every row above. The whole
-catalog sheet is 21,930 bytes gzipped, loaded once, for all 133 designs.
+catalog sheet is 23,587 bytes gzipped, loaded once, for all 133 designs.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
 design in that kind, and it moves in both directions. Since the 129-design checkpoint,
-`dots` has gone from 3,454 to 5,217 bytes as the motion tranche and a countable dot row
-joined it, while `ring` fell from 4,110 to 3,923 and `progress` from 4,017 to 3,858 when
-their duplicate designs were consolidated away — which is why `progress`, the largest
-slice at 3,866 back then, is now fourth. That re-ordering is exactly why `busiest-loader`
+`dots` has gone from 3,454 to 5,243 bytes as the motion tranche, a countable dot row and
+a bubble column joined it, while `ring` fell from 4,110 to 3,923 when its duplicate
+designs were consolidated away — which is why `progress`, the largest slice at 3,866 back
+then, is now fourth. That re-ordering is exactly why `busiest-loader`
 in `npm run measure` samples a dots design today: a probe pinned to whatever kind held the
 record when it was written stops measuring the worst case the moment another kind
 overtakes it, and the budget still passes. Redrawing a design moves its kind too, and not
-in proportion to the design's own size: `infinity` is one loader's worth of markup and put
-388 bytes on `rings` because the figure eight is sixteen keyframe stops, and `helix` put
-410 on `wave` because a DNA twist needs eighteen parts in six rows. A design in a crowded
+in proportion to the design's own size: `infinity` is one loader's worth of markup, and what
+it actually ships is a sixteen-stop lemniscate — 2,721 bytes for the `rings` slice it lives
+in — while `helix` needs eighteen parts in six rows, 3,963 bytes in `wave`. A design in a crowded
 kind costs more than a design in a quiet one, whatever its own rules — and a change to the
 renderer, which every design imports, costs all of them: the determinate fill path added
 227 bytes to every single-design bundle.
 
 Importing one design's entry point costs the renderer, validation and that slice, and
 the six samples below are strictly ordered by the slice they pay for: `progress-view`
-(`scroll`) 6,237 bytes, `equalizer` (`bars`) 6,493, `progress-battery` (`progress`)
-8,191, `ring` 8,292, `skeleton-card` (`skeleton`) 8,894 and `bubble-rise` (`dots`) 9,648
+(`scroll`) 6,273 bytes, `equalizer` (`bars`) 6,554, `ring` 8,327, `progress-battery`
+(`progress`) 8,487, `skeleton-card` (`skeleton`) 8,943 and `bubble-rise` (`dots`) 9,713
 — the largest, because `dots` is now the most crowded slice. `npm run measure` enforces
 both ends of that range: 9,728 bytes for the sampled `ring` and 11,264 for the busiest
 kind, so a new dots design cannot grow that slice without a number moving. Importing
-`renderLoader`, which chooses by string at runtime, costs 31.8 KB because it must be able
-to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
+`renderLoader`, which chooses by string at runtime, costs 33.5 KB (34,259 bytes) because
+it must be able to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry
+point.
 
 ## Styles are injected once, not per loader
 

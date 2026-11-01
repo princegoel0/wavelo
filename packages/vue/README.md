@@ -44,5 +44,7 @@ must include the sheet itself.
 
 Supported peer range: `vue >=3.5.44 <4`.
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

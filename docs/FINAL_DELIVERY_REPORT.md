@@ -36,7 +36,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   133 public IDs, each with its own implementation; no deprecated aliases.
-- 12 render kinds, 12 stylesheet slices, 27 configuration keys, 22 `--wavelo-*`
+- 12 render kinds, 12 stylesheet slices, 27 configuration keys, 23 `--wavelo-*`
   custom properties, 81 `@keyframes`, 206 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
@@ -63,11 +63,11 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | --- | --- |
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
-| `npm test` | Passed: 50 tests across core, adapters, Angular TestBed and Angular SSR |
+| `npm test` | Passed: 52 tests across core, adapters, Angular TestBed and Angular SSR |
 | `npm run catalog` | Passed: 133 IDs / 133 active / 206 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
-| `npm run docs:check` | Passed: 133 designs, 27 configuration keys, 22 custom properties and every bundle figure match the built packages, in 12 documents |
-| `npm run measure` | Passed: 11 entry points inside budget; `ring` 8,300 B gzipped (budget 9,728), the busiest kind `bubble-rise` 9,648 B (budget 11,264), runtime renderer 32,613 B (budget 37,888) |
+| `npm run docs:check` | Passed: 133 designs, 27 configuration keys, 23 custom properties and both bundle KB figures match the built packages, and no document names a design the consolidation retired |
+| `npm run measure` | Passed: 11 entry points inside budget; `ring` 8,336 B gzipped (budget 9,728), the busiest kind `bubble-rise` 9,713 B (budget 11,264), runtime renderer 34,259 B (budget 39,424) |
 | `npm run test:browser` | Passed: 36 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run test:browser:webkit` | Passed: 7 WebKit tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, a conic gradient is carved by a mask, a registered integer reaches a CSS counter, and both timeline designs run on a real `ScrollTimeline`/`ViewTimeline` (`scroll()`/`view()` measured supported on WebKit 27.2, unlike Firefox 157) |
@@ -174,8 +174,9 @@ nothing is fetched from the registry), and asserts there that:
 - every installed package carries `LICENSE`, `README.md`, `dist/index.js` and
   `dist/index.d.ts`.
 
-Sizes from this build: base slice 2,521 B raw, ring slice 2,240 B, scroll slice
-2,139 B, combined sheet 126,068 B raw and 21,930 B gzipped.
+Sizes from this build: shared base 3,237 B raw, `ring` slice 12,920 B raw (3,923 B gzipped
+with the base), `scroll` slice 2,139 B raw, combined sheet 136,274 B raw and 23,587 B
+gzipped.
 
 ## Visual correctness history
 

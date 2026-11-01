@@ -4,6 +4,8 @@ Framework-independent loading animations with typed configuration, accessible
 semantics, reduced-motion support, a generated modular catalog, and a small DOM
 helper. No runtime dependencies.
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 ```ts
 import { renderLoader } from '@wavelo/core';
 
@@ -27,7 +29,7 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 const result = orbitingDots({ label: 'Loading data' });
 ```
 
-The catalog holds 129 public IDs across 12 render kinds, and `src/loaders/*.ts`,
+The catalog holds 133 public IDs across 12 render kinds, and `src/loaders/*.ts`,
 `src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
 Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
 
@@ -39,7 +41,7 @@ set and unset and keeps the keys that made a difference, as a hex bitset decoded
 the registry. So `skeleton-card` advertises no `strokeWidth`, `ring` advertises no
 `secondaryColor`, `progress-bar` advertises no `duration`, `progress-scroll`
 advertises no `speed` — its fill follows the scroll position, not the clock —
-`three-dots` advertises no `count`, and `fullscreen` advertises no `inline`.
+`fullscreen` advertises no `inline`, and `ring` advertises no `count`.
 `npm run audit:customization` re-measures the table and fails when it drifts, so an
 option that does nothing cannot be documented as one. The comparison ignores the
 element's own `class`, so a key is credited for what it changes on screen, not for
@@ -95,7 +97,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 | `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults, `createRouteProgress` |
 | `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
 | `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
-| `@wavelo/core/loaders` | barrel over all 129 designs |
+| `@wavelo/core/loaders` | barrel over all 133 designs |
 | `@wavelo/core/css` | `kindStyles`, `baseCss`, `allStyles`, `designStyles` |
 | `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
 | `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |

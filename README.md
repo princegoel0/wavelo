@@ -135,10 +135,10 @@ overrides that one loader:
 | --- | --- | --- |
 | `--wavelo-size` | `size` — the square box most designs are built in | `2.5rem` |
 | `--wavelo-width` / `--wavelo-height` | `width` / `height`, on the designs that are not a square | each design's own shape (a bar is `8rem` by `.5rem`) |
-| `--wavelo-color` | `color`, and everything painted through `currentColor` | `#6366f1`, or `#a5b4fc` on a dark theme |
+| `--wavelo-color` | `color`, and the accent each design paints with it | `#6366f1`, or `#a5b4fc` on a dark theme |
 | `--wavelo-secondary-color` | `secondaryColor`, on the designs that layer a second colour | `#a5b4fc` |
-| `--wavelo-success-color` | the accent colour of success states (`success-ring`, `button-confirm`, etc.) | `#22c55e` |
-| `--wavelo-error-color` | the alert colour of error states (`error-shake`, `button-confirm`, etc.) | `#ef4444` |
+| `--wavelo-success-color` | the colour of success states (`success-ring`, `button-confirm`, `error-shake` checked) | `#22c55e` |
+| `--wavelo-error-color` | the alert colour of error states, and the badge `error-shake` rests on | `#ef4444` |
 | `--wavelo-background` | `backgroundColor` | `transparent`; the overlay designs fall back to the scrim |
 | `--wavelo-scrim` | the translucent layer of `overlay` and `fullscreen`, normally via `theme` | `#fff`, or `#0f172a` on a dark theme |
 | `--wavelo-duration` | `duration`, and `speed` as its multiplier | `1s` |
@@ -156,9 +156,13 @@ overrides that one loader:
 | `--wavelo-skeleton-base` / `--wavelo-skeleton-highlight` | the shimmer, normally via `theme` | light or dark palette |
 
 A token with no config twin — `--wavelo-radius`, `--wavelo-ease`, `--wavelo-gap`,
-`--wavelo-scrim`, `--wavelo-z-index`, `--wavelo-timeline` and the skeleton palette —
+`--wavelo-scrim`, `--wavelo-z-index`, `--wavelo-timeline`, `--wavelo-error-color`,
+`--wavelo-success-color` and the skeleton palette —
 is reachable only this way, and `npm run docs:check` fails if the sheet reads a
 property that `WaveloTokens` does not declare or the table above does not document.
+The scrim and the skeleton palette are normally set by `theme` rather than written out;
+the error and success colours have no config option at all, so a design that paints them
+is themed through these properties or not at all.
 
 `@wavelo/core/tokens.css` declares as a `:root` block the tokens whose default every
 design agrees on, for a team that would rather see and edit them than inherit them

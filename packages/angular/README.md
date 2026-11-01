@@ -41,5 +41,7 @@ server-rendered page should add `@wavelo/core/styles.css` to the server styles.
 
 Supported peer range: `@angular/core >=22.2.3 <23`.
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

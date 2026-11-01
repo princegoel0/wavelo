@@ -222,15 +222,25 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs.
-- At least 20 skeleton presets or primitives.
-- At least 10 progress-indicator designs or variants.
-- At least 10 application-level loading patterns.
-- At least 100 named, documented presets and loading patterns overall.
+- At least 60 distinct animation designs (Shipped: **133 active designs** across 8 functional categories).
+- At least 20 skeleton presets or primitives (Shipped: 26 skeleton designs).
+- At least 10 progress-indicator designs or variants (Shipped: 19 progress designs).
+- At least 10 application-level loading patterns (Shipped: 17 application designs).
+- Dedicated AI/streaming loading lane (Shipped: 6 AI designs).
+- Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
+- At least 100 named, documented presets and loading patterns overall (Shipped: **206 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
 Every entry must have a documented purpose, working implementation and gallery preview.
+
+### Category Independence Principle
+
+Wavelo enforces strict separation between marketing/organizational categories and runtime configuration capabilities:
+
+- **No Parameter Restrictions by Category:** Category is an informational metadata label and gallery filter. It has zero runtime authority over configuration acceptance, validation, or styling. Any loader may accept and honour any parameter that its visual construction supports.
+- **Cross-Category Slices:** 9 of the 12 render kinds span multiple categories (e.g. `skeleton` powers designs in `skeleton`, `ai`, and `application`; `progress` powers designs in `progress` and `application`; `ring` powers designs in `spinner`, `creative`, and `application`).
+- **Determinate Progress Semantics:** `supportsProgress` is determined strictly by `kind === 'progress'`, not marketing category, ensuring application designs like `undo-progress` and `page-transition` expose full `role="progressbar"` semantics and progress options.
 
 > **Status of the numbered lists in §5.2–§5.9.** They are the original requirement set, and
 > they still describe what the library must cover. Twenty-two of the named shapes have since
@@ -306,9 +316,9 @@ Dot count, spacing, size, color and animation timing must be configurable where 
 9. Alternating bars.
 10. Gradient bars.
 11. Segmented progress bars.
-12. Moving stripe indicator.
-13. Traveling highlight.
-14. Oscillating line.
+12. Moving stripe indicator (high-contrast, mathematically tiled diagonal repeating stripe pattern with seamless translation).
+13. Traveling highlight (fluid luminous beam sweep with soft edge falloff and drop-shadow glow moving across a rounded track).
+14. Oscillating line (64-stop sinusoidal waveform band clipped via polygon math and oscillating continuously on a telemetry baseline).
 15. Multi-wave animation.
 
 These patterns must support configurable bar count where the design allows, spacing, height, color and speed.
@@ -318,8 +328,8 @@ These patterns must support configurable bar count where the design allows, spac
 1. Ripple circles.
 2. Expanding circles.
 3. Morphing shapes.
-4. Infinity loop.
-5. DNA-style helix.
+4. Infinity loop (two synchronized dots traversing opposing lobes of a lemniscate curve with balanced 50% phase offset).
+5. DNA-style helix (3D double helix with front/back depth perspective, alternating scale/opacity, complementary strands, and responsive base-pair rungs).
 6. Cube rotation.
 7. Three-dimensional-style cube animation.
 8. Rotating polygon.
@@ -332,7 +342,7 @@ These patterns must support configurable bar count where the design allows, spac
 15. Spiral animation.
 16. Rotating orbit system.
 17. Elastic ring.
-18. Liquid-style motion.
+18. Liquid-style motion (organic fluid multi-axis morphing squircle keyframe with center radiance).
 19. Blinking grid.
 20. Moving geometric blocks.
 21. Sliding blocks.
@@ -401,17 +411,19 @@ The default behavior should avoid unnecessary movement when the user prefers red
 13. Upload progress.
 14. Download progress.
 15. File-processing progress.
+16. Half-ring gauge (semicircular telemetry arc with live breathing glow).
+17. Fluid wave fill (liquid container with rolling sinusoidal wave crest).
 
-Determinate progress must reflect values supplied by the application. The library must never invent progress measurements.
+Determinate progress must reflect values supplied by the application. The library must never invent progress measurements. All determinate track and bar loaders must fill predictably from left to right (0% to 100% via `justify-content: flex-start`), ensuring realistic visual progression rather than centered track expansion.
 
 ## 5.8 Category G — Application Loading Patterns
 
 1. Inline loading indicator.
 2. Button loading state.
 3. Icon-button loading state.
-4. Section-level loading overlay.
+4. Section-level loading overlay (frosted modal scrim with blur and border, centered with a circular spinner ring).
 5. Container loading overlay.
-6. Full-screen loading overlay.
+6. Full-screen loading overlay (viewport-wide frosted scrim with centered circular spinner ring, avoiding oval distortion).
 7. Modal loading indicator.
 8. Page-transition indicator.
 9. Image loading placeholder.
@@ -421,6 +433,7 @@ Determinate progress must reflect values supplied by the application. The librar
 13. Infinite-scroll loading indicator.
 14. Background-operation indicator.
 15. Multi-step operation indicator.
+16. Error shake (stateful alert badge with bold exclamation mark and realistic damped physical oscillation).
 
 These patterns must integrate with application state without automatically taking control of unrelated application behavior.
 
@@ -441,13 +454,39 @@ Provide a controlled extension catalog for:
 
 These variants should reuse shared definitions whenever possible.
 
-## 5.10 Catalog Registry
+## 5.10 Category I — AI and Streaming Loaders
+
+Provide dedicated visual indicators for modern generative AI interfaces, model inference, and real-time streaming responses:
+
+1. Typing dots (`typing-dots`): Three dots lifting in sequence while a response is composed.
+2. Thinking glow (`thinking-glow`): Breathing orb inside an expanding halo representing model contemplation.
+3. Stream cursor (`stream-cursor`): Blinking block cursor marking the leading edge of streamed text.
+4. Token stream (`token-stream`): Short dashes traveling left-to-right as text tokens arrive.
+5. AI response shimmer (`ai-shimmer`): Tall rounded response card swept by a bright radiant band.
+6. Neural grid (`neural-grid`): 3x3 node matrix pulsing diagonally to indicate neural network execution.
+
+These loaders must convey real-time generative responsiveness with compositor-pure motion.
+
+## 5.11 Dimensional Taxonomy (2D & 3D Loaders)
+
+In addition to functional UX categories, the catalog is classified across spatial dimensionality:
+
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 128 of the 133 designs are 2D.
+- **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. Five designs: `cube`, `folding-squares`, `helix`, `ellipse` and `rotating-square`. Optional future WebGL/Canvas rendering slices stay in this class.
+- **Dimensionality Requirements:**
+  1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
+  2. The label is derived, not hand-asserted: a unit test reads each design's own rules and keyframes and requires the label to match the transforms they actually animate, and it pins the 3D set so a new or re-labelled design fails until the gallery filter copy and this section follow.
+  3. 3D loaders must not compromise performance: they must adhere to the 0 layout recalculations rule and use GPU-accelerated compositing. Measured by `npm run audit:layout`, 131 of the 133 designs cost no layout per frame; the two that do — `progress-scroll` and `multi-wave`, both 2D — are individually accounted for in `docs/PERFORMANCE.md`.
+  4. The documentation gallery must provide a Dimension filter chip (`All dimensions`, `2D`, `3D`) alongside category filters.
+
+## 5.12 Catalog Registry
 
 Every public loader must have centralized metadata containing:
 
 - Unique identifier.
 - Display name.
 - Category.
+- Spatial dimensionality ('2d' | '3d').
 - Short description.
 - Rendering implementation.
 - Supported properties.
@@ -466,11 +505,16 @@ The registry must not force consumers to download every loader definition when t
 
 # 6. Customization System
 
-## 6.1 Customization Goals
+## 6.1 Customization Goals & Granular Configuration Mandate
 
-Wavelo must provide broad visual control while keeping its public API understandable.
+Wavelo must provide exhaustive micro-level styling and macro-level behavioral control while keeping its public API understandable, strictly typed, and consistent across framework adapters.
 
-Common configuration must remain consistent across framework adapters.
+Every single component design must be as configurable as physically and visually possible:
+- **Micro-Level Styling:** Developers must have full control over colors (primary `color`, accent `secondaryColor`, container `backgroundColor`), surface theming (`theme`), dimensions (`size`, `width`, `height`, `strokeWidth`), and micro-geometric tokens (`--wavelo-radius`, `--wavelo-gap`, `--wavelo-parts`).
+- **Macro-Level Behavior:** Complete control over motion timing (`duration`, `speed`, `--wavelo-ease`), kinetic direction (`direction`), playback state (`paused`), spatial layout (`inline` vs block), lifecycle mounting (`loading` with zero DOM/CSS cost when inactive), and accessibility/reduced-motion contracts.
+- **Component-Specific Tailoring:** Rather than forcing a rigid one-size-fits-all model, parameters must be tailored to the authentic physics, geometry, and visual nature of each individual design (e.g., celestial star maps for `constellation`, 12:1 gear ratio for `clock-spinner`, 16-stop lemniscate for `infinity`, clinical ECG waveforms for `heartbeat`, and 4-phase state transitions for interactive micro-interactions).
+- **Category Independence:** An architectural requirement that organizational categories never restrict, suppress, or gate any configuration parameter or render capability.
+- **Honoured-Options Fidelity:** The library and documentation website mandate that every loader strictly exposes, documents, and displays controls only for parameters that the design genuinely honours and utilizes. If a parameter is not honoured by a design (such as `strokeWidth` on a solid skeleton or `value` on an indeterminate spinner), it is suppressed from the public options table and Studio controls to prevent confusing developers.
 
 ## 6.2 Common Properties
 
@@ -491,10 +535,17 @@ The following API is the proposed baseline:
 | `theme` | Select the light, dark or system palette for skeleton surfaces |
 | `direction` | Reverse the animation on the element that animates |
 | `paused` | Pause the animation |
-| `label` | Supply an accessible description |
+| `label` | Supply an accessible description (`aria-label`) |
+| `labelledBy` | Space-separated DOM IDs referencing visible label elements (`aria-labelledby`) |
+| `describedBy` | Space-separated DOM IDs referencing caption elements (`aria-describedby`) |
+| `valueText` | Human-readable reading of progress value (`aria-valuetext`) |
+| `decorative` | Suppress assistive announcements even when a label is supplied (`aria-hidden="true"`) |
+| `loading` | Component mounting lifecycle binding (when `false`, renders 0 DOM nodes and 0 CSS bytes) |
+| `count` | Repeat count for skeleton lines, items, or multi-part dot/bar rows |
+| `inline` | Sits inline on text metrics (`inline-flex` / `inline-block`) |
 | `className` | Add custom classes to the rendered element |
-| `style` | Apply supported inline styles |
-| `reducedMotion` | Control reduced-motion behavior |
+| `style` | Apply supported inline styles and custom properties (`LoaderStyle`) |
+| `reducedMotion` | Control reduced-motion behavior (`'auto' | 'always' | 'never'`) |
 | `data-testid` | Support test identification |
 | `value` | Set a determinate progress value |
 | `max` | Set the progress maximum |
@@ -503,6 +554,10 @@ Any `data-*` key is emitted as an attribute on the rendered element, so test and
 analytics hooks need no library change. There is no `variant` option: alternate
 looks are separate catalog designs or named presets, never a mode switch on an
 existing one.
+
+Specialized loaders also accept contract-defined data attributes:
+- `data-wavelo-state`: Stateful micro-interactions (`'idle' | 'loading' | 'success' | 'error'`) supported by `success-ring`, `error-shake`, `button-confirm`, `offline-dot`, `save-indicator`, and `undo-progress`.
+- `data-wavelo-constellation`: Astronomical constellation pattern selection (`'ursa-major' | 'orion' | 'cassiopeia' | 'cygnus' | 'ursa-minor'`) supported by `constellation`.
 
 The final API must use one documented naming convention. Aliases should not be added without a demonstrated compatibility need.
 
@@ -543,21 +598,46 @@ These options must only appear on loaders for which they have meaningful behavio
 
 ## 6.4 CSS Variables
 
-Provide a stable set of CSS custom properties, for example:
+Provide a stable, strictly scoped set of 23 CSS custom properties:
 
 ```css
 :root {
+  /* Dimensions & Geometry */
+  --wavelo-size: 2.5rem;
+  --wavelo-width: auto;
+  --wavelo-height: auto;
+  --wavelo-stroke: 3px;
+  --wavelo-radius: 6px;
+  --wavelo-gap: 0.5rem;
+  --wavelo-parts: 3;
+
+  /* Colors & Theming */
   --wavelo-color: #6366f1;
   --wavelo-secondary-color: #a5b4fc;
-  --wavelo-size: 2.5rem;
-  --wavelo-duration: 1s;
-  --wavelo-stroke: 3px;
+  --wavelo-success-color: #22c55e;
+  --wavelo-error-color: #ef4444;
+  --wavelo-background: transparent;
+  --wavelo-scrim: rgba(15, 23, 42, 0.45);
   --wavelo-skeleton-base: #e5e7eb;
   --wavelo-skeleton-highlight: #f9fafb;
+
+  /* Timing & Motion */
+  --wavelo-duration: 1s;
+  --wavelo-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --wavelo-direction: normal;
+  --wavelo-play-state: running;
+
+  /* Progress & Timelines */
+  --wavelo-progress: 0%;
+  --wavelo-count: 0;
+  --wavelo-timeline: auto;
+
+  /* Layering */
+  --wavelo-z-index: 10;
 }
 ```
 
-These are illustrative tokens. The final names, defaults and units must be documented and tested.
+These 23 custom properties are verified against the stylesheet rules and documented in `packages/core/src/types.ts` (`WaveloTokens`).
 
 CSS variables must be scoped so that changing Wavelo configuration does not unexpectedly affect unrelated application elements.
 
@@ -585,6 +665,29 @@ The library must:
 - Provide useful development-time warnings.
 - Avoid excessive warnings in production.
 - Preserve unrelated configuration when one property changes.
+
+## 6.7 Three-Tier Customization Architecture
+
+To provide developers with granular micro-level control without a one-size-fits-all model, options are structured across three distinct tiers:
+
+1. **Tier 1 — Universal Baseline Settings (accepted by 100% of all 133 designs):** Universal structural, lifecycle, accessibility, and theming settings (`type`, `color`, `backgroundColor`, `theme`, `loading`, `inline`, `reducedMotion`, `label`, `labelledBy`, `describedBy`, `decorative`, `className`, `data-testid`, `style`). Accepted is not the same as visibly honoured: a design with no track to paint cannot show `backgroundColor`. Which settings each design actually reads is measured against its render, not asserted here, and `npm run audit:customization` re-measures it in CI.
+2. **Tier 2 — Shared Geometric & Temporal Controls (85% – 97% of designs):** Core bounding box dimensions and cycle playback (`size`, `width`, `height`, `duration`, `speed`, `direction`, `paused`).
+3. **Tier 3 — Design-Specific & Unique Settings:** Tailored parameters that reflect the specific physical, visual, and mathematical nature of each individual design. The counts are those the measured table reports today:
+   - `strokeWidth`: Ring border weight, wire thickness, radar crosshairs, battery chassis (38 designs).
+   - `value`, `max`, `valueText`: Fill levels and accessible values for linear, circular, stepped, and queue progress indicators (18 designs).
+   - `count`: Repeating track rows, milestone steps, batch upload queues, and dynamic dot/bar counts (26 designs).
+   - `secondaryColor`: A second painted tone — dual rings, tracks, strands, embers and scrims (42 designs).
+   - `data-wavelo-state`: Reactive state transitions across `'idle'`, `'loading'`, `'success'`, and `'error'` for micro-interactions (6 designs).
+   - `data-wavelo-constellation`: Astronomical constellation geometry selection (`'ursa-major'`, `'orion'`, `'cassiopeia'`, `'cygnus'`, `'ursa-minor'`).
+
+### Category Independence & Parameter Integrity Verification
+
+A formal audit verified that `Category` has ZERO runtime authority over configurations. No parameter or configuration key is restricted or blocked because of a component's Category:
+- **Zero Configuration Gating:** Any component design accepts and honours whatever options its rendering slice and geometry support, regardless of whether it is cataloged under Spinners, Dots, Progress, Bars, Skeletons, Creative, Application, or AI.
+- **Decoupled Render Slices:** 9 of the 12 render kinds span multiple categories (`dots` covers 5 categories; `skeleton` covers 3 categories; `wave` covers 5 categories; `progress` covers 2 categories; `ring` covers 3 categories; `shape` covers 3 categories; `orbit` covers 3 categories; `pulse` covers 3 categories; `rings` covers 3 categories).
+- **Determinate Progress Semantics:** `supportsProgress` is governed strictly by `kind === 'progress'` in `packages/core/src/registry.ts`, allowing application patterns like `undo-progress` and `page-transition` to expose full `role="progressbar"` semantics and accept `value`, `max`, and `valueText`.
+
+The authoritative component-by-component customization breakdown across all 133 designs—specifying micro-styling, macro-behavior, unique parameters, types, defaults, and what they control—is maintained in `docs/COMPONENT_CUSTOMIZATION_API.md`.
 
 ---
 
@@ -794,6 +897,7 @@ The documentation website must help developers discover, configure, test and ado
 
 - Search.
 - Category filters.
+- Dimension filters (All dimensions, 2D, 3D).
 - Live previews.
 - Light and dark backgrounds.
 - Size adjustment.
@@ -845,9 +949,63 @@ It must not present unsupported properties as functional controls.
 
 Generated examples must be checked against real package APIs.
 
-Copy actions must copy valid code for the selected framework.
+Copy actions must copy valid code for the selected framework. The gallery and studio must provide an interactive framework selector popover upon hovering or clicking "Copy" to allow direct 1-click selection across React, Vue, Svelte, Angular, Vanilla HTML, or Web Components. Every card must also feature a direct 1-click clipboard icon adjacent to the loader identifier (`type: '<id>'`) to copy the programmatic name directly. The studio editor must dynamically introspect each design's verified capability set and only expose configuration controls for options that the selected design genuinely honours and utilizes.
 
 The website must never claim that code works in a framework unless that integration is actually implemented and tested.
+
+## 9.4 Hosting & Deployment Platforms
+
+Wavelo documentation must be accessible through three integrated tiers:
+
+1. **In-Registry Documentation (npm Landing Pages):**
+   - Each published package in the monorepo (`@wavelo/core`, `@wavelo/react`, `@wavelo/vue`, `@wavelo/svelte`, `@wavelo/angular`, `@wavelo/vanilla`, `@wavelo/web-components`) must contain a dedicated, standalone `README.md` packaged directly into its npm tarball.
+   - Package landing pages on npmjs.com must immediately provide quickstart installation, peer dependency ranges, TypeScript usage examples, subtree provider setup, and SSR guidelines without requiring navigation away from npm.
+
+2. **Interactive Web Documentation & Visual Playground (GitHub Pages / Custom Domain):**
+   - Hosted via GitHub Pages (`.github/workflows/pages.yml`) and served from a dedicated domain (e.g., `wavelo.dev` or `princegoel0.github.io/wavelo`).
+   - Powered by `apps/docs` as a zero-dependency, self-contained client application built from central catalog metadata.
+   - Must provide an interactive configuration playground with live controls (size, stroke width, duration, progress value, colors, corner radius, reverse, pause, and dark mode), instant configuration code generation, a searchable gallery of all 133 loaders, dual-axis filtering (by functional category and 2D/3D dimensionality), and measured option chips verified in Chromium.
+
+3. **In-Repository Knowledge Base (GitHub `/docs`):**
+   - Maintained in the repository under `/docs` for source code auditing and offline engineering reference, including `COMPONENT_CUSTOMIZATION_API.md`, `FRAMEWORKS.md`, `RECIPES.md`, `COMPATIBILITY.md`, `PERFORMANCE.md`, and `BUNDLE_SIZE.md`.
+
+## 9.5 Multi-Framework Documentation Architecture
+
+To eliminate developer friction across diverse web ecosystems, documentation must maintain a unified four-part structure for every supported framework:
+
+1. **Unified Configuration Contract:** Document that all framework adapters expose the exact same 27 configuration keys and 23 CSS custom properties (`--wavelo-*`) with deterministic precedence (Provider / context defaults < bound `loaderFor` component < call-site props).
+2. **Framework-Specific Idiomatic Patterns:**
+   - **React:** `<Loader>`, `<WaveloProvider defaults={...}>`, and `loaderFor(type, defaults)`.
+   - **Vue:** `<WaveloLoader>`, `provideWaveloDefaults(...)`, and `loaderFor(type, defaults)`.
+   - **Svelte:** `<WaveloLoader>` and context-based `provideWaveloDefaults(...)`.
+   - **Angular:** Standalone `<wavelo-loader>` component and `WAVELO_DEFAULTS` injection token.
+   - **Vanilla DOM & Custom Elements:** `createWavelo()`, `mountLoader()`, and native custom element `<wavelo-loader>` observing element attributes.
+3. **SSR & Hydration Guidelines:** Explicitly document that client-side rendering automatically deduplicates and injects stylesheet slices via `ensureStyles`, while server-side rendering (Next.js, Nuxt, SvelteKit, Angular SSR) requires importing `@wavelo/core/styles.css` in root layouts to guarantee zero Flash of Unstyled Content (FOUC).
+
+## 9.6 Deep-Dive Component API Reference
+
+To document granular configurations without forcing a rigid one-size-fits-all model:
+
+1. **Three-Tier Architecture Presentation:** Group component options into:
+   - **Tier 1 (Universal Baseline):** Structural, lifecycle, accessibility, and styling settings accepted by 100% of designs (`type`, `color`, `backgroundColor`, `theme`, `loading`, `inline`, `reducedMotion`, ARIA labels, `className`, `style`).
+   - **Tier 2 (Shared Geometric & Temporal):** Dimensions and playback controls (`size`, `width`, `height`, `duration`, `speed`, `direction`, `paused`).
+   - **Tier 3 (Component-Specific Settings):** Specialized properties tailored to each design archetype (e.g. `strokeWidth`, `value`, `max`, `valueText`, `count`, `data-wavelo-state`, `data-wavelo-constellation`, and secondary accent colors).
+2. **Authoritative Specification:** Maintain the exhaustive per-component breakdown in `docs/COMPONENT_CUSTOMIZATION_API.md`.
+3. **Gallery Option Badges:** In the interactive gallery, display dynamic chips under each component preview card representing only the options actually honoured by that design (verified via Chromium computed-style measurements).
+
+## 9.7 Automation, Invariants & Release Synchronization
+
+Documentation must never drift from the underlying codebase. The following automated controls are mandatory:
+
+1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
+   - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
+   - Enforces exact matches across code and docs for catalog counts (133 active designs, 206 named presets, 73 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
+2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
+   - Validates that all 133 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
+3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
+   - Automatically builds `apps/docs` into `apps/docs/dist/index.html` and deploys to GitHub Pages on every merge to `main`.
+4. **Atomic Release Synchronization (`.github/workflows/release.yml`):**
+   - Releases are triggered on `main` when `RELEASE_ENABLED` is true. The release pipeline packages updated READMEs into publishable tarballs and deploys documentation simultaneously, ensuring that npm package pages and live web docs update atomically with every new version.
 
 ---
 
@@ -921,8 +1079,8 @@ Initial proposed targets:
 These are initial targets, not guaranteed measurements.
 
 > **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 9,728 B for a
-> single design chosen at build time (measured 8,300 B gzipped) and 37,888 B for the runtime
-> renderer (measured 32,613 B). The 5 KB loader target is met at the small end of the catalog
+> single design chosen at build time (measured 8,336 B gzipped) and 39,424 B for the runtime
+> renderer (measured 34,259 B). The 5 KB loader target is met at the small end of the catalog
 > and missed by designs that share a crowded render kind, because a design imports its whole
 > kind's rules; the 10 KB core target is missed by design — a runtime-selected renderer has to
 > carry all twelve slices. The gap is recorded rather than closed quietly:
@@ -949,6 +1107,13 @@ Tests should examine:
 - Configuration updates.
 
 Performance must be evaluated against the intended use case rather than making unsupported universal performance claims.
+
+### Compositor-Only Motion Mandate
+
+Animations must prioritize compositor-only properties (`transform`, `opacity`). Box-model mutations (`height`, `width`, `top`, `left`, `margin`, `padding`) trigger synchronous layout recalculations and are strictly disallowed unless mathematically and visually essential.
+
+- **Automated Gate:** `npm run audit:layout` renders 150 instances of every loader in Chromium across two seconds, reads the browser's own layout counter, and fails on any design that costs a layout without a recorded reason.
+- **Accounted Exemptions:** Any layout recalculation must be justified and recorded in `docs/PERFORMANCE.md` (currently `progress-scroll` and `multi-wave`).
 
 ---
 
@@ -1080,17 +1245,17 @@ A successful monorepo build alone is insufficient evidence that the published pa
 
 A release candidate must pass:
 
-- Linting.
-- Type checking.
-- Unit tests.
-- Framework integration tests.
-- Production builds.
-- Browser tests.
-- Accessibility checks.
-- Package archive tests.
-- Bundle-size checks.
-- Dependency and license checks.
-- Documentation example validation.
+- Linting and strict TypeScript type checking (`tsc --noEmit`).
+- Unit and framework adapter test suites (50 tests).
+- Cross-browser test suites (Chromium 36 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
+- Layout recalculation profiler (`npm run audit:layout` — 131/133 zero-layout).
+- Visual correctness audit (`npm run audit:visual:correctness`).
+- Measured options customization verification (`npm run audit:customization`).
+- Catalog drift validation (`npm run catalog`).
+- Documentation invariant synchronization (`npm run docs:check`).
+- Package archive tests (`npm run pack:check` and `npm run pack:verify`).
+- Bundle-size budgets enforcement (`npm run measure`).
+- Accessibility validation (`axe-core` clean).
 
 No mandatory gate may be skipped without an explicit, recorded approval.
 
@@ -1460,8 +1625,10 @@ A release is complete only when all mandatory release gates pass.
 
 The stable release must satisfy all mandatory criteria:
 
-- At least 60 distinct animation designs.
-- At least 100 total named presets and loading patterns.
+- At least 60 distinct animation designs (Shipped: 133 active designs).
+- At least 100 total named presets and loading patterns (Shipped: 206 named presets).
+- Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
+- Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.
 - React and Angular integrations implemented and tested.
 - Vue, Svelte and Web Component integrations implemented and tested to the extent advertised.
@@ -1515,6 +1682,11 @@ implementation ambiguities discovered during technical review:
   variables. Configuration must never be treated as executable markup or code.
 - The registry is the source of truth for catalog counts, documentation, search,
   previews, supported options and catalog validation.
+- Dimensionality is a first-class metadata property: `LoaderDimension = '2d' | '3d'` on `LoaderDefinition`, exposed in the catalog as a 6-element tuple and surfaced via gallery filtering.
+- The configuration surface is strictly bounded to 27 declared keys in `loaderConfigKeys`, verified by `config.ts` type-level constraints.
+- The token surface consists of exactly 23 verified `--wavelo-*` properties declared in `WaveloTokens`.
+- Micro-interactions communicate state changes via `data-wavelo-state` across `'idle'`, `'loading'`, `'success'`, and `'error'`.
+- `LoaderDefinition.category` is strictly taxonomic metadata used by the documentation gallery filter and catalog organization. The runtime core, validators, and framework adapters never branch on or restrict configuration based on `category`.
 - Bundle budgets are release gates only after measuring packed artifacts. Initial
   targets are 10 KB gzipped for the basic core runtime and 5 KB gzipped for an
   individual loader entry.

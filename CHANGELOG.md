@@ -4,6 +4,26 @@
 
 Not yet published.
 
+### Breaking (relative to nothing — this is the first release)
+
+Nothing has shipped, so none of this breaks a consumer. It is recorded because it is the
+list of things that were decided, and after 0.1.0 the same changes need a major.
+
+- The public ID set is 133 designs and 206 named presets. Twenty-two visually duplicate
+  designs were consolidated out of the earlier 155 (`arc`, `half-circle`, `rotating-diamond`,
+  `orbiting-circles`, `conic-ring`, `thin-line`, `thick-stroke`, `four-dots`, `five-dots`,
+  `bouncing-dots`, `scaling-dots`, `vertical-dots`, `bouncing-bars`, `vertical-pulse-bars`,
+  `waveform`, `audio-waveform`, `gradient-bars`, `signal-bars`, `spectrum`,
+  `expanding-circles`, `progress-gradient-ring`, `progress-timer`), and seven keyframe
+  modules with them. Five of the twenty-two are reachable by configuration; the rest are
+  recorded as capability decisions in `docs/VISUAL_DEDUPLICATION_REPORT.md`.
+- No `variant` configuration key. It was removed before release: it duplicated `type` and
+  the theme, and a key that no design honours is worse than no key.
+- `LoaderDefinition` carries `dimension: '2d' | '3d'`, and five designs are `3d` because
+  their keyframes run `rotateX`/`rotateY`/`rotate3d` under a perspective. The label is
+  derived-checked by a test against the built sheet, not asserted by hand.
+- `count` is honoured by the designs built from repeated tracks, and only by those.
+
 - Dependency-free core that renders markup and styles separately: `renderLoader`
   returns escaped markup plus the stylesheet slice the design needs.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
