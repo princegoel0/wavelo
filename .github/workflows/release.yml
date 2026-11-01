@@ -89,6 +89,25 @@ jobs:
         with:
           name: wavelo-${{ needs.validate.outputs.version }}-tarballs
           path: release-tarballs
+      - name: Check registry authentication
+        run: |
+          set -euo pipefail
+          # The publish loop fails with a bare 404 when the registry does not accept the
+          # scope, which cannot tell a missing organization from a token that never got
+          # sent. Ask the registry who it thinks we are first, and print the generated
+          # config with the credential elided, so the answer is in the log rather than
+          # guessed at. This step publishes nothing: if it fails, nothing was attempted.
+          echo "userconfig: ${NPM_CONFIG_USERCONFIG:-unset}"
+          if [[ -f "${NPM_CONFIG_USERCONFIG:-/nonexistent}" ]]; then
+            sed 's/:_authToken=.*/:_authToken=<redacted>/' "$NPM_CONFIG_USERCONFIG"
+          fi
+          echo "registry: $(npm config get registry)"
+          if whoami=$(npm whoami 2>&1); then
+            echo "authenticated as ${whoami}"
+          else
+            echo "not authenticated: ${whoami}"
+            exit 1
+          fi
       - name: Publish packages
         shell: bash
         env:
