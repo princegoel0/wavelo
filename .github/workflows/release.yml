@@ -78,18 +78,25 @@ jobs:
       id-token: write
     environment:
       name: npm
+    # npm reads its registry credential from NODE_AUTH_TOKEN, which setup-node writes into
+    # the generated .npmrc as a reference to that variable. The action's `token` input is a
+    # different thing entirely - it authenticates the Node.js download - so passing the
+    # registry credential there left npm referencing a value that was never the one intended.
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-          token: ${{ secrets.NPM_TOKEN }}
       - name: Download validated release tarballs
         uses: actions/download-artifact@v4
         with:
           name: wavelo-${{ needs.validate.outputs.version }}-tarballs
           path: release-tarballs
       - name: Check registry authentication
+        env:
+          MAPPED_DIRECTLY: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
           # The publish loop fails with a bare 404 when the registry does not accept the
@@ -102,10 +109,10 @@ jobs:
             sed 's/:_authToken=.*/:_authToken=<redacted>/' "$NPM_CONFIG_USERCONFIG"
           fi
           echo "registry: $(npm config get registry)"
-          # An npm granular token is long and starts with `npm_`; a GitHub Actions token is
-          # shorter and has no such prefix. Printing only which of the two it is — never the
-          # value — distinguishes a bad paste in the secret from the runner wiring the wrong
-          # credential into NODE_AUTH_TOKEN, which is what an E401 here could also mean.
+          # The registry refuses a credential it never received, so print the shape of what
+          # npm will actually send - length and whether it carries the `npm_` prefix a
+          # granular token starts with - and whether it is the same string the repository
+          # setting holds. Never the value: a length and a yes/no cannot be replayed.
           if [[ -z "${NODE_AUTH_TOKEN:-}" ]]; then
             echo "credential: NODE_AUTH_TOKEN is unset in this step"
           else
@@ -113,6 +120,12 @@ jobs:
               [[ "${NODE_AUTH_TOKEN:0:4}" == "npm_" ]] && echo yes || echo no
             )"
           fi
+          echo "repository setting: ${#MAPPED_DIRECTLY} characters, npm_ prefix: $(
+            [[ "${MAPPED_DIRECTLY:0:4}" == "npm_" ]] && echo yes || echo no
+          )"
+          echo "npm is sending the repository setting: $(
+            [[ "$MAPPED_DIRECTLY" == "${NODE_AUTH_TOKEN:-}" ]] && echo yes || echo no
+          )"
           if whoami=$(npm whoami 2>&1); then
             echo "authenticated as ${whoami}"
           else
