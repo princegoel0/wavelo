@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "offline-dot", name: "Offline status dot", category: "application", kind: "pulse", description: "Network connectivity indicator transitioning between online, offline alert, and reconnecting wave", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "offline-dot" };
+const definition: LoaderDefinition = { id: "offline-dot", name: "Offline status dot", category: "application", dimension: "2d", kind: "pulse", description: "Network connectivity indicator transitioning between online, offline alert, and reconnecting wave", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "offline-dot" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const offlineDot = (config: Omit<LoaderConfig, 'type'> = {}) =>

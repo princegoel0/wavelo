@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "drag-drop-pulse", name: "Drag and drop pulse", category: "application", kind: "pulse", description: "Dropzone boundary with breathing dashed border and upload prompt", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "drag-drop-pulse" };
+const definition: LoaderDefinition = { id: "drag-drop-pulse", name: "Drag and drop pulse", category: "application", dimension: "2d", kind: "pulse", description: "Dropzone boundary with breathing dashed border and upload prompt", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "drag-drop-pulse" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const dragDropPulse = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-kanban", name: "Skeleton kanban board", category: "skeleton", kind: "skeleton", description: "Three-column kanban board placeholder with cards", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-kanban" };
+const definition: LoaderDefinition = { id: "skeleton-kanban", name: "Skeleton kanban board", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Three-column kanban board placeholder with cards", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-kanban" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonKanban = (config: Omit<LoaderConfig, 'type'> = {}) =>

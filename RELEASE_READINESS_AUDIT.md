@@ -291,21 +291,22 @@ knowable only from Settings → Actions → General.
 
 ## Validation commands and observed results
 
-Re-run 2026-10-29 against the current build, after the Phases B–J work.
+Re-run 2026-11-01 against the current build, after the publication blockers were resolved.
 
 | Command | Result |
 |---|---|
-| `npm run check` | Passed: build with catalog generation, strict typecheck, 45 unit tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
+| `npm run check` | Passed: build with catalog generation, strict typecheck, 52 unit and adapter tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
 | `npm run catalog` | Passed: 133 public IDs, 133 active designs, 206 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
-| `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages, across 12 documents |
+| `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages — and the gate now measures what it checks: per-kind slice costs, the sheet size, both quoted bundle sizes from the same entry points the budget gate builds, and every per-design option bullet in `docs/COMPONENT_CUSTOMIZATION_API.md` |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: 36 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 155 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 155 designs, the name contract, distinctness of all 155 designs, gallery with option chips and playground + axe |
+| `npm run test:browser` | Passed: 36 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 133 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality including `error-shake`, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 133 designs, the name contract, distinctness of all 133 designs, gallery with option chips and playground + axe |
 | `npm run test:browser:firefox` | Passed: 6 Gecko smoke tests — the sheet applies, the options and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` measured unsupported on Firefox 157) |
-| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 155 designs |
-| `npm run audit:layout` | Passed: 152 of 155 designs cost no layout per frame; the three that do are each recorded with a reason |
-| `npm run audit:visual` | Passed: 143 designs, contact sheet regenerated |
-| `npm run audit:visual:correctness` | Passed: 155 active designs (137 animating, 16 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
+| `npm run test:browser:webkit` | Passed: 7 WebKit smoke tests |
+| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 133 designs |
+| `npm run audit:layout` | Passed: 131 of 133 designs cost no layout per frame; the two that do are each recorded with a reason |
+| `npm run audit:visual` | Passed: contact sheet regenerated |
+| `npm run audit:visual:correctness` | Passed: 133 active designs (117 animating, 14 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
 | `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |

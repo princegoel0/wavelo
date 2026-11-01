@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-ai-generate", name: "Generating", category: "progress", kind: "wave", description: "A bright band travelling an empty track, with no percentage to report", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "progress-ai-generate" };
+const definition: LoaderDefinition = { id: "progress-ai-generate", name: "Generating", category: "progress", dimension: "2d", kind: "wave", description: "A bright band travelling an empty track, with no percentage to report", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "progress-ai-generate" };
 const styles = `${baseCss}${waveCss}`;
 
 export const progressAiGenerate = (config: Omit<LoaderConfig, 'type'> = {}) =>

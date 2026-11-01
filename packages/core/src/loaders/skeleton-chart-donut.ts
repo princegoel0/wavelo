@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-chart-donut", name: "Skeleton donut chart", category: "skeleton", kind: "skeleton", description: "Donut chart placeholder with masked radial ring and legend", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-chart-donut" };
+const definition: LoaderDefinition = { id: "skeleton-chart-donut", name: "Skeleton donut chart", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Donut chart placeholder with masked radial ring and legend", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-chart-donut" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonChartDonut = (config: Omit<LoaderConfig, 'type'> = {}) =>

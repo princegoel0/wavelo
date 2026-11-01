@@ -16,15 +16,24 @@ const root = resolve(import.meta.dirname, '..');
 const sheetPath = resolve(root, 'packages/core/dist/wavelo.css');
 const tokensPath = resolve(root, 'packages/core/dist/tokens.css');
 
-/** Every `var()` in the sheet, as custom property name to the set of fallbacks used. */
+/** Every public `var()` in the sheet, as custom property name to the set of literal fallbacks used. */
 function collect(sheet) {
   const fallbacks = new Map();
+  // A property whose fallback is another var() — `--wavelo-width` falling back through
+  // `--wavelo-size`, or an error badge falling back through `--wavelo-error-color` — is
+  // not asserting a default of its own. Declaring it at `:root` would cut that chain, so
+  // such reads are recorded separately and never emitted.
+  const chainedOnly = new Set();
   for (let index = sheet.indexOf('var('); index !== -1; index = sheet.indexOf('var(', index + 4)) {
     let cursor = index + 4;
     while (cursor < sheet.length && /[\s]/.test(sheet[cursor])) cursor++;
     const nameMatch = /^--[a-z0-9-]+/i.exec(sheet.slice(cursor));
     if (!nameMatch) continue;
     const name = nameMatch[0];
+    // The `--wavelo-` prefix is the public surface. Properties below it that a design
+    // uses on itself — a track index, an orbit angle, a crest pull — are implementation
+    // detail, and publishing them as theme tokens would make them impossible to rename.
+    if (!name.startsWith('--wavelo-')) continue;
     cursor += name.length;
     if (sheet[cursor] !== ',') continue;
     // Read to the comma's matching close paren, counting nesting: a fallback is
@@ -40,21 +49,34 @@ function collect(sheet) {
       }
       value += character;
     }
+    const fallback = value.trim();
+    if (fallback.includes('var(')) {
+      chainedOnly.add(name);
+      continue;
+    }
     if (!fallbacks.has(name)) fallbacks.set(name, new Set());
-    fallbacks.get(name).add(value.trim());
+    fallbacks.get(name).add(fallback);
   }
-  return fallbacks;
+  return { fallbacks, chainedOnly };
 }
 
 const sheet = await readFile(sheetPath, 'utf8');
-const collected = collect(sheet);
+const { fallbacks: collected, chainedOnly } = collect(sheet);
 const safe = [...collected.entries()]
+  // A name read with a chained fallback anywhere is off the table even if its literal
+  // fallbacks agree: `--wavelo-width` is read as `var(--wavelo-width,100%)` by a bar and
+  // as `var(--wavelo-width,var(--wavelo-size,2.5rem))` by the base, and declaring the
+  // former's value at `:root` would size every design to its container.
+  .filter(([name]) => !chainedOnly.has(name))
   .filter(([, values]) => values.size === 1)
   .map(([name, values]) => [name, [...values][0]])
   .filter(([, value]) => !/(url\s*\(|[;"'<>\\])/.test(value))
   .sort(([a], [b]) => a.localeCompare(b));
 
-const excluded = [...collected.keys()].filter((name) => !safe.some(([token]) => token === name)).sort();
+const excluded = [...new Set([...collected.keys(), ...chainedOnly])]
+  .filter((name) => !safe.some(([token]) => token === name))
+  .filter((name) => name.startsWith('--wavelo-'))
+  .sort();
 
 await writeFile(
   tokensPath,

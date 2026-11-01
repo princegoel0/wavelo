@@ -17,7 +17,7 @@ Every configuration option is **empirically validated** via browser computed-sty
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        CONFIGURATION TAXONOMY                          │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 1: UNIVERSAL STRUCTURAL CONFIGURATIONS (100% of loaders)          │
+│ TIER 1: UNIVERSAL STRUCTURAL CONFIGURATIONS (99% - 100%)               │
 │ • label, labelledBy, describedBy, decorative (Accessibility / ARIA)    │
 │ • loading, inline, className, data-testid (DOM / Lifecycle)            │
 │ • reducedMotion (prefers-reduced-motion override)                      │
@@ -25,14 +25,14 @@ Every configuration option is **empirically validated** via browser computed-sty
 │ • theme (light / dark / system palette resolution)                     │
 │ • color (primary foreground tint token)                                │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 2: SHARED GEOMETRIC & TEMPORAL CONFIGURATIONS (86% - 99%)         │
+│ TIER 2: SHARED GEOMETRIC & TEMPORAL CONFIGURATIONS (85% - 97%)         │
 │ • size: Root bounding box (width & height) for square components       │
 │ • width, height: Independent dimension controls for rectangular designs│
 │ • duration, speed: Cycle timing controls (seconds/ms and multiplier)   │
 │ • direction: 'normal' | 'reverse' playback control                     │
 │ • paused: boolean / string animation freeze state                      │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 3: COMPONENT-SPECIFIC & SPECIALIZED CONFIGURATIONS (6% - 39%)     │
+│ TIER 3: COMPONENT-SPECIFIC & SPECIALIZED CONFIGURATIONS (14% - 36%)    │
 │ • strokeWidth: Ring border, line weight, or stroke thickness           │
 │ • value, max, valueText: Determinate fill level and ARIA progressbar   │
 │ • count: Track repetitions (skeleton lines, rows, steps, files)        │
@@ -75,17 +75,19 @@ The following table summarizes options available across the entire catalog and s
 
 ## 3. Component-Specific Options Reference
 
-The following options are honoured strictly by loaders engineered to read them:
+The following options are honoured strictly by loaders engineered to read them. The
+counts are the ones `npm run audit:customization` measures against each design's render,
+not a guess from the kind it belongs to.
 
 | Option | Type | Consumers | Effect |
 |---|---|---|---|
-| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, etc. (35 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
+| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, gauges and rules (38 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
 | `value` | `number` | Determinate progress bars, rings, battery, meters, counters (18 loaders) | Current completion number between `0` and `max`. Sets `--wavelo-progress` and `aria-valuenow`. |
 | `max` | `number` | Determinate progress loaders (18 loaders) | Maximum completion range (default 100). Sets `aria-valuemax`. |
 | `valueText` | `string` | Determinate progress loaders (18 loaders) | Humanized reading (e.g., `"4 of 12 items"`). Sets `aria-valuetext` and visual counters. |
 | `count` | `number` | Skeleton text lines and composite layouts, multi-step progress, upload queues, and the two repeated-track designs `three-dots` and `equalizer` (26 loaders) | Controls repeating child elements (lines of text, step chips, file items) and, on the two track designs, the length of the row: the sheet divides track width and animation phase by `--wavelo-parts`. |
-| `secondaryColor` | `string` | Dual-color rings, clock hands, solar system, thinking glow (8 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
-| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays (44 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
+| `secondaryColor` | `string` | Every design that paints a track, a counter-rotating ring, a second strand, a shadow or a scrim alongside its accent (42 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
+| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays, chips and pills (48 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
 | `data-wavelo-state` | `'idle' | 'loading' | 'success' | 'error'` | Micro-interactions (6 loaders: `success-ring`, `error-shake`, `button-confirm`, `offline-dot`, `save-indicator`, `undo-progress`) | Triggers reactive visual morphs (spin -> checkmark, pulse -> alert). |
 | `data-wavelo-constellation` | `'ursa-major' | 'orion' | 'cassiopeia' | 'cygnus' | 'ursa-minor'` | Constellation loader | Selects celestial star pattern and geometric line matrix. |
 

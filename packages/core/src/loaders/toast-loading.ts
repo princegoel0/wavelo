@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "toast-loading", name: "Toast loading", category: "application", kind: "pulse", description: "Floating notification badge with spinner and message line", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "toast-loading" };
+const definition: LoaderDefinition = { id: "toast-loading", name: "Toast loading", category: "application", dimension: "2d", kind: "pulse", description: "Floating notification badge with spinner and message line", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "toast-loading" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const toastLoading = (config: Omit<LoaderConfig, 'type'> = {}) =>

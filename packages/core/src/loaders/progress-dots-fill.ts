@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-dots-fill", name: "Dots fill", category: "progress", kind: "progress", description: "Whole units filled as dots, one per step", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-dots-fill" };
+const definition: LoaderDefinition = { id: "progress-dots-fill", name: "Dots fill", category: "progress", dimension: "2d", kind: "progress", description: "Whole units filled as dots, one per step", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-dots-fill" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressDotsFill = (config: Omit<LoaderConfig, 'type'> = {}) =>

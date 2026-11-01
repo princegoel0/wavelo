@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "neural-grid", name: "Neural grid", category: "ai", kind: "dots", description: "Nine nodes pulse along a diagonal across a three-by-three grid", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "neural-grid" };
+const definition: LoaderDefinition = { id: "neural-grid", name: "Neural grid", category: "ai", dimension: "2d", kind: "dots", description: "Nine nodes pulse along a diagonal across a three-by-three grid", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "neural-grid" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const neuralGrid = (config: Omit<LoaderConfig, 'type'> = {}) =>

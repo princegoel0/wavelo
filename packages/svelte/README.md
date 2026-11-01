@@ -34,5 +34,7 @@ returns `{ html, css, styleKey }` without a component tree.
 
 Supported peer range: `svelte >=5.57.3 <6`.
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

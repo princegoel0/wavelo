@@ -34,5 +34,7 @@ if you want to place the markup yourself.
 
 Supported peer range: `react >=19.3.1 <20` and `react-dom >=19.3.1 <20`.
 
+Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
+
 See [docs/FRAMEWORKS.md](../../docs/FRAMEWORKS.md) and
 [docs/COMPATIBILITY.md](../../docs/COMPATIBILITY.md).

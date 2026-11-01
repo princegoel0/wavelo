@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-review", name: "Skeleton review", category: "skeleton", kind: "skeleton", description: "Review card with avatar, rating, and body text", options: ["className","color","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-review" };
+const definition: LoaderDefinition = { id: "skeleton-review", name: "Skeleton review", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Review card with avatar, rating, and body text", options: ["className","color","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-review" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonReview = (config: Omit<LoaderConfig, 'type'> = {}) =>

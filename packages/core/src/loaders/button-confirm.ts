@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "button-confirm", name: "Button confirm", category: "application", kind: "pulse", description: "Stateful button loader that contracts into a confirmation tick", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "button-confirm" };
+const definition: LoaderDefinition = { id: "button-confirm", name: "Button confirm", category: "application", dimension: "2d", kind: "pulse", description: "Stateful button loader that contracts into a confirmation tick", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "button-confirm" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const buttonConfirm = (config: Omit<LoaderConfig, 'type'> = {}) =>

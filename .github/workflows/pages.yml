@@ -1,14 +1,20 @@
 name: Gallery
 
 # The documentation gallery is one self-contained HTML file built from the registry, so
-# publishing it is a build and an upload. It deploys only from `main`, and only once the
-# owner has pointed Pages at "GitHub Actions" in the repository settings and set the
-# repository variable GALLERY_ENABLED to `true`. Until then both jobs skip, so pushing
-# this file cannot fail a run on `main` or publish anything by accident.
+# publishing it is a build and an upload. It deploys from `main`, from a manual run, or
+# after the `Release packages` workflow completes — and only once the owner has pointed
+# Pages at "GitHub Actions" in the repository settings and set the repository variable
+# GALLERY_ENABLED to `true`. Until then every job skips, so pushing this file cannot fail
+# a run on `main` or publish anything by accident. The `workflow_run` path additionally
+# requires the run that triggered it to have succeeded: a release that failed validation
+# must not deploy a site on top of it.
 
 on:
   push:
     branches: [main]
+  workflow_run:
+    workflows: ["Release packages"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -22,7 +28,7 @@ concurrency:
 
 jobs:
   build:
-    if: vars.GALLERY_ENABLED == 'true'
+    if: vars.GALLERY_ENABLED == 'true' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

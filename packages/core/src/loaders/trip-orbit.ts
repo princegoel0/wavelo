@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "trip-orbit", name: "Triple arc orbit", category: "creative", kind: "dots", description: "Three arcs one third of a turn apart, sweeping and shrinking together", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "trip-orbit" };
+const definition: LoaderDefinition = { id: "trip-orbit", name: "Triple arc orbit", category: "creative", dimension: "2d", kind: "dots", description: "Three arcs one third of a turn apart, sweeping and shrinking together", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "trip-orbit" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const tripOrbit = (config: Omit<LoaderConfig, 'type'> = {}) =>

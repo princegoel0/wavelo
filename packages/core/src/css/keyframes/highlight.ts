@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-highlight{to{transform:translateX(100%)}}`;
+export const css = `@keyframes wavelo-highlight{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}`;

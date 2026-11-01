@@ -20,7 +20,8 @@ const signatures = active.map((loader) => loader.visualSignature);
 check(signatures.every(Boolean) && new Set(signatures).size === signatures.length, 'Active catalog contains missing or duplicate visual signatures.');
 
 for (const loader of loaderRegistry) {
-  check(Boolean(loader.description && loader.kind && loader.category), `Incomplete metadata for ${loader.id}`);
+  check(Boolean(loader.description && loader.kind && loader.category && loader.dimension), `Incomplete metadata for ${loader.id}`);
+  check(loader.dimension === '2d' || loader.dimension === '3d', `Invalid dimension for ${loader.id}: ${loader.dimension}`);
   check(loader.options.length > 0, `${loader.id} honours no option at all; run npm run catalog:generate to measure it`);
   check(ids.has(loader.visualSignature), `${loader.id} points at unknown visual signature ${loader.visualSignature}`);
   if (loader.deprecated) {
@@ -29,6 +30,7 @@ for (const loader of loaderRegistry) {
     if (canonical) {
       // An alias renders its target, so its rendering metadata must match.
       check(loader.kind === canonical.kind, `${loader.id} alias kind ${loader.kind} differs from ${canonical.kind}`);
+      check(loader.dimension === canonical.dimension, `${loader.id} alias dimension ${loader.dimension} differs from ${canonical.dimension}`);
       check(loader.supportsProgress === canonical.supportsProgress, `${loader.id} alias progress support differs from ${canonical.id}`);
       check(loader.options.join() === canonical.options.join(), `${loader.id} alias options differ from ${canonical.id}`);
     }

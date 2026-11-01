@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "page-skeleton", name: "Page skeleton", category: "application", kind: "skeleton", description: "Full viewport page skeleton with header navbar, sidebar navigation, and main canvas", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "page-skeleton" };
+const definition: LoaderDefinition = { id: "page-skeleton", name: "Page skeleton", category: "application", dimension: "2d", kind: "skeleton", description: "Full viewport page skeleton with header navbar, sidebar navigation, and main canvas", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "page-skeleton" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const pageSkeleton = (config: Omit<LoaderConfig, 'type'> = {}) =>

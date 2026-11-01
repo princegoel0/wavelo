@@ -69,6 +69,8 @@ export type LoaderCategory =
   | 'application'
   | 'ai';
 
+export type LoaderDimension = '2d' | '3d';
+
 export type Theme = 'light' | 'dark' | 'system';
 export type ReducedMotion = 'auto' | 'always' | 'never';
 
@@ -174,6 +176,7 @@ export interface LoaderDefinition {
   id: string;
   name: string;
   category: LoaderCategory;
+  dimension: LoaderDimension;
   description: string;
   kind: RenderKind;
   options: string[];

@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "piano-keys", name: "Piano keys", category: "bars", kind: "bars", description: "Bars landing one after another at uneven points in the cycle", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "piano-keys" };
+const definition: LoaderDefinition = { id: "piano-keys", name: "Piano keys", category: "bars", dimension: "2d", kind: "bars", description: "Bars landing one after another at uneven points in the cycle", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "piano-keys" };
 const styles = `${baseCss}${barsCss}`;
 
 export const pianoKeys = (config: Omit<LoaderConfig, 'type'> = {}) =>

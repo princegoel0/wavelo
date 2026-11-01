@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "fire-rise", name: "Fire rise", category: "bars", kind: "bars", description: "Bars rising, stretching and burning out at the top", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "fire-rise" };
+const definition: LoaderDefinition = { id: "fire-rise", name: "Fire rise", category: "bars", dimension: "2d", kind: "bars", description: "Bars rising, stretching and burning out at the top", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "fire-rise" };
 const styles = `${baseCss}${barsCss}`;
 
 export const fireRise = (config: Omit<LoaderConfig, 'type'> = {}) =>

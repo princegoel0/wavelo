@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-label-inline", name: "Labelled bar", category: "progress", kind: "progress", description: "The value text riding the edge of the fill", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-label-inline" };
+const definition: LoaderDefinition = { id: "progress-label-inline", name: "Labelled bar", category: "progress", dimension: "2d", kind: "progress", description: "The value text riding the edge of the fill", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-label-inline" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressLabelInline = (config: Omit<LoaderConfig, 'type'> = {}) =>

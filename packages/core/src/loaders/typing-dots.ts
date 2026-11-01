@@ -5,7 +5,7 @@ import { dotsCss } from '../css/kinds/dots.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "typing-dots", name: "Typing dots", category: "ai", kind: "dots", description: "Three dots lift in sequence while a reply is composed", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "typing-dots" };
+const definition: LoaderDefinition = { id: "typing-dots", name: "Typing dots", category: "ai", dimension: "2d", kind: "dots", description: "Three dots lift in sequence while a reply is composed", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "typing-dots" };
 const styles = `${baseCss}${dotsCss}`;
 
 export const typingDots = (config: Omit<LoaderConfig, 'type'> = {}) =>

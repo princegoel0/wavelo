@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-battery", name: "Battery level", category: "progress", kind: "progress", description: "A charge shell filling to the value, terminal and all", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-battery" };
+const definition: LoaderDefinition = { id: "progress-battery", name: "Battery level", category: "progress", dimension: "2d", kind: "progress", description: "A charge shell filling to the value, terminal and all", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-battery" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressBattery = (config: Omit<LoaderConfig, 'type'> = {}) =>

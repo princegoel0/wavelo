@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "thinking-glow", name: "Thinking glow", category: "ai", kind: "pulse", description: "An orb breathes inside a halo that leaves it", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "thinking-glow" };
+const definition: LoaderDefinition = { id: "thinking-glow", name: "Thinking glow", category: "ai", dimension: "2d", kind: "pulse", description: "An orb breathes inside a halo that leaves it", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "thinking-glow" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const thinkingGlow = (config: Omit<LoaderConfig, 'type'> = {}) =>

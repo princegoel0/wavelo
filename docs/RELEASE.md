@@ -6,7 +6,7 @@ not happen without explicit approval.
 ```powershell
 npm install
 npm run build          # builds the core, regenerates catalog entry points, builds adapters
-npm run check          # typecheck, 45 unit tests, catalog drift, docs sync, bundle budgets
+npm run check          # typecheck, 52 unit tests, catalog drift, docs sync, bundle budgets
 npm run test:browser   # Chromium: computed styles, style injection, slice isolation, axe
 npm run docs:build
 npm run measure
@@ -32,6 +32,38 @@ Consumers need to know one thing this repository cannot verify for them: no
 adapter inlines CSS, so a server-rendered page must include
 `@wavelo/core/styles.css` (or the slices it rendered) in its document head.
 State it in the release notes.
+
+## Adding another package
+
+Wavelo is built so that a new family — a chart kit, a modal, a button set — is a new
+workspace, not a restructure. `npm install @wavelo/core` and
+`npm install @wavelo/react` stay exactly as they are, because:
+
+- the workspace glob is `packages/*`, so a new directory is built, packed and tested by
+  the existing scripts without touching them;
+- every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
+  `"access": "public"` under one `@wavelo` scope;
+- each package ships its own stylesheet — a consumer that never imports the new family
+  never downloads its rules, and the loaders' 23.5 KB gzipped sheet does not grow;
+- framework packages declare their framework as a peer and bundle none of it, and the
+  core has no runtime dependency, so a second family cannot drag a first one's weight in;
+- design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.
+
+Three things are not automatic and must be updated when a package joins, all of them
+lists of names rather than logic:
+
+1. `.github/workflows/release.yml` — the publish loop names each tarball, and a package
+   missing from it is built, validated and never published.
+2. `scripts/validate-release.mjs` — `packageFiles` is what "one version across every
+   package" is checked against.
+3. `scripts/verify-packed.mjs` — `publishable` is the list the clean-install consumer
+   project resolves its dependencies from.
+
+Decide the naming before the first release after a new family, not after it: `@wavelo/react`
+means *the React adapter for loaders* today. A UI kit that wants the same framework-first
+name would have to rename a published package, which is a breaking change for every
+consumer; a family-first name (`@wavelo/charts`, `@wavelo/ui`) never collides, and its own
+adapters live inside it as subpaths or as `@wavelo/ui-react`.
 
 ## Versioning
 

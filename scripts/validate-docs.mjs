@@ -2,12 +2,12 @@
 // are read from the built packages, and every file listed against them must
 // state the same thing. Adding a design, an option or a bundle-size claim means
 // updating the document — `npm run docs:check` fails otherwise.
-import { build } from 'esbuild';
 import { gzipSync } from 'node:zlib';
+import { bundleSize, entries } from './bundle-entries.mjs';
 import { readFile } from 'node:fs/promises';
 import { loaderConfigKeys } from '../packages/core/dist/config.js';
 import { loaderRegistry, presetRegistry } from '../packages/core/dist/registry.js';
-import { kindStyles } from '../packages/core/dist/css/index.js';
+import { baseCss, kindStyles } from '../packages/core/dist/css/index.js';
 
 const ids = loaderRegistry.length;
 const active = loaderRegistry.filter((loader) => !loader.deprecated).length;
@@ -15,18 +15,14 @@ const aliases = ids - active;
 const slices = Object.keys(kindStyles).length;
 const options = loaderConfigKeys.length;
 
-async function gzipped(source) {
-  const result = await build({
-    stdin: { contents: source, resolveDir: process.cwd(), sourcefile: 'doc-check.ts', loader: 'ts' },
-    bundle: true, minify: true, format: 'esm', platform: 'browser',
-    external: ['react', 'react-dom', 'vue', '@angular/core', 'svelte'],
-    write: false, logLevel: 'silent'
-  });
-  return gzipSync(result.outputFiles[0].contents).length;
+async function gzipped(source, name) {
+  return (await bundleSize(source, name)).gzipped;
 }
 
-const singleLoaderKb = ((await gzipped("import { ring } from '@wavelo/core/loaders/ring'; console.log(ring({ label: 'x' }));")) / 1024).toFixed(1);
-const catalogKb = ((await gzipped("import { renderLoader } from '@wavelo/core'; console.log(renderLoader({ type: 'ring' }));")) / 1024).toFixed(1);
+// Measured from the same entry points `npm run measure` budgets, so a document can never
+// quote a figure the gate disagrees with.
+const singleLoaderKb = ((await gzipped(entries['individual-loader'], 'doc-check-individual')) / 1024).toFixed(1);
+const catalogKb = ((await gzipped(entries['core-renderer'], 'doc-check-renderer')) / 1024).toFixed(1);
 
 /** [file, strings that must appear] */
 const required = [
@@ -141,7 +137,8 @@ const countDocuments = [
   // These three restate catalog totals and were never compared to anything, so each one
   // drifted: the master audit claimed 133 shipped in its scope line and 155 in every
   // section header, and the progress tracker carried two builds of stale figures.
-  'docs/LOADER_AUDIT.md', 'docs/VISUAL_DEDUPLICATION_REPORT.md', 'docs/wavelo-analysis.md'
+  'docs/LOADER_AUDIT.md', 'docs/VISUAL_DEDUPLICATION_REPORT.md', 'docs/COMPONENT_CUSTOMIZATION_API.md',
+  'docs/wavelo-analysis.md'
 ];
 for (const file of countDocuments) {
   const text = (await readFile(file, 'utf8').catch(() => '')).replace(/\s+/g, ' ');
@@ -155,6 +152,54 @@ for (const file of countDocuments) {
   }
   for (const [, stated] of text.matchAll(/(\d+) pattern presets/g)) {
     if (Number(stated) !== patternPresets.length) failures.push(`${file} states ${stated} pattern presets; the build has ${patternPresets.length}`);
+  }
+}
+
+// The slice costs in docs/PERFORMANCE.md are re-derived here rather than copied from a log:
+// that table was the one nobody measured, so it rotted twice while every gate stayed green.
+const performanceDoc = (await readFile('docs/PERFORMANCE.md', 'utf8')).replace(/\s+/g, ' ');
+for (const [kind, slice] of Object.entries(kindStyles)) {
+  const stated = gzipSync(Buffer.from(`${baseCss}${slice}`)).length.toLocaleString('en-US');
+  if (!performanceDoc.includes(stated)) failures.push(`docs/PERFORMANCE.md does not state the ${kind} slice cost (${stated} B gzipped with the base)`);
+}
+const sheetGzipped = gzipSync(Buffer.from(stylesheet)).length.toLocaleString('en-US');
+for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md']) {
+  if (!(await readFile(file, 'utf8')).replace(/\s+/g, ' ').includes(sheetGzipped)) {
+    failures.push(`${file} does not state the whole-catalog sheet size (${sheetGzipped} B gzipped)`);
+  }
+}
+
+// docs/COMPONENT_CUSTOMIZATION_API.md is written by hand, one section per design, and every
+// option it names for a design is a promise the measured table can contradict. It carried 53
+// claims the build does not support — designs said to take a colour or a stroke that no rule
+// of theirs reads, and `gap`/`radius` published as configuration keys when they are custom
+// properties — so each bullet is now checked against the registry. A bullet may name a
+// data-* attribute (public contract), a configuration key the design is measured to honour,
+// or a --wavelo-* token that a rule the design can actually reach reads; kind rules count,
+// because a property set on the loader reaches those too.
+{
+  const apiDoc = await readFile('docs/COMPONENT_CUSTOMIZATION_API.md', 'utf8');
+  const sheetRules = [...stylesheet.matchAll(/[^}]*\}/g)].map((match) => match[0]);
+  const byId = new Map(loaderRegistry.map((loader) => [loader.id, loader]));
+  const readsToken = (loader, token) => sheetRules.some((rule) => {
+    const selector = rule.slice(0, rule.indexOf('{'));
+    return (selector.includes(`.wavelo--${loader.id}`) || selector.includes(`.wavelo--${loader.kind}`)) && rule.includes(token);
+  });
+  let section = null;
+  for (const line of apiDoc.split(/\r?\n/)) {
+    const heading = /^#### \d+\. `([a-z0-9-]+)`/.exec(line);
+    if (heading) { section = byId.get(heading[1]); continue; }
+    const bullet = /^  - `([a-zA-Z-]+)` \(/.exec(line);
+    if (!bullet || !section) continue;
+    const name = bullet[1];
+    if (name.startsWith('data-')) continue;
+    if (name.startsWith('--wavelo-')) {
+      if (!readsToken(section, name)) failures.push(`${section.id} is documented with ${name}, which no rule it renders reads`);
+    } else if (!loaderConfigKeys.includes(name)) {
+      failures.push(`docs/COMPONENT_CUSTOMIZATION_API.md names ${name} as an option of ${section.id}, but no such configuration key exists`);
+    } else if (!section.options.includes(name)) {
+      failures.push(`docs/COMPONENT_CUSTOMIZATION_API.md gives ${section.id} ${name}, which the measured option table says it ignores`);
+    }
   }
 }
 
