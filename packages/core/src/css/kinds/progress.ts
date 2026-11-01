@@ -4,12 +4,12 @@ import { css as waveRollFrames } from '../keyframes/wave-roll.js';
 import { css as drainFrames } from '../keyframes/drain.js';
 
 export const progressCss = `
-.wavelo--progress{width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);overflow:hidden;border-radius:var(--wavelo-radius,999px);background:color-mix(in srgb,currentColor 18%,transparent)}
+.wavelo--progress{justify-content:flex-start;width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);overflow:hidden;border-radius:var(--wavelo-radius,999px);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent))}
 .wavelo--progress .wavelo__part{height:100%;width:var(--wavelo-progress,35%);border-radius:inherit;transition:width .2s ease}
-.wavelo--progress-ring{width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);overflow:visible;border:0;border-radius:50%;background:conic-gradient(currentColor var(--wavelo-progress,35%),color-mix(in srgb,currentColor 18%,transparent) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:none}
+.wavelo--progress-ring{width:var(--wavelo-size,2.5rem);height:var(--wavelo-size,2.5rem);overflow:visible;border:0;border-radius:50%;background:conic-gradient(currentColor var(--wavelo-progress,35%),var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent)) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--wavelo-stroke,3px)),#000 calc(100% - var(--wavelo-stroke,3px)));animation:none}
 .wavelo--progress-ring .wavelo__part{display:none}
 .wavelo--progress-steps{width:var(--wavelo-width,var(--wavelo-size,8rem));gap:var(--wavelo-gap,3px);border-radius:var(--wavelo-radius,3px);background:transparent}
-.wavelo--progress-steps .wavelo__part{flex:1 1 0;width:auto;height:100%;margin:0;border-radius:var(--wavelo-radius,2px);background:color-mix(in srgb,currentColor 18%,transparent);transition:none}
+.wavelo--progress-steps .wavelo__part{flex:1 1 0;width:auto;height:100%;margin:0;border-radius:var(--wavelo-radius,2px);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent));transition:none}
 .wavelo--progress-steps .wavelo__part[data-wavelo-step="filled"]{background:currentColor}
 .wavelo--segmented-bar{border-radius:var(--wavelo-radius,3px)}
 .wavelo--segmented-bar .wavelo__part{background:repeating-linear-gradient(90deg,currentColor 0 10px,transparent 10px 13px);border-radius:0}
@@ -19,19 +19,20 @@ export const progressCss = `
 .wavelo--progress-top{position:fixed;top:0;left:0;width:100%;height:var(--wavelo-height,3px);border-radius:0;z-index:var(--wavelo-z-index,9999)}
 /* A charge level: the shell is the element, the terminal is drawn outside it, and the
    fill is the value. The overflow stays visible so the terminal can sit past the edge. */
-.wavelo--progress-battery{overflow:visible;width:var(--wavelo-width,var(--wavelo-size,4rem));height:var(--wavelo-height,1.75rem);padding:var(--wavelo-gap,2px);border:var(--wavelo-stroke,2px) solid currentColor;border-radius:var(--wavelo-radius,.35rem);background:color-mix(in srgb,currentColor 12%,transparent)}
+.wavelo--progress-battery{justify-content:flex-start;overflow:visible;width:var(--wavelo-width,var(--wavelo-size,4rem));height:var(--wavelo-height,1.75rem);padding:var(--wavelo-gap,2px);border:var(--wavelo-stroke,2px) solid currentColor;border-radius:var(--wavelo-radius,.35rem);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 12%,transparent))}
 .wavelo--progress-battery:after{content:"";position:absolute;top:32%;bottom:32%;left:100%;width:var(--wavelo-stroke,2px);border-radius:0 2px 2px 0;background:currentColor}
 .wavelo--progress-battery .wavelo__part{border-radius:var(--wavelo-radius,2px)}
 /* A gauge: a half turn of conic gradient, carved to a band by the same radial mask the
    ring spinner uses. The center is the bottom edge, so the arc runs 9 o'clock to 3. */
-.wavelo--progress-half-ring{overflow:visible;width:var(--wavelo-width,var(--wavelo-size,5rem));height:var(--wavelo-height,calc(var(--wavelo-width,var(--wavelo-size,5rem)) / 2));border:0;border-radius:0;background:conic-gradient(from 270deg at 50% 100%,currentColor calc(var(--wavelo-progress,35%) / 2),color-mix(in srgb,currentColor 18%,transparent) 0);-webkit-mask:radial-gradient(circle farthest-side at 50% 100%,transparent calc(100% - var(--wavelo-stroke,6px)),#000 calc(100% - var(--wavelo-stroke,6px)));mask:radial-gradient(circle farthest-side at 50% 100%,transparent calc(100% - var(--wavelo-stroke,6px)),#000 calc(100% - var(--wavelo-stroke,6px)))}
+.wavelo--progress-half-ring{overflow:hidden;width:var(--wavelo-width,var(--wavelo-size,5rem));height:var(--wavelo-height,calc(var(--wavelo-width,var(--wavelo-size,5rem)) / 2));border:0;border-radius:9999px 9999px 0 0;background:conic-gradient(from 270deg at 50% 100%,currentColor calc(var(--wavelo-progress,35%) / 2),var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent)) 0);-webkit-mask:radial-gradient(circle farthest-side at 50% 100%,transparent calc(100% - var(--wavelo-stroke,6px)),#000 calc(100% - var(--wavelo-stroke,6px)));mask:radial-gradient(circle farthest-side at 50% 100%,transparent calc(100% - var(--wavelo-stroke,6px)),#000 calc(100% - var(--wavelo-stroke,6px)))}
 .wavelo--progress-half-ring .wavelo__part{display:none}
 /* A liquid level: the fill is the value's height, and its surface is a row of domes
    painted into the top of the fill itself, rolling sideways on the compositor. Painting
    the crest as the fill's own background rather than a floating layer is what makes an
    empty container look empty — with no water there is no surface. */
-.wavelo--progress-wave-fill{align-items:flex-end;width:var(--wavelo-width,var(--wavelo-size,5rem));height:var(--wavelo-height,var(--wavelo-size,3rem));border-radius:var(--wavelo-radius,.5rem)}
-.wavelo--progress-wave-fill .wavelo__part{width:100%;height:var(--wavelo-progress,35%);border-radius:0 0 var(--wavelo-radius,.5rem) var(--wavelo-radius,.5rem);background-color:color-mix(in srgb,currentColor 62%,transparent);background-image:radial-gradient(circle at 50% 0,currentColor 45%,transparent 46%);background-repeat:repeat-x;background-size:calc(var(--wavelo-width,var(--wavelo-size,5rem)) / 4) calc(var(--wavelo-stroke,3px) * 2);background-position:0 0;animation:wavelo-wave-roll var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:height .2s ease}
+.wavelo--progress-wave-fill{position:relative;overflow:hidden;align-items:flex-end;width:var(--wavelo-width,var(--wavelo-size,5rem));height:var(--wavelo-height,var(--wavelo-size,3rem));border-radius:var(--wavelo-radius,.65rem);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 14%,transparent));border:var(--wavelo-stroke,2px) solid color-mix(in srgb,currentColor 25%,transparent);box-shadow:inset 0 2px 8px rgba(0,0,0,.25)}
+.wavelo--progress-wave-fill .wavelo__part{position:absolute;left:0;right:0;bottom:0;width:100%;height:var(--wavelo-progress,35%);border-radius:0 0 var(--wavelo-radius,.5rem) var(--wavelo-radius,.5rem);background:linear-gradient(180deg,color-mix(in srgb,currentColor 80%,transparent),currentColor);animation:wavelo-wave-roll var(--wavelo-duration,1.2s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:height .2s ease}
+.wavelo--progress-wave-fill .wavelo__part:before{content:"";position:absolute;left:0;bottom:calc(100% - 1px);width:200%;height:12px;background:color-mix(in srgb,currentColor 80%,transparent);-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 12' preserveAspectRatio='none'%3E%3Cpath fill='%23000' d='M0 6 Q 10 0 20 6 T 40 6 V 12 H 0 Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 12' preserveAspectRatio='none'%3E%3Cpath fill='%23000' d='M0 6 Q 10 0 20 6 T 40 6 V 12 H 0 Z'/%3E%3C/svg%3E");-webkit-mask-size:40px 12px;mask-size:40px 12px;-webkit-mask-repeat:repeat-x;mask-repeat:repeat-x;animation:wavelo-wave-roll var(--wavelo-duration,1.2s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The percentage counts itself up. The value arrives twice, once as a fraction for the
    bar and once as the registered integer below, because a counter needs a whole number
    and only a registered property can be interpolated. */
@@ -40,7 +41,7 @@ export const progressCss = `
 /* Whole units, drawn as dots rather than bars. Which unit is filled is decided in the
    renderer, because CSS cannot compare a value against an index. */
 .wavelo--progress-dots-fill{width:var(--wavelo-width,var(--wavelo-size,6rem));height:auto;gap:var(--wavelo-gap,6px);background:transparent;border-radius:0}
-.wavelo--progress-dots-fill .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 3);height:calc(var(--wavelo-size,2.5rem) / 3);border-radius:50%;background:color-mix(in srgb,currentColor 22%,transparent);transition:none}
+.wavelo--progress-dots-fill .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 3);height:calc(var(--wavelo-size,2.5rem) / 3);border-radius:50%;background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 22%,transparent));transition:none}
 .wavelo--progress-dots-fill .wavelo__part[data-wavelo-step="filled"]{background:currentColor}
 /* The value description rides the edge of the fill. attr() reads the same string the
    element is given as aria-valuetext, so the label and the announcement cannot drift. */
@@ -50,7 +51,7 @@ export const progressCss = `
    renderer's part count rather than a string the caller keeps in step with it — and a
    bare number is what fits beneath a track this narrow. */
 .wavelo--progress-multi-step{overflow:visible;width:var(--wavelo-width,var(--wavelo-size,10rem));height:auto;gap:var(--wavelo-gap,6px);background:transparent;border-radius:0}
-.wavelo--progress-multi-step .wavelo__part{position:relative;flex:1 1 0;width:auto;height:var(--wavelo-stroke,3px);border-radius:var(--wavelo-radius,2px);background:color-mix(in srgb,currentColor 18%,transparent);counter-increment:wavelo-step;transition:none}
+.wavelo--progress-multi-step .wavelo__part{position:relative;flex:1 1 0;width:auto;height:var(--wavelo-stroke,3px);border-radius:var(--wavelo-radius,2px);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent));counter-increment:wavelo-step;transition:none}
 .wavelo--progress-multi-step .wavelo__part[data-wavelo-step="filled"]{background:currentColor}
 .wavelo--progress-multi-step .wavelo__part:after{content:counter(wavelo-step);position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);font:inherit;color:currentColor}
 /* A queue of files: one track per file, each filled by its own share of the same value,

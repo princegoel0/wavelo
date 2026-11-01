@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "breathing", name: "Breathing", category: "bars", kind: "wave", description: "One bar widening and narrowing on a slow cycle", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "breathing" };
+const definition: LoaderDefinition = { id: "breathing", name: "Breathing", category: "bars", dimension: "2d", kind: "wave", description: "One bar widening and narrowing on a slow cycle", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "breathing" };
 const styles = `${baseCss}${waveCss}`;
 
 export const breathing = (config: Omit<LoaderConfig, 'type'> = {}) =>

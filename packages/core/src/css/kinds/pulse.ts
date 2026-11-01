@@ -24,7 +24,7 @@ export const pulseCss = `
 /* A model at work: one orb breathing, with a halo leaving it at half the cycle so
    the two read as a pulse rather than a spinner. */
 .wavelo--thinking-glow .wavelo__part{width:44%;height:44%;animation:wavelo-think calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--thinking-glow:before{content:"";position:absolute;inset:8%;border:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;background:transparent;animation:wavelo-think-halo calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--thinking-glow:before{content:"";position:absolute;inset:8%;border:var(--wavelo-stroke,3px) solid var(--wavelo-secondary-color,currentColor);border-radius:50%;background:transparent;animation:wavelo-think-halo calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The caret at the end of a streamed answer. It is a block, not a round dot, and it
    spends the first half of the cycle lit. */
 .wavelo--stream-cursor .wavelo__part{width:42%;height:72%;border-radius:var(--wavelo-radius,2px);animation:wavelo-blink var(--wavelo-duration,1s) var(--wavelo-ease,steps(1,end)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}

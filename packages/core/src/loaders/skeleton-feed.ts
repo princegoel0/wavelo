@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-feed", name: "Skeleton feed post", category: "skeleton", kind: "skeleton", description: "Social feed post placeholder with avatar, author header, media box, and action bar", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-feed" };
+const definition: LoaderDefinition = { id: "skeleton-feed", name: "Skeleton feed post", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Social feed post placeholder with avatar, author header, media box, and action bar", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-feed" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonFeed = (config: Omit<LoaderConfig, 'type'> = {}) =>

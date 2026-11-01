@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-half-ring", name: "Half-ring gauge", category: "progress", kind: "progress", description: "A 180 degree gauge arc drawn from the value", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-half-ring" };
+const definition: LoaderDefinition = { id: "progress-half-ring", name: "Half-ring gauge", category: "progress", dimension: "2d", kind: "progress", description: "A 180 degree gauge arc drawn from the value", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-half-ring" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressHalfRing = (config: Omit<LoaderConfig, 'type'> = {}) =>

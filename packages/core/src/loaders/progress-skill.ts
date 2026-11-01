@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-skill", name: "Skill bar", category: "progress", kind: "progress", description: "A level that overshoots and settles", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-skill" };
+const definition: LoaderDefinition = { id: "progress-skill", name: "Skill bar", category: "progress", dimension: "2d", kind: "progress", description: "A level that overshoots and settles", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-skill" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressSkill = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, renderStylesheets, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
 test('catalog has distinct metadata and required categories', () => {
@@ -15,6 +15,43 @@ test('catalog has distinct metadata and required categories', () => {
   for (const category of ['spinner', 'dots', 'bars', 'skeleton', 'progress', 'application', 'ai']) {
     assert.ok(loaderRegistry.some((loader) => loader.category === category));
   }
+});
+
+test('every design is labelled with the dimension its own motion runs in', async () => {
+  const { allStyles } = await import('../packages/core/dist/css/index.js');
+  const sheet = allStyles;
+  const threeD = /rotate3d|rotateX\(|rotateY\(|translateZ\(|perspective\(/;
+  // Keyframe bodies nest (every stop is a block), so a non-greedy match would capture
+  // the first stop only. Count braces instead.
+  const framesWithDepth = new Set();
+  for (let at = sheet.indexOf('@keyframes'); at !== -1; at = sheet.indexOf('@keyframes', at + 1)) {
+    const name = /^@keyframes\s+([a-z0-9-]+)/.exec(sheet.slice(at))?.[1];
+    if (!name) continue;
+    let cursor = sheet.indexOf('{', at) + 1;
+    let depth = 1;
+    let body = '';
+    for (; cursor < sheet.length && depth; cursor++) {
+      const character = sheet[cursor];
+      if (character === '{') depth++;
+      else if (character === '}') depth--;
+      else body += character;
+    }
+    if (threeD.test(body)) framesWithDepth.add(name);
+  }
+  for (const loader of loaderRegistry) {
+    assert.ok(['2d', '3d'].includes(loader.dimension), `${loader.id} has invalid dimension: ${loader.dimension}`);
+    // The design's own rules name the frames it animates with; a label is only worth
+    // having if it follows from them. A design that reaches 3D through a parent's
+    // transform-style would need a different rule, and none does today.
+    const rules = [...sheet.matchAll(new RegExp(`\\.wavelo--${loader.id}(?::[a-z-]+)?[^{]*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]).join(';');
+    const animated = [...rules.matchAll(/animation(?:-name)?:\s*(?:var\([^)]*\)\s*,\s*)?([a-z][a-z0-9-]*)/g)]
+      .map(([, name]) => name)
+      .filter((name) => name.startsWith('wavelo-'));
+    const deep = animated.some((name) => framesWithDepth.has(name));
+    assert.equal(loader.dimension, deep ? '3d' : '2d', `${loader.id} animates ${animated.join(', ')} → ${deep ? '3d' : '2d'}, labelled ${loader.dimension}`);
+  }
+  const labelled = loaderRegistry.filter((loader) => loader.dimension === '3d').map((loader) => loader.id).sort();
+  assert.deepEqual(labelled, ['cube', 'ellipse', 'folding-squares', 'helix', 'rotating-square'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
 });
 
 test('the generated ID list matches the catalog', async () => {
@@ -329,6 +366,20 @@ test('unset colours are not emitted as self-referencing variables', () => {
   assert.match(coloured.html, /--wavelo-color:#010203/);
   assert.match(coloured.html, /--wavelo-secondary-color:#040506/);
   assert.match(coloured.html, /--wavelo-background:#070809/);
+});
+
+test('the tokens sheet still declares the properties documented as universal defaults', async () => {
+  // A token reaches dist/tokens.css only while every rule that reads it agrees on one
+  // fallback, so a single design writing a second default removes a public token from
+  // the sheet silently — the emitter only logs what it left out. These are the defaults
+  // README promises a page can set once and get everywhere; if one drops out, either the
+  // design that disagrees belongs on a token of its own, or README has stopped matching
+  // the build.
+  const sheet = await readFile(new URL('../packages/core/dist/tokens.css', import.meta.url), 'utf8');
+  const declared = new Set([...sheet.matchAll(/(--wavelo-[a-z0-9-]+)\s*:/g)].map((match) => match[1]));
+  for (const token of ['--wavelo-color', '--wavelo-error-color', '--wavelo-success-color', '--wavelo-scrim', '--wavelo-direction', '--wavelo-play-state', '--wavelo-progress', '--wavelo-count', '--wavelo-timeline', '--wavelo-z-index']) {
+    assert.ok(declared.has(token), `tokens.css no longer declares ${token}`);
+  }
 });
 
 test('generated loader modules match the catalog exactly', async () => {

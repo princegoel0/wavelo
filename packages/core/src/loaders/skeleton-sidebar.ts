@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-sidebar", name: "Skeleton sidebar", category: "skeleton", kind: "skeleton", description: "Sidebar navigation placeholder with logo, nav links and user footer", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-sidebar" };
+const definition: LoaderDefinition = { id: "skeleton-sidebar", name: "Skeleton sidebar", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Sidebar navigation placeholder with logo, nav links and user footer", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-sidebar" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonSidebar = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "comet-orbit", name: "Comet orbit", category: "spinner", kind: "orbit", description: "A dot on a fading conic-gradient tail that turns with it", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "comet-orbit" };
+const definition: LoaderDefinition = { id: "comet-orbit", name: "Comet orbit", category: "spinner", dimension: "2d", kind: "orbit", description: "A dot on a fading conic-gradient tail that turns with it", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "comet-orbit" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const cometOrbit = (config: Omit<LoaderConfig, 'type'> = {}) =>

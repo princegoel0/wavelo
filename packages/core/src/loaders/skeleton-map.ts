@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-map", name: "Skeleton map view", category: "skeleton", kind: "skeleton", description: "Geographic map view placeholder with pin markers, route path, and zoom controls", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-map" };
+const definition: LoaderDefinition = { id: "skeleton-map", name: "Skeleton map view", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Geographic map view placeholder with pin markers, route path, and zoom controls", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-map" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonMap = (config: Omit<LoaderConfig, 'type'> = {}) =>

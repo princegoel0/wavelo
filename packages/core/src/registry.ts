@@ -29,11 +29,12 @@ function optionsFor(definition: LoaderDefinition): string[] {
  * carries `aliasOf`, which is how every entry point resolves it to the design
  * it renders.
  */
-export const loaderRegistry: readonly LoaderDefinition[] = catalogEntries.map(([id, name, category, kind, description]) => {
+export const loaderRegistry: readonly LoaderDefinition[] = catalogEntries.map(([id, name, category, kind, description, dimension]) => {
   const definition: LoaderDefinition = {
     id,
     name,
     category,
+    dimension,
     kind,
     description,
     options: [],
@@ -60,6 +61,7 @@ for (const definition of loaderRegistry) {
   // An alias renders its target, so its rendering metadata must describe the
   // target. Only the public ID, name and description stay the alias's own.
   definition.kind = canonical.kind;
+  definition.dimension = canonical.dimension;
   definition.supportsProgress = canonical.supportsProgress;
   definition.options = [...canonical.options];
 }

@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "neon-ring", name: "Neon ring", category: "spinner", kind: "ring", description: "Ring that turns while its glow swells and fades", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "neon-ring" };
+const definition: LoaderDefinition = { id: "neon-ring", name: "Neon ring", category: "spinner", dimension: "2d", kind: "ring", description: "Ring that turns while its glow swells and fades", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "neon-ring" };
 const styles = `${baseCss}${ringCss}`;
 
 export const neonRing = (config: Omit<LoaderConfig, 'type'> = {}) =>

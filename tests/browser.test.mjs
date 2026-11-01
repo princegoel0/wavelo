@@ -963,55 +963,58 @@ test('documentation gallery renders and has no axe violations', async () => {
   const address = server.address();
   assert.ok(address && typeof address !== 'string');
   const galleryPage = await browser.newPage();
-  const consoleErrors = [];
-  const pageErrors = [];
-  galleryPage.on('console', (message) => {
-    if (message.type() === 'error') consoleErrors.push(message.text());
-  });
-  galleryPage.on('pageerror', (error) => pageErrors.push(error.message));
-  await galleryPage.goto(`http://127.0.0.1:${address.port}`);
-  assert.equal(await galleryPage.locator('.card').count(), loaderRegistry.length);
-  // The playground stages a live clone of the selected design, so the page holds one
-  // loader more than the catalog has cards.
-  assert.equal(await galleryPage.locator('.card .wavelo').count(), loaderRegistry.length);
-  assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length + 1);
-  await galleryPage.emulateMedia({ reducedMotion: 'reduce' });
-  const reducedDuration = await galleryPage.locator('.card .wavelo').first().evaluate((element) => getComputedStyle(element).animationDuration);
-  assert.ok(Number.parseFloat(reducedDuration) <= 0.000001, `unexpected reduced-motion duration: ${reducedDuration}`);
-  await galleryPage.emulateMedia({ reducedMotion: 'no-preference' });
-  await galleryPage.addScriptTag({ content: axe });
-  const report = await galleryPage.evaluate(async () => await window.axe.run());
-  assert.deepEqual(report.violations, []);
-  // The playground writes tokens on the box around the loader, so driving it proves
-  // the same path a page's own CSS takes.
-  await galleryPage.selectOption('#design', 'ring');
-  await galleryPage.locator('#size').evaluate((element) => {
-    element.value = '96';
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await galleryPage.locator('#dark').evaluate((element) => {
-    element.checked = true;
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  const staged = await galleryPage.evaluate(() => {
-    const loader = document.querySelector('#stage .wavelo');
-    return {
-      width: Math.round(loader.getBoundingClientRect().width),
-      theme: loader.getAttribute('data-wavelo-theme'),
-      token: document.querySelector('#stage').style.getPropertyValue('--wavelo-size'),
-      code: document.querySelector('#code').textContent
-    };
-  });
-  assert.equal(staged.width, 96, 'the size control reaches the staged loader');
-  assert.equal(staged.token, '96px', 'it gets there through the token, not an inline width');
-  assert.equal(staged.theme, 'dark', 'the dark-surface switch is the theme option');
-  assert.match(staged.code, /"type": "ring"/);
-  assert.match(staged.code, /"size": 96/);
-  assert.match(staged.code, /"theme": "dark"/);
-  assert.deepEqual(consoleErrors, []);
-  assert.deepEqual(pageErrors, []);
-  await galleryPage.close();
-  server.close();
+  try {
+    const consoleErrors = [];
+    const pageErrors = [];
+    galleryPage.on('console', (message) => {
+      if (message.type() === 'error') consoleErrors.push(message.text());
+    });
+    galleryPage.on('pageerror', (error) => pageErrors.push(error.message));
+    await galleryPage.goto(`http://127.0.0.1:${address.port}`);
+    assert.equal(await galleryPage.locator('.card').count(), loaderRegistry.length);
+    // The playground stages a live clone of the selected design, so the page holds one
+    // loader more than the catalog has cards.
+    assert.equal(await galleryPage.locator('.card .wavelo').count(), loaderRegistry.length);
+    assert.equal(await galleryPage.locator('.wavelo').count(), loaderRegistry.length + 1);
+    await galleryPage.emulateMedia({ reducedMotion: 'reduce' });
+    const reducedDuration = await galleryPage.locator('.card .wavelo').first().evaluate((element) => getComputedStyle(element).animationDuration);
+    assert.ok(Number.parseFloat(reducedDuration) <= 0.000001, `unexpected reduced-motion duration: ${reducedDuration}`);
+    await galleryPage.emulateMedia({ reducedMotion: 'no-preference' });
+    await galleryPage.addScriptTag({ content: axe });
+    const report = await galleryPage.evaluate(async () => await window.axe.run());
+    assert.deepEqual(report.violations, []);
+    // The playground writes tokens on the box around the loader, so driving it proves
+    // the same path a page's own CSS takes.
+    await galleryPage.selectOption('#design', 'ring');
+    await galleryPage.locator('#size').evaluate((element) => {
+      element.value = '96';
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await galleryPage.locator('#dark').evaluate((element) => {
+      element.checked = true;
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const staged = await galleryPage.evaluate(() => {
+      const loader = document.querySelector('#stage .wavelo');
+      return {
+        width: Math.round(loader.getBoundingClientRect().width),
+        theme: loader.getAttribute('data-wavelo-theme'),
+        token: document.querySelector('#stage').style.getPropertyValue('--wavelo-size'),
+        code: document.querySelector('#code').textContent
+      };
+    });
+    assert.equal(staged.width, 96, 'the size control reaches the staged loader');
+    assert.equal(staged.token, '96px', 'it gets there through the token, not an inline width');
+    assert.equal(staged.theme, 'dark', 'the dark-surface switch is the theme option');
+    assert.match(staged.code, /"type": "ring"/);
+    assert.match(staged.code, /"size": 96/);
+    assert.match(staged.code, /"theme": "dark"/);
+    assert.deepEqual(consoleErrors, []);
+    assert.deepEqual(pageErrors, []);
+  } finally {
+    await galleryPage.close();
+    server.close();
+  }
 });
 
 test('a bad attribute value keeps the last good loader on screen', async () => {
@@ -1469,7 +1472,7 @@ test('an unknown type on the element reports what was asked for', async () => {
 });
 
 test('tokens.css declares the defaults without changing any design', async () => {
-  const ids = ['ring', 'three-dots', 'equalizer', 'fading-bars', 'dot-matrix', 'skeleton-card', 'skeleton-line', 'progress-bar', 'progress-ring', 'progress-top', 'progress-scroll', 'overlay', 'fullscreen'];
+  const ids = ['ring', 'three-dots', 'equalizer', 'fading-bars', 'dot-matrix', 'skeleton-card', 'skeleton-line', 'progress-bar', 'progress-ring', 'progress-top', 'progress-scroll', 'overlay', 'fullscreen', 'error-shake'];
   const body = ids.map((id) => `<div data-id="${id}">${renderLoader({ type: id, label: id }).html}</div>`).join('');
   const tokens = await readFile(resolve('packages/core/dist/tokens.css'), 'utf8');
   const properties = ['width', 'height', 'borderTopWidth', 'borderRadius', 'color', 'backgroundColor', 'backgroundImage', 'animationDuration', 'animationPlayState', 'animationDirection', 'animationTimingFunction', 'zIndex', 'opacity', 'transform'];

@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-count", name: "Counting bar", category: "progress", kind: "progress", description: "A bar whose percentage counts itself up", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-count" };
+const definition: LoaderDefinition = { id: "progress-count", name: "Counting bar", category: "progress", dimension: "2d", kind: "progress", description: "A bar whose percentage counts itself up", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-count" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressCount = (config: Omit<LoaderConfig, 'type'> = {}) =>

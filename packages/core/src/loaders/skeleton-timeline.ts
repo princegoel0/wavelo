@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-timeline", name: "Skeleton timeline", category: "skeleton", kind: "skeleton", description: "Vertical activity timeline placeholder with nodes and events", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-timeline" };
+const definition: LoaderDefinition = { id: "skeleton-timeline", name: "Skeleton timeline", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Vertical activity timeline placeholder with nodes and events", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-timeline" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonTimeline = (config: Omit<LoaderConfig, 'type'> = {}) =>

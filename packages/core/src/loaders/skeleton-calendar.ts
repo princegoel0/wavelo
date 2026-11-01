@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-calendar", name: "Skeleton calendar", category: "skeleton", kind: "skeleton", description: "Seven-column calendar view placeholder with day cells", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-calendar" };
+const definition: LoaderDefinition = { id: "skeleton-calendar", name: "Skeleton calendar", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Seven-column calendar view placeholder with day cells", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-calendar" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonCalendar = (config: Omit<LoaderConfig, 'type'> = {}) =>

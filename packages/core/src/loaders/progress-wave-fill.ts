@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-wave-fill", name: "Wave fill", category: "progress", kind: "progress", description: "A liquid level whose crest rolls while the value holds", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","max","paused","reducedMotion","size","speed","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-wave-fill" };
+const definition: LoaderDefinition = { id: "progress-wave-fill", name: "Wave fill", category: "progress", dimension: "2d", kind: "progress", description: "A liquid level whose crest rolls while the value holds", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","max","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-wave-fill" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressWaveFill = (config: Omit<LoaderConfig, 'type'> = {}) =>

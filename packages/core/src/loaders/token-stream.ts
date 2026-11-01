@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "token-stream", name: "Token stream", category: "ai", kind: "wave", description: "Short dashes appear at the left and travel right as tokens arrive", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "token-stream" };
+const definition: LoaderDefinition = { id: "token-stream", name: "Token stream", category: "ai", dimension: "2d", kind: "wave", description: "Short dashes appear at the left and travel right as tokens arrive", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "token-stream" };
 const styles = `${baseCss}${waveCss}`;
 
 export const tokenStream = (config: Omit<LoaderConfig, 'type'> = {}) =>

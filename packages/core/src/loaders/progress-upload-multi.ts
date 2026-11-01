@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-upload-multi", name: "Multi-file upload", category: "progress", kind: "progress", description: "One track per file, each filled by its share of the value", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-upload-multi" };
+const definition: LoaderDefinition = { id: "progress-upload-multi", name: "Multi-file upload", category: "progress", dimension: "2d", kind: "progress", description: "One track per file, each filled by its share of the value", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-upload-multi" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressUploadMulti = (config: Omit<LoaderConfig, 'type'> = {}) =>

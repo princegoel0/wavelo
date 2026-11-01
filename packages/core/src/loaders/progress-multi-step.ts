@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "progress-multi-step", name: "Numbered steps", category: "progress", kind: "progress", description: "Steps that number themselves beneath the track", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-multi-step" };
+const definition: LoaderDefinition = { id: "progress-multi-step", name: "Numbered steps", category: "progress", dimension: "2d", kind: "progress", description: "Steps that number themselves beneath the track", options: ["className","color","count","data-testid","decorative","describedBy","inline","label","labelledBy","loading","max","reducedMotion","secondaryColor","size","strokeWidth","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "progress-multi-step" };
 const styles = `${baseCss}${progressCss}`;
 
 export const progressMultiStep = (config: Omit<LoaderConfig, 'type'> = {}) =>

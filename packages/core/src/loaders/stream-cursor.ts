@@ -5,7 +5,7 @@ import { pulseCss } from '../css/kinds/pulse.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "stream-cursor", name: "Stream cursor", category: "ai", kind: "pulse", description: "Block cursor blinking at the end of a streamed answer", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "stream-cursor" };
+const definition: LoaderDefinition = { id: "stream-cursor", name: "Stream cursor", category: "ai", dimension: "2d", kind: "pulse", description: "Block cursor blinking at the end of a streamed answer", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "stream-cursor" };
 const styles = `${baseCss}${pulseCss}`;
 
 export const streamCursor = (config: Omit<LoaderConfig, 'type'> = {}) =>

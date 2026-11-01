@@ -57,7 +57,7 @@ export const dotsCss = `
 .wavelo--dotted-circle .wavelo__part:nth-child(8){--a:315deg;animation-delay:calc(var(--wavelo-duration,1s) * -1.4)}
 .wavelo--fading-dots .wavelo__part{animation:wavelo-fade-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(odd){animation:wavelo-alt-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--alternating-dots .wavelo__part:nth-child(even){animation:wavelo-alt-dot-reverse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--alternating-dots .wavelo__part:nth-child(even){background:var(--wavelo-secondary-color,currentColor);animation:wavelo-alt-dot-reverse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--staggered-dots .wavelo__part{animation:wavelo-stagger-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--infinite-scroll{gap:var(--wavelo-gap,4px)}
 .wavelo--infinite-scroll .wavelo__part{width:12%;height:12%;animation:wavelo-bounce-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -97,11 +97,11 @@ export const dotsCss = `
    promises rather than a side-to-side slide. */
 .wavelo--pendulum:before{content:"";position:absolute;left:50%;top:10%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:currentColor;opacity:.9;z-index:2}
 .wavelo--pendulum .wavelo__part{position:absolute;left:50%;top:10%;width:var(--wavelo-stroke,2px);height:68%;margin-left:calc(var(--wavelo-stroke,2px) * -.5);transform-origin:top center;background:currentColor;border-radius:1px;animation:wavelo-pendulum calc(var(--wavelo-duration,1s) * 1.5) cubic-bezier(.4,0,.2,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--pendulum .wavelo__part:after{content:"";position:absolute;bottom:0;left:50%;width:calc(var(--wavelo-size,2.5rem) * .28);height:calc(var(--wavelo-size,2.5rem) * .28);margin-left:calc(var(--wavelo-size,2.5rem) * -.14);transform:translateY(50%);border-radius:50%;background:currentColor;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
+.wavelo--pendulum .wavelo__part:after{content:"";position:absolute;bottom:0;left:50%;width:calc(var(--wavelo-size,2.5rem) * .28);height:calc(var(--wavelo-size,2.5rem) * .28);margin-left:calc(var(--wavelo-size,2.5rem) * -.14);transform:translateY(50%);border-radius:50%;background:var(--wavelo-secondary-color,currentColor);box-shadow:0 1px 3px rgba(0,0,0,0.25)}
 /* Bubbles rising: each leaves the bottom, grows and fades out before it reaches the
    top, so the column never looks like a row of dots bouncing. */
 .wavelo--bubble-rise{align-items:flex-end;overflow:hidden}
-.wavelo--bubble-rise .wavelo__part{position:absolute;bottom:8%;border-radius:50%;border:1px solid currentColor;background:color-mix(in srgb,currentColor 35%,transparent);animation:wavelo-bubble calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--bubble-rise .wavelo__part{position:absolute;bottom:8%;border-radius:50%;border:1px solid currentColor;background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 35%,transparent));animation:wavelo-bubble calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--bubble-rise .wavelo__part:nth-child(1){left:14%;width:18%;height:18%;animation-delay:0s}
 .wavelo--bubble-rise .wavelo__part:nth-child(2){left:32%;width:12%;height:12%;animation-delay:calc(var(--wavelo-duration,1s) * -.25)}
 .wavelo--bubble-rise .wavelo__part:nth-child(3){left:50%;width:22%;height:22%;animation-delay:calc(var(--wavelo-duration,1s) * -.55)}
@@ -115,7 +115,7 @@ export const dotsCss = `
 .wavelo--constellation{display:block;background:transparent;position:relative}
 .wavelo--constellation.wavelo-inline{display:inline-block}
 .wavelo--constellation .wavelo__part{position:absolute;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor,0 0 8px color-mix(in srgb,currentColor 40%,transparent);animation:wavelo-constellation calc(var(--wavelo-duration,1s) * 2.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--constellation:before,.wavelo--constellation:after{content:"";position:absolute;inset:0;background:currentColor;opacity:.35;pointer-events:none;border:var(--wavelo-stroke,1px) solid transparent;animation:wavelo-constellation-line calc(var(--wavelo-duration,1s) * 2.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--constellation:before,.wavelo--constellation:after{content:"";position:absolute;inset:0;background:var(--wavelo-secondary-color,currentColor);opacity:.35;pointer-events:none;border:var(--wavelo-stroke,1px) solid transparent;animation:wavelo-constellation-line calc(var(--wavelo-duration,1s) * 2.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 
 /* 1. Ursa Major / Big Dipper (default) */
 .wavelo--constellation:not([data-wavelo-constellation]) .wavelo__part:nth-child(1),.wavelo--constellation[data-wavelo-constellation="ursa-major"] .wavelo__part:nth-child(1){left:10%;top:28%;width:10%;height:10%}

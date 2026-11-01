@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "undo-progress", name: "Undo progress", category: "application", kind: "progress", description: "Action toast bar that drains its time track and morphs to undone or dismissed state", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","max","paused","reducedMotion","size","speed","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "undo-progress" };
+const definition: LoaderDefinition = { id: "undo-progress", name: "Undo progress", category: "application", dimension: "2d", kind: "progress", description: "Action toast bar that drains its time track and morphs to undone or dismissed state", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","max","paused","reducedMotion","size","speed","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "undo-progress" };
 const styles = `${baseCss}${progressCss}`;
 
 export const undoProgress = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -18,7 +18,7 @@ import { css as shakeFrames } from '../keyframes/shake.js';
 export const shapeCss = `
 .wavelo--shape{background:currentColor;border-radius:20%;animation:wavelo-shape var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--shape .wavelo__part{display:none}
-.wavelo--cube{background:linear-gradient(135deg,currentColor 0 42%,transparent 42% 58%,currentColor 58%);border:var(--wavelo-stroke,3px) solid currentColor;transform-style:preserve-3d;animation:wavelo-cube var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--cube{background:linear-gradient(135deg,currentColor 0 42%,var(--wavelo-secondary-color,transparent) 42% 58%,currentColor 58%);border:var(--wavelo-stroke,3px) solid currentColor;transform-style:preserve-3d;animation:wavelo-cube var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--polygon{clip-path:polygon(50% 0,100% 35%,82% 100%,18% 100%,0 35%);animation:wavelo-polygon var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Three triangles orbiting a centre. The root draws nothing: a clip-path here would
    clip its own subtree, and that is what had this design showing one spinning triangle —
@@ -39,7 +39,9 @@ export const shapeCss = `
 .wavelo--triangles .wavelo__part:nth-child(3){--a:240deg;animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 /* The shape never moves; only its corners keep changing their radii, which is what
    makes it read as a liquid rather than a rotating box. */
-.wavelo--liquid-blob{border-radius:58% 42% 55% 45%/48% 56% 44% 52%;animation:wavelo-blob calc(var(--wavelo-duration,1s) * 2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--liquid-blob{width:var(--wavelo-width,var(--wavelo-size,2.75rem));height:var(--wavelo-height,var(--wavelo-size,2.75rem));position:relative;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;background:radial-gradient(circle at 35% 32%,color-mix(in srgb,currentColor 55%,#fff) 0%,currentColor 65%,color-mix(in srgb,currentColor 75%,#000) 100%);box-shadow:0 6px 16px -2px color-mix(in srgb,currentColor 45%,transparent);animation:wavelo-blob calc(var(--wavelo-duration,1s) * 2.5) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--liquid-blob .wavelo__part{display:none}
+.wavelo--liquid-blob:after{content:"";position:absolute;top:18%;left:22%;width:26%;height:18%;border-radius:50%;background:rgba(255,255,255,.7);transform:rotate(-35deg);filter:blur(.5px)}
 /* An hourglass that runs down. The root is the glass: a silhouette clipped to two
    chambers meeting at a neck, with caps and a standing channel drawn as background
    layers. The upper chamber drains toward the neck and the lower one fills from its
@@ -49,7 +51,7 @@ export const shapeCss = `
    full, and because a half-turn of a full-bottom hourglass is a full-top one, the loop
    boundary continues the story instead of resetting it. */
 .wavelo--sand-timer{clip-path:polygon(16% 0,84% 0,54% 47%,54% 53%,84% 100%,16% 100%,46% 53%,46% 47%);border-radius:0;background:linear-gradient(currentColor,currentColor) 0 0/100% 7% no-repeat,linear-gradient(currentColor,currentColor) 0 100%/100% 7% no-repeat,linear-gradient(currentColor,currentColor) 50% 50%/2px 43% no-repeat,color-mix(in srgb,currentColor 22%,transparent);animation:wavelo-sand calc(var(--wavelo-duration,1s) * 6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--sand-timer:before,.wavelo--sand-timer:after{content:"";position:absolute;inset:0;background:currentColor;animation-duration:calc(var(--wavelo-duration,1s) * 6);animation-timing-function:linear;animation-iteration-count:infinite;animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
+.wavelo--sand-timer:before,.wavelo--sand-timer:after{content:"";position:absolute;inset:0;background:var(--wavelo-secondary-color,currentColor);animation-duration:calc(var(--wavelo-duration,1s) * 6);animation-timing-function:linear;animation-iteration-count:infinite;animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
 .wavelo--sand-timer:before{clip-path:polygon(16% 6%,84% 6%,52% 50%,48% 50%);transform-origin:50% 50%;animation-name:wavelo-sand-top}
 .wavelo--sand-timer:after{clip-path:polygon(48% 50%,52% 50%,84% 94%,16% 94%);transform-origin:50% 94%;animation-name:wavelo-sand-bottom}
 /* An eye, not an ellipse. The opening is an almond with pointed corners and a
@@ -62,10 +64,17 @@ export const shapeCss = `
 .wavelo--eye-blink:after{content:"";position:absolute;inset:0;background:currentColor;transform:translateY(-104%);animation:wavelo-blink-eye calc(var(--wavelo-duration,1s) * 3) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* A metronome arm swinging about its foot. */
 .wavelo--metronome{width:var(--wavelo-width,calc(var(--wavelo-size,2.5rem) * .28));height:var(--wavelo-height,var(--wavelo-size,2.5rem));border-radius:var(--wavelo-radius,2px);transform-origin:50% 96%;animation:wavelo-metronome calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--error-shake{background:currentColor;border-radius:var(--wavelo-radius,8px);position:relative;display:inline-grid;place-items:center}
-.wavelo--error-shake[data-wavelo-state="error"]{background:var(--wavelo-error-color,#ef4444);animation:wavelo-shake calc(var(--wavelo-duration,1s) * .45) ease-in-out}
-.wavelo--error-shake[data-wavelo-state="error"]:after{content:"!";font-weight:700;font-size:calc(var(--wavelo-size,2.5rem) * .55);color:#fff;line-height:1}
+/* The badge is painted by the alert token and the halo by the accent token, which is what
+   keeps both defaults singular. Painting the badge through currentColor would have meant
+   defaulting it with a second fallback on --wavelo-color, and the generated tokens sheet
+   declares a property only where every rule that reads it agrees on one default — so one
+   design disagreeing silently dropped a public token from that sheet. A design called
+   error-shake is red when nobody tells it otherwise, and still answers color: its halo. */
+.wavelo--error-shake{background:var(--wavelo-error-color,#ef4444);border-radius:var(--wavelo-radius,8px);position:relative;display:inline-grid;place-items:center;box-shadow:0 4px 14px color-mix(in srgb,var(--wavelo-color,#6366f1) 35%,transparent);animation:wavelo-shake calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--error-shake .wavelo__part{display:none}
+.wavelo--error-shake:after{content:"!";font-weight:800;font-family:system-ui,-apple-system,sans-serif;font-size:calc(var(--wavelo-size,2.5rem) * .58);color:#fff;line-height:1}
+.wavelo--error-shake[data-wavelo-state="error"]{animation:wavelo-shake calc(var(--wavelo-duration,1s) * .6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--error-shake[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:none}
-.wavelo--error-shake[data-wavelo-state="success"]:after{content:"\\2713";font-weight:700;font-size:calc(var(--wavelo-size,2.5rem) * .55);color:#fff;line-height:1}
+.wavelo--error-shake[data-wavelo-state="success"]:after{content:"\\2713"}
 .wavelo--error-shake[data-wavelo-state="idle"]{animation:none;opacity:.7}
 ${shapeFrames}${squareFrames}${cubeFrames}${polygonFrames}${foldFrames}${triangleOrbitFrames}${morphFrames}${starFrames}${blobFrames}${sandFrames}${sandTopFrames}${sandBottomFrames}${blinkEyeFrames}${eyeLookFrames}${metronomeFrames}${shakeFrames}`;

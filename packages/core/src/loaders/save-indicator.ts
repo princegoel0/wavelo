@@ -5,7 +5,7 @@ import { ringCss } from '../css/kinds/ring.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "save-indicator", name: "Save indicator", category: "application", kind: "ring", description: "Document save status transitioning from spinning sync to saved check or error", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "save-indicator" };
+const definition: LoaderDefinition = { id: "save-indicator", name: "Save indicator", category: "application", dimension: "2d", kind: "ring", description: "Document save status transitioning from spinning sync to saved check or error", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "save-indicator" };
 const styles = `${baseCss}${ringCss}`;
 
 export const saveIndicator = (config: Omit<LoaderConfig, 'type'> = {}) =>

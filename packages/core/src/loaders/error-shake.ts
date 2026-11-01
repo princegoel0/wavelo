@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "error-shake", name: "Error shake", category: "application", kind: "shape", description: "Stateful shape indicator that shakes horizontally on error", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "error-shake" };
+const definition: LoaderDefinition = { id: "error-shake", name: "Error shake", category: "application", dimension: "2d", kind: "shape", description: "Stateful shape indicator that shakes horizontally on error", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "error-shake" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const errorShake = (config: Omit<LoaderConfig, 'type'> = {}) =>

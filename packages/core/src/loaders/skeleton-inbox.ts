@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-inbox", name: "Skeleton inbox", category: "skeleton", kind: "skeleton", description: "Avatar and subject tracks repeated as inbox rows", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-inbox" };
+const definition: LoaderDefinition = { id: "skeleton-inbox", name: "Skeleton inbox", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Avatar and subject tracks repeated as inbox rows", options: ["className","color","count","data-testid","decorative","describedBy","direction","duration","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-inbox" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonInbox = (config: Omit<LoaderConfig, 'type'> = {}) =>
