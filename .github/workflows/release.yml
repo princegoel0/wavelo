@@ -102,6 +102,17 @@ jobs:
             sed 's/:_authToken=.*/:_authToken=<redacted>/' "$NPM_CONFIG_USERCONFIG"
           fi
           echo "registry: $(npm config get registry)"
+          # An npm granular token is long and starts with `npm_`; a GitHub Actions token is
+          # shorter and has no such prefix. Printing only which of the two it is — never the
+          # value — distinguishes a bad paste in the secret from the runner wiring the wrong
+          # credential into NODE_AUTH_TOKEN, which is what an E401 here could also mean.
+          if [[ -z "${NODE_AUTH_TOKEN:-}" ]]; then
+            echo "credential: NODE_AUTH_TOKEN is unset in this step"
+          else
+            echo "credential: set, ${#NODE_AUTH_TOKEN} characters, npm_ prefix: $(
+              [[ "${NODE_AUTH_TOKEN:0:4}" == "npm_" ]] && echo yes || echo no
+            )"
+          fi
           if whoami=$(npm whoami 2>&1); then
             echo "authenticated as ${whoami}"
           else
