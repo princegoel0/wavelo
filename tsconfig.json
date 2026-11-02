@@ -9,10 +9,9 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "allowJs": false,
-    "baseUrl": ".",
     "paths": {
-      "@wavelo/core": ["packages/core/src/index.ts"],
-      "@wavelo/core/*": ["packages/core/src/*"]
+      "@wavelo/core": ["./packages/core/src/index.ts"],
+      "@wavelo/core/*": ["./packages/core/src/*"]
     }
   },
   "include": [

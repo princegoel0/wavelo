@@ -1,7 +1,8 @@
 # @wavelo/angular
 
-Angular 22 component for Wavelo. Import `LoaderComponent` into a standalone
-component and drive it with inputs.
+Angular component for Wavelo, for Angular 14 and up (standalone components and `inject()`; the
+package is compiled with `ngc` in partial mode, so an AOT application can import it). Import
+`LoaderComponent` into a standalone component and drive it with inputs.
 
 ```ts
 import { Component } from '@angular/core';
@@ -39,7 +40,7 @@ rendered content is cleared on destroy. Only markup is written into the host;
 `ensureStyles` puts the design's stylesheet slice in the document head, so a
 server-rendered page should add `@wavelo/core/styles.css` to the server styles.
 
-Supported peer range: `@angular/core >=22.2.3 <23`.
+Supported peer range: `@angular/core >=14.0.0`.
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 
