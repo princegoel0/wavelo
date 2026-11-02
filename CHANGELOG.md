@@ -1,9 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
-Nothing in this section is on npm yet: `0.2.0` as published carries the narrow peer ranges
-and an `@wavelo/angular` that an Angular application cannot compile.
+Staged on `dev`; nothing here is on npm until this version is published. `0.2.0` as it stands
+carries the narrow peer ranges and an `@wavelo/angular` that an Angular application cannot compile.
 
 - **Framework Ecosystem Compatibility:** Broadened `peerDependencies` across the framework
   adapters to remove npm `ERESOLVE` friction for downstream consumers:
@@ -18,7 +18,7 @@ and an `@wavelo/angular` that an Angular application cannot compile.
   `NG2012` while every JIT test passed. `packages/angular` builds with `ngc` in
   `compilationMode: "partial"`; a consumer component written the way `docs/FRAMEWORKS.md`
   describes compiles against it. Both `@wavelo/angular@0.1.0` and `@wavelo/angular@0.2.0` on the
-  registry have the defect, so the fix reaches consumers only with the next publish.
+  registry have the defect, and this is the first version an Angular application can build with.
 - **Guards:** `npm run verify:angular` fails if the package stops being library-compiled, if the
   Angular peer floor drops below the artifact's `minVersion`, or if the consumer fixture stops
   compiling; `npm run docs:check` now compares every peer range this repository documents with

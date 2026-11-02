@@ -311,7 +311,7 @@ Re-run 2026-11-01 against the current build, after the publication blockers were
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
 | `npm run verify:angular` | Added 2026-11-02 after the published `@wavelo/angular` turned out not to be usable by an Angular application: it builds with `ngc` in partial mode, so the artifact carries a real component declaration, its `minVersion` (14.0.0) is what the peer floor is checked against, and a standalone consumer component written the way `docs/FRAMEWORKS.md` describes compiles with the Angular compiler. Verified to fail: rebuilding the same source with `tsc` brings back `NG2012`, and promising `>=13.0.0` against a `minVersion` of 14.0.0 is refused |
-| `npm run release:validate` | Ran clean before each release. On 2026-11-02, after `0.2.0` published, it exits non-zero with `These exact package versions are already published: @wavelo/core, @wavelo/vanilla, @wavelo/web-components, @wavelo/react, @wavelo/vue, @wavelo/svelte, @wavelo/angular` — the gate working as intended, and the expected state until the next version bump |
+| `npm run release:validate` | Refused to re-publish `0.2.0` on 2026-11-02, naming all seven packages — the published-version check doing its job. On the same day it passes for the staged release: `Release version 0.3.0 is aligned across 7 packages and is not published.` |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |

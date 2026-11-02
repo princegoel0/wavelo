@@ -7,7 +7,7 @@
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
 > **Layout cost:** **151 of 153** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
 > **Visual audit:** 153 active designs — 137 animating, 14 static by design (bound to a value), 2 timeline-driven.
-> **CI & Release Status:** **`0.2.0` is published** — all seven packages live on npm at `0.2.0` (`0.1.0` shipped on 2026-11-01, `0.2.0` on 2026-11-02), tagged [`v0.2.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.2.0), gallery deployed. `npm run release:validate` now reports `0.2.0` as already published, which is the expected state until the next version bump. What `dev` carries beyond that is **not on npm yet**: the widened adapter peer ranges, and the fix that makes `@wavelo/angular` compilable by an AOT application, which the published 0.1.0 and 0.2.0 Angular tarballs are not.
+> **CI & Release Status:** **`0.2.0` is the newest version on npm** — all seven packages live at `0.2.0` (`0.1.0` shipped on 2026-11-01, `0.2.0` on 2026-11-02), tagged [`v0.2.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.2.0), gallery deployed. **`0.3.0` is staged on `dev` and not yet published**: it carries the widened adapter peer ranges and the fix that makes `@wavelo/angular` compilable by an AOT application, which the published 0.1.0 and 0.2.0 Angular tarballs are not. `npm run release:validate` reports `0.3.0` aligned across 7 packages and not published.
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and catalog figures
@@ -322,7 +322,7 @@ A full-spectrum audit was executed across all 153 loading components to verify t
 | **Gallery Completeness** | `npm run docs:verify` | **Passed: 153 preview cards** render with interactive option chips and zero accessibility violations (axe clean). |
 | **Cross-Browser Verification** | `npm run test:browser` | **Passed:** Chromium (36/36 tests), Gecko / Firefox (6/6 tests), WebKit / Safari (7/7 tests). |
 | **Documentation Invariants** | `npm run docs:check` | **Passed:** 153 designs, 12 slices, 27 configuration keys, 23 custom properties, single loader 8.6 KB gzipped — and it recomputes the slice costs, the sheet size, both quoted bundle figures and every per-design option bullet rather than trusting the document. |
-| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.2.0 is aligned across 7 packages and is not published. |
+| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.3.0 is aligned across 7 packages and is not published. |
 | **Package Tarballs** | `npm run pack:check` | **Passed:** 7 publishable tarballs verified (dry-run). |
 
 ### B. What each family's documentation claims, and what proves it
@@ -979,7 +979,7 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 | Documentation sync | `npm run docs:check` | ✅ pass — and it now re-measures what it checks: the per-kind slice costs, the whole-catalog sheet size, both quoted bundle figures (built from the same entry points the budget gate uses), the option claims of every design section in `COMPONENT_CUSTOMIZATION_API.md`, and the retired-design names |
 | Gallery | `npm run docs:verify` | ✅ pass (153 cards) |
 | Bundle budgets | `npm run measure` | ✅ all 11 entries inside budget |
-| Release validation | `npm run release:validate` | ✅ version 0.2.0 aligned across 7 packages and not yet published |
+| Release validation | `npm run release:validate` | ✅ version 0.3.0 aligned across 7 packages and not yet published |
 
 ### Corrections
 
