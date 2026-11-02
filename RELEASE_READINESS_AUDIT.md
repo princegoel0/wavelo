@@ -256,9 +256,10 @@ been run.
 ## Post-publication repository hardening
 
 Deferred by the owner on 2026-10-30: *"I will do that after we publish package."*
-Every item below was measured against the live repository on that date, not assumed, and
-none of them blocks `0.1.0` — they govern what happens when someone who is not the owner
-touches the repository. Raise this list at the point of publication.
+**`0.1.0` published on 2026-11-01, so this list is now due.** Every item below was measured
+against the live repository on that earlier date, not assumed, and none of them blocked
+`0.1.0` — they govern what happens when someone who is not the owner touches the repository.
+Re-measure before acting: a month of settings changes could have moved any of these.
 
 - [ ] **Dependabot is off entirely.** The dependency-graph endpoint returns `404` (no
   snapshot submitted), `GET /vulnerability-alerts` reports "Vulnerability alerts are
@@ -296,20 +297,20 @@ Re-run 2026-11-01 against the current build, after the publication blockers were
 | Command | Result |
 |---|---|
 | `npm run check` | Passed: build with catalog generation, strict typecheck, 52 unit and adapter tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
-| `npm run catalog` | Passed: 133 public IDs, 133 active designs, 206 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run catalog` | Passed: 153 public IDs, 153 active designs, 231 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
 | `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages — and the gate now measures what it checks: per-kind slice costs, the sheet size, both quoted bundle sizes from the same entry points the budget gate builds, and every per-design option bullet in `docs/COMPONENT_CUSTOMIZATION_API.md` |
 | `npm run docs:build` | Passed |
-| `npm run test:browser` | Passed: 36 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 133 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality including `error-shake`, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 133 designs, the name contract, distinctness of all 133 designs, gallery with option chips and playground + axe |
+| `npm run test:browser` | Passed: 36 tests — paused, direction, all three reducedMotion modes against both OS settings, theme palettes plus the theme's colour and scrim, slice injection counts, per-design slice isolation for 153 designs, custom element re-render, the element keeping its last valid render when an attribute value is invalid, the `style` attribute as configuration, data attributes, determinate values, `loading`/`count`/`inline`, the `data-wavelo-fallback` trace on an unknown type, `tokens.css` neutrality including `error-shake`, container-query sizing, the scroll- and view-driven fills at 0/50/100% of their ranges inside and outside an `overflow: hidden` wrapper plus their clock-driven fallbacks, the route progress bar, a `style-src` CSP page with and without the nonce, painted pixels for the palette/gradients/scrim, visibility for all 153 designs, the name contract, distinctness of all 153 designs, gallery with option chips and playground + axe |
 | `npm run test:browser:firefox` | Passed: 6 Gecko smoke tests — the sheet applies, the options and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` measured unsupported on Firefox 157) |
 | `npm run test:browser:webkit` | Passed: 7 WebKit smoke tests |
-| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 133 designs |
-| `npm run audit:layout` | Passed: 131 of 133 designs cost no layout per frame; the two that do are each recorded with a reason |
+| `npm run audit:customization` | Passed: the measured option table still matches what Chromium renders for all 153 designs |
+| `npm run audit:layout` | Passed: 151 of 153 designs cost no layout per frame; the two that do are each recorded with a reason |
 | `npm run audit:visual` | Passed: contact sheet regenerated |
-| `npm run audit:visual:correctness` | Passed: 133 active designs (117 animating, 14 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
+| `npm run audit:visual:correctness` | Passed: 153 active designs (137 animating, 14 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
-| `npm run release:validate` | Passed: aligned `0.1.0`, exact versions not published |
+| `npm run release:validate` | Ran clean before the release; now reports the seven `0.1.0` versions as already published, which is the expected state until the next version bump |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |

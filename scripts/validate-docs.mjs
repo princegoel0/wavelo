@@ -14,6 +14,9 @@ const active = loaderRegistry.filter((loader) => !loader.deprecated).length;
 const aliases = ids - active;
 const slices = Object.keys(kindStyles).length;
 const options = loaderConfigKeys.length;
+// The 3D set is asserted against each design's own CSS in tests/core.test.mjs; the count is
+// what the documents quote, so it is derived here rather than typed.
+const threeD = loaderRegistry.filter((loader) => loader.dimension === '3d').length;
 
 async function gzipped(source, name) {
   return (await bundleSize(source, name)).gzipped;
@@ -27,6 +30,11 @@ const catalogKb = ((await gzipped(entries['core-renderer'], 'doc-check-renderer'
 /** [file, strings that must appear] */
 const required = [
   ['README.md', [`${ids} designs`, `${slices} stylesheet slices`, `${options} configuration keys`]],
+  // The PRD is the requirements document the rest of the project is measured against, and
+  // until now nothing measured it: it carried "128 of the 138 designs are 2D" and "Ten
+  // designs" for a 3D set of 25 through a full green run, because it was in none of the
+  // lists below.
+  ['PRD.md', [`${ids} designs`, `${options} configuration keys`, `${slices} render kinds`, `${threeD} designs`]],
   ['CHANGELOG.md', [`${ids} public IDs`, aliases ? `${aliases} deprecated aliases` : 'no deprecated aliases']],
   ['docs/COMPATIBILITY.md', [`${options} configuration keys`, `${slices} render kinds`, 'styles.css']],
   ['docs/FRAMEWORKS.md', ['@wavelo/core/styles.css', 'ensureStyles']],
@@ -68,7 +76,7 @@ const retiredDesignIds = [
   'expanding-circles', 'progress-gradient-ring', 'progress-timer'
 ];
 const currentCatalogDocs = [
-  'README.md', 'docs/BUNDLE_SIZE.md', 'docs/PERFORMANCE.md', 'docs/COMPATIBILITY.md',
+  'README.md', 'PRD.md', 'docs/BUNDLE_SIZE.md', 'docs/PERFORMANCE.md', 'docs/COMPATIBILITY.md',
   'docs/MIGRATION.md', 'docs/RECIPES.md', 'docs/FRAMEWORKS.md', 'docs/RELEASE.md',
   'packages/core/README.md', 'packages/react/README.md', 'packages/vue/README.md',
   'packages/svelte/README.md', 'packages/angular/README.md', 'packages/vanilla/README.md',
@@ -131,7 +139,7 @@ for (const token of tokensDeclared) {
 // document that reports the current state has to be the built count.
 const { patternPresets } = await import('../packages/core/dist/catalog.js');
 const countDocuments = [
-  'README.md', 'CHANGELOG.md', 'RELEASE_CHECKLIST.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
+  'README.md', 'PRD.md', 'CHANGELOG.md', 'RELEASE_CHECKLIST.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
   'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/MIGRATION.md',
   'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
   // These three restate catalog totals and were never compared to anything, so each one
@@ -152,6 +160,16 @@ for (const file of countDocuments) {
   }
   for (const [, stated] of text.matchAll(/(\d+) pattern presets/g)) {
     if (Number(stated) !== patternPresets.length) failures.push(`${file} states ${stated} pattern presets; the build has ${patternPresets.length}`);
+  }
+  // "128 of the 138 designs are 2D" described no build this project ever shipped: the
+  // denominator is the catalog size, and the 2D numerator is that minus the 3D set. Both
+  // halves of a fraction like this are derivable, so neither is allowed to be typed.
+  for (const [, part, whole] of text.matchAll(/(\d+) of the (\d+) designs?\b/g)) {
+    if (Number(whole) !== ids) failures.push(`${file} says "${part} of the ${whole} designs"; the build has ${ids} designs`);
+    if (Number(part) > Number(whole)) failures.push(`${file} says "${part} of the ${whole} designs", which is more parts than the whole`);
+  }
+  for (const [, part] of text.matchAll(/(\d+) of the \d+ designs are 2D/g)) {
+    if (Number(part) !== ids - threeD) failures.push(`${file} states ${part} designs are 2D; the build has ${ids - threeD} of ${ids}`);
   }
 }
 

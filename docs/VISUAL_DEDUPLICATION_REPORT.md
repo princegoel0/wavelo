@@ -6,19 +6,19 @@
 
 ## Executive Summary
 
-| Metric | Original | Phase 1 | Phase 2 | Phase 3 (Option 2) | Total Reduction |
-|---|---|---|---|---|---|
-| **Active Designs** | 155 | 146 | 141 | **133** | **-22 designs (-14.2%)** |
-| **Named Presets** | 228 | 219 | 214 | **206** | **22 fewer entries** |
-| **Stylesheet Slices** | 12 | 12 | 12 | **12** | Maintained modularity |
-| **Bundle Size (Core Gzip)** | 33.3 KB | 32.7 KB | 32.0 KB | **31.8 KB** | **-1.5 KB (-4.5%)** |
-| **Layout Cost (0/frame)** | 152 / 155 | 144 / 146 | 139 / 141 | **131 / 133** | Only 2 justified exemptions (`progress-scroll`, `multi-wave`) |
-| **Unit Tests Passed** | 50 / 50 | 50 / 50 | 50 / 50 | **50 / 50** | 100% green |
-| **Browser Tests Passed** | 36 / 36 | 36 / 36 | 36 / 36 | **36 / 36** | 100% green |
+| Metric | Original | Phase 1 | Phase 2 | Phase 3 | Phase 4 (Current) | Status |
+|---|---|---|---|---|---|---|
+| **Active Designs** | 155 | 146 | 141 | 133 | **153** | 153 active designs (25 3D spatial) |
+| **Named Presets** | 228 | 219 | 214 | 231 | **231** | 231 named presets + 78 patterns |
+| **Stylesheet Slices** | 12 | 12 | 12 | 12 | **12** | Maintained 100% modularity |
+| **Bundle Size (Core Gzip)** | 33.3 KB | 32.7 KB | 32.0 KB | 31.8 KB | **43.3 KB** | Core renderer within budget |
+| **Layout Cost (0/frame)** | 152 / 155 | 144 / 146 | 139 / 141 | 131 / 133 | **151 / 153** | Only 2 justified exemptions (`progress-scroll`, `multi-wave`) |
+| **Unit Tests Passed** | 50 / 50 | 50 / 50 | 50 / 50 | 50 / 50 | **52 / 52** | 100% green |
+| **Browser Tests Passed** | 36 / 36 | 36 / 36 | 36 / 36 | 36 / 36 | **36 / 36** | 100% green |
 
 The columns above are the checkpoints taken as each phase landed. The same metrics on the
-current build, which has moved on since the last phase: **133 designs, 206 named presets,
-12 slices, `core-renderer` 33.5 KB (34,259 B) gzipped, 131 of 133 designs cost no layout per
+current build, which has moved on since the last phase: **153 designs, 231 named presets,
+12 slices, `core-renderer` 43.3 KB (44,372 B) gzipped, 151 of 153 designs cost no layout per
 frame, 52 unit and adapter tests, Chromium 36 / Gecko 6 / WebKit 7**. `npm run docs:check`
 compares the design and preset counts in this document with the registry on every run; the
 size and test columns are history and are labelled as such.
@@ -154,19 +154,19 @@ size and test columns are history and are labelled as such.
 Re-run against the tree after the consolidation and after `count` was added, on
 2026-10-31:
 
-- **Catalog:** `npm run catalog` → 133 public IDs, 133 active designs, 206 named presets,
+- **Catalog:** `npm run catalog` → 153 public IDs, 153 active designs, 231 named presets,
   12 slices, zero aliases, generated files in sync.
-- **Unit and adapter tests:** 50/50 (`npm test`).
+- **Unit and adapter tests:** 52/52 (`npm test`).
 - **Three engines:** Chromium 36/36, Gecko 6/6, WebKit 7/7.
-- **Measured options:** `npm run audit:customization` matches the render for all 133,
+- **Measured options:** `npm run audit:customization` matches the render for all 153,
   which is what proves the `count` recipes above rather than asserting them.
-- **Layout:** 131 of 133 zero-layout per frame; `progress-scroll` and `multi-wave` carry a
+- **Layout:** 151 of 153 zero-layout per frame; `progress-scroll` and `multi-wave` carry a
   recorded reason each.
-- **Visual correctness:** 133 designs — 117 animating, 14 static by design, 2
+- **Visual correctness:** 153 designs — 137 animating, 14 static by design, 2
   timeline-driven.
 - **Bundles:** all eleven entries inside budget, re-based to the 12% rule in both
-  directions (runtime 37 KiB, Angular 38 KiB, `busiest-loader` up to 11,264 B because the
-  dots slice grew).
+  directions (runtime 50 KiB, Angular 51 KiB, `busiest-loader` up to 13,824 B because the
+  shape slice overtook dots and the probe moved with it).
 - **Docs:** `npm run docs:check` passes. `docs/MIGRATION.md` no longer routes to a removed
   ID, `docs/LOADER_AUDIT.md` marks the 22 consolidated designs in its index, and
   `CHANGELOG.md` records the consolidation.

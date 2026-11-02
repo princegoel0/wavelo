@@ -66,7 +66,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['multi-wave', 'Multi-wave', 'bars', 'wave', 'Multiple wave layers', '2d'],
   ['ripple-circles', 'Ripple circles', 'creative', 'rings', 'Expanding ripple circles', '2d'],
   ['morphing-shapes', 'Morphing shapes', 'creative', 'shape', 'Shape morphing between square, triangle and diamond', '2d'],
-  ['infinity', 'Infinity loop', 'creative', 'rings', 'Two nodes run a figure-eight track drawn as two circles touching at the centre', '2d'],
+  ['infinity', 'Infinity loop', 'creative', 'rings', 'Isometric 3D interwoven infinity ribbon band with depth shading and traveling energy flows', '2d'],
   ['helix', 'DNA helix', 'creative', 'wave', 'Two strands of nodes twist around each other, joined by base pairs that close as they cross', '3d'],
   ['cube', 'Cube rotation', 'creative', 'shape', 'Cube rotation', '3d'],
   ['polygon', 'Rotating polygon', 'creative', 'shape', 'Rotating polygon', '2d'],
@@ -150,7 +150,27 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['page-skeleton', 'Page skeleton', 'application', 'skeleton', 'Full viewport page skeleton with header navbar, sidebar navigation, and main canvas', '2d'],
   ['offline-dot', 'Offline status dot', 'application', 'pulse', 'Network connectivity indicator transitioning between online, offline alert, and reconnecting wave', '2d'],
   ['save-indicator', 'Save indicator', 'application', 'ring', 'Document save status transitioning from spinning sync to saved check or error', '2d'],
-  ['undo-progress', 'Undo progress', 'application', 'progress', 'Action toast bar that drains its time track and morphs to undone or dismissed state', '2d']
+  ['undo-progress', 'Undo progress', 'application', 'progress', 'Action toast bar that drains its time track and morphs to undone or dismissed state', '2d'],
+  ['gyroscope', 'Gyroscope', 'creative', 'rings', 'Triple concentric gimbal rings rotating along three orthogonal axes with gyroscopic precession', '3d'],
+  ['tesseract', 'Tesseract', 'creative', 'shape', 'Four-dimensional hypercube isometric wireframe rotating and inverting through 3D perspective', '3d'],
+  ['sphere-lattice', 'Sphere lattice', 'creative', 'rings', 'Geodesic wireframe sphere composed of meridian and parallel rings spinning in true 3D space', '3d'],
+  ['prism-refraction', 'Prism refraction', 'creative', 'shape', 'Rotating triangular crystal prism casting an iridescent rainbow spectral dispersion fan', '3d'],
+  ['atom-orbital', 'Atom orbital', 'creative', 'orbit', 'Nuclear core with three orbital planes inclined in 3D space with electrons in planetary orbit', '3d'],
+  ['dna-double-helix', 'DNA double helix', 'creative', 'wave', 'Dual intertwining helical strands with rotating base-pair rungs in true 3D cylinder', '3d'],
+  ['hologram-pyramid', 'Hologram pyramid', 'creative', 'shape', 'Inverted translucent holographic pyramid hovering and rotating above a glowing laser pedestal', '3d'],
+  ['black-hole-accretion', 'Black hole accretion', 'creative', 'orbit', 'Supermassive black hole event horizon encircled by a tilted relativistic accretion disk with Doppler beaming', '3d'],
+  ['crystal-cluster', 'Crystal cluster', 'creative', 'shape', 'Cluster of three interlocking faceted quartz crystal points rotating with specular reflections in 3D space', '3d'],
+  ['mobius-band', 'Mobius band', 'creative', 'rings', 'Topological single-sided Mobius strip twisting 180 degrees through 3D space with a continuous light pulse traversing both faces', '3d'],
+  ['vortex-tunnel', 'Vortex tunnel', 'creative', 'rings', 'Concentric depth gates accelerating along the Z axis from a vanishing point into a hyperspace warp tunnel', '3d'],
+  ['isometric-deck', 'Isometric deck', 'creative', 'shape', 'Four floating document cards in isometric 3D space performing rhythmic cascading restacking and shuffling', '3d'],
+  ['voxel-cluster', 'Voxel cluster', 'creative', 'shape', 'Four corner voxel cubes exploding radially in 3D space and snapping together with elastic bounce overshoot', '3d'],
+  ['torus-ring', 'Torus ring', 'creative', 'rings', 'Three-dimensional geometric torus loops rotating in 3D perspective with an orbiting photon energy bead', '3d'],
+  ['cylindrical-wave', 'Cylindrical wave', 'creative', 'wave', 'Circular pin-matrix cylinder viewed at an isometric angle where vertical pins extrude in traveling sinusoidal waves', '3d'],
+  ['liquid-mercury', 'Liquid mercury', 'creative', 'shape', 'Physics-simulated fluid metallic droplet floating and rippling under surface tension in microgravity', '3d'],
+  ['dna-decode', 'DNA decode', 'creative', 'wave', 'Genome sequencing scanner with traveling holographic laser beam illuminating complementary base-pair nucleotides in 3D', '3d'],
+  ['quantum-superposition', 'Quantum superposition', 'creative', 'dots', 'Wavefunction probability cloud in multiple eigenstates collapsing into a unified quantum singularity and re-expanding', '3d'],
+  ['magnetic-field', 'Magnetic field', 'creative', 'orbit', 'Toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow', '3d'],
+  ['aurora-borealis', 'Aurora borealis', 'creative', 'wave', 'Volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients', '3d']
 ];
 
 /**
@@ -195,6 +215,9 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['kanban-board', 'skeleton-kanban'], ['timeline-feed', 'skeleton-timeline'],
   ['calendar-grid', 'skeleton-calendar'], ['action-success', 'success-ring'],
   ['form-error', 'error-shake'], ['submit-confirm', 'button-confirm'],
+  ['liquid-droplet', 'liquid-mercury'], ['genome-sequence', 'dna-decode'],
+  ['probability-cloud', 'quantum-superposition'], ['dipole-flux', 'magnetic-field'],
+  ['northern-lights', 'aurora-borealis'],
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

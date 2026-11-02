@@ -29,7 +29,7 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 const result = orbitingDots({ label: 'Loading data' });
 ```
 
-The catalog holds 133 public IDs across 12 render kinds, and `src/loaders/*.ts`,
+The catalog holds 153 public IDs across 12 render kinds, and `src/loaders/*.ts`,
 `src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
 Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
 
@@ -97,7 +97,7 @@ head(renderStylesheets(pages.map((page) => page.css)));
 | `@wavelo/core` | types, registry, renderer, DOM helpers, style injection, `createWavelo` and `mergeWaveloConfig` for registered defaults, `createRouteProgress` |
 | `@wavelo/core/registry` | `loaderRegistry`, `presetRegistry`, `resolveCatalogEntry` |
 | `@wavelo/core/loaders/<id>` | one design: its metadata and its stylesheet slice |
-| `@wavelo/core/loaders` | barrel over all 133 designs |
+| `@wavelo/core/loaders` | barrel over all 153 designs |
 | `@wavelo/core/css` | `kindStyles`, `baseCss`, `allStyles`, `designStyles` |
 | `@wavelo/core/styles` | `ensureStyles`, `renderStylesheets`, `stylesheetMarkup` |
 | `@wavelo/core/styles.css` | the complete catalog sheet, for a `<link>` or bundler |

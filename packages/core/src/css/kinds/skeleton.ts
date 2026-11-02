@@ -21,7 +21,8 @@ export const skeletonCss = `
 .wavelo--skeleton.wavelo-inline{display:inline-block}
 .wavelo--skeleton-card.wavelo-inline,.wavelo--skeleton-table.wavelo-inline,.wavelo--skeleton-dashboard.wavelo-inline{display:inline-grid}
 .wavelo--skeleton-line.wavelo-inline{width:var(--wavelo-width,var(--wavelo-size,6em));height:var(--wavelo-height,1em)}
-.wavelo--image-placeholder{width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,var(--wavelo-size,7.5rem));background:linear-gradient(110deg,var(--wavelo-skeleton-base) 30%,var(--wavelo-skeleton-highlight) 45%,var(--wavelo-skeleton-base) 60%);background-size:250% 100%}
+.wavelo--image-placeholder{position:relative;display:flex;align-items:center;justify-content:center;width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,var(--wavelo-size,7.5rem));background:linear-gradient(110deg,var(--wavelo-skeleton-base) 30%,var(--wavelo-skeleton-highlight) 45%,var(--wavelo-skeleton-base) 60%);background-size:250% 100%}
+.wavelo--image-placeholder:before{content:"";position:absolute;width:32px;height:32px;opacity:.35;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E") no-repeat center/contain;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E") no-repeat center/contain}
 /* A counted line is a stack of tracks rather than one painted box, so the element
    stops painting and each track shimmers on its own; the last one is short, because
    that is how a block of text ends. */
@@ -31,7 +32,7 @@ export const skeletonCss = `
 .wavelo--skeleton.wavelo-stacked.wavelo-inline{display:inline-grid}
 /* A response block: one bright sweep crossing a tall rounded panel, the shape a
    streaming answer actually occupies. */
-.wavelo--ai-shimmer{width:var(--wavelo-width,var(--wavelo-size,12rem));height:var(--wavelo-height,var(--wavelo-size,3.5rem));border-radius:var(--wavelo-radius,.75rem);background:linear-gradient(90deg,var(--wavelo-skeleton-base) 0 38%,var(--wavelo-skeleton-highlight) 50%,var(--wavelo-skeleton-base) 62% 100%);background-size:220% 100%;animation:wavelo-response-shimmer calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--ai-shimmer{width:var(--wavelo-width,var(--wavelo-size,12rem));height:var(--wavelo-height,var(--wavelo-size,3.5rem));border-radius:var(--wavelo-radius,.75rem);border:1px solid color-mix(in srgb,currentColor 10%,transparent);box-shadow:0 4px 16px -2px color-mix(in srgb,#818cf8 12%,transparent);background:linear-gradient(110deg,var(--wavelo-skeleton-base) 0%,var(--wavelo-skeleton-base) 34%,color-mix(in srgb,#818cf8 28%,var(--wavelo-skeleton-highlight)) 46%,color-mix(in srgb,#38bdf8 35%,#fff) 50%,color-mix(in srgb,#c084fc 28%,var(--wavelo-skeleton-highlight)) 54%,var(--wavelo-skeleton-base) 66%,var(--wavelo-skeleton-base) 100%);background-size:260% 100%;animation:wavelo-response-shimmer calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--ai-shimmer.wavelo-inline{display:inline-block}
 /* Composite placeholders: the element stops painting and becomes the grid of tracks
    the screen it stands in for is made of. Each one keeps the shimmer on its tracks. */
@@ -140,8 +141,8 @@ export const skeletonCss = `
 .wavelo--skeleton-notification .wavelo__part:nth-child(2){width:65%;height:12px}
 .wavelo--skeleton-notification .wavelo__part:nth-child(3){grid-column:2;width:95%;height:9px}
 .wavelo--skeleton-notification .wavelo__part:nth-child(4){grid-column:span 2;width:80%;height:9px}
-.wavelo--skeleton-command{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,6px);width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto;border:1px solid var(--wavelo-skeleton-base);border-radius:var(--wavelo-radius,8px)}
-.wavelo--skeleton-command .wavelo__part:nth-child(1){width:100%;height:26px;border-radius:var(--wavelo-radius,4px);margin-bottom:4px}
+.wavelo--skeleton-command{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--wavelo-gap,6px);padding:8px;width:var(--wavelo-width,var(--wavelo-size,14rem));height:auto;border:1px solid var(--wavelo-skeleton-highlight);border-radius:var(--wavelo-radius,8px)}
+.wavelo--skeleton-command .wavelo__part:nth-child(1){width:100%;height:26px;border-radius:var(--wavelo-radius,4px);margin-bottom:4px;border:1px solid color-mix(in srgb,currentColor 25%,transparent);box-shadow:inset 0 1px 3px rgba(0,0,0,.15)}
 .wavelo--skeleton-command .wavelo__part:nth-child(2){width:88%;height:12px}
 .wavelo--skeleton-command .wavelo__part:nth-child(3){width:72%;height:12px}
 .wavelo--skeleton-command .wavelo__part:nth-child(4){width:94%;height:12px}

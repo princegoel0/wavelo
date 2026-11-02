@@ -17,10 +17,13 @@ export const pulseCss = `
 .wavelo--pulsing-dots .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--pulsing-dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--expanding-dot .wavelo__part{width:70%;height:70%;animation:wavelo-scale-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--grid-pulse{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 10));width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent}
+.wavelo--grid-pulse{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 10));width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent;position:relative}
 .wavelo--grid-pulse.wavelo-inline{display:inline-grid}
-.wavelo--grid-pulse .wavelo__part{width:100%;height:100%;border-radius:18%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--grid-pulse .wavelo__part:nth-child(2),.wavelo--grid-pulse .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) / -2)}
+.wavelo--grid-pulse .wavelo__part{width:100%;height:100%;border-radius:var(--wavelo-radius,24%);background:currentColor;box-shadow:0 0 calc(var(--wavelo-size,2.5rem) / 6) color-mix(in srgb,currentColor 35%,transparent);animation:wavelo-pulse var(--wavelo-duration,1.2s) cubic-bezier(.4,0,.2,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--grid-pulse .wavelo__part:nth-child(1){animation-delay:0s}
+.wavelo--grid-pulse .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1.2s) * -.25)}
+.wavelo--grid-pulse .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1.2s) * -.5)}
+.wavelo--grid-pulse .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1.2s) * -.75)}
 /* A model at work: one orb breathing, with a halo leaving it at half the cycle so
    the two read as a pulse rather than a spinner. */
 .wavelo--thinking-glow .wavelo__part{width:44%;height:44%;animation:wavelo-think calc(var(--wavelo-duration,1s) * 1.8) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}

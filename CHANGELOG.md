@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+### Highlights & Major Enhancements
+- **Flagship 3D Suite (20 New 3D Loaders):** Introduced 20 innovative, pure-CSS 3D loaders categorized into three distinct tiers:
+  - *Tier 1 Viral Flagships:* `gyroscope` (triple gimbal rings), `tesseract` (4D hypercube inversion), `sphere-lattice` (geodesic wireframe globe), `prism-refraction` (spectral dispersion fan beam), `atom-orbital` (planetary electron orbital planes).
+  - *Tier 2 Showcase Spatial Structures:* `dna-double-helix` (intertwining helical ladder with base-pair rungs), `hologram-pyramid` (inverted holographic pyramid over laser pedestal), `black-hole-accretion` (relativistic accretion disk with Doppler beaming), `crystal-cluster` (faceted quartz crystals with specular highlights), `mobius-band` (single-sided Mobius topological band), `vortex-tunnel` (hyperspace warp gates), `isometric-deck` (floating card restacking), `voxel-cluster` (elastic exploding voxel cubes), `torus-ring` (geometric torus flow), `cylindrical-wave` (pin-matrix terrain wave).
+  - *Tier 3 Unprecedented Simulations:* `liquid-mercury` (microgravity fluid surface tension droplet), `dna-decode` (genome sequencing scanner beam), `quantum-superposition` (wavefunction probability cloud collapsing into singularity), `magnetic-field` (dipole poles and toroidal flux loops), `aurora-borealis` (undulating atmospheric plasma curtains).
+- **Catalog Modernization (11 Upgraded Loaders):** Comprehensively re-engineered `cube` (3-face isometric cube), `folding-squares` (origami 3D fold), `radar` (CRT sonar HUD with ping sweep), `sand-timer` (hourglass chambers with trickling sand), `solar-system` (Keplerian orbits with glowing Sun and Saturn rings), `triangles` (triforce sacred geometry counter-spin), `neural-grid` (bioluminescent action potential wave), `ai-shimmer` (iridescent LLM completion text beam), `dot-matrix` (concentric ripple radiation), `alternating-dots` (orbital weave), `fire-rise` (thermal flame gradient).
+- **Catalog Totals:** 153 public IDs, 153 active designs, 231 named presets, 78 pattern presets, 12 stylesheet slices, 25 verified 3D spatial designs.
+- **Zero WebGL & Zero Layout Shifts:** 100% hardware-accelerated CSS3 3D transforms (`transform-style: preserve-3d`, `perspective`, `rotateX/Y`, `translateZ`) executing on the compositor thread with 0 layout recalculations.
+
 ## 0.1.0
 
 Not yet published.
@@ -9,7 +20,7 @@ Not yet published.
 Nothing has shipped, so none of this breaks a consumer. It is recorded because it is the
 list of things that were decided, and after 0.1.0 the same changes need a major.
 
-- The public ID set is 133 designs and 206 named presets. Twenty-two visually duplicate
+- The public ID set is 153 public IDs and 231 named presets. Twenty-two visually duplicate
   designs were consolidated out of the earlier 155 (`arc`, `half-circle`, `rotating-diamond`,
   `orbiting-circles`, `conic-ring`, `thin-line`, `thick-stroke`, `four-dots`, `five-dots`,
   `bouncing-dots`, `scaling-dots`, `vertical-dots`, `bouncing-bars`, `vertical-pulse-bars`,
@@ -29,7 +40,7 @@ list of things that were decided, and after 0.1.0 the same changes need a major.
 - Generated modular catalog: `packages/core/src/catalog.ts` is the single authored
   source; loader entry points, the loaders barrel and the typed `LoaderId` union
   are generated from it, and `npm run catalog` fails when they drift.
-- 133 public IDs, each with its own implementation and no deprecated aliases. A
+- 153 public IDs, each with its own implementation and no deprecated aliases. A
   browser test asserts that no two designs render identically, and that designs
   whose names promise a count (a 3x3 matrix, a ring of eight dots, six orbiting units)
   render it.

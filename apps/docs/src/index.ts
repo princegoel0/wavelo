@@ -202,36 +202,36 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-light .mock-row .status-text { color: #475569; }
 
 /* Studio Right: Controls Column */
-.controls-column { display: flex; flex-direction: column; gap: 1.1rem; }
+.controls-column { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
 .framework-tab-bar { display: flex; gap: 0.3rem; flex-wrap: wrap; background: var(--bg-subtle); padding: 0.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); }
 .fw-tab { flex: 1; min-width: 65px; background: transparent; border: none; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); padding: 0.4rem 0.5rem; border-radius: var(--radius-sm); cursor: pointer; text-align: center; transition: all 0.15s; }
 .fw-tab.active { background: var(--accent); color: #ffffff; }
 .fw-tab:hover:not(.active) { color: var(--text-main); background: var(--border-subtle); }
-.field-grid { display: grid; gap: 0.75rem; }
-.ctrl-row { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 3.5rem; align-items: center; gap: 0.75rem; font-size: 0.82rem; }
+.field-grid { display: grid; gap: 0.75rem; min-width: 0; }
+.ctrl-row { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 3.5rem; align-items: center; gap: 0.75rem; font-size: 0.82rem; min-width: 0; }
 .ctrl-row label { font-weight: 600; color: var(--text-muted); }
 .ctrl-row output { font-family: var(--font-mono); font-size: 0.78rem; text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-select, input[type=range], input[type=search] { width: 100%; }
+select, input[type=range], input[type=search] { width: 100%; box-sizing: border-box; }
 select { padding: 0.5rem 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-main); font-size: 0.82rem; font-family: inherit; }
 select:focus, input:focus { outline: none; border-color: var(--border-focus); }
 
 /* Range Slider Styling */
-input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; height: 18px; }
+input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; height: 18px; margin: 0; }
 input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: var(--bg-subtle); border: 1px solid var(--border-subtle); }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.3); margin-top: -6px; transition: transform 0.15s, box-shadow 0.15s; }
 input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--accent-subtle); }
 
 /* Preset Segmented Buttons */
-.preset-segments { display: flex; gap: 0.35rem; }
-.preset-btn { flex: 1; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.preset-segments { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.preset-btn { flex: 1; min-width: 0; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
 .preset-btn.active { color: #ffffff; background: var(--accent); border-color: var(--accent); }
 .preset-btn:hover:not(.active) { color: var(--text-main); border-color: var(--border-focus); }
 
 /* Color Palette Swatches & Integrated Picker */
 .swatches { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.color-picker-wrap { position: relative; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.color-picker-wrap { position: relative; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.2); overflow: clip; }
 .color-picker-wrap:hover { transform: scale(1.1); }
-.color-picker-wrap input[type=color] { position: absolute; inset: -4px; width: 200%; height: 200%; opacity: 0; cursor: pointer; }
+.color-picker-wrap input[type=color] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .swatch, .swatch-sec { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
 .swatch:hover, .swatch-sec:hover { transform: scale(1.15); }
 .swatch.active, .swatch-sec.active { border-color: #ffffff; box-shadow: 0 0 0 2px var(--accent); }
@@ -244,6 +244,13 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
 .switch-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: transform 0.2s; }
 .switch-label input[type=checkbox]:checked + .switch-toggle { background: var(--accent); border-color: var(--accent); }
 .switch-label input[type=checkbox]:checked + .switch-toggle::after { transform: translateX(14px); }
+
+@media (max-width: 520px) {
+  .ctrl-row { grid-template-columns: 1fr auto; gap: 0.4rem; }
+  .ctrl-row label { grid-column: 1 / 2; }
+  .ctrl-row output { grid-column: 2 / 3; }
+  .ctrl-row select, .ctrl-row input[type=range], .ctrl-row .preset-segments, .ctrl-row .swatches { grid-column: 1 / -1; width: 100%; }
+}
 
 /* Code Box */
 .code-panel { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
@@ -272,9 +279,12 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 .card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; position: relative; box-shadow: var(--shadow-card); transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; content-visibility: auto; contain-intrinsic-size: 240px 240px; }
 .card[hidden] { display: none !important; }
 .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--accent); }
-.preview { height: 7.5rem; display: grid; place-items: center; overflow: hidden; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(255, 255, 255, 0.02)); border-bottom: 1px solid var(--border-card); }
+.preview { height: 8.5rem; display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(255, 255, 255, 0.02)); border-bottom: 1px solid var(--border-card); }
 .preview .wavelo--fullscreen { position: relative; inset: auto; width: 100%; height: 100%; min-width: 0; min-height: 0; }
 .preview .wavelo--progress-top { position: relative; top: auto; left: auto; width: 100%; }
+.preview .wavelo--skeleton,
+.preview .wavelo--page-skeleton,
+.preview .wavelo--image-placeholder { transform: scale(0.5); transform-origin: center center; flex-shrink: 0; }
 
 .meta-wrap { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
 .meta-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
@@ -539,11 +549,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 <div class="page-wrapper">
   <!-- Hero Section -->
   <section class="hero" aria-label="Introduction">
-    <div class="hero-pill">✨ 133 Production-Ready Loaders · Zero Runtime Dependencies</div>
+    <div class="hero-pill">✨ 153 Production-Ready Loaders · Zero Runtime Dependencies</div>
     <h1 class="hero-title">Wavelo — Motion made simple.</h1>
     <p class="hero-subtitle">Lightweight, accessible, framework-agnostic loading states and skeletons for modern web apps.</p>
     <div class="hero-badges">
-      <span class="hero-badge-item">⚡ 133+ Loaders</span>
+      <span class="hero-badge-item">⚡ 153+ Loaders</span>
       <span class="hero-badge-item">📦 Zero Dependencies</span>
       <span class="hero-badge-item">🛡️ SSR Safe</span>
       <span class="hero-badge-item">🔷 Full TypeScript</span>
@@ -775,11 +785,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     </div>
   </section>
 
-  <!-- Showcase Gallery (133 Loaders) -->
+  <!-- Showcase Gallery (153 Loaders) -->
   <main id="showcase" class="showcase-section" aria-label="Component Showcase">
     <div class="section-headline">
       <h2>Component Showcase</h2>
-      <p>Explore all 133 distinct loader designs across 8 categories with live GPU-accelerated rendering.</p>
+      <p>Explore all 153 distinct loader designs across 8 categories with live GPU-accelerated rendering.</p>
     </div>
 
     <!-- Sticky Top Filter Bar -->
@@ -787,23 +797,23 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
       <div class="filter-row-top">
         <div class="search-wrapper">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="search" type="search" placeholder="Search 133 loaders by name or category..." aria-label="Search loaders">
+          <input id="search" type="search" placeholder="Search 153 loaders by name or category..." aria-label="Search loaders">
         </div>
         <div class="canvas-modes" aria-label="Filter by dimension">
           <button type="button" class="mode-btn active dim-tab" data-dim="">All</button>
           <button type="button" class="mode-btn dim-tab" data-dim="2d">2D</button>
           <button type="button" class="mode-btn dim-tab" data-dim="3d">3D</button>
         </div>
-        <span id="filter-count" class="filter-count">Showing 133 loaders</span>
+        <span id="filter-count" class="filter-count">Showing 153 loaders</span>
       </div>
 
       <div class="category-tabs" aria-label="Filter by category">
-        <button type="button" class="cat-tab active" data-cat="">All (133)</button>
+        <button type="button" class="cat-tab active" data-cat="">All (153)</button>
         <button type="button" class="cat-tab" data-cat="spinner">Spinners (17)</button>
         <button type="button" class="cat-tab" data-cat="dots">Dots (17)</button>
         <button type="button" class="cat-tab" data-cat="bars">Bars (13)</button>
         <button type="button" class="cat-tab" data-cat="progress">Progress (19)</button>
-        <button type="button" class="cat-tab" data-cat="creative">Creative (18)</button>
+        <button type="button" class="cat-tab" data-cat="creative">Creative (38)</button>
         <button type="button" class="cat-tab" data-cat="ai">AI & Stream (6)</button>
         <button type="button" class="cat-tab" data-cat="skeleton">Skeletons (26)</button>
         <button type="button" class="cat-tab" data-cat="application">App States (17)</button>
@@ -1189,7 +1199,7 @@ function paint() {
   const stageDesignId = document.querySelector('#stage-design-id');
   if (stageDesignId) stageDesignId.textContent = "type: '" + id + "'";
   if (stageSpecBadge) {
-    let specText = info.dimension.toUpperCase();
+    let specText = info.dimension === '3d' ? '3D (Drag to Orbit)' : info.dimension.toUpperCase();
     if (id === 'constellation' && variantSelect) {
       specText += ' · ' + variantSelect.options[variantSelect.selectedIndex].text.split(' (')[0];
     } else if (STATEFUL_DESIGNS.has(id) && stateSelect) {
@@ -1393,6 +1403,58 @@ document.querySelectorAll('.canvas-modes [data-ctx]').forEach((btn) => {
     paint();
   });
 });
+
+// 3D Interactive Stage Orbit & Tilt
+const stageWrapper = document.querySelector('.stage-wrapper');
+if (stageWrapper) {
+  let isPointerDown = false;
+  let startX = 0;
+  let startY = 0;
+  let currentTiltX = 0;
+  let currentTiltY = 0;
+
+  stageWrapper.addEventListener('pointerdown', (e) => {
+    const currentId = design.value;
+    const currentInfo = loaderData.find((l) => l.id === currentId);
+    if (!currentInfo || currentInfo.dimension !== '3d') return;
+    isPointerDown = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    try { stageWrapper.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+
+  stageWrapper.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    currentTiltY = Math.max(-45, Math.min(45, currentTiltY + dx * 0.4));
+    currentTiltX = Math.max(-45, Math.min(45, currentTiltX - dy * 0.4));
+    startX = e.clientX;
+    startY = e.clientY;
+    const loaderEl = stage.querySelector('.wavelo');
+    if (loaderEl) {
+      loaderEl.style.transform = 'perspective(500px) rotateX(' + currentTiltX + 'deg) rotateY(' + currentTiltY + 'deg)';
+    }
+  });
+
+  const resetTilt = (e) => {
+    if (isPointerDown) {
+      isPointerDown = false;
+      try { stageWrapper.releasePointerCapture(e.pointerId); } catch (_) {}
+      const loaderEl = stage.querySelector('.wavelo');
+      if (loaderEl) {
+        loaderEl.style.transition = 'transform 0.4s ease-out';
+        loaderEl.style.transform = '';
+        setTimeout(() => { if (loaderEl) loaderEl.style.transition = ''; }, 400);
+      }
+      currentTiltX = 0;
+      currentTiltY = 0;
+    }
+  };
+
+  stageWrapper.addEventListener('pointerup', resetTilt);
+  stageWrapper.addEventListener('pointercancel', resetTilt);
+}
 
 // Copy code button
 document.querySelector('#copy').addEventListener('click', async () => {
@@ -1783,6 +1845,12 @@ function openApiModal(id) {
     content += '<div style="margin-top:0.35rem"><h4 style="font-size:0.82rem;font-weight:700;margin:0 0 0.4rem;color:var(--text-main)">Async Operation Lifecycle Example:</h4>';
     content += '<pre class="modal-code-sample">// React state transition example\\nconst [saveState, setSaveState] = useState&lt;\\x27loading\\x27 | \\x27success\\x27 | \\x27error\\x27 | \\x27idle\\x27&gt;(\\x27idle\\x27);\\n\\nasync function handleSave() {\\n  setSaveState(\\x27loading\\x27);\\n  try {\\n    await api.saveDocument();\\n    setSaveState(\\x27success\\x27);\\n  } catch (err) {\\n    setSaveState(\\x27error\\x27);\\n  }\\n}\\n\\nreturn &lt;Loader type="' + id + '" data-wavelo-state={saveState} size={32} /&gt;;</pre>';
     content += '</div></div>';
+  } else if (info.dimension === '3d') {
+    content += '<div class="modal-doc-box">';
+    content += '<div class="modal-doc-title"><span>🧊 Spatial 3D Volumetric Motion</span><span class="badge badge-dim">Hardware Accelerated</span></div>';
+    content += '<p class="modal-doc-desc">This component operates in true 3D spatial coordinate space using <code>transform-style: preserve-3d</code>, <code>perspective</code>, and <code>translateZ</code> / <code>rotateX/Y</code> keyframes. Animations execute entirely on the browser GPU compositor thread with 0 layout recalculations.</p>';
+    content += '<pre class="modal-code-sample">// React JSX\\nimport { Loader } from \\x27@wavelo/react\\x27;\\n\\n&lt;Loader type="' + id + '" size={64} color="#38bdf8" secondaryColor="#ec4899" /&gt;</pre>';
+    content += '</div>';
   }
 
   content += '<div><h3 style="margin:1rem 0 .5rem;font-size:.92rem;font-weight:700">Supported Configuration Options</h3><table class="modal-table"><thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>';
@@ -1855,7 +1923,7 @@ function filter() {
       c.style.display = 'none';
     }
   });
-  filterCount.textContent = 'Showing ' + visible + ' of 133 loaders';
+  filterCount.textContent = 'Showing ' + visible + ' of ' + cards.length + ' loaders';
 }
 
 search.addEventListener('input', filter);

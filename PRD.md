@@ -222,13 +222,13 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs (Shipped: **133 active designs** across 8 functional categories).
+- At least 60 distinct animation designs (Shipped: **153 active designs** across 8 functional categories, including 25 authentic 3D designs).
 - At least 20 skeleton presets or primitives (Shipped: 26 skeleton designs).
 - At least 10 progress-indicator designs or variants (Shipped: 19 progress designs).
 - At least 10 application-level loading patterns (Shipped: 17 application designs).
 - Dedicated AI/streaming loading lane (Shipped: 6 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **206 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Shipped: **231 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -467,17 +467,534 @@ Provide dedicated visual indicators for modern generative AI interfaces, model i
 
 These loaders must convey real-time generative responsiveness with compositor-pure motion.
 
-## 5.11 Dimensional Taxonomy (2D & 3D Loaders)
+## 5.11 Dimensional Taxonomy & Catalog Modernization Strategy
 
-In addition to functional UX categories, the catalog is classified across spatial dimensionality:
+In addition to functional UX categories, the catalog is classified across spatial dimensionality, paired with an active modernization review of existing designs and an ambitious 3D motion expansion roadmap.
 
-- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 128 of the 133 designs are 2D.
-- **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. Five designs: `cube`, `folding-squares`, `helix`, `ellipse` and `rotating-square`. Optional future WebGL/Canvas rendering slices stay in this class.
+### 5.11.1 Spatial Dimensionality Taxonomy (2D & 3D Loaders)
+
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 128 of the 153 designs are 2D.
+- **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 25 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
 - **Dimensionality Requirements:**
   1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
-  2. The label is derived, not hand-asserted: a unit test reads each design's own rules and keyframes and requires the label to match the transforms they actually animate, and it pins the 3D set so a new or re-labelled design fails until the gallery filter copy and this section follow.
-  3. 3D loaders must not compromise performance: they must adhere to the 0 layout recalculations rule and use GPU-accelerated compositing. Measured by `npm run audit:layout`, 131 of the 133 designs cost no layout per frame; the two that do — `progress-scroll` and `multi-wave`, both 2D — are individually accounted for in `docs/PERFORMANCE.md`.
+  2. The label is derived, not hand-asserted: a unit test reads each design's own rules and keyframes and requires the label to match the transforms they actually animate, and it pins the 3D set above so a new or re-labelled design fails until the gallery filter copy and this section follow. The list is alphabetical for exactly that reason — it can be diffed against the assertion in `tests/core.test.mjs`.
+  3. 3D loaders must not compromise performance: they must adhere to the 0 layout recalculations rule and use GPU-accelerated compositing. `npm run audit:layout` measures every design and fails on any that costs a layout without a recorded reason; the exemptions on record are `progress-scroll` and `multi-wave`, both 2D, each accounted for in `docs/PERFORMANCE.md`. The audit prints the current count per run rather than this section carrying one.
   4. The documentation gallery must provide a Dimension filter chip (`All dimensions`, `2D`, `3D`) alongside category filters.
+
+### 5.11.2 Catalog Modernization Review (User Perspective & Visual Delight)
+
+A thorough UX, visual, and kinesthetic audit across the active catalog identifies several existing loaders that, while functionally operational, originally appeared visually flat, simplistic, or lacking in physical realism. Modern frontend developers and design-system engineers demand loading indicators that communicate craft, visual polish, and organic motion dynamics (similar to micro-interactions found in Apple, Stripe, Linear, and Vercel products).
+
+**Scope of this review:** it was written against the 133-design catalog and its seven sections cover **107 designs** — Spinners 17, Dots 17, Bars 13, Creative 18, Progress 19, Application 17, AI 6. The 26 skeleton layouts are not reviewed here, and neither are the 20 designs added in 0.2.0; the per-design census of all 153, including both, is [`docs/COMPREHENSIVE_DESIGN_AUDIT_REPORT.md`](COMPREHENSIVE_DESIGN_AUDIT_REPORT.md). The counts below are the designs this section actually evaluates, not the category totals, which are in §5.10.
+
+### 🔴 Priority Key
+- 🔴 **Must fix** — obvious visual problem or physics mismatch
+- 🟡 **Should improve** — currently functional but lacking polish
+- 🟢 **Nice to have** — already solid, could be elevated further
+
+---
+
+### A. Spinners (17 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `ring` | ✅ Clean, standard. | Add a subtle luminous **comet-trail gradient** along the open arc — the gap reads as motion rather than just "missing border." | 🟢 |
+| `circular` | ✅ Dual-ring works well. | Counter-rotate the secondary ring for **yin-yang tension** — currently both arcs spin the same direction, reducing visual interest. | 🟡 |
+| `dual-ring` | Slightly redundant with `circular`. | Differentiate with **morphing stroke-dashoffset** — instead of two full rings, have them dynamically shrink and grow arcs like a closing iris. | 🟡 |
+| `multi-arc` | ✅ Good layered arcs. | Add **progressive scale fade** — each arc slightly smaller + lower opacity so the depth reads as a stack receding into space. | 🟢 |
+| `dotted-circle` | A single bright dot travels around the ring. | The "wave of brightness" should **cascade fully around the circle** instead of having one peak. Use multiple simultaneous pulses. | 🟡 |
+| `segmented-ring` | Dashed border is the whole trick. | Replace the CSS `border-style: dashed` with **explicit arc segments** using `stroke-dasharray` on SVG — gives sharper, pixel-perfect segment gaps with controllable count. | 🟡 |
+| `ellipse` | 3D tilted hoop — good concept. | Add a faint **orbital track ring** behind the hoop (semi-transparent) so users can see the tilted path the hoop follows — makes the 3D depth read immediately. | 🟢 |
+| `rotating-square` | Tumbles on its diagonal axis — distinctive. | Add **face lighting**: the square face darkens when edge-on (squished) and brightens when face-on — feels like a card catching light. | 🟡 |
+| `gradient-ring` | Gradient carved by a mask ring — correct. | **Add animation to the gradient angle** (`@property` + `conic-gradient`) so the color bands themselves rotate — gives a prismatic sweep rather than just a ring spinning. | 🟡 |
+| `neon-ring` | Ring + pulsing glow. | The glow pulse and the spin are independent. **Sync the glow peak** to align with the bright arc end so the luminance surge feels intentional, not accidental. | 🟡 |
+| `rubber-band` | Elastic pluck deformation — good. | Add a **color shift during peak stretch** — the band warms to the `secondaryColor` when fully stretched and snaps back to `color` at rest (just opacity + color-mix transition on the border). | 🟢 |
+| `snake` | 5-segment perimeter chase — excellent. | The head's two-dot "eyes" are tiny. Make them **flash/blink** using a micro-pulse animation so the snake reads as alive even at small sizes. | 🟢 |
+| `clock-spinner` | Dial face + two hands — good. | The four hour-markers are just gradient dots. Replace them with **actual tick marks** (short radial lines via `linear-gradient` at four corners) for authentic clock geometry. | 🟡 |
+| `monochrome` | Half-opaque conic gradient — too simple. | Transform into a **fluid mercury drop** — the dark half sweeps faster through the bottom half and slows at the top, simulating viscous fluid inertia. | 🟡 |
+| `radar` | Simple conic sweep. | 🔴 Most important upgrade. Needs **CRT phosphor decay** — the swept region leaves a decaying luminous afterglow trail. Currently reads as a plain spinner with a gradient. | 🔴 |
+| `spiral` | Multi-arc conic — static. | The "spiral" should actually **tighten and loosen** — animate the conic stops so the arcs converge inward then expand outward, creating a breathing vortex. | 🟡 |
+| `svg-star` | Rotating star shape. | Add a **scale pulse** synced to the rotation so the star pulses large at 4 cardinal points and small at 45° — like a twinkling star with radial symmetry. | 🟡 |
+
+---
+
+### B. Dots & Particles (17 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `three-dots` | Standard, clean. | **Height variance** — the middle dot bounces higher than the outer ones (apex 60% vs 40%) for a more organic, wave-like appearance rather than mechanical uniformity. | 🟡 |
+| `pulsing-dots` | Scale pulse in place. | Add **color depth** — each dot warms from `color` at its smallest to `secondaryColor` at its largest, making the pulse feel like a heartbeat rather than just scaling. | 🟢 |
+| `fading-dots` | Opacity wave. | Combine opacity fade with a **micro-scale reduction** — dots should shrink by 15% as they fade, like particles dissolving rather than just dimming. | 🟢 |
+| `dot-wave` | 5 circular dots undulating — good. | Add **depth shading** — the dot at the crest of the sine wave (at peak height) lightens to `secondaryColor`, the dot at the trough darkens. Creates an illusion of a physical wave catching light. | 🟡 |
+| `dot-matrix` | Uniform grid pulse. | Implement a **ripple origin** — pulses radiate outward from the center of the grid in expanding concentric rings, like a stone dropped in water. Currently all nodes pulse identically. | 🔴 |
+| `grid-pulse` | Similar to dot-matrix. | Differentiate: make this a **scanning line** — a bright horizontal row sweeps from top to bottom through the matrix (like a progress scanner). Makes it distinct from dot-matrix. | 🟡 |
+| `alternating-dots` | Odd/even dots counter-phase. | Add **horizontal travel** — the dots should physically move apart and together, not just change in opacity/scale. The "alternating" motion should be spatial, not just chromatic. | 🔴 |
+| `expanding-dot` | Single dot expanding. | Add **concentric ring echoes** — as the dot expands, it leaves a fading ring at each pulse peak, like sonar echoes. Currently just a single scale animation. | 🟡 |
+| `ripple-dot` | ✅ Already good. | Ensure the ring echoes **stagger** rather than all emanating simultaneously — sequential launch creates a more naturalistic water-drop feel. | 🟢 |
+| `staggered-dots` | ✅ Good phase stagger. | Add a **color cascade** — each dot progressively shifts hue across the group (`color-mix` interpolation) so the wave isn't just kinetic but chromatic. | 🟢 |
+| `magnetic-dots` | Dots attract/repel. | The paths should be more **organic and erratic** — currently too uniform. Add individual `animation-timing-function` overrides per dot for natural irregularity. | 🟡 |
+| `pendulum` | Pivot + rod + bob — excellent. | Add a **cast shadow** from the bob onto the "floor" (bottom edge) that swings with the pendulum, giving the design physical grounding. | 🟢 |
+| `constellation` | Star patterns + lines — excellent. | The connecting lines should **animate sequentially** — drawing themselves link by link rather than appearing all at once, like a starmap being traced. | 🟡 |
+| `bubble-rise` | 8 buoyant bubbles — great. | Bubbles should **accelerate toward the top** (realistic buoyancy physics: slower at the bottom, faster at the surface). Currently they use linear timing. | 🟡 |
+| `fireflies` | 10 bioluminescent motes. | Add **pulse synchronization events** — occasionally (every 3s) 3-4 fireflies should flare simultaneously before diverging, like real Photinus pyralis synchronous flashing. | 🟢 |
+| `solar-system` | 5 planets orbiting flat. | 🔴 The orbital plane should be **tilted at 60°** in 3D space. Currently purely flat 2D. Add Keplerian speed variation (faster closer, slower farther). See §5.11.2 spec. | 🔴 |
+| `rotating-dots` | 5 dots orbiting in formation. | Add **size depth perspective** — dots at the bottom of the orbit (notionally "closer") are larger; dots at the top are smaller. Creates illusion of a circular 3D orbit. | 🟡 |
+
+---
+
+### C. Bars & Waveforms (13 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `equalizer` | Classic bars bouncing. | Add **frequency color bands** — the lowest bars are bass-warm (`color`), mid bars blend toward neutral, the tallest peaks flare to `secondaryColor`. Feels like a real EQ visualization. | 🟡 |
+| `horizontal-pulse-bars` | Horizontal scale pulse. | Stagger the bars along a **traveling sine envelope** (rather than a flat bounce), giving a sinewave-on-bars composite effect. | 🟡 |
+| `fading-bars` | Opacity fade. | Combine opacity fade with a **height descent** — bars that fade are also slowly deflating (scaleY reduces as opacity reduces). Much more physicalistic. | 🟡 |
+| `growing-bars` | Sequential bar growth. | Add a **spring overshoot** on the max-height arrival — the bar overshoots 15% then snaps back. One `cubic-bezier(0.34, 1.56, 0.64, 1)` timing on scaleY achieves this. | 🟢 |
+| `alternating-bars` | Every-other bar counter-phase. | Make bars **cross the center line** — instead of `scaleY(0.2)` at minimum, they compress and immediately flip to grow from the opposite side. Like an audio peak-flip visualization. | 🟡 |
+| `piano-keys` | Keys pressing down. | Add **individual key release spring** — after each key presses (scaleY shrinks), it bounces back with a slight overshoot before settling. Real piano keys do this. | 🟡 |
+| `fire-rise` | Flame bars rising. | Add a **color gradient from base to tip**: each bar grades from deep orange at the base to pale yellow/white at the top, using `linear-gradient` on `scaleY` — matches real flame thermodynamics. | 🔴 |
+| `heartbeat` | Clinical ECG waveform — excellent. | Add a **scanning cursor line** — a faint vertical line sweeps left-to-right across the monitor width in sync with the waveform, like a real oscilloscope CRT beam. | 🟡 |
+| `breathing` | Slow scale oscillation. | The breathing should follow the **human respiratory curve**: rapid sharp inhalation, long plateau hold, controlled slow exhalation. Currently uniform sinusoidal which feels robotic. | 🟡 |
+| `moving-stripe` | Diagonal stripe translation. | Add **depth chevron** — alternate strips in slightly different shades (alternating `color` / `color-mix(color 80%, white)`) for a 3D depth-banding optical illusion. | 🟢 |
+| `traveling-highlight` | Luminous beam sweep. | Add a **reflected highlight** on the opposite side of the track at 30% opacity, mimicking how a physical glossy track surface would reflect the passing beam from below. | 🟢 |
+| `oscillating-line` | 64-stop sinusoidal waveform. | The waveform should **modulate in amplitude** — the wave height breathes from 20% to 80% of the band height over a 3-second envelope while the frequency remains constant. | 🟡 |
+| `multi-wave` | Layered wave interference. | Add a **third interfering wave** at `secondaryColor` with a slightly different frequency. Two-wave interference is nice; three-wave creates genuine, complex Lissajous beauty. | 🟡 |
+
+---
+
+### D. Creative & Geometric (18 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `ripple-circles` | Expanding concentric rings. | Add **chromatic dispersion** — the innermost ring is `color`, the next is `secondaryColor`, and the outermost is a lighter tint, like a prism splitting light into concentric colors. | 🟡 |
+| `morphing-shapes` | Shape border-radius morphing. | Currently only morphs corner radii. Add **scale breathing** (size pulses 10% in sync with the morphing) so the shape feels like it's growing and contracting as it changes identity. | 🟡 |
+| `infinity` | Lemniscate curve + 2 orbiting dots. | The dots should **leave a fading motion trail** — a short comet tail (3-5 ghost dot copies at decreasing opacity) so the path of the figure-8 is visible and continuous. | 🟡 |
+| `helix` | 3D DNA double helix — good. | Add a **base-pair "flash" highlight** when the front strand passes closest to the viewer — a brief luminance peak on the nearest-point rung makes the rotation read as 3D immediately. | 🟡 |
+| `cube` | A real cube: three faces placed with `rotateX`/`rotateY` and `translateZ`, `transform-style: preserve-3d` on the container, per-face shading through `color-mix`, and a soft ground shadow. Rebuilt since this row was written — the flat square it described no longer exists, and the derived-label test lists it as `3d`. | Optional: a specular sweep across the top face as it turns would sell the light source. | 🟢 |
+| `polygon` | Rotating pentagon. | Add a **border pulse** — the polygon's border-width breathes from 2px to 8px as it rotates, making the shape feel more kinetically alive rather than just spinning. | 🟢 |
+| `triangles` | Each triangle orbits *and* spins on its own axis: `wavelo-triangle-orbit` carries `rotate(var(--a)) translateY(…) rotate(-720deg)`, so the counter-rotation this row asked for is shipped, with a `--a` offset of 120° per part and staggered negative delays. | Optional: vary the spin rate per triangle rather than only its phase, so the three are not perfectly metronomic. | 🟢 |
+| `folding-squares` | Four quadrants, each with its own animation, on a container that sets `perspective` and `transform-style: preserve-3d`; the fold keyframes open at `rotateZ(45deg)` and close with `perspective(250px) rotateX(180deg)` / `rotateY(…)`. The flat whole-element `rotateY(180deg)` this row described is gone. | Optional: share one crease line between opposite quadrants so the fold reads as a single origami sheet rather than four independent flaps. | 🟡 |
+| `nested-squares` | Concentric squares scaling. | Add **rotation offset per ring** — each nested square rotates at a slightly different speed, creating a mesmerizing **gyro parallax** between the square rings. | 🟡 |
+| `concentric-pulse` | Pulsing rings. | The rings should pulse **in sequence inward** (outermost pulses first, then the inner rings cascade inward one by one), like a radar ping propagating inward. | 🟡 |
+| `trip-orbit` | 3 arc spinners on one ring. | Give each arc a **unique color** (`color`, `secondaryColor`, and an auto-derived third via `hue-rotate(120deg)`) — three-arc RGB triad is visually stunning. | 🟡 |
+| `liquid-blob` | Organic squircle morphing. | Add a **surface tension ripple** — when the blob transitions between two corner-radius states, a tiny circular ripple pulse (`:before` pseudo) emanates from the morph pivot point. | 🟢 |
+| `sand-timer` | Glass silhouette with animated sand. | 🔴 Add **particle stream** — the sand between upper and lower chambers should appear as a thin animated stream (1-2px column animated via `scaleY`) rather than just the chambers scaling. | 🔴 |
+| `eye-blink` | Almond eye with iris and lid. | Add **micro-saccade** — the iris should drift slightly left/right (small `translateX` motion) between blinks, like an eye glancing around rather than staring straight ahead. | 🟡 |
+| `metronome` | Swinging arm. | Add a **tick sound visualization** — at the extreme left and right swing positions, a brief bright flash (opacity spike on the arm) to represent the audible "tick" of a real metronome. | 🟢 |
+| `spiral` | Multi-band conic gradient. | The arms should **tighten inward** over time (like a contracting galaxy) before snapping back out — periodic tighten/release cycle rather than continuous uniform spin. | 🟡 |
+| `radar` | Simple conic sweep. | 🔴 Full redesign per §5.11.2 — concentric range rings, HUD crosshairs, phosphor persistence trail, acoustic ping blips. The current design is misleadingly simple for its name. | 🔴 |
+| `particle-orbit` | Small dots on orbital paths. | Give particles **size variation by orbital position** — particles appear larger at orbital perigee (closest approach to the center) and smaller at apogee, like Keplerian objects. | 🟡 |
+
+---
+
+### E. Progress Indicators (19 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `progress-bar` | Standard left-to-right fill. | Add **fill shimmer** — a subtle bright traveling highlight inside the filled portion (like a glossy bar in iOS) makes the fill feel alive and dimensional. | 🟢 |
+| `progress-ring` | Stroke-dashoffset ring fill. | Add **breathing glow** on the active arc end — the leading edge of the arc glows and pulses as the value increases, like a live indicator catching light. | 🟡 |
+| `progress-top` | Thin NProgress-style top bar. | Add **easing variation** — the bar should slow down asymptotically near 95% when indeterminate (to fake organic perception) then snap to 100%. | 🟡 |
+| `progress-battery` | Battery chassis with fill. | Add **charging animation** — when the battery is not at 100%, a small moving "lightning bolt" or pulsing glow inside the active portion indicates active charging. | 🟡 |
+| `progress-half-ring` | Semicircular gauge arc. | Add **tick marks** at 25%, 50%, 75% positions around the semicircle arc so it reads as a real gauge/speedometer, not just a half-ring. | 🟡 |
+| `progress-wave-fill` | Liquid wave tank. | Add **realistic surface tension** — small ripples should form at the side edges of the tank where the wave meets the walls, like water in a physical container. | 🟢 |
+| `progress-count` | Number counting bar. | The count number should **animate with an odometer roll** — digits should scroll upward as they increment, not just swap instantly. | 🟡 |
+| `progress-dots-fill` | Dots filling a track. | Add **fill pop** — each dot that activates should momentarily scale up 130% then settle to 100%, like a bubble popping into place. | 🟡 |
+| `progress-ai-generate` | Wave fill for AI generation. | Add a **token-burst flash** at the wave crest — a brief bright sparkle every 0.5–1 second indicates individual token generation events. Pairs perfectly with LLM use cases. | 🟡 |
+| `progress-orbit-fill` | Orbiting dot showing fill level. | The orbit radius should **shrink as progress increases** — at 0% the dot orbits wide, at 100% it spirals tightly inward and vanishes, showing "task complete." | 🟡 |
+| `progress-steps` | Numbered milestone steps. | Add **connector animation** — the line connecting milestone steps should animate a **traveling fill** between completed and pending nodes rather than being static. | 🟡 |
+| `progress-skill` | Horizontal skill bar. | Add **label score tick** — a small vertical mark appears at the current `value` with the percentage as a pill tooltip above it, like a professional skills chart. | 🟢 |
+
+---
+
+### F. Application Patterns (17 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `button` | Spinner in a button. | **Add skeleton shimmer state** — when `data-wavelo-state="loading"`, the button label should fade out and be replaced by a skeleton shimmer (not just a spinner), for modern design patterns. | 🟡 |
+| `overlay` | Frosted scrim + spinner. | Add a **subtle animated gradient aurora** in the scrim background — a very slow, barely-visible drifting gradient behind the blur, making overlays feel premium instead of static. | 🟢 |
+| `fullscreen` | Viewport-wide frosted scrim. | Same as `overlay` — add **ambient particle drift** (very subtle floating specks) in the background scrim for a high-end application feel. | 🟢 |
+| `toast-loading` | Notification badge with spinner. | Add **progress drain** — optionally show a thin progress bar at the bottom of the toast that drains to show the auto-dismiss countdown. | 🟡 |
+| `drag-drop-pulse` | Breathing dashed border. | Add **corner highlight flare** — when the dashed border pulses, each corner briefly brightens with a glow, making the boundary feel interactive and touchable. | 🟡 |
+| `success-ring` | Spin → checkmark. | The checkmark should **draw itself** using `stroke-dashoffset` animation (svg tick path) rather than appearing as a static rotated border, which looks unpolished at some sizes. | 🟡 |
+| `error-shake` | Red badge shaking. | Add **damage flash** — at the peak of the shake, a brief full-opacity red flash (like a screen-edge damage indicator in games) makes the error state unmistakably urgent. | 🟢 |
+| `button-confirm` | Pill collapses into checkmark. | Add **color transition** — the pill changes from brand color to a success green during the collapse animation, providing semantic color feedback alongside the kinematic feedback. | 🟡 |
+| `offline-dot` | Network status dot. | Add **connection-attempt pulse ring** — when in `connecting` state, expanding rings should animate outward from the dot (like a WiFi/cellular search signal). | 🟡 |
+| `infinite-scroll` | 3 dots at the bottom. | Consider replacing with a **pull-to-refresh arc** variant — an arc that fills 0→100% as the user scrolls, then triggers the load bounce. Common modern UX pattern. | 🟢 |
+| `page-transition` | Thin bar at page top. | Add **shimmer highlight** moving along the bar's filled portion, and allow the bar to **glow** (soft box-shadow) in the `color` hue. | 🟢 |
+
+---
+
+### G. AI / Streaming (6 designs)
+
+| Design | Current State | Suggested Enhancement | Priority |
+|---|---|---|---|
+| `typing-dots` | 3 lifting dots. | Add **emoji-style expression variants** — via `data-wavelo-state`, the dots could shift from "thinking" (slow, thoughtful lift) to "excited" (rapid bouncing) to match AI emotional context. | 🟢 |
+| `thinking-glow` | Breathing orb with halo. | Add a **second pulsing halo ring** that breathes at a lower, slower frequency — the two desynchronized breathing rings create a meditative, alive quality. | 🟡 |
+| `stream-cursor` | Blinking block cursor. | Add **insertion-point flicker** — the cursor doesn't uniformly blink but occasionally flickers (shorter dark intervals) like a real terminal cursor in a live environment. | 🟢 |
+| `token-stream` | Left-to-right dash flow. | Add **variable dash velocity** — dashes should accelerate and decelerate in bursts to match real LLM token generation patterns (tokens arrive in irregular rhythm, not uniform flow). | 🟡 |
+| `ai-shimmer` | Tall card swept by light. | Add **multi-line shimmer stagger** — the bright band should sweep the first line, then the second line with a delay, then the third, simulating actual line-by-line text streaming. | 🔴 |
+| `neural-grid` | 3x3 grid diagonal pulse. | 🔴 Upgrade to **directional wave propagation** — pulses should travel along distinct paths (not just diagonal) with animated connecting "synapse" lines briefly lighting between adjacent nodes. | 🔴 |
+
+---
+
+### 5.11.3 Flagship & Experimental 3D Motion Road Map (Unique, Differentiating & Popular Pure-CSS 3D Loaders)
+
+To establish Wavelo as the most innovative, visually captivating, and popular loading library in the open-source ecosystem, Wavelo introduces a dedicated suite of **Zero-Runtime-Dependency Pure-CSS 3D Loaders**. 
+
+While other animation libraries require massive 500KB–2MB WebGL engines (Three.js, Babylon, Spline) that introduce canvas mounting latency, memory leaks, and mobile GPU battery drain, Wavelo harnesses the unexploited power of the **GPU Compositor with Pure CSS 3D transforms** (`transform-style: preserve-3d; perspective; rotate3d(); translateZ()`). This yields buttery 60/120fps motion with zero layout shifts, native dark/light theme adaptation, and tiny sub-2.5KB bundle sizes.
+
+The 3D portfolio is structured across three deliberate tiers:
+- **Tier 1 — Viral Flagships (Phase 4B/4C):** Highly original, shareable designs designed to capture developer mindshare on Twitter/X, GitHub trending, and Product Hunt.
+- **Tier 2 — Showcase Spatial Structures (Phase 4D):** Polished isometric and volumetric components for professional dashboards, fintech, cloud consoles, and SaaS.
+- **Tier 3 — Experimental Innovations (Phase 4E):** Unprecedented CSS-only physical and scientific simulations pushing the frontier of what web standards can animate without canvas.
+
+> All designs: Pure CSS 3D (`transform-style: preserve-3d`, `perspective`, `rotate3d`, `translateZ`)  
+> **Zero runtime dependencies** · **< 2.5 KB gzipped** · **0 layout recalculations**
+
+---
+
+### Tier 1 — Viral, "Stop the Scroll" Designs
+
+These are designed to be the "hero" of the library — designs users screenshot and share.
+
+---
+
+#### 3D-01: `gyroscope` — 3D Gimbal Precession Ring
+
+```
+Visual: Three concentric metallic rings rotating independently on X, Y, Z axes
+with a glowing suspended orb at the center.
+```
+
+**Why it's unique:** No CSS library has ever shipped a true 3D gimbal. This is immediately recognizable as "space tech" or "quantum computing" and will be shared by developers on social media.
+
+**Kinematics:**
+- Outer ring: `rotateX(360deg)` in 3.0s
+- Middle ring: `rotateY(360deg)` in 4.85s (golden ratio from outer)
+- Inner ring: `rotateZ(360deg)` in 7.85s (sum of outer + middle — Fibonacci)
+- Core sphere: subtle radial-gradient pulsing glow, no rotation
+
+**CSS Architecture:**
+```
+.wavelo--gyroscope              ← perspective context (600px)
+  .wavelo__part:nth-child(1)    ← outer ring (X-axis rotation)
+    .wavelo__part:nth-child(2)  ← middle ring (Y-axis rotation, nested)
+      .wavelo__part:nth-child(3)← inner ring (Z-axis rotation, nested)
+        .wavelo__part:nth-child(4) ← central glowing orb
+```
+
+**Target contexts:** Aerospace apps, quantum computing UIs, security/auth flows, scientific platforms.
+
+---
+
+#### 3D-02: `tesseract` — 4D Hypercube Perspective Projection
+
+```
+Visual: A wireframe inner cube that continuously unfolds through the 6 faces
+of an outer cube and becomes the outer cube — infinite dimensional topology.
+```
+
+**Why it's unique:** The tesseract is the most mathematically elegant shape in 4D geometry. Developers who studied math will immediately recognize it and share it. It looks impossible.
+
+**Kinematics:**
+- Inner cube corners animate outward to outer cube corners positions
+- Outer cube corners simultaneously animate inward
+- Net effect: a continuous morphing between two state where the inside becomes the outside
+- Simultaneous slow `rotateY` of the entire assembly for extra depth
+
+**CSS Architecture:**
+- 8 vertex dots positioned with `translate3d` keyframes
+- 12 connecting "edge" lines via thin `<span>` elements with 3D rotation
+- Continuous `rotateY(360deg)` on the parent for global tumble
+
+**Target contexts:** AI/ML platforms, 4D simulation software, advanced tech dashboards, Web3 tooling.
+
+---
+
+#### 3D-03: `sphere-lattice` — Volumetric Rotating Particle Globe
+
+```
+Visual: A 3D globe of latitude rings with glowing node intersections.
+Nodes on the viewer-facing side are large and bright; nodes behind
+are small and dim — perfect depth simulation without WebGL.
+```
+
+**Why it's unique:** The "spinning globe" is instantly recognizable and used everywhere in corporate dashboards. This pure CSS version will be stunning and people will not believe it's CSS.
+
+**Kinematics:**
+- 5 rings of latitude, each `rotateX(angle)` pitched differently
+- Parent rotates `rotateY(360deg)` continuously
+- Each node (`:before` pseudo-element at each ring) uses depth-based `scale()` and `opacity` driven by `@property`-registered CSS custom properties
+- Globe axial tilt: `rotateX(23.5deg)` (Earth-accurate)
+
+**CSS Architecture:**
+```css
+.wavelo--sphere-lattice {
+  transform-style: preserve-3d;
+  perspective: 400px;
+  animation: rotateY(360deg) 4s linear infinite;
+}
+/* 5 latitude rings, each pitched */
+.wavelo__part:nth-child(n) {
+  transform: rotateX(calc(n * 30deg - 60deg));
+  /* child nodes positioned around the ring */
+}
+```
+
+**Target contexts:** Global CDN ops, geolocation APIs, international finance, world-facing SaaS products.
+
+---
+
+#### 3D-04: `prism-refraction` — Optical Glass Crystal
+
+```
+Visual: A floating hexagonal glass prism slowly rotating in 3D.
+As it rotates, face luminance shifts between highlight and shadow,
+and a chromatic dispersion rainbow fan sweeps across the surroundings.
+```
+
+**Why it's unique:** Combines optics simulation with 3D geometry. The color dispersion makes it feel like real light physics. This is the kind of loader that appears in luxury product launches and high-end creative tools.
+
+**Kinematics:**
+- Hexagonal prism: 6 side faces + top/bottom caps, each a thin `<span>` with `translateZ`
+- Prism tumbles on a diagonal axis: `rotate3d(1, 2, 0.5, 360deg)` in 6s
+- Each face: `background: linear-gradient` that shifts luminance based on which `rotateY` value is "facing"
+- Chromatic fan: `:before` pseudo with `conic-gradient` of spectral colors, slowly rotating
+
+**Target contexts:** Photography/video tools, luxury e-commerce, design software, generative art platforms.
+
+---
+
+#### 3D-05: `atom-orbital` — Rutherford-Bohr Quantum Atom
+
+```
+Visual: A glowing nucleus with 3 tilted elliptical electron orbitals
+at 0°, 60°, and 120° angular inclinations in true 3D perspective.
+Electrons orbit at variable speed (relativistic perihelion acceleration).
+```
+
+**Why it's unique:** The atom is an iconic scientific loader. No existing CSS library does it in proper 3D with multi-axis orbital planes. This is what `solar-system` should have been.
+
+**Kinematics:**
+- Nucleus: pulsing radial gradient orb at center
+- Ring 1: `rotateX(0deg)` — equatorial orbit
+- Ring 2: `rotateX(60deg)` — tilted 60° from equatorial
+- Ring 3: `rotateX(120deg)` — tilted 120° (perpendicular pair)
+- Each electron: `rotateZ(360deg)` on a child inside each ring frame
+- Keplerian speed: `animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1)` to simulate elliptical orbit acceleration
+
+**Target contexts:** Science, biotech, pharmaceutical, nuclear, education, chemistry tools.
+
+---
+
+### Tier 2 — Showcase Designs (Beautiful, Shareable)
+
+---
+
+#### 3D-06: `vortex-tunnel` — Warp Speed Depth Gates
+
+```
+Visual: 8 concentric hexagonal rings accelerating toward the viewer
+along the Z-axis from a deep vanishing point. Pure CSS warp drive.
+```
+
+**Kinematics:**
+- 8 rings with staggered `translateZ(-600px)` → `translateZ(200px)` keyframes
+- Perspective set very aggressively (`perspective: 200px`) for dramatic foreshortening
+- Rings opacity: 0 at max distance, 1 at mid-distance, 0 again as they "pass through" the camera plane
+- Ring color: progresses from `secondaryColor` (far/blue-shifted) to `color` (near)
+
+**Target contexts:** Gaming launchers, VPN/tunnel applications, fast data transfer UIs, warp-speed themed deployments.
+
+---
+
+#### 3D-07: `isometric-deck` — Floating Card Stack Shuffle
+
+```
+Visual: 4 isometric document cards floating in 3D space at
+rotateX(60deg) rotateZ(-45deg). Top card slides off and reappears
+at the bottom of the stack with smooth spring animation.
+```
+
+**Kinematics:**
+- 4 `.wavelo__part` cards stacked at different `translateZ` elevations
+- Top card animates: `translateX(120%) translateZ(60px) rotateZ(12deg)` (flies off)
+- Remaining cards animate upward: each `translateZ` increases by one slot
+- Bottom receives the old top: `translateX(-80%) translateZ(-60px)` (flies in from below)
+- Contact shadow per card: `box-shadow` animates with elevation
+
+**Target contexts:** Document management, SaaS platforms, card games, checkout flows, task management apps.
+
+---
+
+#### 3D-08: `voxel-cluster` — Isometric Rubik's Cube Assembly
+
+```
+Visual: 8 isometric voxel sub-cubes that explode radially outward,
+orbit with angular momentum, and magnetically snap back together
+into a unified cube with a satisfying click.
+```
+
+**Kinematics:**
+- 8 corner cubes start at their unified positions: `translate3d(±X, ±Y, ±Z)`
+- Explosion phase: each cube translates outward along its diagonal (`translateZ` + `translateX/Y`)
+- Orbit phase: subtle `rotateY` on each sub-cube as they spread
+- Reassembly phase: `cubic-bezier(0.34, 1.56, 0.64, 1)` — elastic snap with 8% overshoot then settle
+- The entire cluster rotates slowly on `rotateY` at all times for continuous 3D readable-ness
+
+**Target contexts:** Cloud infrastructure, build systems, 3D printing software, Minecraft/voxel game launchers, DevOps deployment UIs.
+
+---
+
+#### 3D-09: `torus-ring` — Möbius Strip Continuous Flow
+
+```
+Visual: A 3D torus (donut shape) made from polygonal ribbon segments
+that loop continuously through the center hole. A bright light streak
+races around the ring's surface.
+```
+
+**Kinematics:**
+- Torus approximated by 16-24 ribbon segments, each a thin `<span>` with computed 3D positions
+- Parent rotates on `rotate3d(1, 1, 0, 360deg)` for tumbling torus rotation
+- Light streak: a single bright `<span>` that `rotateZ(360deg)` around the torus with a glowing `box-shadow`
+- Color temperature: ring body is `color`, light streak is warm `secondaryColor`
+
+**Target contexts:** Infinite loop workflows, CI/CD pipelines, mathematical platforms, SaaS subscription billing.
+
+---
+
+#### 3D-10: `cylindrical-wave` — 3D Pin Matrix Wave
+
+```
+Visual: 12-16 vertical columns arranged in a circle (when viewed from above),
+each column extruding and retracting to form a traveling sinusoidal wave
+that propagates around the cylinder. Viewed at a 45° isometric angle.
+```
+
+**Kinematics:**
+- 16 columns arranged radially: `rotateY(angle) translateZ(radius)` for each
+- Wave propagation: each column's `scaleY` keyframe is offset by `(index / total) * 100%` delay
+- Viewed at: `rotateX(45deg)` on the container for the isometric 3D depth
+- Column tops have rounded caps (`:before` pseudo sphere) that rise and fall with the column
+
+**Target contexts:** Audio/music platforms, seismic monitoring, telemetry dashboards, 3D data visualization, sound-to-visual tools.
+
+---
+
+### Tier 3 — Experimental / Conceptual Innovations
+
+These are ideas no other library has ever attempted that push the boundary of what CSS can do.
+
+---
+
+#### 3D-11: `liquid-mercury` — Physics-Simulated Mercury Surface
+
+```
+Visual: A blob of liquid mercury that flows under simulated gravity —
+pooling at the bottom when still, rippling when "disturbed," and
+splitting/merging based on data-wavelo-state transitions.
+```
+
+**Why it's unprecedented:** This combines CSS `border-radius` morphing with simulated surface tension physics entirely in keyframes. No JavaScript, no Canvas.
+
+**Kinematics:**
+- Base state: mercury pool at the bottom of the bounding box, flat top surface with a convex meniscus
+- Active state: surface oscillates with a damped sinusoidal wave across the top edge
+- Success state: blob rises, becomes spherical (surface tension "winning" over gravity), then dissolves upward
+- Error state: blob flattens hard (impact simulation) then bounces and resettles
+
+**Target contexts:** Fluid simulation platforms, physics engines, chemistry/material apps, futuristic loading concepts.
+
+---
+
+#### 3D-12: `dna-decode` — Decoding Base Pair Scanner
+
+```
+Visual: A strip of DNA double helix with a bright "scanner beam"
+traversing from top to bottom. As the beam passes each base pair,
+the pair lights up with A-T (blue-orange) or G-C (green-purple)
+complementary colors — simulating genome sequencing.
+```
+
+**Why it's unique:** This extends the existing `helix` design with semantic meaning — it's not just a spinner but a visual narrative of data processing. Perfect for bioinformatics, health tech, and AI training data platforms.
+
+**Kinematics:**
+- Based on the existing `helix` CSS architecture (18-rung double helix)
+- Add a **scanner element**: a semi-transparent bright band that `translateY`s from 0% to 100%
+- Each rung the scanner crosses briefly flashes to a complementary color pair
+- Scanner travel duration is the `--wavelo-duration`; the helix rotation is always proportionally faster
+
+---
+
+#### 3D-13: `quantum-superposition` — Wavefunction Collapse Visualization
+
+```
+Visual: A particle shown simultaneously at multiple locations (probability
+cloud: 6–8 ghost copies at varying opacities and positions) that
+"collapses" periodically to a single definite point, then re-expands
+into superposition.
+```
+
+**Why it's unprecedented:** This is a conceptual physics metaphor implemented purely in CSS. The visual language of quantum mechanics (probability clouds, wavefunction collapse) has never been done as a loading indicator.
+
+**Kinematics:**
+- 8 ghost copies of a dot at scattered positions, each at `opacity: 0.1–0.4`
+- Collapse phase: all ghosts simultaneously animate to the same central point — `translate(0,0)` — while opacity increases and merges to a single bright dot
+- Observed state: single bright dot holds for 0.3s
+- Expansion phase: dot splits back into ghost copies that scatter outward with spring-like deceleration
+- Cycle: collapse → observe → expand, loop
+
+**Target contexts:** Quantum computing platforms, physics simulation, AI uncertainty visualization, scientific research tools.
+
+---
+
+#### 3D-14: `magnetic-field` — Electromagnetic Field Lines
+
+```
+Visual: A central magnetic dipole (North/South poles visible) with
+8-12 curved magnetic field lines arching from one pole to the other
+and rotating slowly around the dipole axis — like a physics textbook
+diagram brought to life.
+```
+
+**Kinematics:**
+- SVG paths for the curved field lines (precomputed bezier arcs)
+- `stroke-dashoffset` animation drives "flow particles" along each field line
+- The entire assembly `rotateY(360deg)` for 3D effect
+- N pole glows `secondaryColor`, S pole glows `color`
+
+**Target contexts:** Physics education, electrical engineering tools, electromagnetic simulation, scientific dashboards.
+
+---
+
+#### 3D-15: `aurora-borealis` — Northern Lights Shimmer
+
+```
+Visual: Sinusoidal translucent bands of color in cool greens/teals/purples
+flowing and dancing like the Aurora Borealis — a fully atmospheric
+CSS animation with zero JavaScript.
+```
+
+**Kinematics:**
+- 3-5 layered `<span>` elements with large, slow, independently-phased `border-radius` morphing
+- Each band uses a `linear-gradient` in aurora palette (teal, green, magenta, purple)
+- Bands are semi-transparent and overlap, creating natural color mixing
+- Very slow, organic timing (5–12s cycles) for a meditative, natural feel
+- Perfect for "background" loading overlays on creative/artistic applications
+
+**Target contexts:** Arctic tourism, weather apps, astronomy platforms, creative agencies, premium brand loading overlays.
+
+---
+
+### 5.11.4 Pure-CSS 3D Architectural & Performance Mandate
+
+All 3D designs developed for Wavelo must adhere to four strict non-negotiable architectural mandates:
+
+1. **Zero Runtime Dependencies:** No Three.js, Babylon.js, Spline, or heavy WebGL canvas runtimes. All 3D scenes must execute strictly via standards-based CSS 3D transforms (`preserve-3d`, `perspective`, `rotate3d`, `translateZ`) and SVG spatial projections.
+2. **Compositor-Only Execution (0 Layout Recalculations):** Every 3D transform must run exclusively on the GPU compositor thread using `transform` and `opacity`. Animated properties must never trigger DOM reflows or style recalculations (verified by `npm run audit:layout`).
+3. **Modular Bundle Budget (<2.5 KB Gzipped):** Individual 3D loader slices must remain lightweight, compact, and fully tree-shakable. Importing a single 3D loader must never bloat consumer application bundles.
+4. **Accessible Graceful Degradation:** When `prefers-reduced-motion: reduce` is detected, 3D rotations must freeze at an aesthetically pleasing isometric angle or decelerate smoothly to an ultra-slow drift (0.05Hz) to prevent vestibular discomfort.
 
 ## 5.12 Catalog Registry
 
@@ -670,13 +1187,13 @@ The library must:
 
 To provide developers with granular micro-level control without a one-size-fits-all model, options are structured across three distinct tiers:
 
-1. **Tier 1 — Universal Baseline Settings (accepted by 100% of all 133 designs):** Universal structural, lifecycle, accessibility, and theming settings (`type`, `color`, `backgroundColor`, `theme`, `loading`, `inline`, `reducedMotion`, `label`, `labelledBy`, `describedBy`, `decorative`, `className`, `data-testid`, `style`). Accepted is not the same as visibly honoured: a design with no track to paint cannot show `backgroundColor`. Which settings each design actually reads is measured against its render, not asserted here, and `npm run audit:customization` re-measures it in CI.
-2. **Tier 2 — Shared Geometric & Temporal Controls (85% – 97% of designs):** Core bounding box dimensions and cycle playback (`size`, `width`, `height`, `duration`, `speed`, `direction`, `paused`).
+1. **Tier 1 — Universal Baseline Settings (accepted by 100% of all 153 designs):** Universal structural, lifecycle, accessibility, and theming settings (`type`, `color`, `backgroundColor`, `theme`, `loading`, `inline`, `reducedMotion`, `label`, `labelledBy`, `describedBy`, `decorative`, `className`, `data-testid`, `style`). Accepted is not the same as visibly honoured: a design with no track to paint cannot show `backgroundColor`. Which settings each design actually reads is measured against its render, not asserted here, and `npm run audit:customization` re-measures it in CI.
+2. **Tier 2 — Shared Geometric & Temporal Controls (84% – 97% of designs):** Core bounding box dimensions and cycle playback (`size`, `width`, `height`, `duration`, `speed`, `direction`, `paused`).
 3. **Tier 3 — Design-Specific & Unique Settings:** Tailored parameters that reflect the specific physical, visual, and mathematical nature of each individual design. The counts are those the measured table reports today:
-   - `strokeWidth`: Ring border weight, wire thickness, radar crosshairs, battery chassis (38 designs).
+   - `strokeWidth`: Ring border weight, wire thickness, radar crosshairs, battery chassis and the 3D frames (46 designs).
    - `value`, `max`, `valueText`: Fill levels and accessible values for linear, circular, stepped, and queue progress indicators (18 designs).
    - `count`: Repeating track rows, milestone steps, batch upload queues, and dynamic dot/bar counts (26 designs).
-   - `secondaryColor`: A second painted tone — dual rings, tracks, strands, embers and scrims (42 designs).
+   - `secondaryColor`: A second painted tone — dual rings, tracks, strands, embers, scrims and orbital tracks (62 designs).
    - `data-wavelo-state`: Reactive state transitions across `'idle'`, `'loading'`, `'success'`, and `'error'` for micro-interactions (6 designs).
    - `data-wavelo-constellation`: Astronomical constellation geometry selection (`'ursa-major'`, `'orion'`, `'cassiopeia'`, `'cygnus'`, `'ursa-minor'`).
 
@@ -687,7 +1204,7 @@ A formal audit verified that `Category` has ZERO runtime authority over configur
 - **Decoupled Render Slices:** 9 of the 12 render kinds span multiple categories (`dots` covers 5 categories; `skeleton` covers 3 categories; `wave` covers 5 categories; `progress` covers 2 categories; `ring` covers 3 categories; `shape` covers 3 categories; `orbit` covers 3 categories; `pulse` covers 3 categories; `rings` covers 3 categories).
 - **Determinate Progress Semantics:** `supportsProgress` is governed strictly by `kind === 'progress'` in `packages/core/src/registry.ts`, allowing application patterns like `undo-progress` and `page-transition` to expose full `role="progressbar"` semantics and accept `value`, `max`, and `valueText`.
 
-The authoritative component-by-component customization breakdown across all 133 designs—specifying micro-styling, macro-behavior, unique parameters, types, defaults, and what they control—is maintained in `docs/COMPONENT_CUSTOMIZATION_API.md`.
+The authoritative component-by-component customization breakdown across all 153 designs—specifying micro-styling, macro-behavior, unique parameters, types, defaults, and what they control—is maintained in `docs/COMPONENT_CUSTOMIZATION_API.md`.
 
 ---
 
@@ -964,7 +1481,7 @@ Wavelo documentation must be accessible through three integrated tiers:
 2. **Interactive Web Documentation & Visual Playground (GitHub Pages / Custom Domain):**
    - Hosted via GitHub Pages (`.github/workflows/pages.yml`) and served from a dedicated domain (e.g., `wavelo.dev` or `princegoel0.github.io/wavelo`).
    - Powered by `apps/docs` as a zero-dependency, self-contained client application built from central catalog metadata.
-   - Must provide an interactive configuration playground with live controls (size, stroke width, duration, progress value, colors, corner radius, reverse, pause, and dark mode), instant configuration code generation, a searchable gallery of all 133 loaders, dual-axis filtering (by functional category and 2D/3D dimensionality), and measured option chips verified in Chromium.
+   - Must provide an interactive configuration playground with live controls (size, stroke width, duration, progress value, colors, corner radius, reverse, pause, and dark mode), instant configuration code generation, a searchable gallery of all 153 loaders, dual-axis filtering (by functional category and 2D/3D dimensionality), and measured option chips verified in Chromium.
 
 3. **In-Repository Knowledge Base (GitHub `/docs`):**
    - Maintained in the repository under `/docs` for source code auditing and offline engineering reference, including `COMPONENT_CUSTOMIZATION_API.md`, `FRAMEWORKS.md`, `RECIPES.md`, `COMPATIBILITY.md`, `PERFORMANCE.md`, and `BUNDLE_SIZE.md`.
@@ -999,9 +1516,9 @@ Documentation must never drift from the underlying codebase. The following autom
 
 1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
    - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
-   - Enforces exact matches across code and docs for catalog counts (133 active designs, 206 named presets, 73 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
+   - Enforces exact matches across code and docs for catalog counts (153 active designs, 231 named presets, 78 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
 2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
-   - Validates that all 133 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
+   - Validates that all 153 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
 3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds `apps/docs` into `apps/docs/dist/index.html` and deploys to GitHub Pages on every merge to `main`.
 4. **Atomic Release Synchronization (`.github/workflows/release.yml`):**
@@ -1078,9 +1595,9 @@ Initial proposed targets:
 
 These are initial targets, not guaranteed measurements.
 
-> **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 9,728 B for a
-> single design chosen at build time (measured 8,336 B gzipped) and 39,424 B for the runtime
-> renderer (measured 34,259 B). The 5 KB loader target is met at the small end of the catalog
+> **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 10,240 B for a
+> single design chosen at build time (measured 9,073 B gzipped) and 51,200 B for the runtime
+> renderer (measured 44,372 B). The 5 KB loader target is met at the small end of the catalog
 > and missed by designs that share a crowded render kind, because a design imports its whole
 > kind's rules; the 10 KB core target is missed by design — a runtime-selected renderer has to
 > carry all twelve slices. The gap is recorded rather than closed quietly:
@@ -1246,9 +1763,9 @@ A successful monorepo build alone is insufficient evidence that the published pa
 A release candidate must pass:
 
 - Linting and strict TypeScript type checking (`tsc --noEmit`).
-- Unit and framework adapter test suites (50 tests).
+- Unit and framework adapter test suites (52 tests).
 - Cross-browser test suites (Chromium 36 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
-- Layout recalculation profiler (`npm run audit:layout` — 131/133 zero-layout).
+- Layout recalculation profiler (`npm run audit:layout` — 151/153 zero-layout).
 - Visual correctness audit (`npm run audit:visual:correctness`).
 - Measured options customization verification (`npm run audit:customization`).
 - Catalog drift validation (`npm run catalog`).
@@ -1625,8 +2142,8 @@ A release is complete only when all mandatory release gates pass.
 
 The stable release must satisfy all mandatory criteria:
 
-- At least 60 distinct animation designs (Shipped: 133 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 206 named presets).
+- At least 60 distinct animation designs (Shipped: 153 active designs).
+- At least 100 total named presets and loading patterns (Shipped: 231 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.

@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-vortex-gate{0%{transform:scale(.08) translateZ(-200px) rotateZ(0deg);opacity:0}20%{opacity:.8}80%{opacity:1}100%{transform:scale(1.7) translateZ(80px) rotateZ(90deg);opacity:0}}`;

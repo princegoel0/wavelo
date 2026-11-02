@@ -11,6 +11,7 @@ import { css as bubbleFrames } from '../keyframes/bubble.js';
 import { css as dotRingFrames } from '../keyframes/dot-ring.js';
 import { css as constellationFrames } from '../keyframes/constellation.js';
 import { css as constellationLineFrames } from '../keyframes/constellation-line.js';
+import { css as quantumFrames } from '../keyframes/quantum.js';
 
 export const dotsCss = `
 /* The dots are flex items, and N of them at a fifth of the box plus gaps at a seventh
@@ -73,7 +74,7 @@ export const dotsCss = `
 .wavelo--trip-orbit .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--trip-orbit .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 /* Nine nodes pulsing along a diagonal, the way activity is drawn across a network. */
-.wavelo--neural-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,12%);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent}
+.wavelo--neural-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,12%);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:radial-gradient(circle at 50% 50%,color-mix(in srgb,currentColor 8%,transparent) 0%,transparent 70%)}
 .wavelo--neural-grid.wavelo-inline{display:inline-grid}
 .wavelo--neural-grid .wavelo__part{width:100%;height:100%;border-radius:50%;animation:wavelo-neural calc(var(--wavelo-duration,1s) * 1.5) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--neural-grid .wavelo__part:nth-child(2),.wavelo--neural-grid .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.25)}
@@ -82,10 +83,10 @@ export const dotsCss = `
 .wavelo--neural-grid .wavelo__part:nth-child(9){animation-delay:calc(var(--wavelo-duration,1s) * -1)}
 .wavelo--dot-matrix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 14));width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent}
 .wavelo--dot-matrix.wavelo-inline{display:inline-grid}
-.wavelo--dot-matrix .wavelo__part{width:100%;height:100%;border-radius:22%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) / -4)}
-.wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(5),.wavelo--dot-matrix .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration,1s) / -2)}
-.wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,1s) * -3 / 4)}
+.wavelo--dot-matrix .wavelo__part{width:100%;height:100%;border-radius:28%;animation:wavelo-pulse var(--wavelo-duration,1.2s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--dot-matrix .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1.2s) * -.66)}
+.wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4),.wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,1.2s) * -.33)}
+.wavelo--dot-matrix .wavelo__part:nth-child(1),.wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(7),.wavelo--dot-matrix .wavelo__part:nth-child(9){animation-delay:0s}
 /* Five dots pulled toward the middle and released. How far each one travels is its own,
    so the row breathes inward from both ends and the middle dot only shrinks. */
 .wavelo--magnetic-dots .wavelo__part{animation:wavelo-magnet calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -169,4 +170,12 @@ export const dotsCss = `
 .wavelo--constellation[data-wavelo-constellation="ursa-minor"] .wavelo__part:nth-child(7){left:62%;top:74%;width:8%;height:8%;animation-delay:calc(var(--wavelo-duration,1s) * -1.8)}
 .wavelo--constellation[data-wavelo-constellation="ursa-minor"]:before{clip-path:polygon(14% 22%,32% 32%,48% 44%,64% 50%,86% 48%,84% 76%,62% 74%,64% 50%,64% 52%,62% 76%,84% 78%,86% 50%,64% 52%,48% 46%,32% 34%,14% 24%)}
 .wavelo--constellation[data-wavelo-constellation="ursa-minor"]:after{display:none}
-${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}`;
+.wavelo--quantum-superposition{position:relative;background:transparent;border:0;perspective:450px;transform-style:preserve-3d;animation:wavelo-quantum-orbit var(--wavelo-duration,3s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part{display:block;position:absolute;box-sizing:border-box;border-radius:9999px;transform-style:preserve-3d}
+.wavelo--quantum-superposition .wavelo__part:nth-child(1){width:12px;height:12px;left:calc(50% - 6px);top:calc(50% - 6px);background:radial-gradient(circle at 35% 35%,#fff 0%,#38bdf8 60%,currentColor 100%);box-shadow:0 0 8px #38bdf8;animation:wavelo-quantum-p1 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part:nth-child(2){width:10px;height:10px;left:calc(50% - 5px);top:calc(50% - 5px);background:radial-gradient(circle at 35% 35%,#fff 0%,var(--wavelo-secondary-color,#ec4899) 60%,currentColor 100%);box-shadow:0 0 8px var(--wavelo-secondary-color,#ec4899);animation:wavelo-quantum-p2 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part:nth-child(3){width:9px;height:9px;left:calc(50% - 4.5px);top:calc(50% - 4.5px);background:radial-gradient(circle at 35% 35%,#fff 0%,#a855f7 60%,currentColor 100%);box-shadow:0 0 8px #a855f7;animation:wavelo-quantum-p3 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part:nth-child(4){width:8px;height:8px;left:calc(50% - 4px);top:calc(50% - 4px);background:radial-gradient(circle at 35% 35%,#fff 0%,#22c55e 60%,currentColor 100%);box-shadow:0 0 8px #22c55e;animation:wavelo-quantum-p4 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part:nth-child(5){width:7px;height:7px;left:calc(50% - 3.5px);top:calc(50% - 3.5px);background:radial-gradient(circle at 35% 35%,#fff 0%,#eab308 60%,currentColor 100%);box-shadow:0 0 6px #eab308;animation:wavelo-quantum-p5 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--quantum-superposition .wavelo__part:nth-child(6){width:6px;height:6px;left:calc(50% - 3px);top:calc(50% - 3px);background:radial-gradient(circle at 35% 35%,#fff 0%,#06b6d4 60%,currentColor 100%);box-shadow:0 0 6px #06b6d4;animation:wavelo-quantum-p6 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}${quantumFrames}`;

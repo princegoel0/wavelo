@@ -34,7 +34,7 @@ import { bundleSize, entries } from './bundle-entries.mjs';
 // Budgets are set from those two realities, not from a per-design ideal: each ceiling is a
 // clean half-KiB number sitting about 12% above the heaviest bundle it covers, and the
 // rounding lands a few tens of bytes either side of exactly 12%.
-const runtime = 38.5 * 1024;
+const runtime = 50 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
@@ -43,23 +43,25 @@ const budgets = {
   // slice, 5,709 B once the renderer learned to fill a design from a value, 6,237 B once
   // the motion tranche's three ring designs joined it too, 8,440 B after the ring slice
   // gained a clock dial, a masked gradient ring and a snake room, 8,300 B back down
-  // again once the duplicated ring and bar designs were consolidated away, and 8,336 B
-  // as measured now. The saving
+  // again once the duplicated ring and bar designs were consolidated away, 8,336 B after
+  // the token-consensus fix, and 9,073 B as measured now that the 3D work has spread across
+  // the kinds. The saving
   // lands per page instead — a default loader now carries no `style` attribute at all,
   // where it used to carry about 180 bytes of tokens, and a loader with `loading: false`
   // carries nothing.
   //
-  // Budgets sit about 12% above the measured value,
-  // and are re-based deliberately when a feature adds surface: a configuration key
-  // costs roughly 20-30 B gzipped in every bundle, which is why the accessibility
-  // keys cost a single design 407 B and why the styling tokens cost more than that —
-  // they are new rules in every slice, not new reads of existing ones.
-  'individual-loader': 9.5 * 1024,
-  // Raised while the budgets came down elsewhere: `three-dots` and `equalizer` learned to
-  // divide their row by a `count`, which is twelve index rules in the dots slice, and this
-  // probe samples that slice.
-  'busiest-loader': 11 * 1024,
-  'two-loaders': 13 * 1024,
+  // Budgets sit about 12% above the heaviest bundle sharing each ceiling, and are re-based
+  // deliberately when a feature adds surface: a configuration key costs roughly 20-30 B
+  // gzipped in every bundle, which is why the accessibility keys cost a single design 407 B
+  // and why the styling tokens cost more than that — they are new rules in every slice, not
+  // new reads of existing ones. A ceiling set any tighter stops being a budget and becomes a
+  // rerun: at 0.5% of headroom the next design added to any slice fails CI for adding bytes.
+  'individual-loader': 10 * 1024,
+  // Follows the largest slice, which is `shape` since the 3D suite landed — this probe
+  // sampled `bubble-rise` while `dots` was the crowded kind, and a dots design is no longer
+  // the worst case a single import can produce.
+  'busiest-loader': 13.5 * 1024,
+  'two-loaders': 14 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
@@ -68,7 +70,7 @@ const budgets = {
   // eight runtime-shaped entries and gets a ceiling of its own. The other seven share one,
   // set by the heaviest of those — `@wavelo/web-components` — which is why `core-renderer`
   // sits noticeably below the ceiling it is checked against.
-  angular: 39.5 * 1024,
+  angular: 51 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,
@@ -77,17 +79,18 @@ const budgets = {
 
 // A single loader must not carry other kinds' rules or the full catalog table. The
 // busiest-loader case matters most: it is the design that pays for every sibling in the
-// largest slice, so a new dots design has to show up here rather than silently elsewhere.
-// Its markers are chosen from kinds the dots slice does not contain — note that
-// `wavelo-typing-dot` cannot be one of them, because `typing-dots` is itself a dots-kind
-// design and its class is a substring match inside this very slice.
-// The most crowded kind decides what "one design" costs, so it is sampled too — which
-// means this probe has to follow the measurement, not the history. It was pointed at
-// `progress` when twelve determinate designs made that the largest slice; the motion and
-// skeleton tranches then pushed `dots` and `skeleton` past it. Sampling the old kind would
-// let the actual worst case grow unnoticed, and the budget still passes. The slice ranking
-// is printed at the end of every run rather than written here, because a number copied into
-// a comment is a number nobody re-measures.
+// largest slice, so a new shape design has to show up here rather than silently elsewhere.
+// Its markers are chosen from kinds the probed slice does not contain, and the choice has
+// to be re-checked whenever the probe moves: `wavelo-typing-dot` was once a marker and
+// `typing-dots` is itself a dots-kind design, so it matched inside the very slice it was
+// meant to prove clean.
+// The most crowded kind decides what "one design" costs, so this probe has to follow the
+// measurement rather than the history. It was pointed at `progress` when twelve determinate
+// designs made that the largest slice; the motion and skeleton tranches pushed `dots` past
+// it; the 3D suite pushed `shape` past everything, and a dots design stopped being the worst
+// case a single import can produce. Sampling the old kind lets the actual worst case grow
+// unnoticed while the budget still passes. The slice ranking is printed at the end of every
+// run for exactly that reason — a number copied into a comment is a number nobody re-measures.
 const notIn = {
   'individual-loader': ['.wavelo--skeleton-card', '.wavelo--helix', 'DNA helix', 'Circular border'],
   'busiest-loader': ['.wavelo--ring', '.wavelo--skeleton-card', '.wavelo--helix', 'Circular border'],

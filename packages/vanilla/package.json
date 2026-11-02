@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/vanilla",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vanilla DOM helpers for Wavelo",
   "type": "module",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "browser"
   ],
   "dependencies": {
-    "@wavelo/core": "0.1.0"
+    "@wavelo/core": "0.2.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

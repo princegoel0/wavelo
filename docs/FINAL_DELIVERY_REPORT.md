@@ -35,9 +35,9 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 ## What the library is
 
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
-  133 public IDs, each with its own implementation; no deprecated aliases.
+  153 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 23 `--wavelo-*`
-  custom properties, 81 `@keyframes`, 206 named presets. Eight categories, one of
+  custom properties, 81 `@keyframes`, 231 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by
@@ -64,17 +64,17 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
 | `npm test` | Passed: 52 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 133 IDs / 133 active / 206 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run catalog` | Passed: 153 IDs / 153 active / 231 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
-| `npm run docs:check` | Passed: 133 designs, 27 configuration keys, 23 custom properties and both bundle KB figures match the built packages, and no document names a design the consolidation retired |
-| `npm run measure` | Passed: 11 entry points inside budget; `ring` 8,336 B gzipped (budget 9,728), the busiest kind `bubble-rise` 9,713 B (budget 11,264), runtime renderer 34,259 B (budget 39,424) |
+| `npm run docs:check` | Passed: 153 designs, 27 configuration keys, 23 custom properties and both bundle KB figures match the built packages, and no document names a design the consolidation retired |
+| `npm run measure` | Passed: 11 entry points inside budget; `ring` 9,073 B gzipped (budget 10,240), the busiest kind `voxel-cluster` 12,145 B (budget 13,824), runtime renderer 44,372 B (budget 51,200) |
 | `npm run test:browser` | Passed: 36 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run test:browser:webkit` | Passed: 7 WebKit tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, a conic gradient is carved by a mask, a registered integer reaches a CSS counter, and both timeline designs run on a real `ScrollTimeline`/`ViewTimeline` (`scroll()`/`view()` measured supported on WebKit 27.2, unlike Firefox 157) |
-| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 133 designs |
-| `npm run audit:layout` | Passed: 131 of the 133 designs cost no layout per frame; the two that do are each accounted for |
+| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 153 designs |
+| `npm run audit:layout` | Passed: 151 of the 153 designs cost no layout per frame; the two that do are each accounted for |
 | `npm run audit:visual` | Passed: contact sheet regenerated, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 133 active designs — 117 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
+| `npm run audit:visual:correctness` | Passed: 153 active designs — 137 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
 | `node scripts/style-fidelity.mjs isolated` | Passed: 0 differences between the combined sheet and each design rendered with only its own slice |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |
@@ -111,7 +111,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
   `inline` puts a line on the text line at text metrics.
 - Twelve loaders across five kinds produce five `<style>` elements in the head and
   none inside a host.
-- Every one of the 133 designs renders identically when given only the stylesheet slice
+- Every one of the 153 designs renders identically when given only the stylesheet slice
   its own entry point ships, checked against the combined sheet with clock-driven
   animations frozen at time zero and timeline-driven ones paused.
 - The custom element renders, re-renders on attribute change, reports
@@ -140,7 +140,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 - Every design paints something visible, each renders what its name says (part counts,
   border geometry, gradients), and no two designs render identically at any of four
   frozen animation frames.
-- The gallery shows 133 cards with their measured option chips, drives the playground's
+- The gallery shows 153 cards with their measured option chips, drives the playground's
   tokens and code output, has zero axe violations, and logs no console or page errors.
 
 These assertions were checked in both directions: reintroducing the original
@@ -158,7 +158,7 @@ workspace, installs the tarballs into a fresh project whose only other dependenc
 are the framework peers (with `@wavelo/core` overridden to the tarball under test, so
 nothing is fetched from the registry), and asserts there that:
 
-- the installed registry holds the same 133 designs the source built;
+- the installed registry holds the same 153 designs the source built;
 - `@wavelo/core`, `@wavelo/core/loaders/ring` and `@wavelo/core/styles.css` all
   resolve, the modular entry carries its own rules and not another design's, and the
   shipped sheet keeps the reduced-motion rules;
@@ -174,8 +174,8 @@ nothing is fetched from the registry), and asserts there that:
 - every installed package carries `LICENSE`, `README.md`, `dist/index.js` and
   `dist/index.d.ts`.
 
-Sizes from this build: shared base 3,237 B raw, `ring` slice 12,920 B raw (3,923 B gzipped
-with the base), `scroll` slice 2,139 B raw, combined sheet 136,274 B raw and 23,587 B
+Sizes from this build: shared base 3,237 B raw, `ring` slice 16,103 B raw (4,414 B gzipped
+with the base), `scroll` slice 2,139 B raw, combined sheet 199,247 B raw and 31,865 B
 gzipped.
 
 ## Visual correctness history

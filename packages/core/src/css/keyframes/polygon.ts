@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-polygon{50%{transform:rotate(180deg) scale(.8)}}`;
+export const css = `@keyframes wavelo-polygon{0%{transform:rotate(0deg) scale(.9)}50%{transform:rotate(180deg) scale(1.06)}100%{transform:rotate(360deg) scale(.9)}}@keyframes wavelo-poly-inner{0%{transform:rotate(360deg) scale(1)}50%{transform:rotate(180deg) scale(.75)}100%{transform:rotate(0deg) scale(1)}}@keyframes wavelo-poly-pulse{0%,100%{transform:scale(.8);opacity:.6}50%{transform:scale(1.3);opacity:1}}`;

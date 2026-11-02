@@ -1,0 +1,2 @@
+export const css = `@keyframes wavelo-tesseract-outer{0%{transform:rotateX(30deg) rotateZ(35deg) rotateY(0deg) scale(1)}50%{transform:rotateX(30deg) rotateZ(35deg) rotateY(180deg) scale(.55)}100%{transform:rotateX(30deg) rotateZ(35deg) rotateY(360deg) scale(1)}}
+@keyframes wavelo-tesseract-inner{0%{transform:rotateX(-30deg) rotateZ(-35deg) rotateY(0deg) scale(1)}50%{transform:rotateX(-30deg) rotateZ(-35deg) rotateY(-180deg) scale(1.8)}100%{transform:rotateX(-30deg) rotateZ(-35deg) rotateY(-360deg) scale(1)}}`;
