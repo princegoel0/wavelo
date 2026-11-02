@@ -32,7 +32,7 @@ The component ships as Svelte source, so the consumer's build needs
 `vitePreprocess` (or run it through `svelte-package`). `renderSvelteLoader(props)`
 returns `{ html, css, styleKey }` without a component tree.
 
-Supported peer range: `svelte >=5.57.3 <6`.
+Supported peer range: `svelte >=5.0.0 <6.0.0` (supporting all Svelte 5.x releases).
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 

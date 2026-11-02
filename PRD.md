@@ -1332,15 +1332,31 @@ Requirements:
 
 ## 7.6 Compatibility Matrix
 
-Before public release, define and test:
+Before public release, define, verify, and maintain in CI:
 
-- Minimum supported framework versions.
-- Current supported framework versions.
-- Supported browsers.
-- SSR compatibility.
-- Hydration behavior.
-- TypeScript versions.
-- Node.js versions required for development and builds.
+### 1. Framework Adapter Version Support Matrix
+
+| Package | Floor | Declared `peerDependencies` | What the floor rests on | Exercised in CI against |
+| :--- | :--- | :--- | :--- | :--- |
+| `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | The adapter imports only `createContext`, `useContext`, `useEffect`, `createElement`, `FC`, `ReactNode` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
+| `@wavelo/vue` | Vue 3.0.0 | `vue: ">=3.0.0 <4.0.0"` | `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs` — every one present since 3.0. Vue 2 is EOL and out of scope; a Vue 2 page can still consume `@wavelo/web-components`. | Vue 3.5.44 |
+| `@wavelo/svelte` | Svelte 5.0.0 | `svelte: ">=5.0.0 <6.0.0"` | The shipped component uses runes (`$props()`, `$derived()`, `$effect()`), so 5.0 is the real floor and the 6.x cap is deliberate. | Svelte 5.57.3 |
+| `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and the emitted declarations carry `minVersion: "14.0.0"` — the oldest application that can link them. `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that `minVersion`. | Angular 22.2.4, plus an AOT consumer fixture compiled with the Angular compiler |
+| `@wavelo/web-components` | Browser baseline | *None (zero runtime dependencies)* | Native Custom Elements v1 in light DOM — `this.innerHTML`, no `attachShadow`; SSR-safe guards. | Chromium, Firefox, WebKit suites |
+| `@wavelo/vanilla` / `@wavelo/core` | Browser baseline | *None (zero runtime dependencies)* | Pure CSS and DOM; framework-independent. | Chromium, Firefox, WebKit suites |
+
+Only the Angular floor is enforced by an artifact property. The other three are read from the
+framework API each adapter actually imports, and CI installs the newest version of each peer, so
+a 16.8 React or 3.0 Vue application is supported on the strength of the imports, not of a test.
+`npm run docs:check` compares every peer range this repository documents with the manifest that
+declares it, and `npm run packages:check` confirms each adapter declares its peer at all.
+
+### 2. Runtime & Browser Compatibility Baseline
+
+- **Browsers:** Chromium/Chrome/Edge 111+, Firefox 113+, Safari/WebKit 16.2+ (`color-mix()` sets the universal baseline).
+- **Node.js:** packages declare `>=20.11.0` for anything consuming them at runtime. Building this repository needs `^22.22.3 || ^24.15.0 || >=26.0.0`, which is what `@angular/compiler-cli` requires; CI runs Node 24.
+- **TypeScript:** 6.0.3 with strict declaration emission (`.d.ts` alongside every `.js`). The Angular compiler for the supported major pins `>=6.0 <6.1`.
+- **SSR & Hydration:** zero browser-global leaks during server rendering, each one measured — React through `renderToStaticMarkup` on `<Loader>` plus `renderReactLoader`, Vue through `renderToString` plus `renderVueLoader`, Angular through `renderApplication` with the real component plus `renderAngularLoader`, Svelte through `render()` from `svelte/server` on the compiled component, and `@wavelo/web-components` imported with no DOM at all.
 
 Compatibility must be verified rather than inferred from the fact that a package builds.
 

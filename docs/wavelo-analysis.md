@@ -3,11 +3,11 @@
 > **Last verified against code & tests:** 2026-11-02 (IST), on branch `dev`
 > **Catalog size:** **153 active designs / 231 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141, Phase 3: 141 → 133, Phase 4B: 133 → 138, Phase 4C: 138 → 143, Phase 4D: 143 → 148, Phase 4E: 148 → 153)
 > **Dimensionality:** 128 active 2D designs / 25 active 3D designs (`atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel`, `voxel-cluster`), labelled from the transforms each design actually animates.
-> **Quality gates:** `npm run check` green — build, strict typecheck, 52 unit/adapter tests, catalog drift, 7-package metadata validation, documentation sync, bundle budgets.
+> **Quality gates:** `npm run check` green — build, strict typecheck, 52 unit/adapter tests, `npm run verify:angular` (the built Angular package compiles into an AOT application), catalog drift, 7-package metadata validation, documentation sync, bundle budgets. Builds on TypeScript 6.0.3, Angular 22.2.4, Node 24 in CI.
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
 > **Layout cost:** **151 of 153** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
 > **Visual audit:** 153 active designs — 137 animating, 14 static by design (bound to a value), 2 timeline-driven.
-> **CI & Release Status:** **Targeting 0.2.0 release** — all seven packages bumped to `0.2.0`, ready for publication. `npm run release:validate` reports version 0.2.0 aligned and not yet published.
+> **CI & Release Status:** **`0.2.0` is the newest version on npm** — all seven packages live at `0.2.0` (`0.1.0` shipped on 2026-11-01, `0.2.0` on 2026-11-02), tagged [`v0.2.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.2.0), gallery deployed. **`0.3.0` is staged on `dev` and not yet published**: it carries the widened adapter peer ranges and the fix that makes `@wavelo/angular` compilable by an AOT application, which the published 0.1.0 and 0.2.0 Angular tarballs are not. `npm run release:validate` reports `0.3.0` aligned across 7 packages and not published.
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and catalog figures
@@ -322,7 +322,7 @@ A full-spectrum audit was executed across all 153 loading components to verify t
 | **Gallery Completeness** | `npm run docs:verify` | **Passed: 153 preview cards** render with interactive option chips and zero accessibility violations (axe clean). |
 | **Cross-Browser Verification** | `npm run test:browser` | **Passed:** Chromium (36/36 tests), Gecko / Firefox (6/6 tests), WebKit / Safari (7/7 tests). |
 | **Documentation Invariants** | `npm run docs:check` | **Passed:** 153 designs, 12 slices, 27 configuration keys, 23 custom properties, single loader 8.6 KB gzipped — and it recomputes the slice costs, the sheet size, both quoted bundle figures and every per-design option bullet rather than trusting the document. |
-| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.2.0 is aligned across 7 packages and is not published. |
+| **Release Validation** | `npm run release:validate` | **Passed:** Release version 0.3.0 is aligned across 7 packages and is not published. |
 | **Package Tarballs** | `npm run pack:check` | **Passed:** 7 publishable tarballs verified (dry-run). |
 
 ### B. What each family's documentation claims, and what proves it
@@ -847,14 +847,14 @@ To guarantee that developers can easily discover, configure, test, and adopt Wav
 All framework bridges share the exact same 27 configuration keys and 23 CSS custom properties with unified precedence:
 `Registered Subtree Defaults` < `Bound Component (loaderFor)` < `Call-Site Props`.
 
-| Bridge | Package | Subtree Defaults | Bound Component Factory | SSR Requirement |
-|---|---|---|---|---|
-| **React** | `@wavelo/react` | `<WaveloProvider defaults={...}>` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in root layout |
-| **Vue** | `@wavelo/vue` | `provideWaveloDefaults(...)` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in `main.ts` |
-| **Svelte** | `@wavelo/svelte` | `provideWaveloDefaults(...)` | `<WaveloLoader>` with context | Import `@wavelo/core/styles.css` in `+layout.svelte` |
-| **Angular** | `@wavelo/angular` | `WAVELO_DEFAULTS` injection token | Custom wrapper component | Include `@wavelo/core/styles.css` in `angular.json` |
-| **Vanilla** | `@wavelo/vanilla` | `createWavelo(defaults)` | Factory instance | Static `<link>` or `ensureStyles` |
-| **Web Components** | `@wavelo/web-components` | Ancestor CSS variables | `<wavelo-loader>` element | Zero JS runtime dependency for styles |
+| Bridge | Package | Supported Peer Range | Subtree Defaults | Bound Component Factory | SSR Requirement |
+|---|---|---|---|---|---|
+| **React** | `@wavelo/react` | `react >=16.8.0`, `react-dom >=16.8.0` (optional) | `<WaveloProvider defaults={...}>` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in root layout |
+| **Vue** | `@wavelo/vue` | `vue >=3.0.0 <4.0.0` | `provideWaveloDefaults(...)` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in `main.ts` |
+| **Svelte** | `@wavelo/svelte` | `svelte >=5.0.0 <6.0.0` | `provideWaveloDefaults(...)` | `<WaveloLoader>` with context | Import `@wavelo/core/styles.css` in `+layout.svelte` |
+| **Angular** | `@wavelo/angular` | `@angular/core >=14.0.0` | `WAVELO_DEFAULTS` injection token | Custom wrapper component | Include `@wavelo/core/styles.css` in `angular.json` |
+| **Vanilla** | `@wavelo/vanilla` | *None (zero peers)* | `createWavelo(defaults)` | Factory instance | Static `<link>` or `ensureStyles` |
+| **Web Components** | `@wavelo/web-components` | *None (zero peers)* | Ancestor CSS variables | `<wavelo-loader>` element | Zero JS runtime dependency for styles |
 
 ### C. Deep-Dive Component Customization Reference
 
@@ -979,7 +979,7 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 | Documentation sync | `npm run docs:check` | ✅ pass — and it now re-measures what it checks: the per-kind slice costs, the whole-catalog sheet size, both quoted bundle figures (built from the same entry points the budget gate uses), the option claims of every design section in `COMPONENT_CUSTOMIZATION_API.md`, and the retired-design names |
 | Gallery | `npm run docs:verify` | ✅ pass (153 cards) |
 | Bundle budgets | `npm run measure` | ✅ all 11 entries inside budget |
-| Release validation | `npm run release:validate` | ✅ version 0.2.0 aligned across 7 packages and not yet published |
+| Release validation | `npm run release:validate` | ✅ version 0.3.0 aligned across 7 packages and not yet published |
 
 ### Corrections
 

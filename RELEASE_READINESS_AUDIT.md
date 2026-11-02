@@ -310,25 +310,30 @@ Re-run 2026-11-01 against the current build, after the publication blockers were
 | `npm run audit:visual:correctness` | Passed: 153 active designs (137 animating, 14 static by design, 2 timeline-driven verified as a `ScrollTimeline` and a `ViewTimeline`); no aliases remain |
 | `npm run pack:check` | Passed for all seven workspaces |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and carries a licence and README per package |
-| `npm run release:validate` | Ran clean before the release; now reports the seven `0.1.0` versions as already published, which is the expected state until the next version bump |
+| `npm run verify:angular` | Added 2026-11-02 after the published `@wavelo/angular` turned out not to be usable by an Angular application: it builds with `ngc` in partial mode, so the artifact carries a real component declaration, its `minVersion` (14.0.0) is what the peer floor is checked against, and a standalone consumer component written the way `docs/FRAMEWORKS.md` describes compiles with the Angular compiler. Verified to fail: rebuilding the same source with `tsc` brings back `NG2012`, and promising `>=13.0.0` against a `minVersion` of 14.0.0 is refused |
+| `npm run release:validate` | Refused to re-publish `0.2.0` on 2026-11-02, naming all seven packages — the published-version check doing its job. On the same day it passes for the staged release: `Release version 0.3.0 is aligned across 7 packages and is not published.` |
 | `npm pack --workspaces --dry-run --json` | Passed; seven intended tarballs and expected files |
 | `npm ls --workspaces --depth=0` | Passed; aligned workspace dependency graph |
 | `git diff --check` | Passed |
 | GitHub Actions workflow execution | Passed on GitHub for `dev` at `5068090` (push run and pull-request run) and for `main` at `ae0e06d`: `verify` and `verify-browser` both green, with the `verify-browser` step list naming `npx playwright install --with-deps chromium firefox webkit` and successful Gecko and WebKit smoke steps on a clean Ubuntu runner; `Release packages` validating with its publish job skipped, and the `Gallery` workflow skipping both jobs while `GALLERY_ENABLED` is unset. Not run locally. |
 | npm trusted publishing/provenance | Not verifiable without owner configuration and publication; the GitHub-side `npm` environment exists with protected-branch policy and `princegoel0` as required reviewer. `RELEASE_PROVENANCE=true` now switches the publish step to `--provenance` once trusted publishing is configured per package. |
 
-The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`:
+The latest bundle measurements, all within the budgets in `scripts/bundle.mjs`. Re-measured
+on 2026-11-02 against the published `0.2.0` build; the same entries are reproduced by
+`npm run measure` and the full table lives in `docs/BUNDLE_SIZE.md`.
 
-- Individual design entry point: 5,018 B gzip (two designs: 5,782 B)
-- Core renderer (runtime-selected design): 12,692 B gzip
-- Full catalog: 12,702 B gzip
-- React: 13,101 B gzip
-- Vue: 13,532 B gzip
-- Angular: 14,357 B gzip
-- Svelte: 12,789 B gzip
-- Web Components: 13,575 B gzip
-- Vanilla: 12,942 B gzip
-- `@wavelo/core/styles.css`, the whole catalog sheet: 5,897 B gzip
+- Individual design entry point: 9,073 B gzip (budget 10,240)
+- Busiest kind (`voxel-cluster`, the largest slice): 12,145 B gzip (budget 13,824)
+- Two designs of different kinds: 12,569 B gzip (budget 14,336)
+- Core renderer (runtime-selected design): 44,372 B gzip (budget 51,200)
+- Full catalog: 44,376 B gzip
+- React: 44,840 B gzip
+- Vue: 45,325 B gzip
+- Angular: 46,188 B gzip (budget 52,224)
+- Svelte: 44,480 B gzip
+- Web Components: 45,356 B gzip
+- Vanilla: 44,659 B gzip
+- `@wavelo/core/styles.css`, the whole catalog sheet: 199,247 B raw, 31,865 B gzip
 
 ## Gate scenario assessment
 

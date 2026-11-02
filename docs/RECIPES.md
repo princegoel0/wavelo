@@ -26,7 +26,7 @@ head(renderStylesheets(results.map((result) => result.css)));
 | React 19 `renderToStaticMarkup` | `renderReactLoader(props, defaults)` returns `{ html, css }`; put the markup in the body and the slices in the head, or import `@wavelo/core/styles.css` once | tested (`tests/framework.test.mjs`) |
 | Vue 3 `renderToString` | `renderVueLoader(props, defaults)`, same split; `ensureStyles` runs in `watchEffect` on the client only | tested |
 | Angular SSR `renderApplication` | add `node_modules/@wavelo/core/styles.css` to the server builder's `styles` | tested (`tests/angular-ssr.test.mjs`) |
-| Svelte 2+ `render()` / SvelteKit | import the sheet in `src/app.css` or `+layout.ts`; the component calls `ensureStyles` in an `$effect`, which does not run during SSR | component compiles for the server (tested); SvelteKit wiring is documented |
+| Svelte 5 `render()` / SvelteKit | import the sheet in `src/app.css` or `+layout.ts`; the component calls `ensureStyles` in an `$effect`, which does not run during SSR | server-rendered in `tests/framework.test.mjs`; SvelteKit wiring is documented |
 | Next.js app router | `import '@wavelo/core/styles.css'` in the root layout, and mark the component that renders a loader `'use client'` — `Loader` uses an effect | documented |
 | Nuxt 3 | add `@wavelo/core/styles.css` to `css: []` in `nuxt.config.ts` and register the component in a plugin | documented |
 | Astro | `import '@wavelo/core/styles.css'` in the layout, or render the markup at build time with `renderLoader` from an `.astro` file — the core has no framework peer | documented |

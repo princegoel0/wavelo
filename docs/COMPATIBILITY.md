@@ -63,7 +63,7 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 129 public IDs, each with its own implementation, built from
+The catalog holds 153 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
@@ -183,25 +183,62 @@ styled — and that the same page without the meta element is not.
 
 ## Framework versions
 
-Peer ranges are deliberately limited to the versions this repository exercises:
+Every adapter declares a peer range, and that range is the promise: it is what npm accepts and
+what a consumer relies on. Each floor below says what it rests on, and which version CI actually
+installs. `npm run docs:check` compares every range stated in this repository with the manifest
+that declares it, so a README cannot fall behind a widened peer.
 
-- React and React DOM `>=19.3.1 <20`
-- Vue `>=3.5.44 <4`
-- Svelte `>=5.57.3 <6`
-- Angular core `>=22.2.3 <23`
+- **React (`@wavelo/react`):** `react >=16.8.0` and `react-dom >=16.8.0`, the latter declared
+  optional in `peerDependenciesMeta`. The adapter imports `createContext`, `useContext`,
+  `useEffect`, `createElement`, `FC` and `ReactNode` and nothing else, all of them React 16.8
+  API, and no module imports `react-dom` — which is what lets a server-components-only
+  application install it. CI exercises React 19.3.1; the older majors are supported on the
+  strength of those imports, not of a test.
+- **Vue (`@wavelo/vue`):** `vue >=3.0.0 <4.0.0`. `defineComponent`, `computed`, `watchEffect`,
+  `h`, `provide`, `inject` and `useAttrs` are each present since 3.0. Vue 2 is EOL and out of
+  scope; a Vue 2 page can still take `@wavelo/web-components`. CI exercises Vue 3.5.44.
+- **Svelte (`@wavelo/svelte`):** `svelte >=5.0.0 <6.0.0`. The shipped component is runes —
+  `$props()`, `$derived()`, `$effect()` — so 5.0 is the floor and the 6.x cap is deliberate.
+  CI exercises Svelte 5.57.3, compiles the component for client and server, and server-renders
+  it through `render()` from `svelte/server`.
+- **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0`. This floor is not read off the
+  imports: the package is built with `ngc` in `compilationMode: "partial"`, and its emitted
+  declarations carry `minVersion: "14.0.0"` — the oldest application that can link them.
+  `npm run verify:angular` fails if the artifact stops being library-compiled, if the peer floor
+  drops below that `minVersion`, or if a standalone component written the way
+  [FRAMEWORKS.md](FRAMEWORKS.md) describes cannot be compiled by the Angular compiler. CI
+  exercises Angular 22.2.4. A component that ships as plain `tsc` output has no Ivy definition
+  at all, so an AOT application rejects it with `NG2012` while every JIT test passes — that was
+  the state of this package through 0.2.0.
+- **Web Components (`@wavelo/web-components`):** Custom Elements v1 in light DOM — `innerHTML`
+  on the host, no `attachShadow` — with zero runtime dependencies.
+- **Core & Vanilla (`@wavelo/core`, `@wavelo/vanilla`):** framework-independent, zero runtime
+  dependencies.
 
 The `@wavelo/svelte` component ships as source and needs `vitePreprocess` (or
 `svelte-package`) in the consumer's build.
 
+Building this repository is a separate requirement from consuming it: `@angular/compiler-cli`
+for the supported major needs Node `^22.22.3 || ^24.15.0 || >=26.0.0` and TypeScript
+`>=6.0 <6.1`, so CI runs Node 24 and the repo builds with TypeScript 6.0.3. The packages
+themselves still declare `engines.node: ">=20.11.0"`, because the code they ship is plain
+ESM and CSS.
+
 ## What is verified, and where
 
 - React SSR output, Vue SSR output, Angular SSR through `renderApplication`,
-  Angular TestBed updates and lifecycle cleanup, Angular component metadata, and
-  Svelte compilation for both client and server with no legacy-syntax warnings —
-  `tests/framework.test.mjs`, part of `npm test` and CI.
+  Angular TestBed updates and lifecycle cleanup, Angular component metadata, a Svelte
+  server render through `render()` from `svelte/server`, and Svelte compilation for both
+  client and server with no legacy-syntax warnings — `tests/framework.test.mjs`, part of
+  `npm test` and CI.
+- That an Angular application can compile against the built `@wavelo/angular` at all: a
+  standalone component that imports `LoaderComponent` the way FRAMEWORKS.md tells consumers
+  to is compiled by the Angular compiler, and the built artifact must carry a partial component
+  declaration whose `minVersion` is no newer than the peer floor — `npm run verify:angular`,
+  in CI. Neither check needs a browser or a runtime compiler.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 129
+  `theme`, style-slice injection counts, per-design slice isolation for all 153
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —

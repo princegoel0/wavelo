@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/angular",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Angular component integration for Wavelo",
   "type": "module",
   "license": "MIT",
@@ -25,10 +25,10 @@
     "angular-spinner"
   ],
   "dependencies": {
-    "@wavelo/core": "0.2.0"
+    "@wavelo/core": "0.3.0"
   },
   "peerDependencies": {
-    "@angular/core": ">=22.2.3 <23"
+    "@angular/core": ">=14.0.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -42,7 +42,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "ngc -p tsconfig.json"
   },
   "author": "Prince Goel",
   "engines": {

@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.3.0
+
+Staged on `dev`; nothing here is on npm until this version is published. `0.2.0` as it stands
+carries the narrow peer ranges and an `@wavelo/angular` that an Angular application cannot compile.
+
+- **Framework Ecosystem Compatibility:** Broadened `peerDependencies` across the framework
+  adapters to remove npm `ERESOLVE` friction for downstream consumers:
+  - `@wavelo/react`: from `>=19.3.1 <20` to `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` declared
+    optional — the adapter imports only 16.8 API and no module imports `react-dom`.
+  - `@wavelo/vue`: from `>=3.5.44 <4` to `>=3.0.0 <4.0.0` — Composition API only.
+  - `@wavelo/svelte`: from `>=5.57.3 <6` to `>=5.0.0 <6.0.0` — the floor is where runes landed.
+  - `@wavelo/angular`: from `>=22.2.3 <23` to `>=14.0.0`, which the built artifact now proves:
+    its partial declarations carry `minVersion: "14.0.0"`.
+- **Fix — `@wavelo/angular` is now a library an application can use:** it was compiled by `tsc`
+  alone, so its component carried no Ivy definition and an AOT `ng build` rejected it with
+  `NG2012` while every JIT test passed. `packages/angular` builds with `ngc` in
+  `compilationMode: "partial"`; a consumer component written the way `docs/FRAMEWORKS.md`
+  describes compiles against it. Both `@wavelo/angular@0.1.0` and `@wavelo/angular@0.2.0` on the
+  registry have the defect, and this is the first version an Angular application can build with.
+- **Guards:** `npm run verify:angular` fails if the package stops being library-compiled, if the
+  Angular peer floor drops below the artifact's `minVersion`, or if the consumer fixture stops
+  compiling; `npm run docs:check` now compares every peer range this repository documents with
+  the manifest that declares it; `tests/framework.test.mjs` server-renders the Svelte component
+  through `svelte/server`, which is what the SSR claim had been assuming.
+- **Build toolchain:** TypeScript `6.0.3` and Angular `22.2.4` (`@angular/compiler-cli` for that
+  major requires `>=6.0 <6.1`), CI moved to Node 24, and `react`, `vue`, `svelte` and the
+  `@angular/*` packages are now explicit root devDependencies — they had only been present
+  because npm auto-installs workspace peers, so a widened range could have lifted the tested
+  version above the pinned `@angular/compiler` and `react-dom` without anyone changing a line.
+
 ## 0.2.0
 
 ### Highlights & Major Enhancements
@@ -13,7 +43,7 @@
 
 ## 0.1.0
 
-Not yet published.
+Published 2026-11-01.
 
 ### Breaking (relative to nothing — this is the first release)
 

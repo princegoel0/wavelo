@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/vue",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Vue component integration for Wavelo",
   "type": "module",
   "license": "MIT",
@@ -24,10 +24,10 @@
     "reduced-motion"
   ],
   "dependencies": {
-    "@wavelo/core": "0.2.0"
+    "@wavelo/core": "0.3.0"
   },
   "peerDependencies": {
-    "vue": ">=3.5.44 <4"
+    "vue": ">=3.0.0 <4.0.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

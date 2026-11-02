@@ -23,6 +23,11 @@ No package was published to npm and no registry setting was changed.
 - Playwright with the Chromium build it pins, axe-core `4.14.0`, esbuild `0.28.2`,
   domino `2.1.8`
 
+Moved since this report was written, as of `0.2.0`: `0.1.0` published 2026-11-01 and `0.2.0`
+2026-11-02, `RELEASE_ENABLED` is `true`, CI runs Node 24, and the repository builds with
+TypeScript `6.0.3` against Angular `22.2.4`, because compiling `@wavelo/angular` with
+`ngc` — which the package now has to be — requires that pair.
+
 Peer ranges are declared in [COMPATIBILITY.md](COMPATIBILITY.md). One version per
 declared range was tested; that does not prove compatibility across the whole range.
 Chromium is exercised fully; Firefox 157 and WebKit 27.2 each by a smoke suite (sheet
