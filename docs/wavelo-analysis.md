@@ -7,7 +7,7 @@
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
 > **Layout cost:** **151 of 153** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
 > **Visual audit:** 153 active designs — 137 animating, 14 static by design (bound to a value), 2 timeline-driven.
-> **CI & Release Status:** **Targeting 0.2.0 release** — all seven packages bumped to `0.2.0`, ready for publication. `npm run release:validate` reports version 0.2.0 aligned and not yet published.
+> **CI & Release Status:** **`0.2.0` is published** — all seven packages live on npm at `0.2.0` (`0.1.0` shipped on 2026-11-01, `0.2.0` on 2026-11-02), tagged [`v0.2.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.2.0), gallery deployed. `npm run release:validate` now reports `0.2.0` as already published, which is the expected state until the next version bump.
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and catalog figures
