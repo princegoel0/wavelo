@@ -1348,8 +1348,8 @@ Before public release, define, verify, and maintain in CI:
 Only the Angular floor is enforced by an artifact property. The other three are read from the
 framework API each adapter actually imports, and CI installs the newest version of each peer, so
 a 16.8 React or 3.0 Vue application is supported on the strength of the imports, not of a test.
-`npm run packages:check` and `npm run docs:check` keep the declared range and the documented
-range the same number.
+`npm run docs:check` compares every peer range this repository documents with the manifest that
+declares it, and `npm run packages:check` confirms each adapter declares its peer at all.
 
 ### 2. Runtime & Browser Compatibility Baseline
 
