@@ -847,14 +847,14 @@ To guarantee that developers can easily discover, configure, test, and adopt Wav
 All framework bridges share the exact same 27 configuration keys and 23 CSS custom properties with unified precedence:
 `Registered Subtree Defaults` < `Bound Component (loaderFor)` < `Call-Site Props`.
 
-| Bridge | Package | Subtree Defaults | Bound Component Factory | SSR Requirement |
-|---|---|---|---|---|
-| **React** | `@wavelo/react` | `<WaveloProvider defaults={...}>` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in root layout |
-| **Vue** | `@wavelo/vue` | `provideWaveloDefaults(...)` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in `main.ts` |
-| **Svelte** | `@wavelo/svelte` | `provideWaveloDefaults(...)` | `<WaveloLoader>` with context | Import `@wavelo/core/styles.css` in `+layout.svelte` |
-| **Angular** | `@wavelo/angular` | `WAVELO_DEFAULTS` injection token | Custom wrapper component | Include `@wavelo/core/styles.css` in `angular.json` |
-| **Vanilla** | `@wavelo/vanilla` | `createWavelo(defaults)` | Factory instance | Static `<link>` or `ensureStyles` |
-| **Web Components** | `@wavelo/web-components` | Ancestor CSS variables | `<wavelo-loader>` element | Zero JS runtime dependency for styles |
+| Bridge | Package | Supported Peer Range | Subtree Defaults | Bound Component Factory | SSR Requirement |
+|---|---|---|---|---|---|
+| **React** | `@wavelo/react` | `react >=16.8.0`, `react-dom >=16.8.0` (optional) | `<WaveloProvider defaults={...}>` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in root layout |
+| **Vue** | `@wavelo/vue` | `vue >=3.0.0 <4.0.0` | `provideWaveloDefaults(...)` | `loaderFor('ring', defaults)` | Import `@wavelo/core/styles.css` in `main.ts` |
+| **Svelte** | `@wavelo/svelte` | `svelte >=5.0.0 <6.0.0` | `provideWaveloDefaults(...)` | `<WaveloLoader>` with context | Import `@wavelo/core/styles.css` in `+layout.svelte` |
+| **Angular** | `@wavelo/angular` | `@angular/core >=14.0.0` | `WAVELO_DEFAULTS` injection token | Custom wrapper component | Include `@wavelo/core/styles.css` in `angular.json` |
+| **Vanilla** | `@wavelo/vanilla` | *None (zero peers)* | `createWavelo(defaults)` | Factory instance | Static `<link>` or `ensureStyles` |
+| **Web Components** | `@wavelo/web-components` | *None (zero peers)* | Ancestor CSS variables | `<wavelo-loader>` element | Zero JS runtime dependency for styles |
 
 ### C. Deep-Dive Component Customization Reference
 

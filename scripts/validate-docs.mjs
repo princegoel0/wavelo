@@ -91,8 +91,19 @@ for (const file of currentCatalogDocs) {
     }
   }
 }
-const files = new Set(required.map(([file]) => file));
-for (const [file, strings] of required) {
+// A maintained document states a catalog size in the present tense, so the number has to be the
+// registry's. docs/COMPATIBILITY.md carried "The catalog holds 129 public IDs" through four
+// releases of growth because nothing compared it with anything.
+for (const file of currentCatalogDocs) {
+  const text = await readFile(file, 'utf8').catch(() => '');
+  for (const [, stated] of text.matchAll(/(\d[\d,]*) public IDs\b/g)) {
+    if (Number(stated.replace(/,/g, '')) !== ids) {
+      failures.push(`${file} states ${stated} public IDs; the build has ${ids}`);
+    }
+  }
+}
+
+const files = new Set(required.map(([file]) => file));for (const [file, strings] of required) {
   const text = await readFile(file, 'utf8').catch(() => undefined);
   if (text === undefined) {
     failures.push(`${file} is missing`);
@@ -217,6 +228,50 @@ for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md']) {
       failures.push(`docs/COMPONENT_CUSTOMIZATION_API.md names ${name} as an option of ${section.id}, but no such configuration key exists`);
     } else if (!section.options.includes(name)) {
       failures.push(`docs/COMPONENT_CUSTOMIZATION_API.md gives ${section.id} ${name}, which the measured option table says it ignores`);
+    }
+  }
+}
+
+// A peer range is a support promise, and the manifest is the one npm enforces. Every range a
+// document states for these five peers must equal its manifest's, and each adapter README must
+// state its own: the 0.2.0 tree carried four READMEs promising React 19 beside manifests that
+// said 16.8, and `packages:check` passed because it only asks whether a peer is declared.
+{
+  /** peer -> the range npm enforces, and the package that declares it. */
+  const peers = new Map();
+  for (const dir of ['react', 'vue', 'svelte', 'angular']) {
+    const manifest = JSON.parse(await readFile(`packages/${dir}/package.json`, 'utf8'));
+    for (const [peer, range] of Object.entries(manifest.peerDependencies ?? {})) {
+      peers.set(peer, { range: range.replace(/\s+/g, ''), dir });
+    }
+  }
+  const escapeRe = (text) => text.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+  // One comparison term, optionally a second after a space: `>=3.0.0 <4.0.0` reads as one
+  // range, and the sentence ending after it cannot be swallowed into the match.
+  const term = '(?:[<>]=?|[=~^])?\\d+(?:\\.\\d+){0,3}';
+  const rangeOf = (peer) => new RegExp('(?<![\\w@/-])' + escapeRe(peer) + '\\s*:?\\s*"?(\\s*' + term + '(?:\\s+' + term + '){0,2})', 'g');
+  const files = [
+    'packages/react/README.md', 'packages/vue/README.md', 'packages/svelte/README.md', 'packages/angular/README.md',
+    'docs/COMPATIBILITY.md', 'docs/FRAMEWORKS.md', 'docs/wavelo-analysis.md', 'PRD.md'
+  ];
+  for (const file of files) {
+    const text = await readFile(file, 'utf8');
+    for (const [peer, { range, dir }] of peers) {
+      for (const match of text.matchAll(rangeOf(peer))) {
+        const stated = match[1].replace(/\s+/g, '');
+        if (stated && stated !== range) {
+          failures.push(`${file} documents ${peer} as "${stated}"; packages/${dir}/package.json declares "${range}"`);
+        }
+      }
+    }
+  }
+  for (const dir of ['react', 'vue', 'svelte', 'angular']) {
+    const manifest = JSON.parse(await readFile(`packages/${dir}/package.json`, 'utf8'));
+    const text = await readFile(`packages/${dir}/README.md`, 'utf8');
+    for (const peer of Object.keys(manifest.peerDependencies ?? {})) {
+      if (!new RegExp('(?<![\\w@/-])' + escapeRe(peer) + '\\s*:?\\s*"?(\\s*[<>=~^])').test(text)) {
+        failures.push(`packages/${dir}/README.md states no peer range for ${peer}, so nothing keeps it honest against the manifest`);
+      }
     }
   }
 }

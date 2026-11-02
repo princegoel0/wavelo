@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createSSRApp } from 'vue';
@@ -162,6 +162,27 @@ test('Svelte component compiles for client and server without legacy syntax', as
   // only package imports from the shipped source; it must stay the exported one.
   const svelte = await import('../packages/svelte/dist/index.js');
   assert.equal(source.includes(`'${svelte.WAVELO_DEFAULTS_KEY}'`), true, 'the Svelte context key drifted from the exported constant');
+});
+
+test('Svelte component server-renders a loader with no DOM to leak into', async () => {
+  const source = await readFile(new URL('../packages/svelte/src/WaveloLoader.svelte', import.meta.url), 'utf8');
+  const { js } = compile(source, { generate: 'server', filename: 'WaveloLoader.svelte' });
+  // The shipped component is Svelte source, so the only way to render it on a server is to
+  // compile it the way the consumer's build would. The module has to sit under the repository
+  // for its `@wavelo/core` import to resolve.
+  const dir = new URL('./fixtures/generated/', import.meta.url);
+  await mkdir(dir, { recursive: true });
+  const file = new URL('WaveloLoader.server.mjs', dir);
+  await writeFile(file, js.code);
+  const { default: WaveloLoader } = await import(file.href);
+  const { render } = await import('svelte/server');
+
+  assert.equal('document' in globalThis, false, 'a DOM appeared in the server render');
+  const { body, head } = render(WaveloLoader, { props: { type: 'ring', label: 'Loading data', size: 48 } });
+  assert.match(body, /<span class="wavelo-host"><!----><span class="wavelo wavelo--ring/);
+  assert.match(body, /--wavelo-size:48px/);
+  assert.match(body, /aria-label="Loading data" role="status"/);
+  assert.equal(head, '', 'the component styles itself on the client, so a server render must emit nothing into <head>');
 });
 
 test('registered defaults apply underneath a loader and lose to its own options', async () => {

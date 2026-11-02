@@ -16,4 +16,8 @@ release-audit/
 # the repository root shows up in `git status` and gets swept into the next commit.
 audit-results.json
 
+# tests/framework.test.mjs compiles the shipped Svelte component to a server module here, so
+# the file is a build product of the test run rather than a fixture someone can edit.
+tests/fixtures/generated/
+
 .agency/

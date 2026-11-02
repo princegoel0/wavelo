@@ -277,6 +277,26 @@ drops the rest:
 import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 ```
 
+## Supported Framework Versions & Peer Ranges
+
+Each adapter's peer range is a support promise, and the columns say what it rests on and which
+release CI actually installs. [COMPATIBILITY.md](COMPATIBILITY.md) owns the reasoning; this table
+is the short form, and `npm run docs:check` keeps every range here equal to the manifest.
+
+| Package | Declared `peerDependencies` | Floor rests on | Installed in CI |
+| :--- | :--- | :--- | :--- |
+| `@wavelo/react` | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Only 16.8 API is imported — context, effects, `createElement`; nothing imports `react-dom`. | React 19.3.1 |
+| `@wavelo/vue` | `vue: ">=3.0.0 <4.0.0"` | Composition API only: `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs`. | Vue 3.5.44 |
+| `@wavelo/svelte` | `svelte: ">=5.0.0 <6.0.0"` | The shipped component is runes — `$props()`, `$derived()`, `$effect()`. | Svelte 5.57.3 |
+| `@wavelo/angular` | `@angular/core: ">=14.0.0"` | The package is built with `ngc` in partial mode, and its declarations carry `minVersion: "14.0.0"` — the oldest application that can link them. | Angular 22.2.4 |
+| `@wavelo/web-components` | *None (zero runtime dependencies)* | Custom Elements v1 in light DOM, no `attachShadow`. | Chromium, Firefox, WebKit |
+
+`@wavelo/angular` is the only one of these that a test could not infer from its imports. A
+component compiled by `tsc` alone carries no Ivy definition, so an AOT `ng build` of the snippet
+above fails with `NG2012` while every unit test — which loads `@angular/compiler` and runs in
+JIT — stays green. `npm run verify:angular` compiles that snippet with the Angular compiler as
+part of `npm run check` and CI, so the failure cannot come back.
+
 See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for the measured difference, and
 [RECIPES.md](RECIPES.md) for server rendering, content security policy and Tailwind
 wiring per framework.
