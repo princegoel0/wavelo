@@ -1,6 +1,6 @@
 # @wavelo/react
 
-React 19 component for Wavelo. Import `Loader` and pass the shared loader
+React component for Wavelo, supporting React 16.8+, 17, 18, and 19. Import `Loader` and pass the shared loader
 configuration as props — all 27 keys, including `data-*`.
 
 ```tsx
@@ -32,7 +32,7 @@ page must include the sheet, normally by importing `@wavelo/core/styles.css` in
 the entry file. `renderReactLoader(props, defaults)` returns `{ html, css, styleKey }`
 if you want to place the markup yourself.
 
-Supported peer range: `react >=19.3.1 <20` and `react-dom >=19.3.1 <20`.
+Supported peer range: `react >=16.8.0` and optional `react-dom >=16.8.0`.
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 

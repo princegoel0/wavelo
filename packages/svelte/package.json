@@ -28,7 +28,7 @@
     "@wavelo/core": "0.2.0"
   },
   "peerDependencies": {
-    "svelte": ">=5.57.3 <6"
+    "svelte": ">=5.0.0 <6.0.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

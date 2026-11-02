@@ -42,7 +42,7 @@ Only markup is rendered into the component. `ensureStyles` adds the design's
 stylesheet slice to the document head once on the client; a server-rendered page
 must include the sheet itself.
 
-Supported peer range: `vue >=3.5.44 <4`.
+Supported peer range: `vue >=3.0.0 <4.0.0` (supporting all Vue 3.x releases).
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 
