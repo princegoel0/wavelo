@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-neural{0%,100%{transform:scale(.38);opacity:.3}42%{transform:scale(1.1);opacity:1}}`;
+export const css = `@keyframes wavelo-neural{0%,100%{transform:scale(.36);opacity:.25;box-shadow:0 0 0 transparent}40%{transform:scale(1.18);opacity:1;box-shadow:0 0 7px currentColor,0 0 2px #fff}55%{transform:scale(.95);opacity:.75;box-shadow:0 0 3px currentColor}}`;

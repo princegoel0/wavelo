@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-alt-dot-reverse{50%{transform:translateY(50%)}}`;
+export const css = `@keyframes wavelo-alt-dot-reverse{0%,100%{transform:translate(0,0) scale(1);opacity:.75}25%{transform:translate(-14%,42%) scale(.88);opacity:.65}50%{transform:translate(0,58%) scale(1);opacity:.85}75%{transform:translate(14%,42%) scale(1.15);opacity:1}}`;

@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-cube{to{transform:rotateX(360deg) rotateY(360deg)}}`;
+export const css = `@keyframes wavelo-cube{0%{transform:rotateX(-30deg) rotateY(30deg) rotateZ(0deg)}50%{transform:rotateX(-30deg) rotateY(210deg) rotateZ(180deg)}100%{transform:rotateX(-30deg) rotateY(390deg) rotateZ(360deg)}}@keyframes wavelo-cube-shadow{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(.85);opacity:.45}}`;

@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-radar{to{transform:rotate(360deg)}}`;
+export const css = `@keyframes wavelo-radar{to{transform:rotate(360deg)}}@keyframes wavelo-radar-ping{0%,7%{opacity:0;transform:scale(.6)}12%{opacity:1;transform:scale(1.4)}22%{opacity:.9;transform:scale(1);box-shadow:0 0 10px var(--wavelo-secondary-color,#ec4899)}55%{opacity:.1;transform:scale(2.8)}65%,100%{opacity:0;transform:scale(3)}}`;

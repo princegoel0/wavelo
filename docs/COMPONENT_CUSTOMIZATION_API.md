@@ -1,8 +1,8 @@
 # Wavelo — Component Customization API Specification
 
-> **Scope:** Architectural audit and complete customization API reference for all **133 active loading designs** across **8 functional categories** in `@wavelo/core`.  
-> **Status:** Authoritative reference for developer customization, framework adapter props, and design system governance.  
-> **Version Alignment:** Wavelo 0.1.0 on branch `dev` (Post Phase 1–3 visual consolidation; zero-layout compositor performance verified).
+> **Scope:** Architectural audit and complete customization API reference for all **153 active loading designs** across **8 functional categories** in `@wavelo/core`.
+> **Status:** Authoritative reference for developer customization, framework adapter props, and design system governance.
+> **Version Alignment:** Wavelo 0.2.0 on branch `dev` (Post Phase 4 3D expansion; zero-layout compositor performance verified).
 
 ---
 
@@ -16,11 +16,11 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   CONFIGURATION ARCHITECTURE HIERARCHY                 │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 1: GLOBAL BASELINE SETTINGS (accepted by all 133)                 │
+│ TIER 1: GLOBAL BASELINE SETTINGS (accepted by all 153)                 │
 │ Universal structural, accessibility, lifecycle, and core tokens.       │
 │ Every design accepts them; what each visibly reads is measured.        │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 2: SHARED GEOMETRIC & TEMPORAL SETTINGS (85% – 97% of designs)   │
+│ TIER 2: SHARED GEOMETRIC & TEMPORAL SETTINGS (84% – 97% of designs)   │
 │ Bounding box dimensions, cycle timing, direction, and play state.      │
 │ Inherited by all non-viewport/non-static designs.                     │
 ├────────────────────────────────────────────────────────────────────────┤
@@ -36,11 +36,11 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 
 The following baseline parameters apply universally or across all standard loading components.
 
-### Tier 1: Universal Structural & Accessibility Settings (133 / 133 Loaders)
+### Tier 1: Universal Structural & Accessibility Settings (153 / 153 Loaders)
 
 | Property | TypeScript Type | Default Value | Target DOM / CSS | What it Controls |
 |---|---|---|---|---|
-| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 133 active designs or 206 presets. |
+| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 153 active designs or 231 presets. |
 | `color` | `string` | `'#6366f1'` (currentColor) | `--wavelo-color` | Primary foreground accent, stroke, or fill color. |
 | `backgroundColor` | `string` | `'transparent'` | `--wavelo-background` | Outer container background fill, track surface, or modal scrim. |
 | `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | `data-wavelo-theme` | Page color palette: light shimmer, dark surface (`#374151`), or OS dark mode. |
@@ -559,11 +559,10 @@ Mathematical curves, physics simulations, 3D illusions, and complex organic moti
   - `color` (`string`, default `'#6366f1'`): Shape fill tone.
 
 #### 95. `infinity` — Lemniscate Figure-Eight
-- **DOM Structure:** Two circles touching at center forming track; 3 nodes running a 16-stop lemniscate path.
+- **DOM Structure:** Isometric 3D interwoven ribbon loop with depth shading, ambient occlusion underlayer, and traveling energy photons.
 - **Unique & Design-Specific Options:**
-  - `secondaryColor` (`string`, default `'rgba(99, 102, 241, 0.28)'`): Figure-eight guide track border color.
-  - `strokeWidth` (`number`, default `3`): Track line thickness.
-  - `color` (`string`, default `'#6366f1'`): Color of the 3 nodes running the figure eight.
+  - `secondaryColor` (`string`, default `'rgba(99, 102, 241, 0.28)'`): Ribbon underlayer and depth shadow tone.
+  - `color` (`string`, default `'#6366f1'`): Color of the traveling energy photons and specular highlights.
 
 #### 96. `helix` — Double DNA Helix
 - **DOM Structure:** 18 parts across 6 rows representing near nodes, far nodes, and connecting base pairs that close as strands cross.
@@ -799,11 +798,116 @@ Contextual viewports, modals, and reactive state machines.
   - `value` (`number`): Remaining toast lifespan (100% → 0%).
   - `height` (`number | string`, default `4`): Timer track thickness.
 
+#### 134. `gyroscope` — Triple Gimbal 3D Rings
+- **DOM Structure:** Three nested concentric gimbal rings rotating on orthogonal X, Y, and Z axes with 3D depth.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Color of outer and intermediate gimbal rings.
+  - `strokeWidth` (`number | string`): Thickness of gimbal ring borders.
+  - `backgroundColor` (`string`): Gimbal container backdrop.
+
+#### 135. `tesseract` — 4D Hypercube Projection
+- **DOM Structure:** Eight isometric cube vertices and connecting projection struts undergoing 4D-to-3D perspective inversion.
+- **Unique & Design-Specific Options:**
+  - `strokeWidth` (`number | string`): Strut line gauge.
+
+#### 136. `sphere-lattice` — Geodesic Wireframe Globe
+- **DOM Structure:** Longitudinal and latitudinal wireframe rings revolving in 3D spherical coordinate space.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Latitudinal ring accent color.
+  - `strokeWidth` (`number | string`): Wireframe lattice gauge.
+  - `backgroundColor` (`string`): Globe container fill.
+
+#### 137. `prism-refraction` — 3D Dispersion Light Fan
+- **DOM Structure:** Triangular glass prism dispersing white light beam into dynamic spectral refractive rays.
+- **Unique & Design-Specific Options:**
+  - None (governed by Tier 1 & Tier 2 baseline and chromatic dispersion presets).
+
+#### 138. `atom-orbital` — Quantum Planetary Shells
+- **DOM Structure:** Central atomic nucleus orbited by three tilted elliptical electron probability clouds.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Electron orbital track accent.
+
+#### 139. `dna-double-helix` — Spatial Base-Pair Helical Ladder
+- **DOM Structure:** Intertwined dual-strand helix with periodic base-pair rungs rotating in 3D space.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Complementary strand and base rung color.
+  - `strokeWidth` (`number | string`): Helical backbone gauge.
+
+#### 140. `hologram-pyramid` — Inverted Laser Projection
+- **DOM Structure:** Inverted four-faceted 3D pyramid rotating above an oscillating circular emitter pedestal.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Emitter pedestal and scanning ring accent.
+
+#### 141. `black-hole-accretion` — Relativistic Accretion Disk
+- **DOM Structure:** Event horizon singularity with tilted glowing accretion disk exhibiting relativistic Doppler beaming.
+- **Unique & Design-Specific Options:** None (inherits universal size, duration, speed, and directional options).
+
+#### 142. `crystal-cluster` — Faceted Mineral Cluster
+- **DOM Structure:** Hexagonal quartz crystal prism cluster oscillating with specular facet reflections.
+- **Unique & Design-Specific Options:** None (inherits universal size, duration, speed, and directional options).
+
+#### 143. `mobius-band` — Topological Ribbon Flow
+- **DOM Structure:** Non-orientable single-sided continuous Mobius strip twisting in 3D coordinate space.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Reverse-twist surface tone.
+  - `strokeWidth` (`number | string`): Ribbon gauge.
+
+#### 144. `vortex-tunnel` — Hyperspace Concentric Gates
+- **DOM Structure:** Concentric perspective gate rings cascading into infinite depth.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Outer gate perimeter color.
+  - `strokeWidth` (`number | string`): Tunnel gate border gauge.
+
+#### 145. `isometric-deck` — Floating Card Shuffle
+- **DOM Structure:** Isometric deck of cards floating, fanning, and restacking in 3D perspective.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Card rim and shadow tone.
+
+#### 146. `voxel-cluster` — Dispersing Voxel Matrix
+- **DOM Structure:** 3D matrix of isometric cubes expanding and collapsing elastically around a core.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Core voxel accent.
+
+#### 147. `torus-ring` — 3D Donut Coordinate Mesh
+- **DOM Structure:** Toroidal geometry mesh revolving with spatial surface perspective.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Torus inner diameter ring tone.
+  - `strokeWidth` (`number | string`): Torus wire gauge.
+
+#### 148. `cylindrical-wave` — Spatial Wave Array
+- **DOM Structure:** Circular pin-matrix array elevating and depressing in sinusoidal 3D ripples.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Crest crest highlight color.
+
+#### 149. `liquid-mercury` — Zero-G Fluid Droplet
+- **DOM Structure:** Fluid metallic droplet undulating with surface tension dynamics in microgravity.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Specular highlight tone.
+
+#### 150. `dna-decode` — Genomic Sequencing Scanner
+- **DOM Structure:** Rotating DNA double strand traversed by an oscillating high-intensity sequencing laser beam.
+- **Unique & Design-Specific Options:**
+  - `strokeWidth` (`number | string`): Strand diameter.
+
+#### 151. `quantum-superposition` — Probability Cloud
+- **DOM Structure:** Stochastically oscillating quantum wavepackets collapsing into a unified eigenstate.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Eigenstate collapse focal point color.
+
+#### 152. `magnetic-field` — Toroidal Dipole Flux Lines
+- **DOM Structure:** North-south magnetic poles generating revolving toroidal magnetic field flux loops.
+- **Unique & Design-Specific Options:**
+  - `secondaryColor` (`string`): Opposite pole magnetic stream tone.
+
+#### 153. `aurora-borealis` — Atmospheric Plasma Curtains
+- **DOM Structure:** Dual undulating sheets of geomagnetic plasma shimmering across the upper atmosphere.
+- **Unique & Design-Specific Options:** None (inherits universal size, duration, speed, and directional options).
+
 ---
 
 ## 4. Complete Configuration Matrix Summary
 
-The following index summarizes the primary bespoke parameter availability across all 133 designs:
+The following index summarizes the primary bespoke parameter availability across all 153 designs:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -813,7 +917,7 @@ The following index summarizes the primary bespoke parameter availability across
 │ • value & max (19 designs): All progress indicators & toast timer      │
 │ • count (26 designs): Skeletons, three-dots, equalizer, upload queues  │
 │ • secondaryColor (60+ target designs): Two-tone spinners, tracks, dots │
-│ • backgroundColor (133 target designs): Universal container/scrim fill │
+│ • backgroundColor (153 target designs): Universal container/scrim fill │
 │ • radius (Skeletons, shapes, bars, dropzone, toast, buttons)           │
 │ • gap (Dot rows, matrix, equalizer, upload queues, skeleton lists)     │
 │ • data-wavelo-state (6 designs): Stateful micro-interaction morphs     │

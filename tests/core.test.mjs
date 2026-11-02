@@ -51,7 +51,7 @@ test('every design is labelled with the dimension its own motion runs in', async
     assert.equal(loader.dimension, deep ? '3d' : '2d', `${loader.id} animates ${animated.join(', ')} → ${deep ? '3d' : '2d'}, labelled ${loader.dimension}`);
   }
   const labelled = loaderRegistry.filter((loader) => loader.dimension === '3d').map((loader) => loader.id).sort();
-  assert.deepEqual(labelled, ['cube', 'ellipse', 'folding-squares', 'helix', 'rotating-square'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
+  assert.deepEqual(labelled, ['atom-orbital', 'aurora-borealis', 'black-hole-accretion', 'crystal-cluster', 'cube', 'cylindrical-wave', 'dna-decode', 'dna-double-helix', 'ellipse', 'folding-squares', 'gyroscope', 'helix', 'hologram-pyramid', 'isometric-deck', 'liquid-mercury', 'magnetic-field', 'mobius-band', 'prism-refraction', 'quantum-superposition', 'rotating-square', 'sphere-lattice', 'tesseract', 'torus-ring', 'vortex-tunnel', 'voxel-cluster'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
 });
 
 test('the generated ID list matches the catalog', async () => {

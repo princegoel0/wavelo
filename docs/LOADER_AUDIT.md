@@ -1,9 +1,9 @@
 # Comprehensive Wavelo Loader, Spinner & Progress Component Audit
 
-> **Scope:** Full architectural audit of all **133 active loading components** (and consolidation recipes for 22 redundant designs consolidated in Phases 1–3) across **8 functional categories** in the Wavelo design system.  
-> **Repository:** `@wavelo/core` (with React, Vue, Svelte, Angular, Vanilla, and Web Components bridges).  
-> **Audited Date:** October 2026 (Updated post-Phase 3 consolidation)  
-> **Engine:** Verified via Chromium, Gecko, and WebKit test suites with zero layout thrashing (131 compositor-pure designs).
+> **Scope:** Full architectural audit of all **153 active loading components** (and consolidation recipes for 22 redundant designs consolidated in Phases 1–3) across **8 functional categories** in the Wavelo design system.
+> **Repository:** `@wavelo/core` (with React, Vue, Svelte, Angular, Vanilla, and Web Components bridges).
+> **Audited Date:** October 2026 (Updated post-Phase 4 consolidation & 3D expansion)
+> **Engine:** Verified via Chromium, Gecko, and WebKit test suites with zero layout thrashing (151 compositor-pure designs).
 
 ---
 
@@ -25,14 +25,14 @@ Every configuration option is **empirically validated** via browser computed-sty
 │ • theme (light / dark / system palette resolution)                     │
 │ • color (primary foreground tint token)                                │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 2: SHARED GEOMETRIC & TEMPORAL CONFIGURATIONS (85% - 97%)         │
+│ TIER 2: SHARED GEOMETRIC & TEMPORAL CONFIGURATIONS (84% - 97%)         │
 │ • size: Root bounding box (width & height) for square components       │
 │ • width, height: Independent dimension controls for rectangular designs│
 │ • duration, speed: Cycle timing controls (seconds/ms and multiplier)   │
 │ • direction: 'normal' | 'reverse' playback control                     │
 │ • paused: boolean / string animation freeze state                      │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 3: COMPONENT-SPECIFIC & SPECIALIZED CONFIGURATIONS (14% - 36%)    │
+│ TIER 3: COMPONENT-SPECIFIC & SPECIALIZED CONFIGURATIONS (12% - 41%)    │
 │ • strokeWidth: Ring border, line weight, or stroke thickness           │
 │ • value, max, valueText: Determinate fill level and ARIA progressbar   │
 │ • count: Track repetitions (skeleton lines, rows, steps, files)        │
@@ -81,19 +81,19 @@ not a guess from the kind it belongs to.
 
 | Option | Type | Consumers | Effect |
 |---|---|---|---|
-| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, gauges and rules (38 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
+| `strokeWidth` | `number` | Rings, circular borders, battery frames, constellation lines, rubber band, gauges, rules and the 3D frames (46 loaders) | Sets `--wavelo-stroke` (in px), controlling border thickness or line stroke. |
 | `value` | `number` | Determinate progress bars, rings, battery, meters, counters (18 loaders) | Current completion number between `0` and `max`. Sets `--wavelo-progress` and `aria-valuenow`. |
 | `max` | `number` | Determinate progress loaders (18 loaders) | Maximum completion range (default 100). Sets `aria-valuemax`. |
 | `valueText` | `string` | Determinate progress loaders (18 loaders) | Humanized reading (e.g., `"4 of 12 items"`). Sets `aria-valuetext` and visual counters. |
 | `count` | `number` | Skeleton text lines and composite layouts, multi-step progress, upload queues, and the two repeated-track designs `three-dots` and `equalizer` (26 loaders) | Controls repeating child elements (lines of text, step chips, file items) and, on the two track designs, the length of the row: the sheet divides track width and animation phase by `--wavelo-parts`. |
-| `secondaryColor` | `string` | Every design that paints a track, a counter-rotating ring, a second strand, a shadow or a scrim alongside its accent (42 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
-| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays, chips and pills (48 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
+| `secondaryColor` | `string` | Every design that paints a track, a counter-rotating ring, a second strand, a shadow or a scrim alongside its accent (62 loaders) | Secondary orbital, inactive border, or accent color via `--wavelo-secondary-color`. |
+| `backgroundColor` | `string` | Skeletons, progress tracks, modals, cards, overlays, chips, pills and panels (51 loaders) | Sets `--wavelo-background` for outer track containers and scrims. |
 | `data-wavelo-state` | `'idle' | 'loading' | 'success' | 'error'` | Micro-interactions (6 loaders: `success-ring`, `error-shake`, `button-confirm`, `offline-dot`, `save-indicator`, `undo-progress`) | Triggers reactive visual morphs (spin -> checkmark, pulse -> alert). |
 | `data-wavelo-constellation` | `'ursa-major' | 'orion' | 'cassiopeia' | 'cygnus' | 'ursa-minor'` | Constellation loader | Selects celestial star pattern and geometric line matrix. |
 
 ---
 
-## 4. Component-by-Component Detailed Audit (133 shipped, 155 audited)
+## 4. Component-by-Component Detailed Audit (153 shipped, 175 audited)
 
 ### Category: SPINNER (17 shipped, 24 audited)
 
@@ -2717,7 +2717,7 @@ not a guess from the kind it belongs to.
 ---
 
 
-## 5. Master Loader Index & Capability Matrix (133 shipped)
+## 5. Master Loader Index & Capability Matrix (153 shipped)
 
 > The index is the 155 designs as audited, in audit order. The 22 marked
 > **(consolidated)** no longer ship: each was folded into a surviving design, and

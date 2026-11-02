@@ -10,7 +10,7 @@ export const external = ['react', 'react-dom', 'vue', '@angular/core', 'svelte']
 
 export const entries = {
   'individual-loader': "import { ring } from '@wavelo/core/loaders/ring'; console.log(ring({ label: 'Loading' }));",
-  'busiest-loader': "import { bubbleRise } from '@wavelo/core/loaders/bubble-rise'; console.log(bubbleRise());",
+  'busiest-loader': "import { voxelCluster } from '@wavelo/core/loaders/voxel-cluster'; console.log(voxelCluster());",
   'two-loaders': "import { ring } from '@wavelo/core/loaders/ring'; import { skeletonCard } from '@wavelo/core/loaders/skeleton-card'; console.log(ring(), skeletonCard());",
   'core-renderer': "import { renderLoader } from '@wavelo/core'; console.log(renderLoader({ type: 'orbiting-dots' }));",
   'full-catalog': "import { loaderRegistry, renderLoader } from '@wavelo/core'; console.log(loaderRegistry.map(({ id }) => renderLoader({ type: id })));",

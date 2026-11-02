@@ -7,6 +7,7 @@ import { access, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
+const rootManifest = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'));
 const packageDirs = ['core', 'vanilla', 'web-components', 'react', 'vue', 'svelte', 'angular'];
 /** Each adapter's peer, and the keyword a searcher types for that framework. */
 const peers = {
@@ -28,7 +29,7 @@ for (const dir of packageDirs) {
   check(/^[\w ()/'@.,-]{15,160}$/.test(manifest.description ?? ''), `${name} needs a real description for the npm search page`);
   check(manifest.license === 'MIT', `${name} must declare license "MIT"`);
   check(manifest.type === 'module', `${name} must be type: module`);
-  check(manifest.version === '0.1.0', `${name} version must match the release; npm run release:validate enforces alignment`);
+  check(manifest.version === rootManifest.version, `${name} version must match the release; npm run release:validate enforces alignment`);
   check(manifest.sideEffects === false || Array.isArray(manifest.sideEffects), `${name} must state sideEffects so a bundler may drop what is unused`);
   check(manifest.author === 'Prince Goel', `${name} has no author`);
   check(manifest.repository?.directory === path, `${name} repository must name its monorepo directory`);
@@ -52,7 +53,7 @@ for (const dir of packageDirs) {
     check(manifest.dependencies === undefined, 'core must have no runtime dependencies');
     check(manifest.peerDependencies === undefined, 'core must have no peer dependencies');
   } else {
-    check(manifest.dependencies?.['@wavelo/core'] === '0.1.0', `${name} must depend on @wavelo/core@0.1.0`);
+    check(manifest.dependencies?.['@wavelo/core'] === rootManifest.version, `${name} must depend on @wavelo/core@${rootManifest.version}`);
     const [peer] = peers[dir] ?? [];
     if (peer) {
       check(Boolean(manifest.peerDependencies?.[peer]), `${name} must declare ${peer} as a peer dependency`);
