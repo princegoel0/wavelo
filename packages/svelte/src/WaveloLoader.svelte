@@ -19,4 +19,6 @@
   });
 </script>
 
-<span class="wavelo-host">{@html rendered.html}</span>
+{#if rendered.html}
+  <span class="wavelo-host">{@html rendered.html}</span>
+{/if}

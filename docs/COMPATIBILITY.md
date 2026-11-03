@@ -63,7 +63,7 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 153 public IDs, each with its own implementation, built from
+The catalog holds 165 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
@@ -238,7 +238,7 @@ ESM and CSS.
   in CI. Neither check needs a browser or a runtime compiler.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 153
+  `theme`, style-slice injection counts, per-design slice isolation for all 165
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —
@@ -285,5 +285,23 @@ render identically, and every design must paint something visible.
 | `'default'` | an ID that matches nothing, rendering `inline` | `true` |
 
 `fallback` therefore means exactly "your request was not understood", and a preset
-hit is never reported as one. All 78 pattern presets resolve to the design they
+hit is never reported as one. All 90 pattern presets resolve to the design they
 declare; a unit test walks the whole table.
+
+
+## Module format & CommonJS compatibility
+
+Wavelo packages are published with dual ESM and CommonJS support for `@wavelo/core` (`dist/index.js` and `dist/index.cjs`), allowing both modern ESM environments and legacy CommonJS toolchains to consume Wavelo seamlessly.
+
+In modern environments (Node.js >=18 with ESM, Next.js, Vite, Rollup, Webpack 5, Nuxt, SvelteKit), standard `import` syntax works out of the box:
+```ts
+import { renderLoader } from '@wavelo/core';
+import { Loader, WaveloProvider } from '@wavelo/react';
+```
+
+### CommonJS consumption
+In CommonJS environments (`require(...)` in Node.js), synchronous `require('@wavelo/core')` is supported out of the box starting in `v0.4.0` via `packages/core/dist/index.cjs`:
+```js
+// Synchronous require in CommonJS:
+const { renderLoader } = require('@wavelo/core');
+```

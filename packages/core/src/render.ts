@@ -82,7 +82,19 @@ const PART_COUNTS: Record<string, number> = {
   'drag-drop-pulse': 1,
   'offline-dot': 1,
   'save-indicator': 1,
-  'undo-progress': 1
+  'undo-progress': 1,
+  'agent-tree': 3,
+  'aurora-ribbon': 1,
+  'glyph-matrix': 4,
+  'coin-flip': 2,
+  'biometric-reticle': 3,
+  'vault-tumbler': 2,
+  'git-rebase': 3,
+  'packet-pipeline': 3,
+  'crt-scanline': 1,
+  'gooey-metaballs': 2,
+  'camera-iris': 6,
+  'newton-cradle': 3
 };
 
 /**

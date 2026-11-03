@@ -170,7 +170,19 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['dna-decode', 'DNA decode', 'creative', 'wave', 'Genome sequencing scanner with traveling holographic laser beam illuminating complementary base-pair nucleotides in 3D', '3d'],
   ['quantum-superposition', 'Quantum superposition', 'creative', 'dots', 'Wavefunction probability cloud in multiple eigenstates collapsing into a unified quantum singularity and re-expanding', '3d'],
   ['magnetic-field', 'Magnetic field', 'creative', 'orbit', 'Toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow', '3d'],
-  ['aurora-borealis', 'Aurora borealis', 'creative', 'wave', 'Volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients', '3d']
+  ['aurora-borealis', 'Aurora borealis', 'creative', 'wave', 'Volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients', '3d'],
+  ['agent-tree', 'Agent reasoning tree', 'ai', 'dots', 'Bioluminescent node graph simulating multi-step agent reasoning and tool retrieval', '2d'],
+  ['aurora-ribbon', 'Aurora input ribbon', 'ai', 'ring', 'Fluid rotating ambient gradient ribbon hugging a container with subtle glowing blur', '2d'],
+  ['glyph-matrix', 'Glyph decryption', 'ai', 'shape', 'Monospace matrix cells rapidly flipping through alphanumeric runes into stable state', '2d'],
+  ['coin-flip', '3D Coin flip', 'creative', 'shape', 'Isometric bevelled coin performing continuous 3D rotation with specular glint', '3d'],
+  ['biometric-reticle', 'Biometric reticle', 'creative', 'rings', 'Concentric biometric fingerprint ridges with oscillating radial radar laser sweep', '2d'],
+  ['vault-tumbler', 'Vault tumbler', 'creative', 'rings', 'Dual counter-rotating notched tumbler gear rings snapping into alignment with elastic notch latch', '2d'],
+  ['git-rebase', 'Git commit graph', 'application', 'dots', 'Branch commits splitting, advancing, and merging into trunk with elastic snap', '2d'],
+  ['packet-pipeline', 'Packet burst pipeline', 'application', 'bars', 'Modular circuit bus with high-speed neon data packet pulses', '2d'],
+  ['crt-scanline', 'Retro CRT scanline bar', 'application', 'progress', 'Bracketed ASCII terminal progress bar with stepped fill and horizontal phosphor scanline', '2d'],
+  ['gooey-metaballs', 'Gooey metaballs', 'creative', 'dots', 'Fluid droplets stretching, coalescing, and pulling apart with visceral surface tension', '2d'],
+  ['camera-iris', 'Camera aperture iris', 'creative', 'shape', 'Polygonal blades rotating inward to constrict and expand an optical aperture', '2d'],
+  ['newton-cradle', 'Newton cradle', 'creative', 'dots', 'Three-ball kinetic pendulum with elastic momentum transfer and trailing shockwaves', '2d']
 ];
 
 /**
@@ -218,6 +230,12 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['liquid-droplet', 'liquid-mercury'], ['genome-sequence', 'dna-decode'],
   ['probability-cloud', 'quantum-superposition'], ['dipole-flux', 'magnetic-field'],
   ['northern-lights', 'aurora-borealis'],
+  ['agent-reasoning', 'agent-tree'], ['ambient-ribbon', 'aurora-ribbon'],
+  ['glyph-decode', 'glyph-matrix'], ['crypto-coin', 'coin-flip'],
+  ['fingerprint-scan', 'biometric-reticle'], ['safe-vault', 'vault-tumbler'],
+  ['branch-merge', 'git-rebase'], ['data-pipeline', 'packet-pipeline'],
+  ['terminal-scan', 'crt-scanline'], ['viscous-drops', 'gooey-metaballs'],
+  ['camera-shutter', 'camera-iris'], ['kinetic-balls', 'newton-cradle'],
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

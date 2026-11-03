@@ -12,6 +12,11 @@ import { css as dotRingFrames } from '../keyframes/dot-ring.js';
 import { css as constellationFrames } from '../keyframes/constellation.js';
 import { css as constellationLineFrames } from '../keyframes/constellation-line.js';
 import { css as quantumFrames } from '../keyframes/quantum.js';
+import { css as synapseFrames } from '../keyframes/synapse.js';
+import { css as gitMergeFrames } from '../keyframes/git-merge.js';
+import { css as metaballOrbitFrames } from '../keyframes/metaball-orbit.js';
+import { css as newtonLeftFrames } from '../keyframes/newton-left.js';
+import { css as newtonRightFrames } from '../keyframes/newton-right.js';
 
 export const dotsCss = `
 /* The dots are flex items, and N of them at a fifth of the box plus gaps at a seventh
@@ -20,7 +25,7 @@ export const dotsCss = `
    in this family read as ovals. flex:none stops the squeeze, and the size and gap are set
    so five dots actually fit the box they are given. */
 .wavelo--dots{gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 20))}
-.wavelo--dots .wavelo__part{flex:none;width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);border-radius:50%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--dots .wavelo__part{flex:none;width:calc(var(--wavelo-size,2.5rem) / 7);height:calc(var(--wavelo-size,2.5rem) / 7);border-radius:50%;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.4,0,.2,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--dots .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--dots .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1 / 3)}
@@ -59,13 +64,13 @@ export const dotsCss = `
 .wavelo--fading-dots .wavelo__part{animation:wavelo-fade-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(odd){animation:wavelo-alt-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-dots .wavelo__part:nth-child(even){background:var(--wavelo-secondary-color,currentColor);animation:wavelo-alt-dot-reverse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--staggered-dots .wavelo__part{animation:wavelo-stagger-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--staggered-dots .wavelo__part{animation:wavelo-stagger-dot var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--infinite-scroll{gap:var(--wavelo-gap,4px)}
-.wavelo--infinite-scroll .wavelo__part{width:12%;height:12%;animation:wavelo-bounce-dot var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--infinite-scroll .wavelo__part{width:12%;height:12%;animation:wavelo-bounce-dot var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* A reply arriving: three dots lift in a chain and settle before the next one starts,
    which is why the last dot carries the longest delay and the first none at all. */
 .wavelo--typing-dots{gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 8))}
-.wavelo--typing-dots .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 6);height:calc(var(--wavelo-size,2.5rem) / 6);animation:wavelo-typing-dot calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--typing-dots .wavelo__part{width:calc(var(--wavelo-size,2.5rem) / 6);height:calc(var(--wavelo-size,2.5rem) / 6);animation:wavelo-typing-dot calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--typing-dots .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * .18)}
 .wavelo--typing-dots .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * .36)}
 /* Three arcs on the same circle, a third of a turn apart. The turn is in the
@@ -178,4 +183,29 @@ export const dotsCss = `
 .wavelo--quantum-superposition .wavelo__part:nth-child(4){width:8px;height:8px;left:calc(50% - 4px);top:calc(50% - 4px);background:radial-gradient(circle at 35% 35%,#fff 0%,#22c55e 60%,currentColor 100%);box-shadow:0 0 8px #22c55e;animation:wavelo-quantum-p4 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--quantum-superposition .wavelo__part:nth-child(5){width:7px;height:7px;left:calc(50% - 3.5px);top:calc(50% - 3.5px);background:radial-gradient(circle at 35% 35%,#fff 0%,#eab308 60%,currentColor 100%);box-shadow:0 0 6px #eab308;animation:wavelo-quantum-p5 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--quantum-superposition .wavelo__part:nth-child(6){width:6px;height:6px;left:calc(50% - 3px);top:calc(50% - 3px);background:radial-gradient(circle at 35% 35%,#fff 0%,#06b6d4 60%,currentColor 100%);box-shadow:0 0 6px #06b6d4;animation:wavelo-quantum-p6 var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}${quantumFrames}`;
+.wavelo--agent-tree{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));margin:auto;background:transparent;border:0}
+.wavelo--agent-tree:before{content:"";position:absolute;left:20%;top:50%;width:60%;height:2px;background:linear-gradient(90deg,currentColor,var(--wavelo-secondary-color,#818cf8));opacity:.4;transform:translateY(-50%)}
+.wavelo--agent-tree:after{content:"";position:absolute;left:20%;top:28%;width:60%;height:44%;border-top:1.5px dashed var(--wavelo-secondary-color,#818cf8);border-bottom:1.5px dashed color-mix(in srgb,currentColor 50%,transparent);opacity:.35;pointer-events:none}
+.wavelo--agent-tree .wavelo__part{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,currentColor 70%);box-shadow:0 0 10px currentColor;animation:wavelo-synapse var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--agent-tree .wavelo__part:nth-child(1){left:14%;top:50%;width:22%;height:22%;margin:-11% 0 0 -11%}
+.wavelo--agent-tree .wavelo__part:nth-child(2){left:50%;top:28%;width:18%;height:18%;margin:-9% 0 0 -9%;background:radial-gradient(circle at 35% 35%,#fff 0%,var(--wavelo-secondary-color,#818cf8) 70%);box-shadow:0 0 10px var(--wavelo-secondary-color,#818cf8);animation-delay:calc(var(--wavelo-duration,1.4s)*.3)}
+.wavelo--agent-tree .wavelo__part:nth-child(3){left:84%;top:50%;width:22%;height:22%;margin:-11% 0 0 -11%;animation-delay:calc(var(--wavelo-duration,1.4s)*.6)}
+.wavelo--git-rebase{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));margin:auto;background:transparent;border:0}
+.wavelo--git-rebase:before{content:"";position:absolute;left:16%;top:64%;width:68%;height:2.5px;background:color-mix(in srgb,currentColor 45%,transparent);border-radius:2px;transform:translateY(-50%)}
+.wavelo--git-rebase:after{content:"";position:absolute;left:26%;top:30%;width:42%;height:34%;border-top:1.5px dashed var(--wavelo-secondary-color,#38bdf8);border-left:1.5px dashed var(--wavelo-secondary-color,#38bdf8);border-top-left-radius:6px;opacity:.65;pointer-events:none}
+.wavelo--git-rebase .wavelo__part{position:absolute;border-radius:50%;box-sizing:border-box}
+.wavelo--git-rebase .wavelo__part:nth-child(1){left:18%;top:64%;width:20%;height:20%;margin:-10% 0 0 -10%;background:currentColor;box-shadow:0 0 6px currentColor}
+.wavelo--git-rebase .wavelo__part:nth-child(2){left:48%;top:30%;width:18%;height:18%;margin:-9% 0 0 -9%;background:var(--wavelo-secondary-color,#38bdf8);box-shadow:0 0 8px var(--wavelo-secondary-color,#38bdf8);animation:wavelo-pulse var(--wavelo-duration,1.5s) ease-in-out infinite}
+.wavelo--git-rebase .wavelo__part:nth-child(3){left:80%;top:64%;width:22%;height:22%;margin:-11% 0 0 -11%;background:currentColor;box-shadow:0 0 8px currentColor;animation:wavelo-git-merge var(--wavelo-duration,1.5s) cubic-bezier(.34,1.56,.64,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--gooey-metaballs{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));margin:auto;background:transparent;border:0;filter:contrast(10)}
+.wavelo--gooey-metaballs .wavelo__part{position:absolute;left:50%;top:50%;border-radius:50%;filter:blur(calc(var(--wavelo-size,2.5rem)*.08))}
+.wavelo--gooey-metaballs .wavelo__part:nth-child(1){width:42%;height:42%;margin:-21% 0 0 -21%;background:radial-gradient(circle at 35% 35%,#fff 0%,currentColor 70%);animation:wavelo-metaball-orbit var(--wavelo-duration,1.6s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--gooey-metaballs .wavelo__part:nth-child(2){width:34%;height:34%;margin:-17% 0 0 -17%;background:radial-gradient(circle at 35% 35%,#fff 0%,var(--wavelo-secondary-color,currentColor) 70%);animation:wavelo-metaball-orbit var(--wavelo-duration,1.6s) ease-in-out infinite reverse var(--wavelo-play-state,running)}
+.wavelo--newton-cradle{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:calc(var(--wavelo-size,2.5rem)*.06);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));margin:auto;background:transparent;border:0}
+.wavelo--newton-cradle:before{content:"";position:absolute;top:14%;left:16%;right:16%;height:2.5px;border-radius:2px;background:color-mix(in srgb,currentColor 55%,#fff);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.wavelo--newton-cradle .wavelo__part{position:relative;width:calc(var(--wavelo-size,2.5rem)*.22);height:calc(var(--wavelo-size,2.5rem)*.22);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,currentColor 55%,#000 100%);box-shadow:0 2px 4px rgba(0,0,0,.35);transform-origin:50% calc(var(--wavelo-size,2.5rem)*-.45)}
+.wavelo--newton-cradle .wavelo__part:before{content:"";position:absolute;bottom:100%;left:50%;width:1px;height:calc(var(--wavelo-size,2.5rem)*.45);background:color-mix(in srgb,currentColor 45%,transparent);transform:translateX(-50%)}
+.wavelo--newton-cradle .wavelo__part:nth-child(1){animation:wavelo-newton-left var(--wavelo-duration,1.2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--newton-cradle .wavelo__part:nth-child(2){animation:none}
+.wavelo--newton-cradle .wavelo__part:nth-child(3){animation:wavelo-newton-right var(--wavelo-duration,1.2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}${quantumFrames}${synapseFrames}${gitMergeFrames}${metaballOrbitFrames}${newtonLeftFrames}${newtonRightFrames}`;

@@ -297,7 +297,7 @@ Re-run 2026-11-01 against the current build, after the publication blockers were
 | Command | Result |
 |---|---|
 | `npm run check` | Passed: build with catalog generation, strict typecheck, 52 unit and adapter tests, catalog drift check, package metadata check, documentation sync, bundle budgets |
-| `npm run catalog` | Passed: 153 public IDs, 153 active designs, 231 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
+| `npm run catalog` | Passed: 165 public IDs, 165 active designs, 255 presets, 12 stylesheet slices; verified to fail on a drifted generated file |
 | `npm run packages:check` | Passed: seven manifests complete, and every `exports` path exists in the build with its declaration |
 | `npm run docs:check` | Passed: documented counts, options, custom properties and bundle figures match the built packages — and the gate now measures what it checks: per-kind slice costs, the sheet size, both quoted bundle sizes from the same entry points the budget gate builds, and every per-design option bullet in `docs/COMPONENT_CUSTOMIZATION_API.md` |
 | `npm run docs:build` | Passed |

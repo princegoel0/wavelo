@@ -7,6 +7,9 @@ import { css as sphereFrames } from '../keyframes/sphere-spin.js';
 import { css as mobiusFrames } from '../keyframes/mobius.js';
 import { css as vortexFrames } from '../keyframes/vortex.js';
 import { css as torusFrames } from '../keyframes/torus.js';
+import { css as biometricFrames } from '../keyframes/biometric-pulse.js';
+import { css as vaultCwFrames } from '../keyframes/vault-cw.js';
+import { css as vaultCcwFrames } from '../keyframes/vault-ccw.js';
 
 export const ringsCss = `
 .wavelo--rings:before,.wavelo--rings:after{content:"";position:absolute;border:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;border-right-color:transparent;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -19,7 +22,7 @@ export const ringsCss = `
 .wavelo--infinity .wavelo__part:nth-child(1){box-shadow:0 0 8px #fff,0 0 16px #38bdf8,0 0 24px currentColor;animation:wavelo-inf-flow var(--wavelo-duration,2.4s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--infinity .wavelo__part:nth-child(2){box-shadow:0 0 8px #fff,0 0 16px var(--wavelo-secondary-color,#ec4899),0 0 24px #f43f5e;animation:wavelo-inf-flow var(--wavelo-duration,2.4s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,2.4s) * -.5)}
 
-.wavelo--ripple-circles .wavelo__part{position:absolute;border:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;background:transparent;animation:wavelo-ripple var(--wavelo-duration,1s) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--ripple-circles .wavelo__part{position:absolute;border:var(--wavelo-stroke,3px) solid currentColor;border-radius:50%;background:transparent;animation:wavelo-ripple var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(0,0,.2,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--ripple-circles .wavelo__part:nth-child(1){width:25%;height:25%}
 .wavelo--ripple-circles .wavelo__part:nth-child(2){width:55%;height:55%;animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--ripple-circles .wavelo__part:nth-child(3){width:85%;height:85%;animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
@@ -28,14 +31,14 @@ export const ringsCss = `
 .wavelo--nested-squares .wavelo__part:nth-child(1){inset:8%;transform:rotate(0deg);animation:wavelo-square-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--nested-squares .wavelo__part:nth-child(2){inset:25%;transform:rotate(45deg);animation:wavelo-square-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite reverse var(--wavelo-play-state,running)}
 .wavelo--nested-squares .wavelo__part:nth-child(3){inset:42%;transform:rotate(22deg);animation:wavelo-square-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--concentric-pulse .wavelo__part{border-radius:50%;inset:12%;animation:wavelo-concentric var(--wavelo-duration,1s) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--concentric-pulse .wavelo__part{border-radius:50%;inset:12%;animation:wavelo-concentric var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(0,0,.2,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--concentric-pulse .wavelo__part:nth-child(2){inset:28%;animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--concentric-pulse .wavelo__part:nth-child(3){inset:44%;animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--multi-arc{border:var(--wavelo-stroke,3px) solid transparent;border-top-color:currentColor;border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--multi-arc:before{inset:18%;border-top-color:transparent;border-right-color:currentColor}
 .wavelo--multi-arc:after{inset:34%;border-top-color:transparent;border-bottom-color:currentColor;animation-direction:normal}
 .wavelo--ripple-dot:before{inset:42%;border:0;border-radius:50%;background:currentColor;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--ripple-dot:after{inset:0;border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:currentColor;border-radius:50%;opacity:1;animation:wavelo-ripple var(--wavelo-duration,1s) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--ripple-dot:after{inset:0;border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:currentColor;border-radius:50%;opacity:1;animation:wavelo-ripple var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(0,0,.2,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--gyroscope{perspective:350px;transform-style:preserve-3d}
 .wavelo--gyroscope .wavelo__part{position:absolute;inset:0;margin:auto;border-radius:9999px;background:transparent;transform-style:preserve-3d}
 .wavelo--gyroscope .wavelo__part:nth-child(1){width:100%;height:100%;border:var(--wavelo-stroke,2.5px) solid currentColor;animation:wavelo-gyro-outer var(--wavelo-duration,2.4s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -63,4 +66,17 @@ export const ringsCss = `
 .wavelo--torus-ring .wavelo__part:nth-child(1){width:92%;height:92%;border:var(--wavelo-stroke,3px) solid currentColor;border-top-color:transparent;filter:drop-shadow(0 0 6px currentColor);animation:wavelo-torus-spin var(--wavelo-duration,2.6s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--torus-ring .wavelo__part:nth-child(2){width:52%;height:52%;border:var(--wavelo-stroke,2.5px) solid var(--wavelo-secondary-color,#38bdf8);border-left-color:transparent;filter:drop-shadow(0 0 6px var(--wavelo-secondary-color,#38bdf8));animation:wavelo-torus-spin var(--wavelo-duration,2.6s) linear infinite reverse var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,2.6s) * -.5)}
 .wavelo--torus-ring .wavelo__part:nth-child(3){width:8px;height:8px;background:#fff;box-shadow:0 0 10px #fff,0 0 18px var(--wavelo-secondary-color,#38bdf8);animation:wavelo-torus-bead var(--wavelo-duration,2.6s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${rippleFrames}${infinityFrames}${squareSpinFrames}${concentricFrames}${gyroFrames}${sphereFrames}${mobiusFrames}${vortexFrames}${torusFrames}`;
+.wavelo--biometric-reticle{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.75rem));height:var(--wavelo-height,var(--wavelo-size,2.75rem));margin:auto;background:transparent;border:0}
+.wavelo--biometric-reticle:before{content:"";position:absolute;left:12%;right:12%;height:2px;background:linear-gradient(90deg,transparent,var(--wavelo-secondary-color,#38bdf8),#fff,var(--wavelo-secondary-color,#38bdf8),transparent);box-shadow:0 0 8px var(--wavelo-secondary-color,#38bdf8);border:0;border-radius:0;animation:wavelo-biometric-laser var(--wavelo-duration,1.8s) ease-in-out infinite alternate var(--wavelo-play-state,running);pointer-events:none;z-index:5}
+.wavelo--biometric-reticle:after{content:"";position:absolute;inset:2%;border:1.5px solid color-mix(in srgb,currentColor 40%,transparent);border-radius:6px;animation:none;pointer-events:none}
+.wavelo--biometric-reticle .wavelo__part{position:absolute;border-radius:50%/60% 60% 40% 40%;background:transparent;box-sizing:border-box}
+.wavelo--biometric-reticle .wavelo__part:nth-child(1){inset:32% 36%;border:calc(var(--wavelo-stroke,2.5px)) solid currentColor;box-shadow:0 0 8px color-mix(in srgb,currentColor 50%,transparent);animation:wavelo-biometric-pulse var(--wavelo-duration,1.6s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--biometric-reticle .wavelo__part:nth-child(2){inset:18% 22%;border:calc(var(--wavelo-stroke,2px)) solid color-mix(in srgb,currentColor 75%,transparent);animation:wavelo-biometric-pulse var(--wavelo-duration,1.6s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1.6s)*-.3)}
+.wavelo--biometric-reticle .wavelo__part:nth-child(3){inset:6%;border:calc(var(--wavelo-stroke,2px)) dashed var(--wavelo-secondary-color,#38bdf8);border-radius:50%;animation:wavelo-spin calc(var(--wavelo-duration,1.6s)*1.5) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--vault-tumbler{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.75rem));height:var(--wavelo-height,var(--wavelo-size,2.75rem));margin:auto;background:transparent;border:0}
+.wavelo--vault-tumbler:before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid color-mix(in srgb,currentColor 50%,transparent);box-shadow:inset 0 0 8px rgba(0,0,0,.6);animation:none}
+.wavelo--vault-tumbler:after{content:"";position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,currentColor 60%,#000 100%);box-shadow:0 2px 6px rgba(0,0,0,.5);border:0;animation:none}
+.wavelo--vault-tumbler .wavelo__part{position:absolute;border-radius:50%;background:transparent;box-sizing:border-box}
+.wavelo--vault-tumbler .wavelo__part:nth-child(1){inset:8%;border:calc(var(--wavelo-stroke,3px)) dashed currentColor;animation:wavelo-vault-cw var(--wavelo-duration,2s) cubic-bezier(.34,1.56,.64,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--vault-tumbler .wavelo__part:nth-child(2){inset:22%;border:calc(var(--wavelo-stroke,2.5px)) dashed var(--wavelo-secondary-color,#f59e0b);animation:wavelo-vault-ccw var(--wavelo-duration,2s) cubic-bezier(.34,1.56,.64,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+${rippleFrames}${infinityFrames}${squareSpinFrames}${concentricFrames}${gyroFrames}${sphereFrames}${mobiusFrames}${vortexFrames}${torusFrames}${biometricFrames}${vaultCwFrames}${vaultCcwFrames}`;
