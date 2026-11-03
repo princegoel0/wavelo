@@ -17,7 +17,7 @@ fails the build rather than getting documented.
 | `@wavelo/svelte` | 269,224 | 49,550 | 51,200 |
 | `@wavelo/web-components` | 271,343 | 50,428 | 51,200 |
 | `@wavelo/vanilla` | 269,554 | 49,726 | 51,200 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 228,579 raw | 36,149 | — |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 229,085 raw | 36,193 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not

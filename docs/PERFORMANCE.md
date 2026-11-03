@@ -75,14 +75,14 @@ Gzipped together, as shipped — every slice, cheapest first:
 | --- | --- | --- | --- |
 | `overlay` | 1,782 | `progress` | 4,662 |
 | `scroll` | 2,005 | `skeleton` | 4,966 |
-| `pulse` | 2,883 | `orbit` | 4,972 |
+| `pulse` | 2,883 | `orbit` | 4,974 |
 | `bars` | 2,891 | `wave` | 5,553 |
-| `rings` | 4,372 | `dots` | 7,151 |
-| `ring` | 4,618 | `shape` | 8,462 |
+| `rings` | 4,378 | `dots` | 7,151 |
+| `ring` | 4,618 | `shape` | 8,491 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,360 bytes of every row above. The whole
-catalog sheet is 36,149 bytes gzipped, loaded once, for all 165 designs. Read down the
+catalog sheet is 36,193 bytes gzipped, loaded once, for all 165 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
@@ -97,7 +97,7 @@ record when it was written stops measuring the worst case the moment another kin
 overtakes it, and the budget still passes — which is what happened here, with the ceiling
 at 11,264 bytes while a shape design already cost 12,145. Redrawing a design moves its kind
 too, and not in proportion to the design's own size: `infinity` is one loader's worth of
-markup and what it ships is a sixteen-stop lemniscate inside the 3,615-byte `rings` slice,
+markup and what it ships is a sixteen-stop lemniscate inside the 4,378-byte `rings` slice,
 while `helix` needs eighteen parts in six rows inside the 5,382-byte `wave` slice. A design
 in a crowded kind costs more than a design in a quiet one, whatever its own rules — and a
 change to the renderer, which every design imports, costs all of them: the determinate fill

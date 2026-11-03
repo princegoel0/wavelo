@@ -150,7 +150,11 @@ for (const token of tokensDeclared) {
 // document that reports the current state has to be the built count.
 const { patternPresets } = await import('../packages/core/dist/catalog.js');
 const countDocuments = [
-  'README.md', 'PRD.md', 'CHANGELOG.md', 'RELEASE_CHECKLIST.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
+  // CHANGELOG.md and RELEASE_CHECKLIST.md are deliberately absent: each entry records what
+  // was true when it was written, so "Catalog Totals (v0.2.0): 153 public IDs" is a fact about
+  // a past release, not a claim about this build. The current release is still checked, through
+  // `required` below, which demands the built total appear in the changelog.
+  'README.md', 'PRD.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
   'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/MIGRATION.md',
   'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
   // These three restate catalog totals and were never compared to anything, so each one
@@ -175,12 +179,26 @@ for (const file of countDocuments) {
   // "128 of the 138 designs are 2D" described no build this project ever shipped: the
   // denominator is the catalog size, and the 2D numerator is that minus the 3D set. Both
   // halves of a fraction like this are derivable, so neither is allowed to be typed.
-  for (const [, part, whole] of text.matchAll(/(\d+) of the (\d+) designs?\b/g)) {
-    if (Number(whole) !== ids) failures.push(`${file} says "${part} of the ${whole} designs"; the build has ${ids} designs`);
-    if (Number(part) > Number(whole)) failures.push(`${file} says "${part} of the ${whole} designs", which is more parts than the whole`);
+  // "128 of the 138 designs are 2D" described no build this project ever shipped: the
+  // denominator is the catalog size, and the 2D numerator is that minus the 3D set. Both
+  // halves of a fraction like this are derivable, so neither is allowed to be typed. A
+  // number that follows an arrow is a phase transition ("155 → 146 active designs"), which
+  // is history rather than a claim about this build, so those are left alone.
+  const history = (text, index) => text.slice(Math.max(0, index - 8), index).includes('→');
+  for (const match of text.matchAll(/(\d+) of (?:the )?(\d+) designs?\b/g)) {
+    if (history(text, match.index)) continue;
+    const [, part, whole] = match;
+    if (Number(whole) !== ids) failures.push(`${file} says "${match[0]}"; the build has ${ids} designs`);
+    if (Number(part) > Number(whole)) failures.push(`${file} says "${match[0]}", which is more parts than the whole`);
   }
   for (const [, part] of text.matchAll(/(\d+) of the \d+ designs are 2D/g)) {
     if (Number(part) !== ids - threeD) failures.push(`${file} states ${part} designs are 2D; the build has ${ids - threeD} of ${ids}`);
+  }
+  // "153 active designs" is the same claim as "153 designs" in different clothes, and it
+  // slipped through while the catalog grew to 165 because only the exact phrase was matched.
+  for (const match of text.matchAll(/(\d+) active designs\b/g)) {
+    if (history(text, match.index)) continue;
+    if (Number(match[1]) !== active) failures.push(`${file} states ${match[1]} active designs; the build has ${active}`);
   }
 }
 

@@ -79,7 +79,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 165 designs |
 | `npm run audit:layout` | Passed: 163 of the 165 designs cost no layout per frame; the two that do are each accounted for |
 | `npm run audit:visual` | Passed: contact sheet regenerated, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 153 active designs — 137 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
+| `npm run audit:visual:correctness` | Passed at this report's date, against the then-current 153-design checkpoint: 137 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
 | `node scripts/style-fidelity.mjs isolated` | Passed: 0 differences between the combined sheet and each design rendered with only its own slice |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |

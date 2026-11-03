@@ -9,13 +9,18 @@
   - *Category D (Organic Physics & Liquid Dynamics):* `gooey-metaballs` (fluid droplets stretching and coalescing with visceral surface tension), `camera-iris` (6 polygonal aperture blades constricting and opening), `newton-cradle` (3-ball kinetic pendulum with elastic momentum transfer).
 - **CommonJS & Dual Module Packaging (WAV-PKG-01):** Dual CJS/ESM distribution bundling via `esbuild` emitting `dist/index.cjs` with conditional exports map, allowing legacy Node.js environments to synchronously `require('@wavelo/core')` without `ERR_REQUIRE_ESM`.
 - **Perceptual Physics & Keyframe Compositing:** All keyframes refactored to GPU-composited `transform` and `opacity` properties with zero layout recalculation.
+- **3D Suite Elevation:** `atom-orbital` re-cut as volumetric spheres with specular pinpricks and orbital occlusion rather than flat discs; `coin-flip` given an alternating toss with a specular reflection so the two faces read as one object; `newton-cradle`, `sphere-lattice`, `crystal-cluster`, `camera-iris`, `crt-scanline` and the spatial ring and dot kinds refined to match.
+- **One layout cost removed on measurement, not on assertion:** `biometric-reticle` swept its laser with `top`, which costs the browser a layout on every frame — the same travel is now a `translateY` scaled by the loader's own height, and `multi-wave`, whose frames became transforms, no longer needs an exception recorded for it. `npm run audit:layout` re-measures all 165 and refuses a design that dirties layout without a stated reason.
+- **`atom-orbital` orbits are now static:** the `orbit` kind animates every part's transform, and this design draws its three elliptical paths on those parts, so the paths revolved along with the electrons. Each part now holds a fixed tilt (0°, 60°, 120°) sized to its own ellipse, and only the electron travels. Verified frame by frame: the ring orientations are identical at every phase of the cycle.
+- **`cube` is a closed cube:** it shipped three quads, so for half its turn every face was turned away and the loader read as an open shell — measured at 12 of 24 sampled phases with no face toward the camera. Each face now carries its opposite, turned outward, and exactly three faces face the camera at every phase.
+- The Chromium suite's part-stacking check compares transforms as well as bounding boxes. Two ellipses authored at 60° and 120° fill the same axis-aligned box while being plainly different drawings; the check still fires when two parts collapse onto the same transform, which is the bug it exists for.
 - **Studio & DX Upgrades:** Added high-contrast canvas background modes (Pure Black `#000` and Brand gradient) and standalone accessible HTML & CSS exporter tab with `currentColor` inheritance and `@media (prefers-reduced-motion: reduce)`.
 - **Catalog Totals:** 165 public IDs, 165 active designs, no deprecated aliases, 255 named presets, 90 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
 
 ## 0.3.0
 
-Staged on `dev`; nothing here is on npm until this version is published. `0.2.0` as it stands
-carries the narrow peer ranges and an `@wavelo/angular` that an Angular application cannot compile.
+Published 2026-11-02. It carries the widened adapter peer ranges and the fix that makes
+`@wavelo/angular` compilable by an Angular application, which `0.1.0` and `0.2.0` do not.
 
 - **Framework Ecosystem Compatibility:** Broadened `peerDependencies` across the framework
   adapters to remove npm `ERESOLVE` friction for downstream consumers:

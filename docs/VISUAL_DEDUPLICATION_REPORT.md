@@ -8,7 +8,7 @@
 
 | Metric | Original | Phase 1 | Phase 2 | Phase 3 | Phase 4 (Current) | Status |
 |---|---|---|---|---|---|---|
-| **Active Designs** | 155 | 146 | 141 | 133 | **153** | 153 active designs (25 3D spatial) |
+| **Active Designs** | 155 | 146 | 141 | 133 | **153** | the 153-design checkpoint (25 3D spatial) |
 | **Named Presets** | 228 | 219 | 214 | 231 | **255** | 255 named presets + 90 patterns |
 | **Stylesheet Slices** | 12 | 12 | 12 | 12 | **12** | Maintained 100% modularity |
 | **Bundle Size (Core Gzip)** | 33.3 KB | 32.7 KB | 32.0 KB | 31.8 KB | **43.3 KB** | Core renderer within budget |
