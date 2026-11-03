@@ -15,9 +15,8 @@ export const orbitCss = `
 .wavelo--orbit .wavelo__part:nth-child(3){--orbit-angle:144deg}
 .wavelo--orbit .wavelo__part:nth-child(4){--orbit-angle:216deg}
 .wavelo--orbit .wavelo__part:nth-child(5){--orbit-angle:288deg}
-.wavelo--orbiting-dots:before{content:"";position:absolute;left:50%;top:50%;width:18%;height:18%;margin:-9% 0 0 -9%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,var(--wavelo-secondary-color,#38bdf8) 60%,currentColor 100%);box-shadow:0 0 10px var(--wavelo-secondary-color,#38bdf8)}
-.wavelo--orbit .wavelo__part{position:absolute;left:50%;top:50%;width:18%;height:18%;border-radius:50%;transform-origin:0 0;background:radial-gradient(circle at 30% 30%,#fff 0%,currentColor 60%,color-mix(in srgb,currentColor 40%,#000) 100%);box-shadow:inset -1px -1px 2px rgba(0,0,0,.6),inset 1px 1px 2px rgba(255,255,255,.8),0 0 6px currentColor;animation:wavelo-orbit var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--particle-orbit .wavelo__part{width:12%;height:12%;background:radial-gradient(circle at 30% 30%,#fff 0%,var(--wavelo-secondary-color,#38bdf8) 55%,#0369a1 100%);box-shadow:inset -1px -1px 2px rgba(0,0,0,.6),0 0 8px var(--wavelo-secondary-color,#38bdf8)}
+.wavelo--orbiting-dots:before{content:"";position:absolute;left:50%;top:50%;width:12%;height:12%;margin:-6% 0 0 -6%;border-radius:50%;background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 35%,transparent))}
+.wavelo--particle-orbit .wavelo__part{width:10%;height:10%;box-shadow:0 0 0 2px color-mix(in srgb,currentColor 30%,transparent)}
 .wavelo--rotating-dots .wavelo__part{animation:wavelo-dot-orbit var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* The ring is one radius wide and the dots ride it a fifth of a turn apart; without the
    stagger every dot is at the same point of the same circle, which renders as one blob. */

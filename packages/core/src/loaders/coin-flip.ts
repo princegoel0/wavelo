@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "coin-flip", name: "3D Coin flip", category: "creative", dimension: "3d", kind: "shape", description: "Isometric bevelled coin performing continuous 3D rotation with specular glint", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "coin-flip" };
+const definition: LoaderDefinition = { id: "coin-flip", name: "3D Coin flip", category: "creative", dimension: "3d", kind: "shape", description: "Isometric bevelled coin performing continuous 3D rotation with specular glint", options: ["className","color","data-testid","decorative","describedBy","direction","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "coin-flip" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const coinFlip = (config: Omit<LoaderConfig, 'type'> = {}) =>

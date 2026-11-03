@@ -5,7 +5,7 @@ import { progressCss } from '../css/kinds/progress.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "crt-scanline", name: "Retro CRT scanline bar", category: "application", dimension: "2d", kind: "progress", description: "Bracketed ASCII terminal progress bar with stepped fill and horizontal phosphor scanline", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","max","reducedMotion","size","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "crt-scanline" };
+const definition: LoaderDefinition = { id: "crt-scanline", name: "Retro CRT scanline bar", category: "application", dimension: "2d", kind: "progress", description: "Bracketed ASCII terminal progress bar with stepped fill and horizontal phosphor scanline", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","max","paused","reducedMotion","size","speed","style","theme","value","valueText","width"], supportsProgress: true, stability: "stable", visualSignature: "crt-scanline" };
 const styles = `${baseCss}${progressCss}`;
 
 export const crtScanline = (config: Omit<LoaderConfig, 'type'> = {}) =>
