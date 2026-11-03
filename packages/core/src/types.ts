@@ -1,6 +1,26 @@
-import type { LoaderId } from './ids.js';
+import { loaderIds, type LoaderId } from './ids.js';
 
+export { loaderIds };
 export type { LoaderId };
+
+/**
+ * Autocomplete constants for all supported loader IDs.
+ */
+export const WaveloTypes = loaderIds;
+
+/**
+ * All official categorization tags for Wavelo loader designs.
+ */
+export const WaveloCategories = [
+  'spinner',
+  'dots',
+  'bars',
+  'creative',
+  'skeleton',
+  'progress',
+  'application',
+  'ai'
+] as const;
 
 /**
  * The CSS custom properties Wavelo's stylesheets read. Setting one in `style`, on
@@ -59,15 +79,7 @@ export type LoaderStyle = WaveloTokens & Record<string, string | number>;
  */
 export type WaveloDefaults = LoaderConfig;
 
-export type LoaderCategory =
-  | 'spinner'
-  | 'dots'
-  | 'bars'
-  | 'creative'
-  | 'skeleton'
-  | 'progress'
-  | 'application'
-  | 'ai';
+export type LoaderCategory = (typeof WaveloCategories)[number];
 
 export type LoaderDimension = '2d' | '3d';
 

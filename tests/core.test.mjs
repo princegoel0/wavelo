@@ -633,3 +633,18 @@ test('micro-interactions pass through data-wavelo-state', () => {
     assert.match(undo.html, new RegExp(`data-wavelo-state="${state}"`));
   }
 });
+
+test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
+  const { WaveloCategories, WaveloTypes, loaderIds } = await import('../packages/core/dist/index.js');
+  assert.ok(Array.isArray(WaveloCategories));
+  assert.equal(WaveloCategories.length, 8);
+  for (const cat of ['spinner', 'dots', 'bars', 'creative', 'skeleton', 'progress', 'application', 'ai']) {
+    assert.ok(WaveloCategories.includes(cat));
+  }
+  assert.ok(Array.isArray(WaveloTypes));
+  assert.equal(WaveloTypes.length, 165);
+  assert.equal(WaveloTypes, loaderIds);
+  assert.ok(WaveloTypes.includes('circular'));
+  assert.ok(WaveloTypes.includes('atom-orbital'));
+});
+

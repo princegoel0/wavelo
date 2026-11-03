@@ -222,3 +222,18 @@ test('the custom element observes every configuration attribute', async () => {
   const { WaveloLoaderElement } = await import('../packages/web-components/dist/index.js');
   assert.deepEqual([...WaveloLoaderElement.observedAttributes].sort(), [...loaderAttributes].sort());
 });
+
+test('universal Wavelo component and element aliases are exported across frameworks', async () => {
+  const { Wavelo: ReactWavelo, Loader: ReactLoaderComponent } = await import('../packages/react/dist/index.js');
+  assert.equal(ReactWavelo, ReactLoaderComponent);
+
+  const { Wavelo: VueWavelo, Loader: VueLoaderComponent } = await import('../packages/vue/dist/index.js');
+  assert.equal(VueWavelo, VueLoaderComponent);
+
+  const { createWaveloElement, createLoaderElement, mountWavelo, mountLoader } = await import('../packages/vanilla/dist/index.js');
+  assert.equal(createWaveloElement, createLoaderElement);
+  assert.equal(mountWavelo, mountLoader);
+
+  const { WaveloElement, WaveloLoaderElement } = await import('../packages/web-components/dist/index.js');
+  assert.equal(WaveloElement, WaveloLoaderElement);
+});

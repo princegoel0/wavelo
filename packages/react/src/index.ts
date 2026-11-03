@@ -51,6 +51,10 @@ export function Loader(props: WaveloProps = {}) {
   });
 }
 
+/** `Wavelo` is the universal component alias for `<Loader>`. */
+export const Wavelo = Loader;
+export type Wavelo = typeof Loader;
+
 /**
  * A component bound to one design and the options it always uses, so a call site
  * reads `<ButtonSpinner loading={busy} />` instead of repeating a configuration.

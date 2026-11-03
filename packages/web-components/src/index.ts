@@ -61,3 +61,7 @@ export function defineWaveloElements(): void {
   if (typeof customElements === 'undefined') return;
   if (!customElements.get('wavelo-loader')) customElements.define('wavelo-loader', WaveloLoaderElement);
 }
+
+/** `WaveloElement` is the alias for `WaveloLoaderElement`. */
+export const WaveloElement = WaveloLoaderElement;
+export type WaveloElement = WaveloLoaderElement;

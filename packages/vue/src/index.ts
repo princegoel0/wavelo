@@ -70,6 +70,9 @@ function defineLoader(name: string, bound: LoaderConfig) {
  */
 export const Loader = defineLoader('WaveloLoader', {});
 
+/** `Wavelo` is the universal component alias for `<Loader>`. */
+export const Wavelo = Loader;
+
 /**
  * A component bound to one design and the options it always uses:
  * `const ButtonSpinner = loaderFor('ring', { size: 16, color: '#fff' })`, then

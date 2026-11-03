@@ -1685,3 +1685,27 @@ test('constellations render distinct astronomical star maps and connecting lines
   const firstStarPositions = new Set(results.map((r) => r.firstStarLeft));
   assert.ok(firstStarPositions.size >= 4, 'Constellations must have unique star placements');
 });
+
+test('forced-colors active sets high contrast system colors and preserves part visibility', async () => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  try {
+    const html = `<div id="hc-test">${renderLoader({ type: 'ring', label: 'High contrast ring' }).html}</div>`;
+    await setContentPage(html);
+    const styles = await page.evaluate(() => {
+      const el = document.querySelector('#hc-test .wavelo');
+      const cs = getComputedStyle(el);
+      return {
+        forcedColorAdjust: cs.forcedColorAdjust,
+        color: cs.getPropertyValue('--wavelo-color').trim(),
+        skeletonBase: cs.getPropertyValue('--wavelo-skeleton-base').trim(),
+        skeletonHighlight: cs.getPropertyValue('--wavelo-skeleton-highlight').trim()
+      };
+    });
+    assert.equal(styles.forcedColorAdjust, 'none');
+    assert.equal(styles.color, 'CanvasText');
+    assert.equal(styles.skeletonBase, 'Canvas');
+    assert.equal(styles.skeletonHighlight, 'Highlight');
+  } finally {
+    await page.emulateMedia({ forcedColors: 'none' });
+  }
+});

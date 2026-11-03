@@ -41,7 +41,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./WaveloLoader.svelte": "./src/WaveloLoader.svelte"
+    "./WaveloLoader.svelte": "./src/WaveloLoader.svelte",
+    "./Wavelo.svelte": "./src/WaveloLoader.svelte"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json"
