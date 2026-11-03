@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 31,417 | 9.2 KB (9,374 B) | 10,240 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 56,873 | 13,171 | 13,824 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 55,606 | 12,872 | 14,336 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 269,032 | 48.3 KB (49,435 B) | 51,200 |
-| `@wavelo/core` + registry walk over all 165 designs | 269,035 | 49,444 | 51,200 |
-| `@wavelo/react` | 269,864 | 49,913 | 51,200 |
-| `@wavelo/vue` | 270,849 | 50,385 | 51,200 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 31,482 | 9.2 KB (9,406 B) | 10,240 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 59,333 | 13,564 | 13,824 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 55,671 | 12,907 | 14,336 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 270,456 | 48.4 KB (49,570 B) | 51,200 |
+| `@wavelo/core` + registry walk over all 165 designs | 270,459 | 49,578 | 51,200 |
+| `@wavelo/react` | 271,288 | 50,048 | 51,200 |
+| `@wavelo/vue` | 272,273 | 50,519 | 51,200 |
 | `@wavelo/angular` | 240,228 | 45,780 | 52,224 |
-| `@wavelo/svelte` | 269,224 | 49,550 | 51,200 |
-| `@wavelo/web-components` | 271,343 | 50,428 | 51,200 |
-| `@wavelo/vanilla` | 269,554 | 49,726 | 51,200 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 229,085 raw | 36,193 | — |
+| `@wavelo/svelte` | 270,648 | 49,684 | 51,200 |
+| `@wavelo/web-components` | 272,767 | 50,564 | 51,200 |
+| `@wavelo/vanilla` | 270,978 | 49,861 | 51,200 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 230,003 raw | 36,289 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not

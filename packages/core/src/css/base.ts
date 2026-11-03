@@ -16,7 +16,7 @@ export const baseCss = `
    there and a design would lose the fill, display and duration its own rule set: a
    shape loader on a page that also draws a ring rendered hollow. :where() keeps these
    defaults at zero specificity, so a kind or design rule wins in any order. */
-:where(.wavelo){display:inline-flex;position:relative;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);transition:--wavelo-progress .2s ease;animation-duration:var(--wavelo-duration,1s);animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
+:where(.wavelo){display:inline-flex;position:relative;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;isolation:isolate;contain:layout style;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));color:var(--wavelo-color,#6366f1);background:var(--wavelo-background,transparent);transition:--wavelo-progress .2s ease;animation-duration:var(--wavelo-duration,1s);animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
 :where(.wavelo__part){box-sizing:border-box;background:currentColor}
 .wavelo,.wavelo *,.wavelo::before,.wavelo::after,.wavelo *::before,.wavelo *::after{box-sizing:border-box!important}
 /* "inline" aligns an inline-level box with its text line; block and grid designs
