@@ -9,15 +9,15 @@ fails the build rather than getting documented.
 | `@wavelo/core/loaders/ring` — one design, chosen at build time | 31,417 | 9.2 KB (9,374 B) | 10,240 |
 | `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 56,873 | 13,171 | 13,824 |
 | Two designs from different kinds (`ring` + `skeleton-card`) | 55,606 | 12,872 | 14,336 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 260,731 | 46.9 KB (47,991 B) | 51,200 |
-| `@wavelo/core` + registry walk over all 165 designs | 260,734 | 48,002 | 51,200 |
-| `@wavelo/react` | 261,563 | 48,467 | 51,200 |
-| `@wavelo/vue` | 262,548 | 48,936 | 51,200 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 270,891 | 48.1 KB (49,294 B) | 51,200 |
+| `@wavelo/core` + registry walk over all 165 designs | 270,894 | 49,302 | 51,200 |
+| `@wavelo/react` | 271,723 | 49,770 | 51,200 |
+| `@wavelo/vue` | 272,708 | 50,237 | 51,200 |
 | `@wavelo/angular` | 240,228 | 45,780 | 52,224 |
-| `@wavelo/svelte` | 260,923 | 48,106 | 51,200 |
-| `@wavelo/web-components` | 263,042 | 48,984 | 51,200 |
-| `@wavelo/vanilla` | 261,253 | 48,281 | 51,200 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 220,572 raw | 34,699 | — |
+| `@wavelo/svelte` | 271,083 | 49,407 | 51,200 |
+| `@wavelo/web-components` | 273,202 | 50,286 | 51,200 |
+| `@wavelo/vanilla` | 271,413 | 49,584 | 51,200 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 230,438 raw | 36,045 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -29,7 +29,7 @@ tranche's per-part fill logic cost every design a further ~227 B, including a ri
 which uses none of it. `busiest-loader` is measured alongside `individual-loader` so a
 crowded kind cannot grow unnoticed, and it is pointed at whatever the largest slice is
 now rather than at the kind that held the record when the probe was written: `shape`
-(8,156 B with the base) leads `dots` (6,802), `wave` (5,436) and `skeleton` (4,966), so
+(8,156 B with the base) leads `dots` (6,844), `wave` (5,553) and `skeleton` (4,966), so
 the probe samples `voxel-cluster`. It has moved twice — `progress` while twelve determinate
 designs made that the largest slice, then `dots` (through `bubble-rise`) after the motion
 and skeleton tranches, now `shape` after the 3D suite — and each move was only visible
