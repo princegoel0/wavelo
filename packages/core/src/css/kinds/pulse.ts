@@ -31,13 +31,13 @@ export const pulseCss = `
 /* The caret at the end of a streamed answer. It is a block, not a round dot, and it
    spends the first half of the cycle lit. */
 .wavelo--stream-cursor .wavelo__part{width:42%;height:72%;border-radius:var(--wavelo-radius,2px);animation:wavelo-blink var(--wavelo-duration,1s) var(--wavelo-ease,steps(1,end)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--button-confirm{width:var(--wavelo-width,var(--wavelo-size,5.5rem));height:var(--wavelo-height,2rem);border-radius:999px;background:var(--wavelo-color,#6366f1);position:relative;display:inline-flex;align-items:center;justify-content:center}
-.wavelo--button-confirm .wavelo__part{flex:none;width:6px;height:6px;border-radius:50%;margin:0 2px;background:#fff;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--button-confirm{width:var(--wavelo-width,var(--wavelo-size,5.5rem));height:var(--wavelo-height,2rem);border-radius:999px;background:var(--wavelo-color,#6366f1);position:relative;display:inline-flex;align-items:center;justify-content:center;transition:background-color .25s ease,transform .2s ease,opacity .25s ease}
+.wavelo--button-confirm .wavelo__part{flex:none;width:6px;height:6px;border-radius:50%;margin:0 2px;background:#fff;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:opacity .2s ease,transform .2s ease}
 .wavelo--button-confirm .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--button-confirm .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
 .wavelo--button-confirm[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:wavelo-confirm calc(var(--wavelo-duration,1s) * .4) ease forwards}
 .wavelo--button-confirm[data-wavelo-state="success"] .wavelo__part{display:none}
-.wavelo--button-confirm[data-wavelo-state="success"]:after{content:"\\2713";color:#fff;font-size:1.1rem;font-weight:700;line-height:1}
+.wavelo--button-confirm[data-wavelo-state="success"]:after{content:"\\2713";color:#fff;font-size:1.1rem;font-weight:700;line-height:1;animation:wavelo-pop .25s cubic-bezier(.175,.885,.32,1.275) forwards}
 .wavelo--button-confirm[data-wavelo-state="error"]{background:var(--wavelo-error-color,#ef4444);animation:none}
 .wavelo--button-confirm[data-wavelo-state="error"] .wavelo__part{display:none}
 .wavelo--button-confirm[data-wavelo-state="error"]:after{content:"\\00d7";color:#fff;font-size:1.3rem;font-weight:700;line-height:1}
@@ -48,8 +48,8 @@ export const pulseCss = `
 .wavelo--drag-drop-pulse{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:var(--wavelo-width,var(--wavelo-size,12rem));height:var(--wavelo-height,var(--wavelo-size,6rem));border:2px dashed color-mix(in srgb,currentColor 35%,transparent);border-radius:var(--wavelo-radius,8px);background:color-mix(in srgb,currentColor 4%,transparent);animation:wavelo-drag-drop calc(var(--wavelo-duration,1s) * 1.5) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--drag-drop-pulse .wavelo__part{width:28px;height:18px;border-radius:var(--wavelo-radius,4px);animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--offline-dot{width:var(--wavelo-width,var(--wavelo-size,2rem));height:var(--wavelo-height,var(--wavelo-size,2rem));position:relative;display:inline-flex;align-items:center;justify-content:center}
-.wavelo--offline-dot .wavelo__part{width:12px;height:12px;border-radius:50%;background:currentColor;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--offline-dot:before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid currentColor;animation:wavelo-ping calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--offline-dot .wavelo__part{width:12px;height:12px;border-radius:50%;background:currentColor;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:background-color .25s ease}
+.wavelo--offline-dot:before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid currentColor;animation:wavelo-ping calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:border-color .25s ease,opacity .25s ease}
 .wavelo--offline-dot[data-wavelo-state="success"] .wavelo__part{background:var(--wavelo-success-color,#22c55e);animation:none}
 .wavelo--offline-dot[data-wavelo-state="success"]:before{display:none}
 .wavelo--offline-dot[data-wavelo-state="error"] .wavelo__part{background:var(--wavelo-error-color,#ef4444);animation:none}

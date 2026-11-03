@@ -28,6 +28,7 @@ wavelo-loader,.wavelo-host{display:contents}
    design falls back to and the scrim an overlay draws, both of which an explicit
    "color" or "backgroundColor" still overrides. */
 .wavelo[data-wavelo-theme="dark"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563;--wavelo-color:#a5b4fc;--wavelo-scrim:#0f172a}
+:where(.wavelo[data-wavelo-state="idle"]){opacity:.55;transition:opacity .25s ease}
 @media (prefers-color-scheme:dark){.wavelo[data-wavelo-theme="system"]{--wavelo-skeleton-base:#374151;--wavelo-skeleton-highlight:#4b5563;--wavelo-color:#a5b4fc;--wavelo-scrim:#0f172a}}
 @media (forced-colors:active){.wavelo,.wavelo[data-wavelo-theme]{forced-color-adjust:none;--wavelo-color:CanvasText;--wavelo-skeleton-base:Canvas;--wavelo-skeleton-highlight:Highlight}:where(.wavelo__part){background:CanvasText;border-color:CanvasText}}
 @media (prefers-reduced-motion:reduce){.wavelo:not([data-wavelo-motion="never"]),.wavelo:not([data-wavelo-motion="never"]) *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}

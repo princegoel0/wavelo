@@ -73,16 +73,16 @@ Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,870 | `progress` | 4,745 |
-| `scroll` | 2,086 | `skeleton` | 5,051 |
-| `pulse` | 2,967 | `orbit` | 5,086 |
-| `bars` | 2,980 | `wave` | 5,638 |
-| `rings` | 4,486 | `dots` | 7,247 |
-| `ring` | 4,703 | `shape` | 8,588 |
+| `overlay` | 1,899 | `progress` | 4,786 |
+| `scroll` | 2,117 | `skeleton` | 5,081 |
+| `bars` | 3,010 | `orbit` | 5,116 |
+| `pulse` | 3,058 | `wave` | 5,667 |
+| `rings` | 4,514 | `dots` | 7,277 |
+| `ring` | 4,747 | `shape` | 8,642 |
 
 The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
-blocks more than one kind animates with — is 1,448 bytes of every row above. The whole
-catalog sheet is 36,352 bytes gzipped, loaded once, for all 165 designs. Read down the
+blocks more than one kind animates with — is 1,474 bytes of every row above. The whole
+catalog sheet is 36,529 bytes gzipped, loaded once, for all 165 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every

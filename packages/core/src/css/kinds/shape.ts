@@ -95,9 +95,9 @@ export const shapeCss = `
    declares a property only where every rule that reads it agrees on one default — so one
    design disagreeing silently dropped a public token from that sheet. A design called
    error-shake is red when nobody tells it otherwise, and still answers color: its halo. */
-.wavelo--error-shake{background:var(--wavelo-error-color,#ef4444);border-radius:var(--wavelo-radius,8px);position:relative;display:inline-grid;place-items:center;box-shadow:0 4px 14px color-mix(in srgb,var(--wavelo-color,#6366f1) 35%,transparent);animation:wavelo-shake calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--error-shake{background:var(--wavelo-error-color,#ef4444);border-radius:var(--wavelo-radius,8px);position:relative;display:inline-grid;place-items:center;box-shadow:0 4px 14px color-mix(in srgb,var(--wavelo-color,#6366f1) 35%,transparent);animation:wavelo-shake calc(var(--wavelo-duration,1s) * 1.2) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:background-color .25s ease,opacity .25s ease,transform .2s ease}
 .wavelo--error-shake .wavelo__part{display:none}
-.wavelo--error-shake:after{content:"!";font-weight:800;font-family:system-ui,-apple-system,sans-serif;font-size:calc(var(--wavelo-size,2.5rem) * .58);color:#fff;line-height:1}
+.wavelo--error-shake:after{content:"!";font-weight:800;font-family:system-ui,-apple-system,sans-serif;font-size:calc(var(--wavelo-size,2.5rem) * .58);color:#fff;line-height:1;transition:transform .2s ease,opacity .2s ease}
 .wavelo--error-shake[data-wavelo-state="error"]{animation:wavelo-shake calc(var(--wavelo-duration,1s) * .6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--error-shake[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:none}
 .wavelo--error-shake[data-wavelo-state="success"]:after{content:"\\2713"}

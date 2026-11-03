@@ -1557,6 +1557,8 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   const microBody = [
     `<div id="ring-loading">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="ring-success">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="ring-error">${renderLoader({ type: 'success-ring', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="generic-idle">${renderLoader({ type: 'ring', 'data-wavelo-state': 'idle' }).html}</div>`,
     `<div id="shake-loading">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="shake-error">${renderLoader({ type: 'error-shake', 'data-wavelo-state': 'error' }).html}</div>`,
     `<div id="button-loading">${renderLoader({ type: 'button-confirm', 'data-wavelo-state': 'loading' }).html}</div>`,
@@ -1579,6 +1581,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     const ringLoadingAnim = getComputedStyle(document.querySelector('#ring-loading .wavelo')).animationName;
     const ringSuccessAnim = getComputedStyle(document.querySelector('#ring-success .wavelo')).animationName;
     const ringSuccessColor = getComputedStyle(document.querySelector('#ring-success .wavelo')).borderColor;
+    const ringErrorColor = getComputedStyle(document.querySelector('#ring-error .wavelo')).borderColor;
+    const ringErrorAfterContent = getComputedStyle(document.querySelector('#ring-error .wavelo'), '::after').content;
+    const ringTransition = getComputedStyle(document.querySelector('#ring-loading .wavelo')).transitionProperty;
+    const buttonTransition = getComputedStyle(document.querySelector('#button-loading .wavelo')).transitionProperty;
+    const genericIdleOpacity = getComputedStyle(document.querySelector('#generic-idle .wavelo')).opacity;
 
     const shakeLoadingColor = getComputedStyle(document.querySelector('#shake-loading .wavelo')).backgroundColor;
     const shakeErrorColor = getComputedStyle(document.querySelector('#shake-error .wavelo')).backgroundColor;
@@ -1605,6 +1612,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
       ringLoadingAnim,
       ringSuccessAnim,
       ringSuccessColor,
+      ringErrorColor,
+      ringErrorAfterContent,
+      ringTransition,
+      buttonTransition,
+      genericIdleOpacity,
       shakeLoadingColor,
       shakeErrorColor,
       buttonSuccessDisplay,
@@ -1625,6 +1637,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.ringLoadingAnim, 'wavelo-spin');
   assert.equal(states.ringSuccessAnim, 'none');
   assert.equal(states.ringSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.ringErrorColor, 'rgb(239, 68, 68)');
+  assert.ok(states.ringErrorAfterContent.includes('×') || states.ringErrorAfterContent.includes('\\00d7') || states.ringErrorAfterContent !== 'none');
+  assert.ok(states.ringTransition.includes('border-color') || states.ringTransition.includes('all'));
+  assert.ok(states.buttonTransition.includes('background-color') || states.buttonTransition.includes('all'));
+  assert.equal(states.genericIdleOpacity, '0.55');
   assert.equal(states.shakeErrorColor, 'rgb(239, 68, 68)');
   assert.equal(states.buttonSuccessDisplay, 'none');
 
