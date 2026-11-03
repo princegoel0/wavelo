@@ -1,8 +1,8 @@
 # Wavelo — Progress Tracker & Comprehensive Analysis Report
 
 > **Last verified against code & tests:** 2026-11-02 (IST), on branch `dev`
-> **Catalog size:** **153 active designs / 231 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141, Phase 3: 141 → 133, Phase 4B: 133 → 138, Phase 4C: 138 → 143, Phase 4D: 143 → 148, Phase 4E: 148 → 153)
-> **Dimensionality:** 128 active 2D designs / 25 active 3D designs (`atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel`, `voxel-cluster`), labelled from the transforms each design actually animates.
+> **Catalog size:** **165 active designs / 255 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141, Phase 3: 141 → 133, Phase 4B: 133 → 138, Phase 4C: 138 → 143, Phase 4D: 143 → 148, Phase 4E: 148 → 153, Phase 5: 153 → 165)
+> **Dimensionality:** 139 active 2D designs / 26 active 3D designs (`atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel`, `voxel-cluster`), labelled from the transforms each design actually animates.
 > **Quality gates:** `npm run check` green — build, strict typecheck, 52 unit/adapter tests, `npm run verify:angular` (the built Angular package compiles into an AOT application), catalog drift, 7-package metadata validation, documentation sync, bundle budgets. Builds on TypeScript 6.0.3, Angular 22.2.4, Node 24 in CI.
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
 > **Layout cost:** **151 of 153** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
@@ -225,9 +225,9 @@ Recent studio and developer experience upgrades ensure zero friction when integr
 
 ---
 
-## 3. Catalog Breakdown — 153 Designs / 231 Presets
+## 3. Catalog Breakdown — 165 Designs / 255 Presets
 
-Counts read directly from the built registry: **153 active designs, 153 public IDs, 0 aliases, 231 preset-registry entries, 78 pattern presets, 12 render kinds, 102 keyframe modules, 23 custom properties, 27 configuration keys**.
+Counts read directly from the built registry: **165 active designs, 165 public IDs, 0 aliases, 255 preset-registry entries, 90 pattern presets, 12 render kinds, 114 keyframe modules, 23 custom properties, 27 configuration keys**.
 
 ### A. Functional Category Breakdown
 
@@ -868,9 +868,9 @@ Component API reference documentation follows the **Three-Tier Customization Arc
 
 1. **Zero-Drift Invariant Gate (`npm run docs:check`):**
    - Automatically executed in CI by `scripts/validate-docs.mjs`.
-   - Validates that documentation matches built packages: 153 active designs, 231 named presets, 78 pattern presets, 23 custom properties, 27 configuration keys, and bundle size measurements. Any drift fails CI.
+   - Validates that documentation matches built packages: 165 active designs, 255 named presets, 90 pattern presets, 23 custom properties, 27 configuration keys, and bundle size measurements. Any drift fails CI.
 2. **Accessibility Verification (`npm run docs:verify`):**
-   - Audits all 153 preview cards in `apps/docs` against `axe-core` to guarantee 0 accessibility violations.
+   - Audits all 165 preview cards in `apps/docs` against `axe-core` to guarantee 0 accessibility violations.
 3. **Continuous GitHub Pages Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds and deploys `apps/docs/dist` to GitHub Pages on every merge to `main` when `GALLERY_ENABLED` is true.
 4. **Atomic npm & Docs Release (`.github/workflows/release.yml`):**
@@ -882,7 +882,7 @@ Component API reference documentation follows the **Three-Tier Customization Arc
 
 ```mermaid
 flowchart TD
-    Current["✅ Current Stable State\n153 Loaders · 231 Presets · 23 Tokens\nAll Gates Green"]
+    Current["✅ Current Stable State\n165 Loaders · 255 Presets · 23 Tokens\nAll Gates Green"]
 
     subgraph Step1["Step 1: Dimensionality Classification — DONE"]
         D1["types.ts: LoaderDimension union"]
@@ -973,7 +973,7 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 | Layout profiler | `npm run audit:layout` | ✅ 151 of 153 zero-layout (progress-scroll: 120, multi-wave: 66 verified live) |
 | Measured options | `npm run audit:customization` | ✅ matches for 153 |
 | Visual correctness | `npm run audit:visual:correctness` | ✅ 137 animating / 14 static by design / 2 timeline-driven |
-| Catalog drift | `npm run catalog` | ✅ 153 / 231 / 12 |
+| Catalog drift | `npm run catalog` | ✅ 165 / 255 / 12 |
 | Package metadata | `npm run packages:check` | ✅ 7 packages |
 | Packed tarballs | `npm run pack:verify` | ✅ pass |
 | Documentation sync | `npm run docs:check` | ✅ pass — and it now re-measures what it checks: the per-kind slice costs, the whole-catalog sheet size, both quoted bundle figures (built from the same entry points the budget gate uses), the option claims of every design section in `COMPONENT_CUSTOMIZATION_API.md`, and the retired-design names |
@@ -997,12 +997,12 @@ Against previous drafts of project reports: **Chromium is 36 tests, not 35**, an
 | Total consolidated in Phases 1–3 | **22** |
 | Active designs post Phase 3 consolidation | **133** |
 | 3D Flagship Suite designs added in Phase 4 | **+20** |
-| Current active designs | **153** |
-| Named presets | **231** |
-| Pattern presets | **78** |
+| Current active designs | **165** |
+| Named presets | **255** |
+| Pattern presets | **90** |
 | Stylesheet slices | **12** |
-| Bundle size (Core Gzip) | **43.3 KB** |
-| Zero-layout compositor designs | **151 of 153** |
+| Bundle size (Core Gzip) | **46.0 KB** |
+| Zero-layout compositor designs | **163 of 165** |
 
 ### The 22 consolidations, checked against the measured option table
 
@@ -1056,4 +1056,7 @@ Against previous drafts of project reports: **Chromium is 36 tests, not 35**, an
   Catalog: **143 → 148 active designs** (at Phase 4D checkpoint: 20 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
 - **Phase 4E (Flagship 3D Suite — Tier 3 Unprecedented Experimental Simulations)** — **COMPLETED ✅**:
   Created 5 innovative pure-CSS 3D simulation designs: `liquid-mercury` (microgravity physics-simulated fluid metallic droplet floating and rippling under surface tension), `dna-decode` (genome sequencing scanner with traveling holographic laser beam illuminating complementary base-pair nucleotides in 3D), `quantum-superposition` (wavefunction probability cloud in multiple eigenstates collapsing into a unified quantum singularity and re-expanding), `magnetic-field` (toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow), `aurora-borealis` (volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients).
-  Catalog: **148 → 153 active designs** (231 named presets, 25 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
+  Catalog: **148 → 153 active designs** (231 preset configurations at Phase 4E checkpoint, 25 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
+- **Phase 5 (v0.4.0 Modern Micro-Interactions & Dual Packaging)** — **COMPLETED ✅**:
+  Created 12 modern micro-interaction loaders: `agent-tree`, `aurora-ribbon`, `glyph-matrix`, `coin-flip`, `biometric-reticle`, `vault-tumbler`, `git-rebase`, `packet-pipeline`, `crt-scanline`, `gooey-metaballs`, `camera-iris`, `newton-cradle`. Implemented dual CJS/ESM packaging with synchronous `require('@wavelo/core')` via `dist/index.cjs`.
+  Catalog: **153 → 165 active designs** (255 named presets, 90 pattern presets, 26 3D designs). All 53 unit tests, 40 adversarial tests passing.

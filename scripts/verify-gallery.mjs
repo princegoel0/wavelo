@@ -15,4 +15,9 @@ if (/<link[^>]+stylesheet/.test(html)) throw new Error('gallery links an externa
 const cards = html.split('class="card').length - 1;
 if (cards < loaderRegistry.length) throw new Error(`gallery rendered ${cards} cards for ${loaderRegistry.length} designs`);
 
-console.log(`Gallery is complete: ${cards} cards, ${loaderRegistry.length} designs, stylesheet embedded.`);
+const rootPkg = JSON.parse(await readFile('package.json', 'utf8'));
+if (!html.includes(`badge-version">v${rootPkg.version}</span>`)) {
+  throw new Error(`gallery badge version does not match package.json version ${rootPkg.version}`);
+}
+
+console.log(`Gallery is complete: ${cards} cards, ${loaderRegistry.length} designs, version v${rootPkg.version}, stylesheet embedded.`);

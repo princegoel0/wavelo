@@ -29,7 +29,7 @@ import { orbitingDots } from '@wavelo/core/loaders/orbiting-dots';
 const result = orbitingDots({ label: 'Loading data' });
 ```
 
-The catalog holds 153 public IDs across 12 render kinds, and `src/loaders/*.ts`,
+The catalog holds 165 public IDs across 12 render kinds, and `src/loaders/*.ts`,
 `src/loaders/index.ts` and `src/ids.ts` are generated from `src/catalog.ts`.
 Regenerate with `npm run catalog:generate`; `npm run catalog` fails on drift.
 

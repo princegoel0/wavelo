@@ -11,8 +11,17 @@ const WaveloDefaultsContext = createContext<WaveloDefaults | null>(null);
  * motion — so a page sets its house style once instead of at each call site. A
  * value passed to an individual `<Loader>` always wins.
  */
-export function WaveloProvider({ defaults, children }: { defaults: WaveloDefaults; children?: ReactNode }) {
-  return createElement(WaveloDefaultsContext.Provider, { value: defaults }, children);
+export interface WaveloProviderProps {
+  /** House style defaults to apply across the subtree. */
+  defaults?: WaveloDefaults;
+  /** Standard React context value alias for defaults. */
+  value?: WaveloDefaults;
+  children?: ReactNode;
+}
+
+export function WaveloProvider({ defaults, value, children }: WaveloProviderProps) {
+  const effectiveDefaults = defaults ?? value ?? {};
+  return createElement(WaveloDefaultsContext.Provider, { value: effectiveDefaults }, children);
 }
 
 /** The defaults in effect for this subtree, for components that build their own config. */

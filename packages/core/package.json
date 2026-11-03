@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Framework-independent loading animation core",
   "type": "module",
   "license": "MIT",
@@ -28,13 +28,14 @@
   "sideEffects": [
     "*.css"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./registry": {
       "types": "./dist/registry.d.ts",
@@ -78,7 +79,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs && node ../../scripts/emit-tokens.mjs"
+    "build": "node ../../scripts/clean.mjs dist && tsc -p tsconfig.json && node ../../scripts/emit-stylesheet.mjs && node ../../scripts/emit-tokens.mjs && node ../../scripts/emit-cjs.mjs"
   },
   "author": "Prince Goel",
   "engines": {

@@ -30,7 +30,7 @@ export const ringCss = `
 .wavelo--monochrome{position:relative;border:0;background:conic-gradient(from 0deg,currentColor 0%,color-mix(in srgb,currentColor 85%,transparent) 35%,color-mix(in srgb,currentColor 22%,transparent) 50% 100%);-webkit-mask:radial-gradient(farthest-side,transparent 52%,#000 53%);mask:radial-gradient(farthest-side,transparent 52%,#000 53%);border-radius:50%;animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 10px color-mix(in srgb,currentColor 25%,transparent)}
 .wavelo--monochrome:before{content:"";position:absolute;top:2px;left:50%;transform:translateX(-50%);width:10%;height:10%;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff}
 /* The same ring, but lit: it turns and throws a glow that swells and fades. */
-.wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--neon-ring{animation:wavelo-spin var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running),wavelo-glow calc(var(--wavelo-duration,1s) * 1.6) var(--wavelo-ease,cubic-bezier(.4,0,.2,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Elastic: the ring holds still and the stroke travels instead, squashing along one
    axis and stretching along the other. */
 /* A rubber band is a loop, so it cannot have a side missing — the inherited open border
@@ -77,4 +77,8 @@ export const ringCss = `
 .wavelo--save-indicator[data-wavelo-state="error"]{border-color:var(--wavelo-error-color,#ef4444);animation:none}
 .wavelo--save-indicator[data-wavelo-state="error"]:after{content:"\\00d7";border:0;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--wavelo-error-color,#ef4444);font-size:1.1rem;font-weight:700;line-height:1;transform:scale(1);opacity:1}
 .wavelo--save-indicator[data-wavelo-state="idle"]{border-color:color-mix(in srgb,currentColor 35%,transparent);animation:none}
+.wavelo--aurora-ribbon{position:relative;border:0;border-radius:var(--wavelo-radius,8px);overflow:hidden;padding:2px;background:transparent}
+.wavelo--aurora-ribbon:before{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent 0%,currentColor 25%,#06b6d4 45%,#8b5cf6 65%,var(--wavelo-secondary-color,#ec4899) 85%,transparent 100%);animation:wavelo-spin var(--wavelo-duration,2.2s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);filter:blur(3px)}
+.wavelo--aurora-ribbon:after{content:"";position:absolute;inset:2px;border-radius:calc(var(--wavelo-radius,8px) - 1.5px);background:var(--wavelo-background,color-mix(in srgb,currentColor 5%,#090d16))}
+.wavelo--aurora-ribbon .wavelo__part{position:relative;z-index:2;display:block;width:100%;height:100%;border-radius:inherit;box-shadow:inset 0 0 8px color-mix(in srgb,currentColor 20%,transparent)}
 ${radarFrames}${glowFrames}${rubberFrames}${snakeFrames}${ellipseFrames}${checkFrames}`;

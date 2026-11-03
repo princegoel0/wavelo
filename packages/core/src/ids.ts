@@ -156,6 +156,18 @@ export const loaderIds = [
   "quantum-superposition",
   "magnetic-field",
   "aurora-borealis",
+  "agent-tree",
+  "aurora-ribbon",
+  "glyph-matrix",
+  "coin-flip",
+  "biometric-reticle",
+  "vault-tumbler",
+  "git-rebase",
+  "packet-pipeline",
+  "crt-scanline",
+  "gooey-metaballs",
+  "camera-iris",
+  "newton-cradle",
 ] as const;
 
 export type LoaderId = (typeof loaderIds)[number];

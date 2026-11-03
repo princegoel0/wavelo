@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-waveform-reverse{0%,100%{height:100%;transform:translateY(-20%)}50%{height:25%;transform:translateY(20%)}}`;
+export const css = `@keyframes wavelo-waveform-reverse{0%,100%{transform:scaleY(1) translateY(-20%)}50%{transform:scaleY(.25) translateY(20%)}}`;

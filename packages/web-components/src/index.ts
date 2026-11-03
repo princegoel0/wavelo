@@ -19,6 +19,9 @@ export class WaveloLoaderElement extends HTMLElementBase {
   private lastGood = '';
 
   connectedCallback(): void {
+    if (!this.style.display) {
+      this.style.display = 'contents';
+    }
     this.render();
   }
 
