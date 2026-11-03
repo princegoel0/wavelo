@@ -3,6 +3,7 @@ import { css as fadeBarFrames } from '../keyframes/fade-bar.js';
 import { css as growBarFrames } from '../keyframes/grow-bar.js';
 import { css as pianoFrames } from '../keyframes/piano.js';
 import { css as fireFrames } from '../keyframes/fire.js';
+import { css as packetFlowFrames } from '../keyframes/packet-flow.js';
 
 export const barsCss = `
 .wavelo--bars{align-items:flex-end;gap:var(--wavelo-gap,3px)}
@@ -26,15 +27,15 @@ export const barsCss = `
 .wavelo--equalizer .wavelo__part:nth-child(10){--i:9}
 .wavelo--equalizer .wavelo__part:nth-child(11){--i:10}
 .wavelo--equalizer .wavelo__part:nth-child(12){--i:11}
-.wavelo--equalizer .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-equalizer var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--equalizer .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-equalizer var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.45,0,.55,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--equalizer .wavelo__part:nth-child(even){background:var(--wavelo-secondary-color,currentColor)}
 .wavelo--fading-bars .wavelo__part{animation:wavelo-fade-bar var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--growing-bars .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-grow-bar var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--alternating-bars .wavelo__part:nth-child(odd){height:100%;transform-origin:bottom;animation:wavelo-grow-bar var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--growing-bars .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-grow-bar var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--alternating-bars .wavelo__part:nth-child(odd){height:100%;transform-origin:bottom;animation:wavelo-grow-bar var(--wavelo-duration,1s) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--alternating-bars .wavelo__part:nth-child(even){background:var(--wavelo-secondary-color,currentColor);animation:wavelo-fade-bar var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Piano keys: the same fall-and-rise at four different points in the cycle, so the
    bars do not sweep as a wave but land one after another. */
-.wavelo--piano-keys .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-piano calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--piano-keys .wavelo__part{height:100%;transform-origin:bottom;animation:wavelo-piano calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,cubic-bezier(.34,1.56,.64,1)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--piano-keys .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) * -.28)}
 .wavelo--piano-keys .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -.84)}
 .wavelo--piano-keys .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -1.12)}
@@ -53,4 +54,10 @@ export const barsCss = `
 
 
 
-${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}`;
+.wavelo--packet-pipeline{display:flex;flex-direction:column;justify-content:space-around;gap:calc(var(--wavelo-size,2.5rem)*.12);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:calc(var(--wavelo-height,var(--wavelo-size,2.5rem))*.65);margin:auto;background:transparent;border:0}
+.wavelo--packet-pipeline .wavelo__part{position:relative;width:100%;height:3px;background:color-mix(in srgb,currentColor 22%,transparent);border-radius:999px}
+.wavelo--packet-pipeline .wavelo__part:before{content:"";position:absolute;left:-2px;top:-2px;width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,currentColor 50%,transparent)}
+.wavelo--packet-pipeline .wavelo__part:after{content:"";position:absolute;left:0;top:-1.5px;height:6px;width:38%;border-radius:999px;background:linear-gradient(90deg,transparent,currentColor,#fff);box-shadow:0 0 8px currentColor;animation:wavelo-packet-flow var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--packet-pipeline .wavelo__part:nth-child(2):after{animation-delay:calc(var(--wavelo-duration,1.4s)*-.35);background:linear-gradient(90deg,transparent,var(--wavelo-secondary-color,#38bdf8),#fff);box-shadow:0 0 8px var(--wavelo-secondary-color,#38bdf8)}
+.wavelo--packet-pipeline .wavelo__part:nth-child(3):after{animation-delay:calc(var(--wavelo-duration,1.4s)*-.7)}
+${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}${packetFlowFrames}`;

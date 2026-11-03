@@ -19,7 +19,6 @@ const seconds = 2;
  * width appears here without being listed, so this stays the whole truth.
  */
 const accepted = {
-  'multi-wave': 'the same two frames run in opposite phase',
   'progress-scroll': 'the fill is the reading position, and a scaleX would squash the leading dot that marks it'
 };
 

@@ -1,4 +1,3 @@
-export const css = `@keyframes wavelo-atom-ring-1{0%{transform:rotateX(65deg) rotateZ(0deg)}100%{transform:rotateX(65deg) rotateZ(360deg)}}
-@keyframes wavelo-atom-ring-2{0%{transform:rotateY(60deg) rotateX(65deg) rotateZ(0deg)}100%{transform:rotateY(60deg) rotateX(65deg) rotateZ(360deg)}}
-@keyframes wavelo-atom-ring-3{0%{transform:rotateY(120deg) rotateX(65deg) rotateZ(0deg)}100%{transform:rotateY(120deg) rotateX(65deg) rotateZ(360deg)}}`;
+export const css = `@keyframes wavelo-atom-orbit{0%{transform:translate(var(--rx),0) translateZ(0) scale(1);z-index:15}12.5%{transform:translate(calc(.707 * var(--rx)),calc(.707 * var(--ry))) translateZ(10px) scale(1.18);z-index:15}25%{transform:translate(0,var(--ry)) translateZ(14px) scale(1.28);z-index:15}37.5%{transform:translate(calc(-.707 * var(--rx)),calc(.707 * var(--ry))) translateZ(10px) scale(1.18);z-index:15}50%{transform:translate(calc(-1 * var(--rx)),0) translateZ(0) scale(1);z-index:4}62.5%{transform:translate(calc(-.707 * var(--rx)),calc(-.707 * var(--ry))) translateZ(-10px) scale(.82);z-index:4;opacity:.82}75%{transform:translate(0,calc(-1 * var(--ry))) translateZ(-14px) scale(.72);z-index:4;opacity:.72}87.5%{transform:translate(calc(.707 * var(--rx)),calc(-.707 * var(--ry))) translateZ(-10px) scale(.82);z-index:4;opacity:.82}100%{transform:translate(var(--rx),0) translateZ(0) scale(1);z-index:15}}`;
+
 

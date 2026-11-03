@@ -36,11 +36,11 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 
 The following baseline parameters apply universally or across all standard loading components.
 
-### Tier 1: Universal Structural & Accessibility Settings (153 / 153 Loaders)
+### Tier 1: Universal Structural & Accessibility Settings (165 / 165 Loaders)
 
 | Property | TypeScript Type | Default Value | Target DOM / CSS | What it Controls |
 |---|---|---|---|---|
-| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 153 active designs or 231 presets. |
+| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 165 active designs or 255 presets. |
 | `color` | `string` | `'#6366f1'` (currentColor) | `--wavelo-color` | Primary foreground accent, stroke, or fill color. |
 | `backgroundColor` | `string` | `'transparent'` | `--wavelo-background` | Outer container background fill, track surface, or modal scrim. |
 | `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | `data-wavelo-theme` | Page color palette: light shimmer, dark surface (`#374151`), or OS dark mode. |

@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/react",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "React component integration for Wavelo",
   "type": "module",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "react-spinner"
   ],
   "dependencies": {
-    "@wavelo/core": "0.3.0"
+    "@wavelo/core": "0.4.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

@@ -1,9 +1,26 @@
 # Changelog
 
+## 0.4.0
+
+- **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:
+  - *Category A (AI & Agent Reasoning):* `agent-tree` (bioluminescent multi-step reasoning DAG), `aurora-ribbon` (rotating ambient gradient container border), `glyph-matrix` (monospace character decryption matrix).
+  - *Category B (Fintech & Auth):* `coin-flip` (3D isometric coin flip with specular reflection), `biometric-reticle` (conic laser radar & concentric fingerprint ridges), `vault-tumbler` (dual counter-rotating notched tumbler gears).
+  - *Category C (Dev Tools & Terminal):* `git-rebase` (branch commits splitting and merging into trunk with elastic snap), `packet-pipeline` (modular circuit bus with high-speed neon data packet pulses), `crt-scanline` (retro terminal bracketed progress bar with horizontal phosphor scanline).
+  - *Category D (Organic Physics & Liquid Dynamics):* `gooey-metaballs` (fluid droplets stretching and coalescing with visceral surface tension), `camera-iris` (6 polygonal aperture blades constricting and opening), `newton-cradle` (3-ball kinetic pendulum with elastic momentum transfer).
+- **CommonJS & Dual Module Packaging (WAV-PKG-01):** Dual CJS/ESM distribution bundling via `esbuild` emitting `dist/index.cjs` with conditional exports map, allowing legacy Node.js environments to synchronously `require('@wavelo/core')` without `ERR_REQUIRE_ESM`.
+- **Perceptual Physics & Keyframe Compositing:** All keyframes refactored to GPU-composited `transform` and `opacity` properties with zero layout recalculation.
+- **3D Suite Elevation:** `atom-orbital` re-cut as volumetric spheres with specular pinpricks and orbital occlusion rather than flat discs; `coin-flip` given an alternating toss with a specular reflection so the two faces read as one object; `newton-cradle`, `sphere-lattice`, `crystal-cluster`, `camera-iris`, `crt-scanline` and the spatial ring and dot kinds refined to match.
+- **One layout cost removed on measurement, not on assertion:** `biometric-reticle` swept its laser with `top`, which costs the browser a layout on every frame — the same travel is now a `translateY` scaled by the loader's own height, and `multi-wave`, whose frames became transforms, no longer needs an exception recorded for it. `npm run audit:layout` re-measures all 165 and refuses a design that dirties layout without a stated reason.
+- **`atom-orbital` orbits are now static:** the `orbit` kind animates every part's transform, and this design draws its three elliptical paths on those parts, so the paths revolved along with the electrons. Each part now holds a fixed tilt (0°, 60°, 120°) sized to its own ellipse, and only the electron travels. Verified frame by frame: the ring orientations are identical at every phase of the cycle.
+- **`cube` is a closed cube:** it shipped three quads, so for half its turn every face was turned away and the loader read as an open shell — measured at 12 of 24 sampled phases with no face toward the camera. Each face now carries its opposite, turned outward, and exactly three faces face the camera at every phase.
+- The Chromium suite's part-stacking check compares transforms as well as bounding boxes. Two ellipses authored at 60° and 120° fill the same axis-aligned box while being plainly different drawings; the check still fires when two parts collapse onto the same transform, which is the bug it exists for.
+- **Studio & DX Upgrades:** Added high-contrast canvas background modes (Pure Black `#000` and Brand gradient) and standalone accessible HTML & CSS exporter tab with `currentColor` inheritance and `@media (prefers-reduced-motion: reduce)`.
+- **Catalog Totals:** 165 public IDs, 165 active designs, no deprecated aliases, 255 named presets, 90 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
+
 ## 0.3.0
 
-Staged on `dev`; nothing here is on npm until this version is published. `0.2.0` as it stands
-carries the narrow peer ranges and an `@wavelo/angular` that an Angular application cannot compile.
+Published 2026-11-02. It carries the widened adapter peer ranges and the fix that makes
+`@wavelo/angular` compilable by an Angular application, which `0.1.0` and `0.2.0` do not.
 
 - **Framework Ecosystem Compatibility:** Broadened `peerDependencies` across the framework
   adapters to remove npm `ERESOLVE` friction for downstream consumers:
@@ -38,7 +55,7 @@ carries the narrow peer ranges and an `@wavelo/angular` that an Angular applicat
   - *Tier 2 Showcase Spatial Structures:* `dna-double-helix` (intertwining helical ladder with base-pair rungs), `hologram-pyramid` (inverted holographic pyramid over laser pedestal), `black-hole-accretion` (relativistic accretion disk with Doppler beaming), `crystal-cluster` (faceted quartz crystals with specular highlights), `mobius-band` (single-sided Mobius topological band), `vortex-tunnel` (hyperspace warp gates), `isometric-deck` (floating card restacking), `voxel-cluster` (elastic exploding voxel cubes), `torus-ring` (geometric torus flow), `cylindrical-wave` (pin-matrix terrain wave).
   - *Tier 3 Unprecedented Simulations:* `liquid-mercury` (microgravity fluid surface tension droplet), `dna-decode` (genome sequencing scanner beam), `quantum-superposition` (wavefunction probability cloud collapsing into singularity), `magnetic-field` (dipole poles and toroidal flux loops), `aurora-borealis` (undulating atmospheric plasma curtains).
 - **Catalog Modernization (11 Upgraded Loaders):** Comprehensively re-engineered `cube` (3-face isometric cube), `folding-squares` (origami 3D fold), `radar` (CRT sonar HUD with ping sweep), `sand-timer` (hourglass chambers with trickling sand), `solar-system` (Keplerian orbits with glowing Sun and Saturn rings), `triangles` (triforce sacred geometry counter-spin), `neural-grid` (bioluminescent action potential wave), `ai-shimmer` (iridescent LLM completion text beam), `dot-matrix` (concentric ripple radiation), `alternating-dots` (orbital weave), `fire-rise` (thermal flame gradient).
-- **Catalog Totals:** 153 public IDs, 153 active designs, 231 named presets, 78 pattern presets, 12 stylesheet slices, 25 verified 3D spatial designs.
+- **Catalog Totals (v0.2.0):** 153 public IDs, 153 active designs, 231 preset configurations, 78 pattern configurations, 12 stylesheet slices, 25 verified 3D spatial designs.
 - **Zero WebGL & Zero Layout Shifts:** 100% hardware-accelerated CSS3 3D transforms (`transform-style: preserve-3d`, `perspective`, `rotateX/Y`, `translateZ`) executing on the compositor thread with 0 layout recalculations.
 
 ## 0.1.0
@@ -50,7 +67,7 @@ Published 2026-11-01.
 Nothing has shipped, so none of this breaks a consumer. It is recorded because it is the
 list of things that were decided, and after 0.1.0 the same changes need a major.
 
-- The public ID set is 153 public IDs and 231 named presets. Twenty-two visually duplicate
+- The public ID set is 153 public IDs and 231 preset configurations. Twenty-two visually duplicate
   designs were consolidated out of the earlier 155 (`arc`, `half-circle`, `rotating-diamond`,
   `orbiting-circles`, `conic-ring`, `thin-line`, `thick-stroke`, `four-dots`, `five-dots`,
   `bouncing-dots`, `scaling-dots`, `vertical-dots`, `bouncing-bars`, `vertical-pulse-bars`,

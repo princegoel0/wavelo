@@ -2,6 +2,14 @@ import { loaderRegistry, renderLoader } from '@wavelo/core';
 import { allStyles } from '@wavelo/core/css';
 import { stylesheetMarkup } from '@wavelo/core/styles';
 
+const version = '0.4.0';
+
+const totalCount = loaderRegistry.length;
+const categoryCounts = loaderRegistry.reduce((acc, l) => {
+  acc[l.category] = (acc[l.category] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
 const designs = loaderRegistry.map((loader) => `<option value="${loader.id}">${loader.name}</option>`).join('');
 
 const cards = loaderRegistry.map((loader) => `
@@ -163,6 +171,8 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-light { background: #ffffff !important; }
 .stage.stage-dim { background: #0f172a !important; }
 .stage.stage-dark { background: #030712 !important; }
+.stage.stage-black { background: #000000 !important; }
+.stage.stage-brand { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important; }
 
 .stage-footer-info { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0 0.25rem; }
 .stage-pill { font-size: 0.78rem; font-weight: 600; color: var(--text-main); }
@@ -200,6 +210,20 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-light .mock-row { border-bottom: 1px solid #e2e8f0; }
 .stage.stage-light .mock-row span { color: #0f172a; }
 .stage.stage-light .mock-row .status-text { color: #475569; }
+
+.stage.stage-black .mock-card,
+.stage.stage-black .mock-table { background: #0a0a0a; border: 1px solid #1a1a1a; color: #f8fafc; }
+.stage.stage-black .mock-line { background: #1a1a1a; }
+.stage.stage-black .mock-row { border-bottom: 1px solid #1a1a1a; }
+.stage.stage-black .mock-row span { color: #f8fafc; }
+.stage.stage-black .mock-row .status-text { color: #a1a1aa; }
+
+.stage.stage-brand .mock-card,
+.stage.stage-brand .mock-table { background: rgba(30, 27, 75, 0.75); border: 1px solid rgba(99, 102, 241, 0.35); color: #e0e7ff; backdrop-filter: blur(8px); }
+.stage.stage-brand .mock-line { background: rgba(99, 102, 241, 0.35); }
+.stage.stage-brand .mock-row { border-bottom: 1px solid rgba(99, 102, 241, 0.2); }
+.stage.stage-brand .mock-row span { color: #e0e7ff; }
+.stage.stage-brand .mock-row .status-text { color: #c7d2fe; }
 
 /* Studio Right: Controls Column */
 .controls-column { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
@@ -533,7 +557,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12c.6 0 1.2-.4 1.4-1 1-3.5 3.1-6 6.6-6 4 0 5 4 8 4s3.4-2.5 4-4"/><path d="M2 18c.6 0 1.2-.4 1.4-1 1-3.5 3.1-6 6.6-6 4 0 5 4 8 4s3.4-2.5 4-4"/></svg>
       </div>
       <span class="brand-title">Wavelo</span>
-      <span class="badge badge-version">v0.1.0</span>
+      <span class="badge badge-version">v${version}</span>
     </a>
     <nav class="nav-actions" aria-label="Site navigation">
       <a href="#studio" class="nav-link">Studio</a>
@@ -549,11 +573,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 <div class="page-wrapper">
   <!-- Hero Section -->
   <section class="hero" aria-label="Introduction">
-    <div class="hero-pill">✨ 153 Production-Ready Loaders · Zero Runtime Dependencies</div>
+    <div class="hero-pill">✨ ${totalCount} Production-Ready Loaders · Zero Runtime Dependencies</div>
     <h1 class="hero-title">Wavelo — Motion made simple.</h1>
     <p class="hero-subtitle">Lightweight, accessible, framework-agnostic loading states and skeletons for modern web apps.</p>
     <div class="hero-badges">
-      <span class="hero-badge-item">⚡ 153+ Loaders</span>
+      <span class="hero-badge-item">⚡ ${totalCount}+ Loaders</span>
       <span class="hero-badge-item">📦 Zero Dependencies</span>
       <span class="hero-badge-item">🛡️ SSR Safe</span>
       <span class="hero-badge-item">🔷 Full TypeScript</span>
@@ -599,6 +623,8 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <button type="button" class="mode-btn active" data-bg="dark">Dark</button>
             <button type="button" class="mode-btn" data-bg="dim">Dim</button>
             <button type="button" class="mode-btn" data-bg="light">Light</button>
+            <button type="button" class="mode-btn" data-bg="black">Black #000</button>
+            <button type="button" class="mode-btn" data-bg="brand">Brand</button>
           </div>
           <div class="canvas-modes" aria-label="Simulated UI context">
             <button type="button" class="mode-btn active" data-ctx="isolated">Isolated</button>
@@ -626,6 +652,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
       <div class="controls-column">
         <div class="framework-tab-bar" aria-label="Target framework">
           <button type="button" class="fw-tab active" data-fw="core">Core</button>
+          <button type="button" class="fw-tab" data-fw="html">HTML &amp; CSS</button>
           <button type="button" class="fw-tab" data-fw="react">React</button>
           <button type="button" class="fw-tab" data-fw="vue">Vue</button>
           <button type="button" class="fw-tab" data-fw="svelte">Svelte</button>
@@ -635,6 +662,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
         </div>
         <select id="framework" aria-label="Target framework" hidden>
           <option value="core" selected>Core</option>
+          <option value="html">HTML &amp; CSS</option>
           <option value="react">React</option>
           <option value="vue">Vue</option>
           <option value="svelte">Svelte</option>
@@ -785,11 +813,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     </div>
   </section>
 
-  <!-- Showcase Gallery (153 Loaders) -->
+  <!-- Showcase Gallery (${totalCount} Loaders) -->
   <main id="showcase" class="showcase-section" aria-label="Component Showcase">
     <div class="section-headline">
       <h2>Component Showcase</h2>
-      <p>Explore all 153 distinct loader designs across 8 categories with live GPU-accelerated rendering.</p>
+      <p>Explore all ${totalCount} distinct loader designs across ${Object.keys(categoryCounts).length} categories with live GPU-accelerated rendering.</p>
     </div>
 
     <!-- Sticky Top Filter Bar -->
@@ -797,26 +825,26 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
       <div class="filter-row-top">
         <div class="search-wrapper">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="search" type="search" placeholder="Search 153 loaders by name or category..." aria-label="Search loaders">
+          <input id="search" type="search" placeholder="Search ${totalCount} loaders by name or category..." aria-label="Search loaders">
         </div>
         <div class="canvas-modes" aria-label="Filter by dimension">
           <button type="button" class="mode-btn active dim-tab" data-dim="">All</button>
           <button type="button" class="mode-btn dim-tab" data-dim="2d">2D</button>
           <button type="button" class="mode-btn dim-tab" data-dim="3d">3D</button>
         </div>
-        <span id="filter-count" class="filter-count">Showing 153 loaders</span>
+        <span id="filter-count" class="filter-count">Showing ${totalCount} loaders</span>
       </div>
 
       <div class="category-tabs" aria-label="Filter by category">
-        <button type="button" class="cat-tab active" data-cat="">All (153)</button>
-        <button type="button" class="cat-tab" data-cat="spinner">Spinners (17)</button>
-        <button type="button" class="cat-tab" data-cat="dots">Dots (17)</button>
-        <button type="button" class="cat-tab" data-cat="bars">Bars (13)</button>
-        <button type="button" class="cat-tab" data-cat="progress">Progress (19)</button>
-        <button type="button" class="cat-tab" data-cat="creative">Creative (38)</button>
-        <button type="button" class="cat-tab" data-cat="ai">AI & Stream (6)</button>
-        <button type="button" class="cat-tab" data-cat="skeleton">Skeletons (26)</button>
-        <button type="button" class="cat-tab" data-cat="application">App States (17)</button>
+        <button type="button" class="cat-tab active" data-cat="">All (${totalCount})</button>
+        <button type="button" class="cat-tab" data-cat="spinner">Spinners (${categoryCounts.spinner || 0})</button>
+        <button type="button" class="cat-tab" data-cat="dots">Dots (${categoryCounts.dots || 0})</button>
+        <button type="button" class="cat-tab" data-cat="bars">Bars (${categoryCounts.bars || 0})</button>
+        <button type="button" class="cat-tab" data-cat="progress">Progress (${categoryCounts.progress || 0})</button>
+        <button type="button" class="cat-tab" data-cat="creative">Creative (${categoryCounts.creative || 0})</button>
+        <button type="button" class="cat-tab" data-cat="ai">AI & Stream (${categoryCounts.ai || 0})</button>
+        <button type="button" class="cat-tab" data-cat="skeleton">Skeletons (${categoryCounts.skeleton || 0})</button>
+        <button type="button" class="cat-tab" data-cat="application">App States (${categoryCounts.application || 0})</button>
       </div>
 
       <select id="category" aria-label="Filter by category" hidden>
@@ -863,6 +891,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     <span class="copy-popover-target" id="popover-target-name">React</span>
   </div>
   <div class="copy-popover-list">
+    <button type="button" class="popover-item" data-fw="html" role="menuitem">
+      <span class="popover-fw-badge">HTML</span>
+      <span class="popover-fw-name">HTML &amp; CSS</span>
+      <span class="popover-fw-tag">&lt;div&gt; + CSS</span>
+    </button>
     <button type="button" class="popover-item" data-fw="react" role="menuitem">
       <span class="popover-fw-badge">React</span>
       <span class="popover-fw-name">React JSX</span>
@@ -1146,6 +1179,23 @@ function generateCodeSnippet(id, fw, values) {
       props += '\\n  style="--wavelo-radius: ' + values.radius + 'px"';
     }
     snippet = '<sc' + 'ript type="module">\\n  import { defineWaveloElements } from \\x27@wavelo/web-components\\x27;\\n  defineWaveloElements();\\n</sc' + 'ript>\\n\\n<wavelo-loader\\n' + props + '\\n></wavelo-loader>';
+  } else if (fw === 'html') {
+    const rendered = renderLoader(config);
+    snippet = '<!-- Accessible Standalone HTML & CSS (Zero Dependencies) -->\\n' +
+      '<div role="status" aria-live="polite">\\n' +
+      '  ' + rendered.html + '\\n' +
+      '  <span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Loading...</span>\\n' +
+      '</div>\\n\\n' +
+      '<!-- Scoped Loader Stylesheet & Motion Accessibility Fallback -->\\n' +
+      '<style>\\n' +
+      rendered.css + '\\n\\n' +
+      '@media (prefers-reduced-motion: reduce) {\\n' +
+      '  .wavelo, .wavelo * {\\n' +
+      '    animation-duration: 0.01ms !important;\\n' +
+      '    animation-iteration-count: 1 !important;\\n' +
+      '  }\\n' +
+      '}\\n' +
+      '</style>';
   } else if (fw === 'vanilla') {
     snippet = "import { mountLoader } from '@wavelo/vanilla';\\n\\nconst detach = mountLoader(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
   } else {
@@ -1389,7 +1439,7 @@ document.querySelectorAll('.canvas-modes [data-bg]').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.canvas-modes [data-bg]').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light');
+    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand');
     stage.classList.add('stage-' + btn.dataset.bg);
   });
 });
@@ -1772,6 +1822,7 @@ document.querySelectorAll('.copy-popover .popover-item').forEach((item) => {
     item.classList.add('copied');
 
     const fwLabels = {
+      html: 'HTML & CSS',
       core: '@wavelo/core',
       react: 'React',
       vue: 'Vue',

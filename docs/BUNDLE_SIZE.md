@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 30,166 | 8.9 KB (9,073 B) | 10,240 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 49,505 | 12,145 | 13,824 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 54,355 | 12,569 | 14,336 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 236,838 | 43.3 KB (44,372 B) | 51,200 |
-| `@wavelo/core` + registry walk over all 153 designs | 236,841 | 44,376 | 51,200 |
-| `@wavelo/react` | 237,670 | 44,840 | 51,200 |
-| `@wavelo/vue` | 238,655 | 45,325 | 51,200 |
-| `@wavelo/angular` | 240,612 | 46,188 | 52,224 |
-| `@wavelo/svelte` | 237,030 | 44,480 | 51,200 |
-| `@wavelo/web-components` | 239,097 | 45,356 | 51,200 |
-| `@wavelo/vanilla` | 237,360 | 44,659 | 51,200 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 199,247 raw | 31,865 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 31,417 | 9.2 KB (9,374 B) | 10,240 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 56,873 | 13,171 | 13,824 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 55,606 | 12,872 | 14,336 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 269,032 | 48.3 KB (49,435 B) | 51,200 |
+| `@wavelo/core` + registry walk over all 165 designs | 269,035 | 49,444 | 51,200 |
+| `@wavelo/react` | 269,864 | 49,913 | 51,200 |
+| `@wavelo/vue` | 270,849 | 50,385 | 51,200 |
+| `@wavelo/angular` | 240,228 | 45,780 | 52,224 |
+| `@wavelo/svelte` | 269,224 | 49,550 | 51,200 |
+| `@wavelo/web-components` | 271,343 | 50,428 | 51,200 |
+| `@wavelo/vanilla` | 269,554 | 49,726 | 51,200 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 229,085 raw | 36,193 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -29,7 +29,7 @@ tranche's per-part fill logic cost every design a further ~227 B, including a ri
 which uses none of it. `busiest-loader` is measured alongside `individual-loader` so a
 crowded kind cannot grow unnoticed, and it is pointed at whatever the largest slice is
 now rather than at the kind that held the record when the probe was written: `shape`
-(7,268 B with the base) leads `dots` (5,920), `wave` (5,382) and `skeleton` (4,923), so
+(8,156 B with the base) leads `dots` (6,844), `wave` (5,553) and `skeleton` (4,966), so
 the probe samples `voxel-cluster`. It has moved twice — `progress` while twelve determinate
 designs made that the largest slice, then `dots` (through `bubble-rise`) after the motion
 and skeleton tranches, now `shape` after the 3D suite — and each move was only visible

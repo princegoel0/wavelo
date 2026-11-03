@@ -151,7 +151,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "dna-double-helix": "07fbdf6",
    "hologram-pyramid": "26fbff6",
    "black-hole-accretion": "26dbff6",
-   "crystal-cluster": "26dbff6",
+   "crystal-cluster": "26fbff6",
    "mobius-band": "27fbff6",
    "vortex-tunnel": "27fbff6",
    "isometric-deck": "26fbff6",
@@ -162,5 +162,17 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "dna-decode": "07dbdf6",
    "quantum-superposition": "26fbff6",
    "magnetic-field": "26fbff6",
-   "aurora-borealis": "06dbdf6"
+   "aurora-borealis": "06dbdf6",
+   "agent-tree": "26fbff6",
+   "aurora-ribbon": "26fbff7",
+   "glyph-matrix": "26fbff6",
+   "coin-flip": "27fbef6",
+   "biometric-reticle": "27fbff6",
+   "vault-tumbler": "27fbff6",
+   "git-rebase": "26fbff6",
+   "packet-pipeline": "26fbff6",
+   "crt-scanline": "3edfff6",
+   "gooey-metaballs": "26fbff6",
+   "camera-iris": "27fbff6",
+   "newton-cradle": "26dbff6"
   };

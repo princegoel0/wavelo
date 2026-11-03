@@ -2,6 +2,7 @@ import { css as uploadFrames } from '../keyframes/upload.js';
 import { css as transitionFrames } from '../keyframes/transition.js';
 import { css as waveRollFrames } from '../keyframes/wave-roll.js';
 import { css as drainFrames } from '../keyframes/drain.js';
+import { css as scanlineFrames } from '../keyframes/scanline.js';
 
 export const progressCss = `
 .wavelo--progress{justify-content:flex-start;width:var(--wavelo-width,var(--wavelo-size,8rem));height:var(--wavelo-height,.5rem);overflow:hidden;border-radius:var(--wavelo-radius,999px);background:var(--wavelo-secondary-color,color-mix(in srgb,currentColor 18%,transparent))}
@@ -85,4 +86,8 @@ export const progressCss = `
 .wavelo--undo-progress[data-wavelo-state="error"] .wavelo__part{background:var(--wavelo-error-color,#ef4444);animation:none;transform:scaleX(0)}
 .wavelo--undo-progress[data-wavelo-state="idle"]{opacity:.7}
 .wavelo--undo-progress[data-wavelo-state="idle"] .wavelo__part{animation:none;transform:scaleX(1)}
-${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}`;
+.wavelo--crt-scanline{position:relative;width:var(--wavelo-width,var(--wavelo-size,10rem));height:var(--wavelo-height,1.25rem);border:1.5px solid currentColor;border-radius:3px;padding:2px;background:color-mix(in srgb,currentColor 8%,#050811);box-shadow:inset 0 0 8px color-mix(in srgb,currentColor 35%,transparent),0 0 8px color-mix(in srgb,currentColor 30%,transparent);overflow:hidden}
+.wavelo--crt-scanline:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.25) 50%,transparent 100%);animation:wavelo-scanline var(--wavelo-duration,2s) linear infinite var(--wavelo-play-state,running);pointer-events:none;z-index:4}
+.wavelo--crt-scanline .wavelo__part{height:100%;width:var(--wavelo-progress,35%);background:linear-gradient(90deg,currentColor,color-mix(in srgb,#fff 40%,currentColor));box-shadow:0 0 10px currentColor,0 0 18px color-mix(in srgb,currentColor 50%,transparent);border-radius:1px;transition:width .2s steps(10)}
+.wavelo--crt-scanline:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.35) 2px 4px);pointer-events:none;z-index:5}
+${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}${scanlineFrames}`;

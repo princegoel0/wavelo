@@ -8,8 +8,8 @@
 
 | Metric | Original | Phase 1 | Phase 2 | Phase 3 | Phase 4 (Current) | Status |
 |---|---|---|---|---|---|---|
-| **Active Designs** | 155 | 146 | 141 | 133 | **153** | 153 active designs (25 3D spatial) |
-| **Named Presets** | 228 | 219 | 214 | 231 | **231** | 231 named presets + 78 patterns |
+| **Active Designs** | 155 | 146 | 141 | 133 | **153** | the 153-design checkpoint (25 3D spatial) |
+| **Named Presets** | 228 | 219 | 214 | 231 | **255** | 255 named presets + 90 patterns |
 | **Stylesheet Slices** | 12 | 12 | 12 | 12 | **12** | Maintained 100% modularity |
 | **Bundle Size (Core Gzip)** | 33.3 KB | 32.7 KB | 32.0 KB | 31.8 KB | **43.3 KB** | Core renderer within budget |
 | **Layout Cost (0/frame)** | 152 / 155 | 144 / 146 | 139 / 141 | 131 / 133 | **151 / 153** | Only 2 justified exemptions (`progress-scroll`, `multi-wave`) |
@@ -17,9 +17,9 @@
 | **Browser Tests Passed** | 36 / 36 | 36 / 36 | 36 / 36 | 36 / 36 | **36 / 36** | 100% green |
 
 The columns above are the checkpoints taken as each phase landed. The same metrics on the
-current build, which has moved on since the last phase: **153 designs, 231 named presets,
-12 slices, `core-renderer` 43.3 KB (44,372 B) gzipped, 151 of 153 designs cost no layout per
-frame, 52 unit and adapter tests, Chromium 36 / Gecko 6 / WebKit 7**. `npm run docs:check`
+current build, which has moved on since the last phase: **165 designs, 255 named presets,
+12 slices, `core-renderer` 46.0 KB gzipped, 163 of 165 designs cost no layout per
+frame, 53 unit and adapter tests, Chromium 36 / Gecko 6 / WebKit 7**. `npm run docs:check`
 compares the design and preset counts in this document with the registry on every run; the
 size and test columns are history and are labelled as such.
 
@@ -154,15 +154,15 @@ size and test columns are history and are labelled as such.
 Re-run against the tree after the consolidation and after `count` was added, on
 2026-10-31:
 
-- **Catalog:** `npm run catalog` → 153 public IDs, 153 active designs, 231 named presets,
+- **Catalog:** `npm run catalog` → 165 public IDs, 165 active designs, 255 named presets,
   12 slices, zero aliases, generated files in sync.
-- **Unit and adapter tests:** 52/52 (`npm test`).
+- **Unit and adapter tests:** 53/53 (`npm test`).
 - **Three engines:** Chromium 36/36, Gecko 6/6, WebKit 7/7.
-- **Measured options:** `npm run audit:customization` matches the render for all 153,
+- **Measured options:** `npm run audit:customization` matches the render for all 165,
   which is what proves the `count` recipes above rather than asserting them.
-- **Layout:** 151 of 153 zero-layout per frame; `progress-scroll` and `multi-wave` carry a
+- **Layout:** 163 of 165 zero-layout per frame; `progress-scroll` and `multi-wave` carry a
   recorded reason each.
-- **Visual correctness:** 153 designs — 137 animating, 14 static by design, 2
+- **Visual correctness:** 165 designs — 149 animating, 14 static by design, 2
   timeline-driven.
 - **Bundles:** all eleven entries inside budget, re-based to the 12% rule in both
   directions (runtime 50 KiB, Angular 51 KiB, `busiest-loader` up to 13,824 B because the

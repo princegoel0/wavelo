@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "crystal-cluster", name: "Crystal cluster", category: "creative", dimension: "3d", kind: "shape", description: "Cluster of three interlocking faceted quartz crystal points rotating with specular reflections in 3D space", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "crystal-cluster" };
+const definition: LoaderDefinition = { id: "crystal-cluster", name: "Crystal cluster", category: "creative", dimension: "3d", kind: "shape", description: "Cluster of three interlocking faceted quartz crystal points rotating with specular reflections in 3D space", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "crystal-cluster" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const crystalCluster = (config: Omit<LoaderConfig, 'type'> = {}) =>

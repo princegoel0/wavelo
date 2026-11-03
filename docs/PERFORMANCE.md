@@ -18,7 +18,7 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**151 of the 153 designs cost no layout per frame.** Two do, each for a reason a
+**163 of the 165 designs cost no layout per frame.** Two do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
@@ -29,7 +29,7 @@ transform would take away:
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 151.
+frame for a design that animates a box property, and zero for the other 163.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -73,16 +73,16 @@ Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,737 | `ring` | 4,414 |
-| `scroll` | 1,961 | `orbit` | 4,459 |
-| `bars` | 2,535 | `skeleton` | 4,923 |
-| `pulse` | 2,820 | `wave` | 5,382 |
-| `rings` | 3,615 | `dots` | 5,920 |
-| `progress` | 4,407 | `shape` | 7,268 |
+| `overlay` | 1,782 | `progress` | 4,662 |
+| `scroll` | 2,005 | `skeleton` | 4,966 |
+| `pulse` | 2,883 | `orbit` | 4,974 |
+| `bars` | 2,891 | `wave` | 5,553 |
+| `rings` | 4,378 | `dots` | 7,151 |
+| `ring` | 4,618 | `shape` | 8,491 |
 
 The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
-blocks more than one kind animates with — is 1,316 bytes of every row above. The whole
-catalog sheet is 31,865 bytes gzipped, loaded once, for all 153 designs. Read down the
+blocks more than one kind animates with — is 1,360 bytes of every row above. The whole
+catalog sheet is 36,193 bytes gzipped, loaded once, for all 165 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
@@ -97,7 +97,7 @@ record when it was written stops measuring the worst case the moment another kin
 overtakes it, and the budget still passes — which is what happened here, with the ceiling
 at 11,264 bytes while a shape design already cost 12,145. Redrawing a design moves its kind
 too, and not in proportion to the design's own size: `infinity` is one loader's worth of
-markup and what it ships is a sixteen-stop lemniscate inside the 3,615-byte `rings` slice,
+markup and what it ships is a sixteen-stop lemniscate inside the 4,378-byte `rings` slice,
 while `helix` needs eighteen parts in six rows inside the 5,382-byte `wave` slice. A design
 in a crowded kind costs more than a design in a quiet one, whatever its own rules — and a
 change to the renderer, which every design imports, costs all of them: the determinate fill

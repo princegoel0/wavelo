@@ -42,7 +42,7 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 - `@wavelo/core` renders escaped markup plus the stylesheet slice a design needs.
   153 public IDs, each with its own implementation; no deprecated aliases.
 - 12 render kinds, 12 stylesheet slices, 27 configuration keys, 23 `--wavelo-*`
-  custom properties, 81 `@keyframes`, 231 named presets. Eight categories, one of
+  custom properties, 93 `@keyframes`, 255 named presets. Eight categories, one of
   them (`ai`) added for the streaming lane.
 - `packages/core/src/catalog.ts` is the only authored catalog description.
   `src/loaders/*.ts`, `src/loaders/index.ts` and `src/ids.ts` are generated from it by
@@ -69,17 +69,17 @@ WebKit stands in for Safari — the same engine, not an Apple-shipped browser.
 | `npm run build` | Passed: core, catalog generation, all adapters, docs gallery |
 | `npm run typecheck` | Passed under strict TypeScript |
 | `npm test` | Passed: 52 tests across core, adapters, Angular TestBed and Angular SSR |
-| `npm run catalog` | Passed: 153 IDs / 153 active / 231 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
+| `npm run catalog` | Passed: 165 IDs / 165 active / 255 presets / 12 slices, plus drift, alias-metadata, slice-ownership and keyframe-completeness checks |
 | `npm run packages:check` | Passed: 7 manifests complete, and every path an `exports` map names exists in the build with its declaration |
-| `npm run docs:check` | Passed: 153 designs, 27 configuration keys, 23 custom properties and both bundle KB figures match the built packages, and no document names a design the consolidation retired |
+| `npm run docs:check` | Passed: 165 designs, 27 configuration keys, 23 custom properties and both bundle KB figures match the built packages, and no document names a design the consolidation retired |
 | `npm run measure` | Passed: 11 entry points inside budget; `ring` 9,073 B gzipped (budget 10,240), the busiest kind `voxel-cluster` 12,145 B (budget 13,824), runtime renderer 44,372 B (budget 51,200) |
 | `npm run test:browser` | Passed: 36 Chromium tests (see below) |
 | `npm run test:browser:firefox` | Passed: 6 Gecko tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, and both timeline designs run on the document clock (`scroll()`/`view()` unsupported on Firefox 157) |
 | `npm run test:browser:webkit` | Passed: 7 WebKit tests — the sheet applies, `paused`/`direction`/`reducedMotion`/`theme` and ancestor tokens reach the loader, every design paints, the custom element re-renders, a conic gradient is carved by a mask, a registered integer reaches a CSS counter, and both timeline designs run on a real `ScrollTimeline`/`ViewTimeline` (`scroll()`/`view()` measured supported on WebKit 27.2, unlike Firefox 157) |
-| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 153 designs |
-| `npm run audit:layout` | Passed: 151 of the 153 designs cost no layout per frame; the two that do are each accounted for |
+| `npm run audit:customization` | Passed: the measured option table matches what Chromium renders for all 165 designs |
+| `npm run audit:layout` | Passed: 163 of the 165 designs cost no layout per frame; the two that do are each accounted for |
 | `npm run audit:visual` | Passed: contact sheet regenerated, desktop and 375px mobile |
-| `npm run audit:visual:correctness` | Passed: 153 active designs — 137 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
+| `npm run audit:visual:correctness` | Passed at this report's date, against the then-current 153-design checkpoint: 137 animating, 14 static determinate designs bound to their value, 2 timeline-driven designs bound to a `ScrollTimeline` and a `ViewTimeline` |
 | `node scripts/style-fidelity.mjs isolated` | Passed: 0 differences between the combined sheet and each design rendered with only its own slice |
 | `npm run pack:check` | Passed: seven publishable tarballs; `@wavelo/docs` also packs but is `"private": true` and is never published |
 | `npm run pack:verify` | Passed: the tarballs install into a fresh project that renders, type checks under `--strict`, and finds a licence and README in every package |

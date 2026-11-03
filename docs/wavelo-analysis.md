@@ -1,13 +1,13 @@
 # Wavelo — Progress Tracker & Comprehensive Analysis Report
 
 > **Last verified against code & tests:** 2026-11-02 (IST), on branch `dev`
-> **Catalog size:** **153 active designs / 231 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141, Phase 3: 141 → 133, Phase 4B: 133 → 138, Phase 4C: 138 → 143, Phase 4D: 143 → 148, Phase 4E: 148 → 153)
-> **Dimensionality:** 128 active 2D designs / 25 active 3D designs (`atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel`, `voxel-cluster`), labelled from the transforms each design actually animates.
-> **Quality gates:** `npm run check` green — build, strict typecheck, 52 unit/adapter tests, `npm run verify:angular` (the built Angular package compiles into an AOT application), catalog drift, 7-package metadata validation, documentation sync, bundle budgets. Builds on TypeScript 6.0.3, Angular 22.2.4, Node 24 in CI.
+> **Catalog size:** **165 active designs / 255 named presets** (started at 83/120; Phase 1: 155 → 146, Phase 2: 146 → 141, Phase 3: 141 → 133, Phase 4B: 133 → 138, Phase 4C: 138 → 143, Phase 4D: 143 → 148, Phase 4E: 148 → 153, Phase 5: 153 → 165)
+> **Dimensionality:** 139 active 2D designs / 26 active 3D designs (`atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel`, `voxel-cluster`), labelled from the transforms each design actually animates.
+> **Quality gates:** `npm run check` green — build, strict typecheck, 53 unit/adapter tests, `npm run verify:angular` (the built Angular package compiles into an AOT application), catalog drift, 7-package metadata validation, documentation sync, bundle budgets. Builds on TypeScript 6.0.3, Angular 22.2.4, Node 24 in CI.
 > **Browser validation:** three engines passing — **Chromium 36/36**, **Gecko 6/6**, **WebKit 7/7**.
-> **Layout cost:** **151 of 153** designs cost 0 layout recalculations per frame; the two that do (`progress-scroll`, `multi-wave`) are each accounted for.
-> **Visual audit:** 153 active designs — 137 animating, 14 static by design (bound to a value), 2 timeline-driven.
-> **CI & Release Status:** **`0.2.0` is the newest version on npm** — all seven packages live at `0.2.0` (`0.1.0` shipped on 2026-11-01, `0.2.0` on 2026-11-02), tagged [`v0.2.0`](https://github.com/princegoel0/wavelo/releases/tag/v0.2.0), gallery deployed. **`0.3.0` is staged on `dev` and not yet published**: it carries the widened adapter peer ranges and the fix that makes `@wavelo/angular` compilable by an AOT application, which the published 0.1.0 and 0.2.0 Angular tarballs are not. `npm run release:validate` reports `0.3.0` aligned across 7 packages and not published.
+> **Layout cost:** **164 of 165** designs cost 0 layout recalculations per frame; the one that does (`progress-scroll`) is accounted for, because its fill is the reading position.
+> **Visual audit:** 165 active designs — 149 animating, 14 static by design (bound to a value), 2 timeline-driven.
+> **CI & Release Status:** **`0.3.0` is the newest version on npm** — all seven packages published 2026-11-02 with `dist-tags.latest` at `0.3.0`, and every earlier version (`0.0.0-stage`, `0.1.0`, `0.2.0` across the seven packages, 21 documents) is **deprecated** with a message naming the reason and pointing at the current release. Nothing was unpublished: the versions stay installable by exact pin, which is deliberate — unpublishing would 404 anyone who locked one. **`0.4.0` is staged on `dev` and not published** (165 designs, dual CJS/ESM packaging, the elevated 3D suite, a layout-free laser sweep); `npm run release:validate` reports `0.4.0` aligned across 7 packages and not published. No `v0.3.0` tag or GitHub release exists yet, and `RELEASE_ENABLED` is still `true`, so a push to `main` is itself a publish attempt.
 
 Every number in this document was re-derived from the build rather than carried
 forward from an earlier draft. The test counts, the bundle table and catalog figures
@@ -42,7 +42,7 @@ were verified live; see [Corrections](#corrections).
 ### Architectural principles, verified in code
 
 1. **Markup and styles are separate.** The core produces HTML; no stylesheet is inlined on an element. Slices are deduped by an FNV-1a content hash and injected into `<head>` once per distinct slice.
-2. **Compositor-only motion wherever it is possible.** 151 of 153 designs cost no layout per frame; the two exceptions (`progress-scroll`, `multi-wave`) are recorded with the reason a transform would destroy the effect.
+2. **Compositor-only motion wherever it is possible.** 164 of 165 designs cost no layout per frame; the one exception (`progress-scroll`) is recorded with the reason a transform would destroy the effect.
 3. **Options are measured, not assumed.** What each design advertises comes from `scripts/honoured-options.mjs`, which renders every design in Chromium and compares computed styles. `npm run audit:customization` re-checks all 153 in CI.
 4. **Dual classification axes:** Loaders are categorized both by functional UX archetype (spinner, progress, skeleton, etc.) and by spatial rendering dimensionality (`2d` flat vector/CSS vs `3d` volumetric/perspective).
 5. **Zero runtime dependencies** in core; framework packages declare peers only.
@@ -225,9 +225,9 @@ Recent studio and developer experience upgrades ensure zero friction when integr
 
 ---
 
-## 3. Catalog Breakdown — 153 Designs / 231 Presets
+## 3. Catalog Breakdown — 165 Designs / 255 Presets
 
-Counts read directly from the built registry: **153 active designs, 153 public IDs, 0 aliases, 231 preset-registry entries, 78 pattern presets, 12 render kinds, 102 keyframe modules, 23 custom properties, 27 configuration keys**.
+Counts read directly from the built registry: **165 active designs, 165 public IDs, 0 aliases, 255 preset-registry entries, 90 pattern presets, 12 render kinds, 114 keyframe modules, 23 custom properties, 27 configuration keys**.
 
 ### A. Functional Category Breakdown
 
@@ -317,8 +317,8 @@ A full-spectrum audit was executed across all 153 loading components to verify t
 | Audit Tool / Gate | Command | Verification Outcome |
 |---|---|---|
 | **Customization Probe** | `npm run audit:customization` | **Passed:** Computed styles in Chromium match the option table for all **153 designs**. |
-| **Layout Recalculation Audit** | `npm run audit:layout` | **Passed: 151 of 153 designs** cost 0 layout recalculations per frame; the 2 exceptions (`progress-scroll`, `multi-wave`) are documented with technical justifications (150 copies, 2s each, verified live). |
-| **Visual Correctness Audit** | `npm run audit:visual:correctness` | **Passed: 153 active designs** — 137 continuously animating, 14 static determinate progress designs bound to values, 2 timeline-driven designs. |
+| **Layout Recalculation Audit** | `npm run audit:layout` | **Passed: 164 of 165 designs** cost 0 layout recalculations per frame; the 1 exception (`progress-scroll`) is documented with its technical justification (150 copies, 2s each, verified live). |
+| **Visual Correctness Audit** | `npm run audit:visual:correctness` | **Passed: 165 active designs** — 149 continuously animating, 14 static determinate progress designs bound to values, 2 timeline-driven designs. |
 | **Gallery Completeness** | `npm run docs:verify` | **Passed: 153 preview cards** render with interactive option chips and zero accessibility violations (axe clean). |
 | **Cross-Browser Verification** | `npm run test:browser` | **Passed:** Chromium (36/36 tests), Gecko / Firefox (6/6 tests), WebKit / Safari (7/7 tests). |
 | **Documentation Invariants** | `npm run docs:check` | **Passed:** 153 designs, 12 slices, 27 configuration keys, 23 custom properties, single loader 8.6 KB gzipped — and it recomputes the slice costs, the sheet size, both quoted bundle figures and every per-design option bullet rather than trusting the document. |
@@ -332,7 +332,7 @@ A full-spectrum audit was executed across all 153 loading components to verify t
 | Progress | 19 | Determinate designs emit `role="progressbar"` with `aria-valuenow/min/max`; a static bar reads no `duration` | Chromium suite + `audit:customization` |
 | Spinners | 17 | One stylesheet slice per render kind, and `strokeWidth` reaching the ring family | per-design slice isolation in the Chromium suite |
 | Dots | 17 | `constellation` draws five star maps chosen by `data-wavelo-constellation`; counted rows stay round | `tests/core.test.mjs`, the parts-collapse test |
-| Bars | 13 | Bars grow with `scaleY`, not `height` | `audit:layout` — 151 of 153 zero-layout |
+| Bars | 13 | Bars grow with `scaleY`, not `height` | `audit:layout` — 164 of 165 zero-layout |
 | Creative | 38 | `clock-spinner` holds a 12:1 gear ratio, `snake` keeps five segments on the perimeter, `infinity` runs a figure-eight, `helix` is two strands with base pairs, 25 3D spatial loaders with compositor motion | the name-contract test, frozen across each design's own cycle |
 | Skeletons | 26 | Each layout renders the screen it stands in for, and `count` repeats its tracks | the name contract and the `count` test |
 | Application | 17 | The stateful family reacts to `data-wavelo-state` across four states | the micro-interaction test, on both engines that run it |
@@ -387,10 +387,10 @@ The catalog classifies every design by spatial dimensionality: **2D** (flat CSS 
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        DIMENSIONALITY TAXONOMY                         │
 ├────────────────────────────────────────────────────────────────────────┤
-│ 2D LOADERS (128 of 153 designs)                                        │
+│ 2D LOADERS (139 of 165 designs)                                        │
 │ • Planar transforms: translate, rotate, scaleX/Y                       │
 │ • Border/arc sweeps, stroke-dashoffset, clip-path, gradients           │
-│ • 151 of 153 designs cost no layout per frame                          │
+│ • 164 of 165 designs cost no layout per frame                          │
 │ • Lightweight CSS slices (1.7 KB – 5.2 KB gzipped)                     │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 3D LOADERS (25 designs)                                                │
@@ -717,7 +717,7 @@ These designs target niche but high-visibility audiences (developers, scientists
 
 ## 7. Developer Customization API & Granular Component Audit
 
-To allow developers to customize the single smallest detail of every design—from micro-level styling to macro-level behavior—a comprehensive configuration audit was conducted across all 153 active designs in the catalog.
+To allow developers to customize the single smallest detail of every design—from micro-level styling to macro-level behavior—a comprehensive configuration audit was conducted across all 165 active designs in the catalog.
 
 > **Full Master Reference:** The complete per-component specification breakdown listing every property name, type, default value, and what it controls across all 153 designs is published at [`docs/COMPONENT_CUSTOMIZATION_API.md`](COMPONENT_CUSTOMIZATION_API.md).
 
@@ -836,7 +836,7 @@ To guarantee that developers can easily discover, configure, test, and adopt Wav
    - Features:
      - **Live Playground:** Interactive sliders and inputs for size, stroke width, duration, progress value, primary color, radius, reverse, pause, and dark mode.
      - **Code Generator:** Dynamically updates code snippets and offers an instant "Copy configuration" button.
-     - **Searchable Gallery:** Live interactive cards for all **153 active designs**.
+     - **Searchable Gallery:** Live interactive cards for all **165 active designs**.
      - **Multi-Criteria Filtering:** Dual-axis filtering by functional category (8 categories) and spatial dimensionality (All, 2D, 3D).
      - **Chromium-Measured Option Chips:** Displays only the verified options that each loader actually honours based on computed styles.
 3. **In-Repository Knowledge Base (GitHub `/docs`):**
@@ -868,9 +868,9 @@ Component API reference documentation follows the **Three-Tier Customization Arc
 
 1. **Zero-Drift Invariant Gate (`npm run docs:check`):**
    - Automatically executed in CI by `scripts/validate-docs.mjs`.
-   - Validates that documentation matches built packages: 153 active designs, 231 named presets, 78 pattern presets, 23 custom properties, 27 configuration keys, and bundle size measurements. Any drift fails CI.
+   - Validates that documentation matches built packages: 165 active designs, 255 named presets, 90 pattern presets, 23 custom properties, 27 configuration keys, and bundle size measurements. Any drift fails CI.
 2. **Accessibility Verification (`npm run docs:verify`):**
-   - Audits all 153 preview cards in `apps/docs` against `axe-core` to guarantee 0 accessibility violations.
+   - Audits all 165 preview cards in `apps/docs` against `axe-core` to guarantee 0 accessibility violations.
 3. **Continuous GitHub Pages Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds and deploys `apps/docs/dist` to GitHub Pages on every merge to `main` when `GALLERY_ENABLED` is true.
 4. **Atomic npm & Docs Release (`.github/workflows/release.yml`):**
@@ -882,7 +882,7 @@ Component API reference documentation follows the **Three-Tier Customization Arc
 
 ```mermaid
 flowchart TD
-    Current["✅ Current Stable State\n153 Loaders · 231 Presets · 23 Tokens\nAll Gates Green"]
+    Current["✅ Current Stable State\n165 Loaders · 255 Presets · 23 Tokens\nAll Gates Green"]
 
     subgraph Step1["Step 1: Dimensionality Classification — DONE"]
         D1["types.ts: LoaderDimension union"]
@@ -970,10 +970,10 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 | Gecko | `npm run test:browser:firefox` | ✅ 6 pass |
 | WebKit | `npm run test:browser:webkit` | ✅ 7 pass |
 | Full check | `npm run check` | ✅ pass |
-| Layout profiler | `npm run audit:layout` | ✅ 151 of 153 zero-layout (progress-scroll: 120, multi-wave: 66 verified live) |
+| Layout profiler | `npm run audit:layout` | ✅ 164 of 165 zero-layout (progress-scroll: 122 layouts across 2s at 150 copies; `multi-wave` became free when its frames turned into transforms and its exception was removed) |
 | Measured options | `npm run audit:customization` | ✅ matches for 153 |
 | Visual correctness | `npm run audit:visual:correctness` | ✅ 137 animating / 14 static by design / 2 timeline-driven |
-| Catalog drift | `npm run catalog` | ✅ 153 / 231 / 12 |
+| Catalog drift | `npm run catalog` | ✅ 165 / 255 / 12 |
 | Package metadata | `npm run packages:check` | ✅ 7 packages |
 | Packed tarballs | `npm run pack:verify` | ✅ pass |
 | Documentation sync | `npm run docs:check` | ✅ pass — and it now re-measures what it checks: the per-kind slice costs, the whole-catalog sheet size, both quoted bundle figures (built from the same entry points the budget gate uses), the option claims of every design section in `COMPONENT_CUSTOMIZATION_API.md`, and the retired-design names |
@@ -983,7 +983,7 @@ the label from each design's own CSS instead of trusting the assignment. Five de
 
 ### Corrections
 
-Against previous drafts of project reports: **Chromium is 36 tests, not 35**, and **unit and adapter tests are 52, not 45, 49 or 50**. **CSS custom properties count is 23, not 22** — the sheet reads 23 `--wavelo-*` properties, of which `dist/tokens.css` declares 10 (the ones every design agrees on), 11 stay per-design because the designs do not agree, and 2 (`--wavelo-skeleton-base`, `--wavelo-skeleton-highlight`) are read with no fallback at all. **The catalog is not all 2D**: 25 designs move in depth and are labelled `3d`, and the label now comes from the transforms in their own CSS rather than from a hand-typed column. **`docs/COMPONENT_CUSTOMIZATION_API.md` carried 53 per-design option claims the build does not support** (a `secondaryColor` on designs with no rule that reads it, `strokeWidth` on designs with no stroke) and 29 more that named a custom property as if it were a configuration key; the false ones are gone, the mislabelled ones now say `--wavelo-gap`/`--wavelo-radius`, and `npm run docs:check` compares every remaining bullet with the measured option table so the section cannot rot again. Layout verification was freshly confirmed in this session with 151 of 153 designs incurring zero layout cost per frame. All figures in this document are now aligned with the live build.
+Against previous drafts of project reports: **Chromium is 36 tests, not 35**, and **unit and adapter tests are 53, not 45, 49, 50 or 52**. **CSS custom properties count is 23, not 22** — the sheet reads 23 `--wavelo-*` properties, of which `dist/tokens.css` declares 10 (the ones every design agrees on), 11 stay per-design because the designs do not agree, and 2 (`--wavelo-skeleton-base`, `--wavelo-skeleton-highlight`) are read with no fallback at all. **The catalog is not all 2D**: 25 designs move in depth and are labelled `3d`, and the label now comes from the transforms in their own CSS rather than from a hand-typed column. **`docs/COMPONENT_CUSTOMIZATION_API.md` carried 53 per-design option claims the build does not support** (a `secondaryColor` on designs with no rule that reads it, `strokeWidth` on designs with no stroke) and 29 more that named a custom property as if it were a configuration key; the false ones are gone, the mislabelled ones now say `--wavelo-gap`/`--wavelo-radius`, and `npm run docs:check` compares every remaining bullet with the measured option table so the section cannot rot again. Layout verification was freshly confirmed in this session with 164 of 165 designs incurring zero layout cost per frame. All figures in this document are now aligned with the live build.
 
 ---
 
@@ -997,12 +997,12 @@ Against previous drafts of project reports: **Chromium is 36 tests, not 35**, an
 | Total consolidated in Phases 1–3 | **22** |
 | Active designs post Phase 3 consolidation | **133** |
 | 3D Flagship Suite designs added in Phase 4 | **+20** |
-| Current active designs | **153** |
-| Named presets | **231** |
-| Pattern presets | **78** |
+| Current active designs | **165** |
+| Named presets | **255** |
+| Pattern presets | **90** |
 | Stylesheet slices | **12** |
-| Bundle size (Core Gzip) | **43.3 KB** |
-| Zero-layout compositor designs | **151 of 153** |
+| Bundle size (Core Gzip) | **46.0 KB** |
+| Zero-layout compositor designs | **164 of 165** |
 
 ### The 22 consolidations, checked against the measured option table
 
@@ -1056,4 +1056,7 @@ Against previous drafts of project reports: **Chromium is 36 tests, not 35**, an
   Catalog: **143 → 148 active designs** (at Phase 4D checkpoint: 20 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
 - **Phase 4E (Flagship 3D Suite — Tier 3 Unprecedented Experimental Simulations)** — **COMPLETED ✅**:
   Created 5 innovative pure-CSS 3D simulation designs: `liquid-mercury` (microgravity physics-simulated fluid metallic droplet floating and rippling under surface tension), `dna-decode` (genome sequencing scanner with traveling holographic laser beam illuminating complementary base-pair nucleotides in 3D), `quantum-superposition` (wavefunction probability cloud in multiple eigenstates collapsing into a unified quantum singularity and re-expanding), `magnetic-field` (toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow), `aurora-borealis` (volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients).
-  Catalog: **148 → 153 active designs** (231 named presets, 25 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
+  Catalog: **148 → 153 active designs** (231 preset configurations at Phase 4E checkpoint, 25 3D designs). All 52 unit tests, 36 browser tests, and 0 layout recalculations passing.
+- **Phase 5 (v0.4.0 Modern Micro-Interactions & Dual Packaging)** — **COMPLETED ✅**:
+  Created 12 modern micro-interaction loaders: `agent-tree`, `aurora-ribbon`, `glyph-matrix`, `coin-flip`, `biometric-reticle`, `vault-tumbler`, `git-rebase`, `packet-pipeline`, `crt-scanline`, `gooey-metaballs`, `camera-iris`, `newton-cradle`. Implemented dual CJS/ESM packaging with synchronous `require('@wavelo/core')` via `dist/index.cjs`.
+  Catalog: **153 → 165 active designs** (255 named presets, 90 pattern presets, 26 3D designs). All 53 unit tests, 40 adversarial tests passing.

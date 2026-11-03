@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/web-components",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Framework-free custom element integration for Wavelo",
   "type": "module",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "web-component"
   ],
   "dependencies": {
-    "@wavelo/core": "0.3.0"
+    "@wavelo/core": "0.4.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
