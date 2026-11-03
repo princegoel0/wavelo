@@ -605,6 +605,7 @@ test('no design has parts stacked on one another or squeezed out of round', asyn
           }
         }
         const boxes = parts.map((part) => part.getBoundingClientRect());
+        const transforms = parts.map((part) => getComputedStyle(part).transform);
         // A part rounded by border-radius:50% is only a dot if its box is square. These
         // are flex items, so any row whose parts overflow the loader gets squeezed
         // sideways and draws an ellipse while still being called a dot.
@@ -613,9 +614,13 @@ test('no design has parts stacked on one another or squeezed out of round', asyn
           if (round && box.width > 1 && Math.abs(box.width / box.height - 1) > 0.06)
             out.push(`${wrap.dataset.design} part ${index + 1} is ${box.width.toFixed(1)}x${box.height.toFixed(1)}`);
         }
+        // A stack is a shared box *and* a shared transform: an ellipse authored at 60° and one
+        // at 120° fill the same axis-aligned box while being plainly different drawings, and
+        // the bug this scan exists for — a keyframe replacing the transform that placed each
+        // part — collapses the matrix as well as the box.
         for (let i = 0; i < boxes.length; i++)
           for (let j = i + 1; j < boxes.length; j++)
-            if (Math.hypot(boxes[i].x - boxes[j].x, boxes[i].y - boxes[j].y) < 0.6 && Math.abs(boxes[i].width - boxes[j].width) < 0.6)
+            if (Math.hypot(boxes[i].x - boxes[j].x, boxes[i].y - boxes[j].y) < 0.6 && Math.abs(boxes[i].width - boxes[j].width) < 0.6 && transforms[i] === transforms[j])
               out.push(`${wrap.dataset.design} parts ${i + 1} and ${j + 1} at ${p * 100}%`);
       }
       return out;
