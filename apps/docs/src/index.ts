@@ -27,6 +27,13 @@ const cards = loaderRegistry.map((loader) => `
       </button>
       <div>${loader.id === 'constellation' ? '<span class="badge badge-feat" title="5 Astronomical Patterns: Ursa Major, Orion, Cassiopeia, Cygnus, Ursa Minor">5 Patterns</span> ' : ''}<span class="badge badge-cat">${loader.category}</span></div>
     </div>
+    <div class="quick-swatches" aria-label="Quick preview colors">
+      <button type="button" class="quick-dot active" style="background:#6366f1" data-color="#6366f1" title="Indigo" aria-label="Set card color to indigo"></button>
+      <button type="button" class="quick-dot" style="background:#10b981" data-color="#10b981" title="Emerald" aria-label="Set card color to emerald"></button>
+      <button type="button" class="quick-dot" style="background:#0ea5e9" data-color="#0ea5e9" title="Sky" aria-label="Set card color to sky"></button>
+      <button type="button" class="quick-dot" style="background:#f43f5e" data-color="#f43f5e" title="Rose" aria-label="Set card color to rose"></button>
+      <button type="button" class="quick-dot" style="background:#f59e0b" data-color="#f59e0b" title="Amber" aria-label="Set card color to amber"></button>
+    </div>
     <div class="action-bar" aria-label="${loader.name} actions">
       <button type="button" class="btn-card-action btn-test-card" data-id="${loader.id}" aria-label="Test ${loader.name} in studio">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Studio
@@ -397,6 +404,29 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 .btn-card-action { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.35rem 0.4rem; border-radius: var(--radius-sm); font-size: 0.72rem; font-weight: 600; border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
 .btn-card-action:hover { background: var(--accent); color: #ffffff; border-color: var(--accent); }
 
+/* In-Card Quick Color Swatches */
+.quick-swatches { display: flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0; }
+.quick-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid transparent; cursor: pointer; padding: 0; transition: transform 0.15s ease, border-color 0.15s ease; flex-shrink: 0; }
+.quick-dot:hover { transform: scale(1.25); }
+.quick-dot.active { border-color: #ffffff; box-shadow: 0 0 0 1px var(--accent); }
+
+/* WCAG 2.2 Contrast Badges & Indicators */
+.contrast-badge { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: var(--radius-sm); letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.25rem; }
+.contrast-good, .pill-good { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.contrast-warn, .pill-warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+.stage-pill.pill-contrast { font-weight: 700; }
+
+/* Modal Snippet Framework Tabs */
+.modal-snippet-section { background: var(--bg-subtle); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.modal-snippet-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.btn-copy-modal-snippet { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.75rem; border-radius: var(--radius-sm); background: var(--accent); color: #fff; border: none; cursor: pointer; transition: all 0.15s ease; }
+.btn-copy-modal-snippet:hover { background: var(--accent-hover); }
+.btn-copy-modal-snippet.copied { background: #10b981 !important; color: #fff !important; }
+.modal-fw-tabs { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
+.modal-fw-tab { font-size: 0.74rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.12s ease; }
+.modal-fw-tab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+.modal-fw-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
 /* API Modal */
 .modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 1.5rem; }
 .modal-backdrop[hidden] { display: none !important; }
@@ -645,6 +675,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <svg class="copy-id-icon" aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
           <span id="stage-spec-badge" class="stage-pill pill-sub">2D · 48px · 1s</span>
+          <span id="stage-contrast-pill" class="stage-pill pill-contrast pill-good" title="WCAG 2.2 Relative Contrast Ratio">WCAG: 4.5:1 AA</span>
         </div>
       </div>
 
@@ -763,10 +794,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
               <button type="button" class="swatch" style="background:#f43f5e" data-color="#f43f5e" aria-label="Select rose color"></button>
               <button type="button" class="swatch" style="background:#f59e0b" data-color="#f59e0b" aria-label="Select amber color"></button>
             </div>
-            <output></output>
-          </div>
-
-          <div class="ctrl-row" id="row-secondary-color">
+            <output id="contrast-badge" class="contrast-badge contrast-good" title="WCAG 2.2 Relative Contrast Ratio" aria-label="WCAG 2.2 Relative Contrast Ratio">4.5:1 AA</output>
             <label for="secondary-color">Secondary</label>
             <div class="swatches">
               <div class="color-picker-wrap" title="Secondary accent color picker">
@@ -899,17 +927,17 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     <button type="button" class="popover-item" data-fw="react" role="menuitem">
       <span class="popover-fw-badge">React</span>
       <span class="popover-fw-name">React JSX</span>
-      <span class="popover-fw-tag">&lt;Loader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="vue" role="menuitem">
       <span class="popover-fw-badge">Vue</span>
       <span class="popover-fw-name">Vue SFC</span>
-      <span class="popover-fw-tag">&lt;Loader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="svelte" role="menuitem">
       <span class="popover-fw-badge">Svelte</span>
       <span class="popover-fw-name">Svelte 5</span>
-      <span class="popover-fw-tag">&lt;WaveloLoader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="angular" role="menuitem">
       <span class="popover-fw-badge">Angular</span>
@@ -924,7 +952,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     <button type="button" class="popover-item" data-fw="vanilla" role="menuitem">
       <span class="popover-fw-badge">JS</span>
       <span class="popover-fw-name">Vanilla JS</span>
-      <span class="popover-fw-tag">mountLoader</span>
+      <span class="popover-fw-tag">mountWavelo</span>
     </button>
     <button type="button" class="popover-item" data-fw="core" role="menuitem">
       <span class="popover-fw-badge">Core</span>
@@ -1030,6 +1058,30 @@ function read() {
   return values;
 }
 
+function hexToRgb(hex) {
+  let c = (hex || '#6366f1').replace('#', '');
+  if (c.length === 3) c = c.split('').map((x) => x + x).join('');
+  const num = Number.parseInt(c, 16);
+  if (Number.isNaN(num)) return [99, 102, 241];
+  return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+}
+
+function relativeLuminance(rgb) {
+  const [rs, gs, bs] = rgb.map((val) => {
+    const s = val / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function getContrastRatio(colorHex, bgHex) {
+  const l1 = relativeLuminance(hexToRgb(colorHex));
+  const l2 = relativeLuminance(hexToRgb(bgHex));
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 function generateCodeSnippet(id, fw, values) {
   if (!values) values = read();
   const info = loaderData.find((l) => l.id === id) || {
@@ -1099,9 +1151,9 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  style={{ \\x27--wavelo-radius\\x27: \\x27' + values.radius + 'px\\x27 }}';
     }
-    snippet = "import { Loader } from '@wavelo/react';\\n\\n<Loader\\n" + props + "\\n/>";
+    snippet = "import { Wavelo } from '@wavelo/react';\\n\\n<Wavelo\\n" + props + "\\n/>";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
-      snippet += "\\n\\n// Shortcut preset type:\\n// <Loader type='constellation-" + vSelect.value + "' size={" + values.size + "} />";
+      snippet += "\\n\\n// Shortcut preset type:\\n// <Wavelo type='constellation-" + vSelect.value + "' size={" + values.size + "} />";
     }
   } else if (fw === 'vue') {
     let props = '  type="' + id + '"';
@@ -1121,7 +1173,7 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  :style="{ \\x27--wavelo-radius\\x27: \\x27' + values.radius + 'px\\x27 }"';
     }
-    snippet = "<sc" + "ript setup>\\nimport { Loader } from '@wavelo/vue';\\n</sc" + "ript>\\n\\n<template>\\n  <Loader\\n" + props + "\\n  />\\n</template>";
+    snippet = "<sc" + "ript setup>\\nimport { Wavelo } from '@wavelo/vue';\\n</sc" + "ript>\\n\\n<template>\\n  <Wavelo\\n" + props + "\\n  />\\n</template>";
   } else if (fw === 'svelte') {
     let props = '  type="' + id + '"';
     if (extraAttr) props += '\\n ' + extraAttr.trim();
@@ -1140,7 +1192,7 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  style="--wavelo-radius: ' + values.radius + 'px"';
     }
-    snippet = "<sc" + "ript>\\n  import WaveloLoader from '@wavelo/svelte/WaveloLoader.svelte';\\n</sc" + "ript>\\n\\n<WaveloLoader\\n" + props + "\\n/>";
+    snippet = "<sc" + "ript>\\n  import Wavelo from '@wavelo/svelte/Wavelo.svelte';\\n</sc" + "ript>\\n\\n<Wavelo\\n" + props + "\\n/>";
   } else if (fw === 'angular') {
     let props = '  type="' + id + '"';
     if (extraAttr) props += '\\n ' + extraAttr.trim();
@@ -1197,7 +1249,7 @@ function generateCodeSnippet(id, fw, values) {
       '}\\n' +
       '</style>';
   } else if (fw === 'vanilla') {
-    snippet = "import { mountLoader } from '@wavelo/vanilla';\\n\\nconst detach = mountLoader(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
+    snippet = "import { mountWavelo } from '@wavelo/vanilla';\\n\\nconst detach = mountWavelo(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
   } else {
     snippet = "renderLoader(" + JSON.stringify(config, null, 2) + ")";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
@@ -1261,6 +1313,20 @@ function paint() {
     if (info.honoursCount) specText += ' · ' + (values.count || 3) + '×';
     if (determinate.has(id)) specText += ' · ' + values.progress + '%';
     stageSpecBadge.textContent = specText;
+  }
+
+  const stageBg = values.dark ? '#030712' : '#ffffff';
+  const contrastRatio = getContrastRatio(values.color, stageBg);
+  const contrastLabel = contrastRatio >= 7.0 ? 'AAA' : contrastRatio >= 4.5 ? 'AA' : 'Low';
+  const contrastBadge = document.querySelector('#contrast-badge');
+  if (contrastBadge) {
+    contrastBadge.textContent = contrastRatio.toFixed(1) + ':1 ' + contrastLabel;
+    contrastBadge.className = 'contrast-badge ' + (contrastRatio >= 4.5 ? 'contrast-good' : 'contrast-warn');
+  }
+  const stageContrastPill = document.querySelector('#stage-contrast-pill');
+  if (stageContrastPill) {
+    stageContrastPill.textContent = 'WCAG ' + contrastRatio.toFixed(1) + ':1 (' + contrastLabel + ')';
+    stageContrastPill.className = 'stage-pill pill-contrast ' + (contrastRatio >= 4.5 ? 'pill-good' : 'pill-warn');
   }
 
   const source = document.querySelector('.card[data-id="' + id + '"] .wavelo');
@@ -1683,6 +1749,21 @@ document.querySelectorAll('.card').forEach((card) => {
       }, 1200);
     });
   }
+
+  // Quick color swatch dots on card
+  card.querySelectorAll('.quick-dot').forEach((dot) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.querySelectorAll('.quick-dot').forEach((d) => d.classList.remove('active'));
+      dot.classList.add('active');
+      const dotColor = dot.dataset.color;
+      const loaderEl = card.querySelector('.wavelo');
+      if (loaderEl) {
+        loaderEl.style.setProperty('--wavelo-color', dotColor);
+        loaderEl.style.setProperty('color', dotColor);
+      }
+    });
+  });
 });
 
 // Copy Stage Design ID in Studio
@@ -1864,6 +1945,23 @@ function openApiModal(id) {
   if (STATEFUL_DESIGNS.has(id)) content += '<span class="modal-pill" style="color:var(--accent)">Morphing States</span>';
   content += '</div>';
 
+  content += '<div class="modal-snippet-section">';
+  content += '<div class="modal-snippet-header">';
+  content += '<h4 style="margin:0;font-size:0.86rem;font-weight:700;color:var(--text-main)">Ready-to-Paste Code Snippet</h4>';
+  content += '<button type="button" class="btn-copy-modal-snippet" id="btn-copy-modal-code"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Code</button>';
+  content += '</div>';
+  content += '<div class="modal-fw-tabs" role="tablist" aria-label="Framework code formats">';
+  content += '<button type="button" class="modal-fw-tab active" data-mfw="react">React</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="vue">Vue</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="svelte">Svelte</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="angular">Angular</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="vanilla">Vanilla</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="web-components">Web Comp</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="html">HTML &amp; CSS</button>';
+  content += '</div>';
+  content += '<pre class="modal-code-sample" id="modal-code-display">' + generateCodeSnippet(id, 'react', read()).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+  content += '</div>';
+
   if (id === 'constellation') {
     content += '<div class="modal-doc-box">';
     content += '<div class="modal-doc-title"><span>🌌 Astronomical Formations (5 Celestial Patterns)</span><span class="badge badge-feat">Click to Test in Studio</span></div>';
@@ -1913,6 +2011,38 @@ function openApiModal(id) {
   content += '<div><h3 style="margin:1rem 0 .4rem;font-size:.92rem;font-weight:700">Accessibility & ARIA Contract</h3><p style="color:var(--text-muted);margin:0;line-height:1.6">When given a <code>label</code> or <code>labelledBy</code>, renders <code>role="' + (info.supportsProgress ? 'progressbar' : 'status') + '"</code>. Unlabelled instances render <code>aria-hidden="true"</code> to keep assistive technology quiet. Reduced motion preferences are automatically honoured without layout shifts.</p></div>';
 
   modalContent.innerHTML = content;
+
+  // Framework tabs inside API modal
+  let activeModalFw = 'react';
+  const modalCodeDisplay = modalContent.querySelector('#modal-code-display');
+  const modalCodeBtn = modalContent.querySelector('#btn-copy-modal-code');
+
+  modalContent.querySelectorAll('.modal-fw-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      modalContent.querySelectorAll('.modal-fw-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeModalFw = tab.dataset.mfw;
+      if (modalCodeDisplay) {
+        modalCodeDisplay.textContent = generateCodeSnippet(id, activeModalFw, read());
+      }
+    });
+  });
+
+  if (modalCodeBtn) {
+    modalCodeBtn.addEventListener('click', async () => {
+      const snippet = generateCodeSnippet(id, activeModalFw, read());
+      try {
+        await navigator.clipboard.writeText(snippet);
+      } catch (err) {}
+      modalCodeBtn.classList.add('copied');
+      modalCodeBtn.textContent = '✓ Copied!';
+      showToast('Copied ' + activeModalFw.toUpperCase() + ' snippet to clipboard!');
+      setTimeout(() => {
+        modalCodeBtn.classList.remove('copied');
+        modalCodeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Code';
+      }, 1400);
+    });
+  }
 
   // Bind copy design ID button in modal
   const modalCopyId = modalContent.querySelector('.btn-copy-modal-id');
