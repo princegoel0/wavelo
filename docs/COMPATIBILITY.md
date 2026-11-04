@@ -204,10 +204,12 @@ that declares it, so a README cannot fall behind a widened peer.
   CI exercises Svelte 5.57.3, compiles the component for client and server, and server-renders
   it through `render()` from `svelte/server`.
 - **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0`. This floor is not read off the
-  imports: the package is built with `ngc` in `compilationMode: "partial"`, and its emitted
-  declarations carry `minVersion: "14.0.0"` — the oldest application that can link them.
+  imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component
+  declaration carries `minVersion: "14.0.0"` — the metadata and factory declarations around it
+  say 12.0.0, and the floor is the newest of the three, because a linking application has to
+  satisfy every declaration in the artifact.
   `npm run verify:angular` fails if the artifact stops being library-compiled, if the peer floor
-  drops below that `minVersion`, or if a standalone component written the way
+  drops below that newest `minVersion`, or if a standalone component written the way
   [FRAMEWORKS.md](FRAMEWORKS.md) describes cannot be compiled by the Angular compiler. CI
   exercises Angular 22.2.4. A component that ships as plain `tsc` output has no Ivy definition
   at all, so an AOT application rejects it with `NG2012` while every JIT test passes — that was

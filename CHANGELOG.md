@@ -26,7 +26,6 @@
   files and fails if a boundary moves, if the server entry reaches a module that declares one, or
   if the entry loses an export; `npm run pack:verify` resolves the three specifiers out of the
   installed tarball and renders through the server entry with no DOM.
-
 - **npm metadata:** all seven packages were listed on the registry with a one-line
   internal description (`React component integration for Wavelo`) and about nine keywords,
   which is invisible in a search for `loading spinner react` or `skeleton loader`. Each now
@@ -50,6 +49,14 @@
   maintained documents, which is how the PRD's link to
   `COMPREHENSIVE_DESIGN_AUDIT_REPORT.md` was found: the file has always lived in `docs/`,
   and the link has never pointed there.
+- **Angular floor, stated exactly:** three documents said the built package's "declarations
+  carry `minVersion: "14.0.0"`". Only the component declaration does — the metadata and
+  factory declarations around it say 12.0.0, and the floor is the newest of the three because
+  a linking application must satisfy every one of them. `PRD.md`,
+  [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) and
+  [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) now say that, and `npm run docs:check` compares
+  every `minVersion` a maintained document quotes against the built artifact, so the sentence
+  cannot fall behind the emit again.
 
 ## 0.4.0
 
@@ -80,7 +87,7 @@ Published 2026-11-02. It carries the widened adapter peer ranges and the fix tha
   - `@wavelo/vue`: from `>=3.5.44 <4` to `>=3.0.0 <4.0.0` — Composition API only.
   - `@wavelo/svelte`: from `>=5.57.3 <6` to `>=5.0.0 <6.0.0` — the floor is where runes landed.
   - `@wavelo/angular`: from `>=22.2.3 <23` to `>=14.0.0`, which the built artifact now proves:
-    its partial declarations carry `minVersion: "14.0.0"`.
+    its partial component declaration carries `minVersion: "14.0.0"` (the metadata and factory declarations say 12.0.0; the newest is the floor).
 - **Fix — `@wavelo/angular` is now a library an application can use:** it was compiled by `tsc`
   alone, so its component carried no Ivy definition and an AOT `ng build` rejected it with
   `NG2012` while every JIT test passed. `packages/angular` builds with `ngc` in

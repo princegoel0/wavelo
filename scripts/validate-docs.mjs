@@ -110,13 +110,37 @@ const files = new Set(required.map(([file]) => file));
 // is. The README's own index once grew an entry for a document that was never written,
 // and nothing reads a 404 faster than a stranger deciding whether to trust the package.
 let linkedCount = 0;
-for (const file of currentCatalogDocs) {
+// The Angular floor is a number the documents quote by name. verify:angular compares it
+// with the peer range; this compares it with the sentences, because a doc that quotes an
+// older `minVersion` than the artifact emits describes a floor nobody promised.
+const angularArtifact = await readFile('packages/angular/dist/index.js', 'utf8').catch(() => '');
+const emitted = [...angularArtifact.matchAll(/minVersion: "(\d+\.\d+\.\d+)"/g)].map((match) => match[1]);
+const newestMinVersion = emitted.reduce((newest, candidate) => {
+  const left = candidate.split('.').map(Number);
+  const right = newest.split('.').map(Number);
+  return left[0] > right[0] || (left[0] === right[0] && left[1] > right[1]) ||
+    (left[0] === right[0] && left[1] === right[1] && left[2] > right[2])
+    ? candidate
+    : newest;
+}, emitted[0]);
+// The changelog and the repository files in .github/ are scanned for links too, even
+// though the changelog is exempt from the count checks: a history entry may quote an old
+// number, but it may not point at a file that was never there.
+const linkCheckedDocs = [
+  ...currentCatalogDocs, 'CHANGELOG.md', '.github/CONTRIBUTING.md', '.github/SECURITY.md', '.github/PULL_REQUEST_TEMPLATE.md'
+];
+for (const file of linkCheckedDocs) {
   const body = (await readFile(file, 'utf8').catch(() => '')).replace(/```[\s\S]*?```/g, '');
   const links = [...body.matchAll(/\]\((?!https?:|mailto:|#)([^)\s]+)\)/g)];
   linkedCount += links.length;
   for (const [, target] of links) {
     const path = resolve(dirname(file), target.split('#')[0]);
     if (!existsSync(path)) failures.push(`${file} links to ${target}, which is not in the repository`);
+  }
+  for (const [, quoted] of body.matchAll(/minVersion: "(\d+\.\d+\.\d+)"/g)) {
+    if (newestMinVersion && quoted !== newestMinVersion) {
+      failures.push(`${file} quotes minVersion "${quoted}"; the built @wavelo/angular emits "${newestMinVersion}" as its newest`);
+    }
   }
 }
 for (const [file, strings] of required) {
