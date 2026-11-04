@@ -189,11 +189,13 @@ installs. `npm run docs:check` compares every range stated in this repository wi
 that declares it, so a README cannot fall behind a widened peer.
 
 - **React (`@wavelo/react`):** `react >=16.8.0` and `react-dom >=16.8.0`, the latter declared
-  optional in `peerDependenciesMeta`. The adapter imports `createContext`, `useContext`,
-  `useEffect`, `createElement`, `FC` and `ReactNode` and nothing else, all of them React 16.8
-  API, and no module imports `react-dom` — which is what lets a server-components-only
-  application install it. CI exercises React 19.3.1; the older majors are supported on the
-  strength of those imports, not of a test.
+  optional in `peerDependenciesMeta`. Read off the built files: the runtime imports are
+  `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef` and
+  `useState` — all React 16.8 API — and no module imports `react-dom`, which is what lets a
+  server-components-only application install it. `dist/server.js` imports no React at all; that
+  is the entry a Server Component renders markup through, and `npm run verify:react` fails if a
+  client boundary ever moves into it. CI exercises React 19.3.1; the older majors are supported
+  on the strength of those imports, not of a test.
 - **Vue (`@wavelo/vue`):** `vue >=3.0.0 <4.0.0`. `defineComponent`, `computed`, `watchEffect`,
   `h`, `provide`, `inject` and `useAttrs` are each present since 3.0. Vue 2 is EOL and out of
   scope; a Vue 2 page can still take `@wavelo/web-components`. CI exercises Vue 3.5.44.

@@ -26,6 +26,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run verify:angular
+      - run: npm run verify:react
       - run: npm run catalog
       - run: npm run packages:check
       - run: npm run measure

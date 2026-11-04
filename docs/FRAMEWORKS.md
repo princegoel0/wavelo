@@ -42,8 +42,16 @@ import '@wavelo/core/styles.css';
 ```
 
 `renderReactLoader(props, defaults)` returns the core result (`html`, `css`,
-`styleKey`) when you need to place the markup yourself. A component that always
-shows one design is worth making once:
+`styleKey`) when you need to place the markup yourself. In an App Router tree the
+package is split by boundary, so you choose which half you are importing:
+
+| Import | Where it runs | Use it for |
+| --- | --- | --- |
+| `@wavelo/react` | both halves | the normal case: `<Loader>` is a client component, `renderReactLoader` is a plain function |
+| `@wavelo/react/client` | client | naming the boundary explicitly instead of relying on the entry's |
+| `@wavelo/react/server` | server | markup for a Server Component, a route handler or a streaming shell |
+
+A component that always shows one design is worth making once:
 
 ```tsx
 import { WaveloProvider, loaderFor } from '@wavelo/react';

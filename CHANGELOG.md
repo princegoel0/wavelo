@@ -15,6 +15,17 @@
   needs — a consumer class on the loader wins over the sheet's own size rule, while a parent's
   `text-*` does not reach the colour because the sheet declares an explicit default, so
   `color="currentColor"` or `[--wavelo-color:var(--color-…)]` is the way to ask for it.
+- **`@wavelo/react` now ships its own Server Component boundary.** The package was one module
+  with no directive: `<Loader>` uses an effect, so a Next.js App Router page had to declare a
+  client boundary itself, which is what `docs/RECIPES.md` told every React user to write. The
+  surface is split three ways — `dist/client.js` declares `'use client'` and holds the provider,
+  the components and the hooks, `dist/server.js` declares none and holds `renderReactLoader`, and
+  the package entry re-exports both, so `<Loader>` works from a Server Component and
+  `@wavelo/react/server` stays on the server. New `./client` and `./server` export conditions;
+  `@wavelo/react` keeps every name it exported before. `npm run verify:react` reads the built
+  files and fails if a boundary moves, if the server entry reaches a module that declares one, or
+  if the entry loses an export; `npm run pack:verify` resolves the three specifiers out of the
+  installed tarball and renders through the server entry with no DOM.
 
 ## 0.4.0
 

@@ -268,6 +268,11 @@ import { renderStylesheets } from '@wavelo/core/styles';
 renderStylesheets(results.map((result) => result.css));
 ```
 
+In a React Server Component tree the same split is packaged rather than left to you:
+`@wavelo/react` declares the client boundary inside the package, so `<Loader>` renders
+from a Server Component with no wrapper file, and `@wavelo/react/server` is the half
+that stays on the server and sends no JavaScript.
+
 Every adapter package documents the same rule. See
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md), and for a page under a `style-src` policy
 without `'unsafe-inline'`, declare the nonce once and every injected slice carries it:

@@ -32,6 +32,38 @@ page must include the sheet, normally by importing `@wavelo/core/styles.css` in
 the entry file. `renderReactLoader(props, defaults)` returns `{ html, css, styleKey }`
 if you want to place the markup yourself.
 
+## React Server Components
+
+`Loader` injects its slice in an effect, so the module that defines it declares a
+client boundary. Importing it from a Server Component is therefore normal — no
+`'use client'` wrapper of your own:
+
+```tsx
+// app/page.tsx — a Server Component
+import { Loader } from '@wavelo/react';
+
+export default function Page() {
+  return <Loader type="ring" label="Loading" size={48} />;
+}
+```
+
+For a loader whose markup is known while the page renders, `@wavelo/react/server`
+stays on the server and sends no JavaScript:
+
+```tsx
+// app/page.tsx — a Server Component or a route handler
+import { renderReactLoader } from '@wavelo/react/server';
+
+const loader = renderReactLoader({ type: 'typing-dots', label: 'Assistant is typing' });
+
+export default function Page() {
+  return <div dangerouslySetInnerHTML={{ __html: loader.html }} />;
+}
+```
+
+`@wavelo/react/client` is the same surface named directly, for a file that wants to
+declare the boundary itself.
+
 Supported peer range: `react >=16.8.0` and optional `react-dom >=16.8.0`.
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/

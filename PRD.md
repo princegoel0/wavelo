@@ -1245,6 +1245,10 @@ Requirements:
 - Avoid unnecessary re-renders.
 - Clean up resources correctly.
 - Support SSR where applicable.
+- Split the surface by React Server Component boundary: the module that defines the
+  component declares a client boundary, the render-only function declares none, and the
+  package entry exports both — so a Server Component renders a loader without writing a
+  wrapper, and a route that only needs markup imports the half that stays on the server.
 - Avoid browser-global access during server rendering.
 - Avoid hydration mismatches.
 - Use framework-appropriate types and lifecycle patterns.
@@ -1338,7 +1342,7 @@ Before public release, define, verify, and maintain in CI:
 
 | Package | Floor | Declared `peerDependencies` | What the floor rests on | Exercised in CI against |
 | :--- | :--- | :--- | :--- | :--- |
-| `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | The adapter imports only `createContext`, `useContext`, `useEffect`, `createElement`, `FC`, `ReactNode` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
+| `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Read off the built files: the runtime imports are `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef`, `useState` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
 | `@wavelo/vue` | Vue 3.0.0 | `vue: ">=3.0.0 <4.0.0"` | `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs` — every one present since 3.0. Vue 2 is EOL and out of scope; a Vue 2 page can still consume `@wavelo/web-components`. | Vue 3.5.44 |
 | `@wavelo/svelte` | Svelte 5.0.0 | `svelte: ">=5.0.0 <6.0.0"` | The shipped component uses runes (`$props()`, `$derived()`, `$effect()`), so 5.0 is the real floor and the 6.x cap is deliberate. | Svelte 5.57.3 |
 | `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and the emitted declarations carry `minVersion: "14.0.0"` — the oldest application that can link them. `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that `minVersion`. | Angular 22.2.4, plus an AOT consumer fixture compiled with the Angular compiler |
@@ -1780,7 +1784,7 @@ A release candidate must pass:
 
 - Linting and strict TypeScript type checking (`tsc --noEmit`).
 - Unit and framework adapter test suites (52 tests).
-- Cross-browser test suites (Chromium 36 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
+- Cross-browser test suites (Chromium 37 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
 - Layout recalculation profiler (`npm run audit:layout` — 151/153 zero-layout).
 - Visual correctness audit (`npm run audit:visual:correctness`).
 - Measured options customization verification (`npm run audit:customization`).

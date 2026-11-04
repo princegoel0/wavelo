@@ -82,6 +82,22 @@ test('React server helper returns the design slice for head injection', () => {
   assert.doesNotMatch(result.css, /\.wavelo--skeleton-card/);
 });
 
+test('the React client and server entries are halves of one surface', async () => {
+  const client = await import('../packages/react/dist/client.js');
+  const server = await import('../packages/react/dist/server.js');
+  // The split is packaging, not a second implementation: both entries hand back the
+  // same functions the package entry does.
+  assert.equal(client.Loader, ReactLoader);
+  assert.equal(client.loaderFor, reactLoaderFor);
+  assert.equal(server.renderReactLoader, renderReactLoader);
+  const html = renderToStaticMarkup(createElement(client.Loader, { type: 'ring', label: 'Loading' }));
+  assert.match(html, /class="wavelo-host"><span class="wavelo wavelo--ring/);
+  assert.doesNotMatch(html, /<style/);
+  for (const name of ['useWaveloState', 'useWaveloProgress']) {
+    assert.equal(typeof client[name], 'function', `@wavelo/react/client lost ${name}`);
+  }
+});
+
 test('a loader that is not loading renders nothing through the components', async () => {
   assert.equal(renderToStaticMarkup(createElement(ReactLoader, { ...fullConfig, loading: false })), '');
   const vue = await renderToString(createSSRApp(VueLoader, { ...fullConfig, loading: false }));

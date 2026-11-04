@@ -18,10 +18,10 @@
 
 The columns above are the checkpoints taken as each phase landed. The same metrics on the
 current build, which has moved on since the last phase: **165 designs, 255 named presets,
-12 slices, `core-renderer` 46.0 KB gzipped, 163 of 165 designs cost no layout per
-frame, 53 unit and adapter tests, Chromium 36 / Gecko 6 / WebKit 7**. `npm run docs:check`
+12 slices, `core-renderer` 48.7 KB gzipped, 164 of 165 designs cost no layout per
+frame, 59 unit and adapter tests, Chromium 37 / Gecko 6 / WebKit 7**. `npm run docs:check`
 compares the design and preset counts in this document with the registry on every run; the
-size and test columns are history and are labelled as such.
+size and test columns in the table above are history and are labelled as such.
 
 ---
 
@@ -156,12 +156,12 @@ Re-run against the tree after the consolidation and after `count` was added, on
 
 - **Catalog:** `npm run catalog` → 165 public IDs, 165 active designs, 255 named presets,
   12 slices, zero aliases, generated files in sync.
-- **Unit and adapter tests:** 53/53 (`npm test`).
-- **Three engines:** Chromium 36/36, Gecko 6/6, WebKit 7/7.
+- **Unit and adapter tests:** 59/59 (`npm test`).
+- **Three engines:** Chromium 37/37, Gecko 6/6, WebKit 7/7.
 - **Measured options:** `npm run audit:customization` matches the render for all 165,
   which is what proves the `count` recipes above rather than asserting them.
-- **Layout:** 163 of 165 zero-layout per frame; `progress-scroll` and `multi-wave` carry a
-  recorded reason each.
+- **Layout:** 164 of 165 zero-layout per frame; `progress-scroll` carries the one
+  recorded reason.
 - **Visual correctness:** 165 designs — 149 animating, 14 static by design, 2
   timeline-driven.
 - **Bundles:** all eleven entries inside budget, re-based to the 12% rule in both

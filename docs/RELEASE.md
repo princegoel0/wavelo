@@ -14,7 +14,7 @@ not happen without explicit approval.
 ```powershell
 npm ci
 npm run build                  # core, generated catalog entry points, every adapter
-npm run check                  # typecheck · 53 unit and adapter tests · verify:angular · catalog drift · packages:check · docs:check · bundle budgets
+npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · catalog drift · packages:check · docs:check · bundle budgets
 npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
 npm run test:browser:firefox   # Gecko smoke suite
 npm run test:browser:webkit    # WebKit smoke suite
@@ -54,6 +54,14 @@ by `tsc` alone carries no Ivy definition and an AOT application rejects it with
 shipped artifact is library-compiled, that its Angular peer floor is not older than
 the `minVersion` it emits, and that a consumer component written the way
 [FRAMEWORKS.md](FRAMEWORKS.md) describes compiles against it.
+
+`@wavelo/react` splits its surface by React Server Component boundary: the module
+that defines `Loader` declares `'use client'`, `dist/server.js` declares none and
+reaches none, and the package entry re-exports both. A package that declares nothing
+pushes that work onto every App Router consumer, which is what the old recipe told
+them to write. `npm run verify:react` reads the built files and fails if a boundary
+moves, if the server entry reaches a module that declares one, or if the package
+entry loses an export.
 
 Consumers need to know one thing this repository cannot verify for them: no
 adapter inlines CSS, so a server-rendered page must include
