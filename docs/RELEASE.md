@@ -14,7 +14,7 @@ not happen without explicit approval.
 ```powershell
 npm ci
 npm run build                  # core, generated catalog entry points, every adapter
-npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · catalog drift · packages:check · docs:check · bundle budgets
+npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
 npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
 npm run test:browser:firefox   # Gecko smoke suite
 npm run test:browser:webkit    # WebKit smoke suite

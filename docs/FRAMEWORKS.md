@@ -5,6 +5,9 @@ configuration keys; only the lifecycle plumbing differs. None of them inline CSS
 — `ensureStyles` puts each stylesheet slice in the document head once, and for
 server rendering you include the sheet yourself.
 
+Each bridge also has a runnable project, with the button, route-bar, skeleton and
+inline patterns wired the way that framework does them: [`examples/`](../examples/README.md).
+
 ## Set it once, then use it
 
 Each bridge has one place to register the options a page or subtree shares, and each

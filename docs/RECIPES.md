@@ -36,6 +36,9 @@ A server-rendered page that skips the sheet still renders correct markup — wit
 styling. That is the deliberate trade for not shipping one copy of the stylesheet per
 component instance.
 
+[`examples/`](../examples/README.md) has these stacks as runnable projects, and
+`npm run verify:examples` compiles them against the built packages.
+
 ## React Server Components
 
 The package is split in two so that each half of an App Router tree imports the

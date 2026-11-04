@@ -67,6 +67,21 @@
   regenerate them write there too, so the tidy holds. `PRD.md` pointed at two of them; those
   sentences now say what the repository actually enforces instead.
 
+- **`examples/`:** five runnable projects — Vite + React, Next.js App Router, Nuxt,
+  SvelteKit and a standalone Angular app — each showing the same four patterns a loader is
+  actually bought for: a spinner inside a button that does not resize it, one route progress
+  bar for the app, a skeleton that holds the shape of the content, and a loader sitting on
+  the text line. They are ordinary npm projects, not workspace members, so `npm install &&
+  npm run dev` in any of them is what a consumer would type. `npm run verify:examples`
+  compiles every source against the built packages: the Svelte components for both the client
+  and the server build, the Vue single-file components with `@vue/compiler-sfc`, the Angular
+  application with the Angular compiler and `strictTemplates`, the React application with
+  `tsc`, and every `@wavelo/*` import against the shipped declarations and the project's own
+  dependencies — which is what checks the Next.js and Nuxt sources, whose frameworks are not
+  installed here. Verified by breaking it: an invented binding, an undeclared subpath, an
+  unclosed tag and a missing dependency each fail the check. The Next.js project pins
+  `@wavelo/react@0.5.0`, the release that carries the Server Component boundary.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:

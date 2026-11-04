@@ -24,6 +24,7 @@ and a claim that no measurement supports gets corrected before it ships.
 | `packages/core/src/css/` | the base sheet, one slice per kind, the keyframes |
 | `packages/{react,vue,svelte,angular,vanilla,web-components}/` | thin bridges. Each one accepts the same configuration keys and does no rendering of its own |
 | `apps/docs/` | the gallery and playground, built into one HTML file |
+| `examples/` | five runnable projects, one per stack. `npm run verify:examples` compiles them |
 | `release-audit/` | audit output and review artifacts. Ignored: nothing a consumer or a newcomer needs lives there |
 | `PRD.md` | what the surface *is*. `docs/` is what it *does*, measured |
 | `scripts/` | the gates. Each file says in its header what it refuses |
@@ -43,7 +44,8 @@ Three rules follow from that layout:
 
 | When | Run |
 | --- | --- |
-| always | `npm run check` — build, typecheck, the unit and adapter tests, `verify:angular`, `verify:react`, catalog drift, package metadata, docs sync, bundle budgets |
+| always | `npm run check` — build, typecheck, the unit and adapter tests, `verify:angular`, `verify:react`, `verify:examples`, catalog drift, package metadata, docs sync, bundle budgets |
+| a public option or entry point | `npm run verify:examples` — the five projects are compiled against the built packages, so a surface change that breaks how an app uses it fails here |
 | the renderer or any CSS | `npm run test:browser` (Chromium: computed styles, slice injection and isolation, axe) |
 | a keyframe or a transform | `npm run audit:layout` — a design that costs layout per frame needs its reason recorded in `scripts/layout-cost.mjs` |
 | a design's geometry | `npm run docs:build && npm run test:visual`; `test:visual:update` rewrites `tests/visual-baselines/catalog-baselines.json`, so review that diff |

@@ -7,6 +7,7 @@
 [![typed](https://img.shields.io/npm/types/@wavelo/core)](docs/COMPATIBILITY.md)
 
 [Gallery](https://princegoel0.github.io/wavelo/) ·
+[Examples](examples/README.md) ·
 [Framework guides](docs/FRAMEWORKS.md) ·
 [Recipes](docs/RECIPES.md) ·
 [Compatibility](docs/COMPATIBILITY.md) ·
@@ -16,6 +17,10 @@
 
 Install: `npm i @wavelo/core` · `@wavelo/react` · `@wavelo/vue` · `@wavelo/svelte` ·
 `@wavelo/angular` · `@wavelo/vanilla` · `@wavelo/web-components`
+
+Five runnable projects — Vite + React, Next.js App Router, Nuxt, SvelteKit and Angular —
+are in [examples/](examples/README.md). Each shows the same four patterns: a spinner in a
+button, a route bar, a skeleton and a loader inline in text.
 
 Wavelo is a dependency-light, framework-independent loading and motion library.
 The repository contains a typed core, a generated modular catalog, DOM and Web
