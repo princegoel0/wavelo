@@ -180,6 +180,9 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-dark { background: #030712 !important; }
 .stage.stage-black { background: #000000 !important; }
 .stage.stage-brand { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important; }
+.stage.stage-glass { background: radial-gradient(circle at 20% 25%, rgba(99, 102, 241, 0.28) 0%, transparent 50%), radial-gradient(circle at 80% 75%, rgba(16, 185, 129, 0.22) 0%, transparent 50%), #0d111c !important; }
+.stage.stage-neon { background: radial-gradient(circle at 50% 50%, #2e1065 0%, #070514 85%) !important; }
+.stage.stage-grid { background-color: #0b0f19 !important; background-image: radial-gradient(#334155 1.2px, transparent 1.2px) !important; background-size: 18px 18px !important; }
 
 .stage-footer-info { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0 0.25rem; }
 .stage-pill { font-size: 0.78rem; font-weight: 600; color: var(--text-main); }
@@ -232,6 +235,27 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-brand .mock-row span { color: #e0e7ff; }
 .stage.stage-brand .mock-row .status-text { color: #c7d2fe; }
 
+.stage.stage-glass .mock-card,
+.stage.stage-glass .mock-table { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); color: #f8fafc; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); }
+.stage.stage-glass .mock-line { background: rgba(255, 255, 255, 0.2); }
+.stage.stage-glass .mock-row { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.stage.stage-glass .mock-row span { color: #f8fafc; }
+.stage.stage-glass .mock-row .status-text { color: #cbd5e1; }
+
+.stage.stage-neon .mock-card,
+.stage.stage-neon .mock-table { background: rgba(15, 7, 34, 0.85); border: 1px solid rgba(168, 85, 247, 0.45); color: #f8fafc; box-shadow: 0 0 30px rgba(168, 85, 247, 0.25); }
+.stage.stage-neon .mock-line { background: rgba(168, 85, 247, 0.35); }
+.stage.stage-neon .mock-row { border-bottom: 1px solid rgba(168, 85, 247, 0.2); }
+.stage.stage-neon .mock-row span { color: #f8fafc; }
+.stage.stage-neon .mock-row .status-text { color: #d8b4fe; }
+
+.stage.stage-grid .mock-card,
+.stage.stage-grid .mock-table { background: #0f172a; border: 1px solid #1e293b; color: #f8fafc; }
+.stage.stage-grid .mock-line { background: #1e293b; }
+.stage.stage-grid .mock-row { border-bottom: 1px solid #1e293b; }
+.stage.stage-grid .mock-row span { color: #f8fafc; }
+.stage.stage-grid .mock-row .status-text { color: #94a3b8; }
+
 /* Studio Right: Controls Column */
 .controls-column { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
 .framework-tab-bar { display: flex; gap: 0.3rem; flex-wrap: wrap; background: var(--bg-subtle); padding: 0.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); }
@@ -254,9 +278,9 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
 
 /* Preset Segmented Buttons */
 .preset-segments { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.preset-btn { flex: 1; min-width: 0; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.preset-btn.active { color: #ffffff; background: var(--accent); border-color: var(--accent); }
-.preset-btn:hover:not(.active) { color: var(--text-main); border-color: var(--border-focus); }
+.preset-btn, .speed-btn { flex: 1; min-width: 0; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.preset-btn.active, .speed-btn.active { color: #ffffff; background: var(--accent); border-color: var(--accent); }
+.preset-btn:hover:not(.active), .speed-btn:hover:not(.active) { color: var(--text-main); border-color: var(--border-focus); }
 
 /* Color Palette Swatches & Integrated Picker */
 .swatches { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
@@ -285,11 +309,15 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
 
 /* Code Box */
 .code-panel { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
-.code-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+.code-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem; }
+.code-actions { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 pre#code { margin: 0; padding: 1rem; background: var(--code-bg); color: var(--code-text); border-radius: var(--radius-lg); font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; border: 1px solid var(--border-card); overflow: auto; max-height: 220px; white-space: pre-wrap; }
 pre#code:focus { outline: 2px solid var(--border-focus); }
-.btn-copy-code { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; border-radius: var(--radius-sm); border: none; background: var(--accent); color: #ffffff; cursor: pointer; transition: background 0.15s; }
+.btn-copy-code { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; border-radius: var(--radius-sm); border: none; background: var(--accent); color: #ffffff; cursor: pointer; transition: all 0.15s; }
 .btn-copy-code:hover { background: var(--accent-hover); }
+.btn-copy-standalone { background: var(--bg-subtle) !important; color: var(--text-main) !important; border: 1px solid var(--border-subtle) !important; }
+.btn-copy-standalone:hover { background: var(--border-subtle) !important; border-color: var(--border-focus) !important; }
+.btn-copy-standalone.copied { background: rgba(16, 185, 129, 0.15) !important; border-color: #10b981 !important; color: #10b981 !important; }
 
 /* Showcase Section & Sticky Filter Bar */
 .showcase-section { scroll-margin-top: 5rem; }
@@ -655,6 +683,9 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <button type="button" class="mode-btn" data-bg="light">Light</button>
             <button type="button" class="mode-btn" data-bg="black">Black #000</button>
             <button type="button" class="mode-btn" data-bg="brand">Brand</button>
+            <button type="button" class="mode-btn" data-bg="glass" aria-label="Frosted glass surface">Glass</button>
+            <button type="button" class="mode-btn" data-bg="neon" aria-label="Cyber neon gradient surface">Neon</button>
+            <button type="button" class="mode-btn" data-bg="grid" aria-label="Matrix blueprint grid surface">Grid</button>
           </div>
           <div class="canvas-modes" aria-label="Simulated UI context">
             <button type="button" class="mode-btn active" data-ctx="isolated">Isolated</button>
@@ -763,6 +794,17 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <output for="duration">1s</output>
           </div>
 
+          <div class="ctrl-row" id="row-speed">
+            <label>Speed</label>
+            <div class="preset-segments speed-segments" aria-label="Animation speed presets">
+              <button type="button" class="speed-btn" data-speed="2" aria-label="Set animation speed to 0.5x slow">0.5x</button>
+              <button type="button" class="speed-btn active" data-speed="1" aria-label="Set animation speed to 1x normal">1x</button>
+              <button type="button" class="speed-btn" data-speed="0.67" aria-label="Set animation speed to 1.5x brisk">1.5x</button>
+              <button type="button" class="speed-btn" data-speed="0.5" aria-label="Set animation speed to 2x rapid">2x</button>
+            </div>
+            <output></output>
+          </div>
+
           <div class="ctrl-row">
             <label for="radius">Radius</label>
             <input id="radius" type="range" min="0" max="24" step="1" value="6" aria-label="Border radius in pixels">
@@ -833,7 +875,10 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
         <div class="code-panel">
           <div class="code-header">
             <span id="code-framework-label">Generated Code</span>
-            <button type="button" id="copy" class="btn-copy-code">Copy Code</button>
+            <div class="code-actions">
+              <button type="button" id="copy-standalone" class="btn-copy-code btn-copy-standalone" title="Copy standalone HTML and CSS with scoped styles" aria-label="Copy standalone HTML and CSS">Copy Standalone HTML</button>
+              <button type="button" id="copy" class="btn-copy-code">Copy Code</button>
+            </div>
           </div>
           <pre id="code" tabindex="0" aria-label="Generated component code" aria-live="polite"></pre>
         </div>
@@ -1276,6 +1321,7 @@ function paint() {
   // Row IDs correspond to the control they govern
   const rowStroke = document.querySelector('#stroke').closest('.ctrl-row');
   const rowDuration = document.querySelector('#duration').closest('.ctrl-row');
+  const rowSpeed = document.querySelector('#row-speed');
   const rowPreset = document.querySelector('.preset-segments').closest('.ctrl-row');
   const rowSize = document.querySelector('#size').closest('.ctrl-row');
   const rowRadius = document.querySelector('#radius').closest('.ctrl-row');
@@ -1287,6 +1333,7 @@ function paint() {
 
   if (rowStroke) rowStroke.hidden = !info.honoursStroke;
   if (rowDuration) rowDuration.hidden = !info.honoursDuration;
+  if (rowSpeed) rowSpeed.hidden = !info.honoursDuration;
   // Size slider and size presets are linked — hide both or neither
   if (rowSize) rowSize.hidden = !info.honoursSize;
   if (rowPreset) rowPreset.hidden = !info.honoursSize;
@@ -1296,6 +1343,18 @@ function paint() {
   if (rowProgress) rowProgress.hidden = !determinate.has(id);
   if (labelPaused) labelPaused.hidden = !info.honoursPaused;
   if (labelReverse) labelReverse.hidden = !info.honoursReverse;
+
+  // Sync speed and size preset buttons state
+  const durVal = Number(values.duration || 1);
+  document.querySelectorAll('.speed-btn').forEach((b) => {
+    const s = Number(b.getAttribute('data-speed'));
+    b.classList.toggle('active', Math.abs(s - durVal) < 0.05);
+  });
+  const sizeVal = Number(values.size || 48);
+  document.querySelectorAll('.preset-btn').forEach((b) => {
+    const s = Number(b.getAttribute('data-size'));
+    b.classList.toggle('active', s === sizeVal);
+  });
 
   if (stageDesignName) stageDesignName.textContent = info.name;
   const stageDesignId = document.querySelector('#stage-design-id');
@@ -1315,7 +1374,19 @@ function paint() {
     stageSpecBadge.textContent = specText;
   }
 
-  const stageBg = values.dark ? '#030712' : '#ffffff';
+  const activeBgBtn = document.querySelector('.canvas-modes [data-bg].active');
+  const activeBgMode = activeBgBtn ? activeBgBtn.getAttribute('data-bg') : (values.dark ? 'dark' : 'light');
+  const bgColors = {
+    light: '#ffffff',
+    dim: '#0f172a',
+    dark: '#030712',
+    black: '#000000',
+    brand: '#1e1b4b',
+    glass: '#0d111c',
+    neon: '#070514',
+    grid: '#0b0f19'
+  };
+  const stageBg = bgColors[activeBgMode] || (values.dark ? '#030712' : '#ffffff');
   const contrastRatio = getContrastRatio(values.color, stageBg);
   const contrastLabel = contrastRatio >= 7.0 ? 'AAA' : contrastRatio >= 4.5 ? 'AA' : 'Low';
   const contrastBadge = document.querySelector('#contrast-badge');
@@ -1435,6 +1506,8 @@ function paint() {
     if (info.honoursSecondaryColor && values['secondary-color']) hashParams.set('secondaryColor', values['secondary-color']);
     if (id === 'constellation' && variantSelect) hashParams.set('pattern', variantSelect.value);
     if (STATEFUL_DESIGNS.has(id) && stateSelect) hashParams.set('state', stateSelect.value);
+    const activeBg = document.querySelector('.canvas-modes [data-bg].active');
+    if (activeBg && activeBg.getAttribute('data-bg') !== 'dark') hashParams.set('surface', activeBg.getAttribute('data-bg'));
     window.history.replaceState(null, '', '#' + hashParams.toString());
   } catch (e) {}
 }
@@ -1460,6 +1533,16 @@ document.querySelectorAll('.preset-btn').forEach((btn) => {
     document.querySelectorAll('.preset-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelector('#size').value = btn.dataset.size;
+    paint();
+  });
+});
+
+// Speed presets
+document.querySelectorAll('.speed-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector('#duration').value = btn.dataset.speed;
     paint();
   });
 });
@@ -1505,8 +1588,9 @@ document.querySelectorAll('.canvas-modes [data-bg]').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.canvas-modes [data-bg]').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand');
+    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand', 'stage-glass', 'stage-neon', 'stage-grid');
     stage.classList.add('stage-' + btn.dataset.bg);
+    paint();
   });
 });
 
@@ -1581,10 +1665,31 @@ document.querySelector('#copy').addEventListener('click', async () => {
   const oldText = btn.textContent;
   btn.textContent = 'Copied!';
   const fwName = framework.value;
-  const fwLabels = { core: '@wavelo/core', react: 'React', vue: 'Vue', svelte: 'Svelte', angular: 'Angular', vanilla: 'Vanilla JS', 'web-components': 'Web Component' };
+  const fwLabels = { core: '@wavelo/core', html: 'HTML & CSS', react: 'React', vue: 'Vue', svelte: 'Svelte', angular: 'Angular', vanilla: 'Vanilla JS', 'web-components': 'Web Component' };
   showToast('Copied ' + design.value + ' (' + (fwLabels[fwName] || fwName) + ') code to clipboard!');
   setTimeout(() => { btn.textContent = oldText; }, 1500);
 });
+
+// Copy standalone HTML & CSS button
+const copyStandaloneBtn = document.querySelector('#copy-standalone');
+if (copyStandaloneBtn) {
+  copyStandaloneBtn.addEventListener('click', async () => {
+    const id = design.value;
+    const values = read();
+    const standaloneHtml = generateCodeSnippet(id, 'html', values);
+    try {
+      await navigator.clipboard.writeText(standaloneHtml);
+    } catch (_) {}
+    const oldText = copyStandaloneBtn.textContent;
+    copyStandaloneBtn.textContent = 'Copied Standalone!';
+    copyStandaloneBtn.classList.add('copied');
+    showToast('Copied standalone zero-install HTML & CSS for ' + id + ' to clipboard!');
+    setTimeout(() => {
+      copyStandaloneBtn.textContent = oldText;
+      copyStandaloneBtn.classList.remove('copied');
+    }, 1500);
+  });
+}
 
 // Package manager install command tabs
 const pkgTabs = document.querySelectorAll('.t-tab');
@@ -1671,6 +1776,15 @@ try {
       document.querySelectorAll('.swatch-sec').forEach((s) => {
         s.classList.toggle('active', s.dataset.color.toLowerCase() === params.get('secondaryColor').toLowerCase());
       });
+    }
+    if (params.has('surface') && document.querySelector('.canvas-modes [data-bg="' + params.get('surface') + '"]')) {
+      document.querySelectorAll('.canvas-modes [data-bg]').forEach((b) => b.classList.remove('active'));
+      const targetBg = document.querySelector('.canvas-modes [data-bg="' + params.get('surface') + '"]');
+      if (targetBg) {
+        targetBg.classList.add('active');
+        stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand', 'stage-glass', 'stage-neon', 'stage-grid');
+        stage.classList.add('stage-' + params.get('surface'));
+      }
     }
   }
 } catch (e) {}
