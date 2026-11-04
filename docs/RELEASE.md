@@ -148,6 +148,39 @@ branch up to date with `main`, so merging `main` back into `dev` before opening 
 normal, not noise. Never publish an unreviewed pull request, and record the exact
 validation environment in release notes.
 
+## If the publish loop stops halfway
+
+`Publish npm packages` runs `set -euo pipefail` over a fixed order — core, vanilla,
+web-components, react, vue, svelte, angular — after dry-running all seven. So a failure
+leaves a *prefix* of the release live at the new version and the rest absent. Every one
+of those numbers is permanent, and npm will not accept a version that already exists,
+which means the loop cannot simply be re-run: it would fail at the first package and
+publish nothing after it. Finish the set rather than redo it.
+
+1. **Read the registry, not the log.** For each of the seven, ask for that exact version
+   (`npm view @wavelo/<name>@<version> version`). A publish that timed out after the
+   registry accepted it is a published package, and one that reported success on a
+   network hiccup may not be.
+2. **Take the tarballs from the build artifact**, `wavelo-<version>-tarballs`, uploaded
+   by `Validate release`. Those are the bytes the dry-run checked. Re-packing from a
+   working tree that has moved on publishes something nobody validated.
+3. **Publish only the missing ones**, one command per package, with the same
+   `--access public` and the same provenance flag the loop would have used. Core is
+   first in the order, so a missing core means nothing was published and the whole
+   release is still ahead of you.
+4. **Re-read every `dist-tags/latest`** afterwards. Adapters pin `@wavelo/core` to the
+   exact version, so a set where four packages point at the new release and three point
+   at the old one is installable and wrong at the same time.
+5. **Say what happened** in `CHANGELOG.md` and the release notes. If one of the packages
+   that did publish must be pulled back, deprecate it (Part 2) — an unpublish would
+   break the pins of the adapters that already point at it.
+
+Then decide which of the two endings applies: complete this version by hand, as above, or
+let it stand as released and move the whole workspace to the next one. The second path
+re-runs `npm run release:validate`, which is what refuses a set of manifests that no
+longer agree — and it is also what refuses a version the registry already holds, so while
+a partial release is still unresolved that check fails by design.
+
 ## The order of operations, in one line each
 
 Source change → `catalog:generate` → local verification in full → commit and push `dev` → CI →
