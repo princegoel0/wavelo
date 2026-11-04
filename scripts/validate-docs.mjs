@@ -210,7 +210,10 @@ for (const [kind, slice] of Object.entries(kindStyles)) {
   if (!performanceDoc.includes(stated)) failures.push(`docs/PERFORMANCE.md does not state the ${kind} slice cost (${stated} B gzipped with the base)`);
 }
 const sheetGzipped = gzipSync(Buffer.from(stylesheet)).length.toLocaleString('en-US');
-for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md']) {
+// Every document that quotes the sheet size is checked against the built artifact, including
+// docs/RELEASE.md: it carried "34,699 B" through two releases precisely because it was the one
+// release-facing document nobody measured.
+for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md', 'docs/RELEASE.md']) {
   if (!(await readFile(file, 'utf8')).replace(/\s+/g, ' ').includes(sheetGzipped)) {
     failures.push(`${file} does not state the whole-catalog sheet size (${sheetGzipped} B gzipped)`);
   }

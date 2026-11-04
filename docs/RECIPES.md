@@ -130,6 +130,36 @@ in the light DOM:
 }
 ```
 
+### Utility classes on the loader itself
+
+A class passed as `className` lands on the same element as Wavelo's own rules, and it
+wins: measured in Chromium with the consumer stylesheet loaded before the Wavelo sheet, a
+class setting `width` and `height` to 24px overrode the sheet's
+`width: var(--wavelo-width, var(--wavelo-size, 2rem))`. Sizing by utility class needs no
+token at all.
+
+Colour is the exception, and it is deliberate. The sheet declares an explicit default, so
+a parent's `text-indigo-600` does not reach the loader — the element resolves its own
+`color` first. Either ask for the inherited colour:
+
+```tsx
+<Loader type="ring" color="currentColor" className="text-indigo-600 dark:text-indigo-400" />
+```
+
+or set the token, which is what the class is for anyway:
+
+```tsx
+<Loader type="ring" className="[--wavelo-color:var(--color-indigo-600)] dark:[--wavelo-color:var(--color-indigo-400)]" />
+```
+
+`className` accepts the shapes real stylesheets emit: variants (`dark:`, `md:`,
+`group-hover:`, `motion-safe:`), arbitrary values (`[--wavelo-size:24px]`,
+`bg-red-500/50`, `data-[state=open]:opacity-50`, `[mask-image:linear-gradient(90deg,#fff,transparent)]`),
+and `!` important. Arbitrary *selector* variants (`[&>*]:mt-2`) are refused, because `&`
+and `>` have no business in an attribute value — put those rules on a wrapper element.
+Quotes, angle brackets, semicolons, braces, backslashes, control characters and anything
+over 256 characters are rejected with a `LoaderConfigurationError` naming the value.
+
 Set the token rather than the property it backs. Wavelo's own rules declare `width`,
 `height`, `color`, `display`, `background` and the animation longhands from those
 tokens, and an injected slice is appended to `<head>` — after the page's own

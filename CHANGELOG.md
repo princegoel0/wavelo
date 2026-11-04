@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- **Fix — `className` now accepts the way consumers actually style things.** The validator
+  allowed letters, digits, space, dash and underscore, so every Tailwind variant
+  (`dark:text-indigo-400`, `md:size-6`, `group-hover:opacity-50`) and every arbitrary value
+  (`[--wavelo-size:24px]`, `bg-red-500/50`, `data-[state=open]:opacity-50`) threw
+  `LoaderConfigurationError: className contains unsupported characters.` The accepted set now
+  covers the characters class attributes contain, to 256 of them, and the error names the value
+  it rejected. Arbitrary *selector* variants (`[&>*]:mt-2`) stay refused: `&` and `>` have no
+  business in an attribute value, and a wrapper element carries those rules. Strictly more
+  permissive than 0.4.0, so nothing that used to work stops working.
+- **Documented, and measured:** `docs/RECIPES.md` now states the precedence a Tailwind user
+  needs — a consumer class on the loader wins over the sheet's own size rule, while a parent's
+  `text-*` does not reach the colour because the sheet declares an explicit default, so
+  `color="currentColor"` or `[--wavelo-color:var(--color-…)]` is the way to ask for it.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:

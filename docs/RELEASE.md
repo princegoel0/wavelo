@@ -12,14 +12,26 @@ Publishing is intentionally not automated from this repository checkout and must
 not happen without explicit approval.
 
 ```powershell
-npm install
-npm run build          # builds the core, regenerates catalog entry points, builds adapters
-npm run check          # typecheck, 53 unit tests, verify:angular, catalog drift, docs sync, bundle budgets
-npm run test:browser   # Chromium: computed styles, style injection, slice isolation, axe
+npm ci
+npm run build                  # core, generated catalog entry points, every adapter
+npm run check                  # typecheck · 53 unit and adapter tests · verify:angular · catalog drift · packages:check · docs:check · bundle budgets
+npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
+npm run test:browser:firefox   # Gecko smoke suite
+npm run test:browser:webkit    # WebKit smoke suite
+npm run audit:customization    # the measured option table, re-measured against a real render
+npm run audit:layout           # which designs cost a layout per frame, and why
+npm run audit:visual:correctness
 npm run docs:build
-npm run measure
-npm pack --workspace @wavelo/core
+npm run pack:check             # all seven tarballs, dry run
+npm run pack:verify            # the seven installed into a clean consumer project and compiled
+npm run release:validate       # one version across the seven, and not already on npm
 ```
+
+This is the sequence `ci.yml` runs on every push and pull request, and the sequence the
+`Validate release` job runs on `main` before it will pack anything. Nothing in it publishes:
+the publish job needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm`
+environment deployment. `npm run measure` is inside `npm run check`; it is listed nowhere
+separately because a document that quotes a size is compared against it.
 
 `npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
 against `packages/core/src/catalog.ts`; after changing the catalog run
@@ -59,7 +71,7 @@ workspace, not a restructure. `npm install @wavelo/core` and
 - every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
   `"access": "public"` under one `@wavelo` scope;
 - each package ships its own stylesheet — a consumer that never imports the new family
-  never downloads its rules, and the loaders' 34,699 B gzipped catalog sheet does not grow;
+  never downloads its rules, and the loaders' 36,529 B gzipped catalog sheet does not grow;
 - framework packages declare their framework as a peer and bundle none of it, and the
   core has no runtime dependency, so a second family cannot drag a first one's weight in;
 - design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.
@@ -102,13 +114,26 @@ the owner's to set:
   publishes when this equals exactly `true` and the ref is `main`. The `npm`
   environment additionally requires an approval from `princegoel0`. Set it back to
   `false` after a release, so the next merge cannot queue a publish attempt.
-- `GALLERY_ENABLED` (unset) — `pages.yml` builds and deploys the documentation
+- `GALLERY_ENABLED` (default unset) — `pages.yml` builds and deploys the documentation
   gallery to GitHub Pages only when this equals `true`. It stays skipped while
   unset, so merging the workflow cannot fail a run on `main` or publish a site
-  before Pages is pointed at "GitHub Actions" in the repository settings.
+  before Pages is pointed at "GitHub Actions" in the repository settings. It is
+  currently set to `true`, so every push to `main` deploys the gallery.
 
-Neither gate publishes anything to npm, and no other workflow may be given
-`pages: write` or `id-token: write`.
+### Permissions, per workflow
+
+| Workflow | Permissions it holds | Why |
+|---|---|---|
+| `ci.yml` | `contents: read` | it builds and tests; it writes nothing |
+| `release.yml` → `Validate release` | `contents: read` | packs tarballs into the job workspace and uploads them as a build artifact |
+| `release.yml` → `Publish npm packages` | `contents: read`, `id-token: write` | `id-token` is what OIDC needs once npm trusted publishing is configured per package; until then the job authenticates with `NPM_TOKEN` via `NODE_AUTH_TOKEN` and the scope goes unused |
+| `pages.yml` | `contents: read`, `pages: write`, `id-token: write` | deploying to GitHub Pages requires both write scopes |
+
+No other workflow receives `pages: write`, `id-token: write` or a registry credential, and only
+the publish job may see `NPM_TOKEN`.
+
+Neither variable publishes anything on its own: `RELEASE_ENABLED` decides whether a publish is
+attempted, and the `npm` environment approval decides whether it happens.
 
 `main` requires a pull request with the `verify` and `verify-browser` checks green and the
 branch up to date with `main`, so merging `main` back into `dev` before opening a PR is
