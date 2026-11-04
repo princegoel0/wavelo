@@ -1,0 +1,90 @@
+name: Bug report
+description: Markup, styles, sizing, animation or documentation that does not do what it says
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Wavelo's behaviour is measured, so a report that carries the measurement is the
+        fastest to close: the rendered markup, the computed styles you expected, and the
+        version.
+
+        If you only have a symptom, send that too. A reproduction that runs without your
+        application is worth more than a long description of it.
+  - type: textarea
+    id: symptom
+    attributes:
+      label: What happened
+      description: What you expected and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: |
+        A code snippet, a public link, or the standalone HTML that the gallery exports
+        (https://princegoel0.github.io/wavelo/) — that file contains the markup and the
+        exact rules for the design and options you used.
+      placeholder: |
+        import { renderLoader } from '@wavelo/core';
+        renderLoader({ type: 'ring', label: 'Loading', size: 48, speed: 0.5 });
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output you got
+      description: The rendered markup, the computed style, or the error text and stack.
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Wavelo version
+      description: The installed one. `npm ls @wavelo/core` reports it, or read the package's own version field.
+    validations:
+      required: true
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration
+      description: Which package you imported
+      options:
+        - '@wavelo/core'
+        - '@wavelo/vanilla'
+        - '@wavelo/web-components'
+        - '@wavelo/react'
+        - '@wavelo/vue'
+        - '@wavelo/svelte'
+        - '@wavelo/angular'
+        - The documentation gallery
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: Framework and version
+      description: For a core, vanilla or web-components report, write "none".
+      placeholder: React 19.3.1 / Next.js 15 / Angular 22.2 / none
+  - type: checkboxes
+    id: engines
+    attributes:
+      label: Browser and engine
+      options:
+        - label: Chromium (Chrome, Edge, Brave)
+        - label: Gecko (Firefox)
+        - label: WebKit (Safari, iOS)
+        - label: Not a rendering problem
+  - type: dropdown
+    id: motion
+    attributes:
+      label: What does the operating system's reduced-motion setting change here?
+      description: |
+        `reducedMotion: 'auto'` reads that setting, so this separates a stylesheet problem
+        from an animation problem.
+      options:
+        - The animation plays either way
+        - It only stops when reduced motion is on
+        - It only plays when reduced motion is on
+        - Have not checked
+        - Not about an animation

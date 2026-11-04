@@ -1,0 +1,61 @@
+name: Feature request
+description: A capability the surface does not have yet
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Wavelo's whole surface is one shared configuration object and the design catalog, and
+        every bridge accepts all of it. A request that names the missing part — a key, a
+        design, a bridge, a document — is easier to answer than one that names an outcome.
+
+        Before writing: the gallery at https://princegoel0.github.io/wavelo/ renders every
+        design with the options it was measured to honour, so the closest existing combination
+        is usually two clicks away.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem, in your application
+      description: What you were building, what you reached for, and what you did instead. A workaround you shipped is useful information.
+    validations:
+      required: true
+  - type: textarea
+    id: api
+    attributes:
+      label: The call site you would want to write
+      description: Props, attributes or configuration — as you would type it.
+      render: tsx
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What would this add?
+      options:
+        - A new design (catalog entry, kind slice, keyframes)
+        - A new configuration key (reaches every bridge, the validator and the docs)
+        - Behaviour in an existing key (what it honours, or when)
+        - Packaging or an entry point
+        - A documented recipe or example
+    validations:
+      required: true
+  - type: textarea
+    id: server
+    attributes:
+      label: If it adds a key, what does that key do on a server?
+      description: |
+        `renderLoader` is the same function in both places, and a server-rendered page gets
+        markup and a stylesheet slice. Saying what a new key means there is what keeps it from
+        becoming a client-only option.
+  - type: textarea
+    id: falls-short
+    attributes:
+      label: Which existing designs or options come closest, and how
+      description: |
+        If an existing `type` plus current keys get most of the way there, say so — the honest
+        answer may be a recipe in docs/RECIPES.md rather than a new option.
+  - type: input
+    id: contribution
+    attributes:
+      label: Would you send a pull request?
+      description: Not a commitment. It changes what to suggest first, and .github/CONTRIBUTING.md lists the gates a change has to pass.

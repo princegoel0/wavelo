@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Gallery and playground
+    url: https://princegoel0.github.io/wavelo/
+    about: Every design, every option it was measured to honour, and a standalone HTML export
+  - name: Documentation
+    url: https://github.com/princegoel0/wavelo/tree/main/docs
+    about: Framework guides, customization, compatibility, bundle size, performance
+  - name: Security report
+    url: https://github.com/princegoel0/wavelo/security/advisories/new
+    about: Private report, read SECURITY.md first

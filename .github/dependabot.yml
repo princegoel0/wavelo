@@ -1,0 +1,30 @@
+# Two things get watched: the dependencies that end up in a consumer's lockfile, and
+# the actions this repository runs with its credentials. Framework majors are pinned
+# on purpose — they are the versions the compatibility claims are measured against —
+# so they arrive as separate pull requests, each one carrying its own CI run.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 8
+    ignore:
+      # Workspace-internal pins move with the release, never with a bot: see
+      # npm run release:validate, which refuses a set of manifests that disagree.
+      - dependency-name: "@wavelo/*"
+    commit-message:
+      prefix: build
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: ci
+    labels:
+      - dependencies
