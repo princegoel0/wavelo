@@ -485,7 +485,7 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 A thorough UX, visual, and kinesthetic audit across the active catalog identifies several existing loaders that, while functionally operational, originally appeared visually flat, simplistic, or lacking in physical realism. Modern frontend developers and design-system engineers demand loading indicators that communicate craft, visual polish, and organic motion dynamics (similar to micro-interactions found in Apple, Stripe, Linear, and Vercel products).
 
-**Scope of this review:** it was written against the 133-design catalog and its seven sections cover **107 designs** — Spinners 17, Dots 17, Bars 13, Creative 18, Progress 19, Application 17, AI 6. The 26 skeleton layouts are not reviewed here, and neither are the 20 designs added in 0.2.0; the per-design census of all 153, including both, is [`docs/COMPREHENSIVE_DESIGN_AUDIT_REPORT.md`](COMPREHENSIVE_DESIGN_AUDIT_REPORT.md). The counts below are the designs this section actually evaluates, not the category totals, which are in §5.10.
+**Scope of this review:** it was written against the 133-design catalog and its seven sections cover **107 designs** — Spinners 17, Dots 17, Bars 13, Creative 18, Progress 19, Application 17, AI 6. The 26 skeleton layouts are not reviewed here, and neither are the 20 designs added in 0.2.0; the per-design census of all 153, including both, is [`docs/COMPREHENSIVE_DESIGN_AUDIT_REPORT.md`](docs/COMPREHENSIVE_DESIGN_AUDIT_REPORT.md). The counts below are the designs this section actually evaluates, not the category totals, which are in §5.10.
 
 ### 🔴 Priority Key
 - 🔴 **Must fix** — obvious visual problem or physics mismatch

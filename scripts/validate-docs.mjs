@@ -4,6 +4,8 @@
 // updating the document — `npm run docs:check` fails otherwise.
 import { gzipSync } from 'node:zlib';
 import { bundleSize, entries } from './bundle-entries.mjs';
+import { existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { loaderConfigKeys } from '../packages/core/dist/config.js';
 import { loaderRegistry, presetRegistry } from '../packages/core/dist/registry.js';
@@ -103,7 +105,21 @@ for (const file of currentCatalogDocs) {
   }
 }
 
-const files = new Set(required.map(([file]) => file));for (const [file, strings] of required) {
+const files = new Set(required.map(([file]) => file));
+// A relative link in a document is a promise that a file is where the sentence says it
+// is. The README's own index once grew an entry for a document that was never written,
+// and nothing reads a 404 faster than a stranger deciding whether to trust the package.
+let linkedCount = 0;
+for (const file of currentCatalogDocs) {
+  const body = (await readFile(file, 'utf8').catch(() => '')).replace(/```[\s\S]*?```/g, '');
+  const links = [...body.matchAll(/\]\((?!https?:|mailto:|#)([^)\s]+)\)/g)];
+  linkedCount += links.length;
+  for (const [, target] of links) {
+    const path = resolve(dirname(file), target.split('#')[0]);
+    if (!existsSync(path)) failures.push(`${file} links to ${target}, which is not in the repository`);
+  }
+}
+for (const [file, strings] of required) {
   const text = await readFile(file, 'utf8').catch(() => undefined);
   if (text === undefined) {
     failures.push(`${file} is missing`);
@@ -302,4 +318,4 @@ if (failures.length) {
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
-console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, ${tokensRead.size} custom properties, single loader ${singleLoaderKb} KB gzipped.`);
+console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, ${tokensRead.size} custom properties, single loader ${singleLoaderKb} KB gzipped, ${linkedCount} relative links resolve.`);

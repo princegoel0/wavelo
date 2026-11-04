@@ -36,8 +36,9 @@ separately because a document that quotes a size is compared against it.
 `npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
 against `packages/core/src/catalog.ts`; after changing the catalog run
 `npm run catalog:generate` and commit the regenerated files. `npm run docs:check`
-reads the counts and bundle figures from the build, so a stale document fails
-rather than drifting silently.
+reads the counts and bundle figures from the build and resolves every relative link in
+the maintained documents, so a stale document or a 404 in a README fails rather than
+drifting silently.
 
 Install the generated tarball in a clean temporary project, resolve every public
 subpath — `@wavelo/core/loaders/<id>`, `@wavelo/core/css`, `@wavelo/core/styles`,

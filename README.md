@@ -1,5 +1,22 @@
 # Wavelo
 
+[![npm version](https://img.shields.io/npm/v/@wavelo/core)](https://www.npmjs.com/package/@wavelo/core)
+[![monthly downloads](https://img.shields.io/npm/dm/@wavelo/core)](https://www.npmjs.com/package/@wavelo/core)
+[![MIT license](https://img.shields.io/npm/l/@wavelo/core)](LICENSE)
+[![package size](https://img.shields.io/bundlephobia/minzip/@wavelo/core)](https://bundlephobia.com/package/@wavelo/core)
+[![typed](https://img.shields.io/npm/types/@wavelo/core)](docs/COMPATIBILITY.md)
+
+[Gallery](https://princegoel0.github.io/wavelo/) ·
+[Framework guides](docs/FRAMEWORKS.md) ·
+[Recipes](docs/RECIPES.md) ·
+[Compatibility](docs/COMPATIBILITY.md) ·
+[Per-design options](docs/COMPONENT_CUSTOMIZATION_API.md) ·
+[Bundle size](docs/BUNDLE_SIZE.md) ·
+[Changelog](CHANGELOG.md)
+
+Install: `npm i @wavelo/core` · `@wavelo/react` · `@wavelo/vue` · `@wavelo/svelte` ·
+`@wavelo/angular` · `@wavelo/vanilla` · `@wavelo/web-components`
+
 Wavelo is a dependency-light, framework-independent loading and motion library.
 The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven

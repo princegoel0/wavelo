@@ -43,6 +43,14 @@
   those are pinned because the compatibility claims are measured against them. Claiming no
   install-time scripts is now enforced: `packages:check` refuses a manifest that declares one.
 
+- **README:** version, downloads, licence, size and typed badges, a one-line index of the
+  nine documents the repository keeps, and the install line for all seven packages — the
+  first twenty seconds a stranger spends on a project are spent here, and it had no image,
+  no badge and no map. `npm run docs:check` now resolves every relative link in the
+  maintained documents, which is how the PRD's link to
+  `COMPREHENSIVE_DESIGN_AUDIT_REPORT.md` was found: the file has always lived in `docs/`,
+  and the link has never pointed there.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:
