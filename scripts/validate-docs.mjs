@@ -190,18 +190,17 @@ for (const token of tokensDeclared) {
 // document that reports the current state has to be the built count.
 const { patternPresets } = await import('../packages/core/dist/catalog.js');
 const countDocuments = [
-  // CHANGELOG.md and RELEASE_CHECKLIST.md are deliberately absent: each entry records what
-  // was true when it was written, so "Catalog Totals (v0.2.0): 153 public IDs" is a fact about
-  // a past release, not a claim about this build. The current release is still checked, through
-  // `required` below, which demands the built total appear in the changelog.
-  'README.md', 'PRD.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
-  'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/MIGRATION.md',
-  'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
-  // These three restate catalog totals and were never compared to anything, so each one
-  // drifted: the master audit claimed 133 shipped in its scope line and 155 in every
-  // section header, and the progress tracker carried two builds of stale figures.
-  'docs/LOADER_AUDIT.md', 'docs/VISUAL_DEDUPLICATION_REPORT.md', 'docs/COMPONENT_CUSTOMIZATION_API.md',
-  'docs/wavelo-analysis.md'
+  // CHANGELOG.md is deliberately absent: each entry records what was true when it was
+  // written, so "Catalog Totals (v0.2.0): 153 public IDs" is a fact about a past release,
+  // not a claim about this build. The current release is still checked, through `required`
+  // below, which demands the built total appear in the changelog. Review artifacts live in
+  // the ignored release-audit/ and are not guarded: nobody installs them, and a number in
+  // a dated audit is a measurement of the day it was taken.
+  'README.md', 'PRD.md', 'packages/core/README.md',
+  'docs/COMPATIBILITY.md', 'docs/MIGRATION.md', 'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
+  // This one restates catalog totals and was never compared to anything, so it drifted: the
+  // progress tracker carried two builds of stale figures.
+  'docs/COMPONENT_CUSTOMIZATION_API.md'
 ];
 for (const file of countDocuments) {
   const text = (await readFile(file, 'utf8').catch(() => '')).replace(/\s+/g, ' ');
@@ -313,7 +312,7 @@ for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md', 'docs/RELEASE.
   const rangeOf = (peer) => new RegExp('(?<![\\w@/-])' + escapeRe(peer) + '\\s*:?\\s*"?(\\s*' + term + '(?:\\s+' + term + '){0,2})', 'g');
   const files = [
     'packages/react/README.md', 'packages/vue/README.md', 'packages/svelte/README.md', 'packages/angular/README.md',
-    'docs/COMPATIBILITY.md', 'docs/FRAMEWORKS.md', 'docs/wavelo-analysis.md', 'PRD.md'
+    'docs/COMPATIBILITY.md', 'docs/FRAMEWORKS.md', 'PRD.md'
   ];
   for (const file of files) {
     const text = await readFile(file, 'utf8');

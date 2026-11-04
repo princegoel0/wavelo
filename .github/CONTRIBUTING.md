@@ -24,16 +24,20 @@ and a claim that no measurement supports gets corrected before it ships.
 | `packages/core/src/css/` | the base sheet, one slice per kind, the keyframes |
 | `packages/{react,vue,svelte,angular,vanilla,web-components}/` | thin bridges. Each one accepts the same configuration keys and does no rendering of its own |
 | `apps/docs/` | the gallery and playground, built into one HTML file |
+| `release-audit/` | audit output and review artifacts. Ignored: nothing a consumer or a newcomer needs lives there |
 | `PRD.md` | what the surface *is*. `docs/` is what it *does*, measured |
 | `scripts/` | the gates. Each file says in its header what it refuses |
 
-Two rules follow from that layout:
+Three rules follow from that layout:
 
 1. A feature lands in core, then every bridge, or it does not land. A bridge that accepts
    a key another bridge drops is the defect class this repository removes.
 2. A documented capability names its measurement. Option support is not inferred from a
    design's name — `npm run audit:customization` re-measures which options each design
    actually honours, and `npm run docs:check` compares the documents against that table.
+3. An audit writes its report to `release-audit/`, not to `docs/`. The tracked documents are
+   the ones a stranger reads before they trust the package, and a dated measurement of the
+   catalogue belongs beside the tool that took it.
 
 ## Before you open a pull request
 

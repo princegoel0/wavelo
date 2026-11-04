@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 
 const outputDirectory = resolve('release-audit');
 const screenshotPath = resolve(outputDirectory, 'catalog-corrected-contact-sheet.png');
-const reportPath = resolve('docs', 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
+const reportPath = resolve(outputDirectory, 'LOADER_VISUAL_CORRECTNESS_AUDIT.md');
 // Designs whose motion is not driven by the document clock, so sampling two
 // moments 250ms apart cannot show them advancing. Determinate tracks take their
 // fill from the configured value; the scroll-driven bar takes its progress from a

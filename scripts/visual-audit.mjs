@@ -112,7 +112,8 @@ await writeFile(reportPath, `# Visual catalog audit
   at desktop size — blank output, clipping, inconsistent dimensions, broken labels
   and obvious cosmetic-only variants. That review is separate from automated
   validation and is not recorded as complete here: whether each animation looks
-  right is still an owner decision, tracked in \`RELEASE_CHECKLIST.md\`.
+  right is still an owner decision, recorded in the release process at
+  \`docs/RELEASE.md\`.
 
 ## Decisions
 

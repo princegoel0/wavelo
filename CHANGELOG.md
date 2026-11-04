@@ -58,6 +58,15 @@
   every `minVersion` a maintained document quotes against the built artifact, so the sentence
   cannot fall behind the emit again.
 
+- **Repository tidy:** the tracked tree carried 35 markdown files, ten of them at the root —
+  `WAVELO_COMPONENT_INVENTORY.md`, `WAVELO_FINDINGS_REGISTER.md`, `RELEASE_CHECKLIST.md`,
+  `RELEASE_READINESS_AUDIT.md` and six more — alongside seven audit reports in `docs/` and a
+  folder of review screenshots. None of it is documentation a consumer needs, and all of it
+  stood in front of the eight documents in `docs/` that are. Those fourteen files and the
+  evidence directory now live in the ignored `release-audit/`, and the scripts that
+  regenerate them write there too, so the tidy holds. `PRD.md` pointed at two of them; those
+  sentences now say what the repository actually enforces instead.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:
@@ -132,7 +141,8 @@ list of things that were decided, and after 0.1.0 the same changes need a major.
   `waveform`, `audio-waveform`, `gradient-bars`, `signal-bars`, `spectrum`,
   `expanding-circles`, `progress-gradient-ring`, `progress-timer`), and seven keyframe
   modules with them. Five of the twenty-two are reachable by configuration; the rest are
-  recorded as capability decisions in `docs/VISUAL_DEDUPLICATION_REPORT.md`.
+  recorded as capability decisions in the deduplication audit, an internal review artifact
+  that is not shipped with the package.
 - No `variant` configuration key. It was removed before release: it duplicated `type` and
   the theme, and a key that no design honours is worse than no key.
 - `LoaderDefinition` carries `dimension: '2d' | '3d'`, and five designs are `3d` because

@@ -4,7 +4,9 @@ import { baseCss, kindStyles } from '../packages/core/dist/css/index.js';
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const evidenceDir = resolve('WAVELO_AUDIT_EVIDENCE');
+// Audit output is a review artifact, not package documentation: it lands in the
+// ignored release-audit/ so the tracked tree stays the files a stranger needs.
+const evidenceDir = resolve('release-audit', 'audit-evidence');
 await mkdir(evidenceDir, { recursive: true });
 const waveloCss = await readFile('packages/core/dist/wavelo.css', 'utf8');
 
