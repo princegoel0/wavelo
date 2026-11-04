@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/vue",
   "version": "0.4.0",
-  "description": "Vue component integration for Wavelo",
+  "description": "Vue 3 components for CSS loading spinners, skeletons and progress, server-rendered with a provide and inject house style",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -21,7 +21,14 @@
     "animation",
     "accessible",
     "css",
-    "reduced-motion"
+    "reduced-motion",
+    "vue-spinner",
+    "loading-indicator",
+    "skeleton",
+    "progress",
+    "nuxt",
+    "composition-api",
+    "typescript"
   ],
   "dependencies": {
     "@wavelo/core": "0.4.0"

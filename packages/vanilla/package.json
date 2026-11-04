@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/vanilla",
   "version": "0.4.0",
-  "description": "Vanilla DOM helpers for Wavelo",
+  "description": "Vanilla DOM mount helpers for Wavelo loaders, including a route progress bar that stays inert on a server",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -23,7 +23,12 @@
     "css",
     "reduced-motion",
     "vanilla",
-    "browser"
+    "browser",
+    "loading-indicator",
+    "preloader",
+    "skeleton-loader",
+    "typescript",
+    "vanilla-js"
   ],
   "dependencies": {
     "@wavelo/core": "0.4.0"

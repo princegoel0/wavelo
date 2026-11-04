@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/core",
   "version": "0.4.0",
-  "description": "Framework-independent loading animation core",
+  "description": "CSS loading spinners, skeletons and progress indicators that render as markup plus one shared stylesheet, with no runtime dependencies",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -23,7 +23,12 @@
     "css",
     "accessible",
     "reduced-motion",
-    "ui"
+    "ui",
+    "loading-indicator",
+    "preloader",
+    "skeleton-loader",
+    "typescript",
+    "zero-dependency"
   ],
   "sideEffects": [
     "*.css"

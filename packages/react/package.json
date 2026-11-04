@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/react",
   "version": "0.4.0",
-  "description": "React component integration for Wavelo",
+  "description": "React components for CSS loading spinners, skeletons and progress, with a React Server Component boundary built in",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -22,7 +22,13 @@
     "accessible",
     "css",
     "reduced-motion",
-    "react-spinner"
+    "react-spinner",
+    "loading-indicator",
+    "skeleton",
+    "progress",
+    "nextjs",
+    "server-components",
+    "typescript"
   ],
   "dependencies": {
     "@wavelo/core": "0.4.0"

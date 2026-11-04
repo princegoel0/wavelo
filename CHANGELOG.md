@@ -27,6 +27,22 @@
   if the entry loses an export; `npm run pack:verify` resolves the three specifiers out of the
   installed tarball and renders through the server entry with no DOM.
 
+- **npm metadata:** all seven packages were listed on the registry with a one-line
+  internal description (`React component integration for Wavelo`) and about nine keywords,
+  which is invisible in a search for `loading spinner react` or `skeleton loader`. Each now
+  carries a description that says what the package renders and how, and fourteen or fifteen
+  keywords including the terms a searcher actually types (`loading-indicator`, `preloader`,
+  `skeleton-loader`, `react-spinner`, `nextjs`, `aot`). Metadata only — no code changed, and
+  `npm run packages:check` still validates every description against the pattern the search
+  page accepts.
+- **Repository hygiene:** `.github/` gained a security policy that names the real surface
+  (a configuration value reaching markup or a stylesheet) and the guard for it, a
+  contributing guide that maps the repository and says which gate applies to which change,
+  issue forms and a pull-request checklist built from the actual commands, and a dependabot
+  configuration that watches npm and Actions weekly without grouping framework majors —
+  those are pinned because the compatibility claims are measured against them. Claiming no
+  install-time scripts is now enforced: `packages:check` refuses a manifest that declares one.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:
