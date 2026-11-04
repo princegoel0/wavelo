@@ -21,8 +21,22 @@ function guarded(value: string, limit: number, pattern: RegExp, label: string, h
 
 const COLOR_HINT = 'Use hex, a colour keyword, or a function like rgb(), oklch(), color-mix().';
 const DIMENSION_HINT = 'Use a number with a unit, auto, or calc()/min()/max()/clamp()/env()/var().';
+const CLASS_HINT =
+  'Use class names separated by spaces; arbitrary selector variants like [&>*] belong on a wrapper element.';
 
-const SAFE_CLASS = /^[A-Za-z0-9 _-]{0,200}$/;
+// The characters a real class attribute value contains. The previous whitelist was
+// [A-Za-z0-9 _-], which rejected the way almost every consumer styles a loader: Tailwind
+// variants use `:` (`dark:text-indigo-400`, `md:size-6`, `group-hover:opacity-50`), arbitrary
+// values use brackets, parentheses, `#`, `%`, `,`, `/` and `=` (`[--wavelo-size:24px]`,
+// `bg-red-500/50`, `data-[state=open]:opacity-50`), important uses `!`, and container queries
+// use `@`. Every one of those threw a LoaderConfigurationError.
+//
+// Still refused: `< > " ' & \ ; { } | + ~ $ ^ backtick`, whitespace below a space, and anything
+// else outside the set — which covers the characters that could end an attribute or start a
+// tag. Arbitrary *selector* variants (`[&>*]:mt-2`) need `&` and `>` and are therefore refused:
+// put those rules on a wrapper element instead. escapeHtml escapes the value when it reaches the
+// markup, so this is defence in depth rather than the only barrier.
+const SAFE_CLASS = /^[A-Za-z0-9 _:.@!#%\/,()[\]*=-]{0,256}$/;
 const SAFE_DATA_NAME = /^data-[a-z][a-z0-9._-]{0,60}$/;
 const SAFE_ID_REFERENCE = /^[A-Za-z_][A-Za-z0-9_:.-]{0,63}(?:\s+[A-Za-z_][A-Za-z0-9_:.-]{0,63}){0,7}$/;
 const THEMES: Theme[] = ['light', 'dark', 'system'];
@@ -173,8 +187,7 @@ function trackCount(value: number | undefined): number | undefined {
 
 export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   rejectForeignAccessibility(input);
-  const className = input.className ?? '';
-  if (!SAFE_CLASS.test(className)) throw new LoaderConfigurationError('className contains unsupported characters.');
+  guarded(input.className ?? '', 256, SAFE_CLASS, 'className', CLASS_HINT);
   const speed = number(input.speed, [0, 20], 'speed', true) ?? 1;
   const max = number(input.max, [0, Number.MAX_SAFE_INTEGER], 'max', true) ?? 100;
   const value = number(input.value, [0, max], 'value');

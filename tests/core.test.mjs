@@ -211,6 +211,45 @@ test('every supported configuration key reaches the rendered element', () => {
   }
 });
 
+test('className accepts the strings real stylesheets emit and refuses the ones that matter', () => {
+  // The whitelist used to be letters, digits, space, dash and underscore, so every Tailwind
+  // variant and every arbitrary value threw a LoaderConfigurationError — the single most common
+  // way a consumer styles a loader. These are the shapes that have to work.
+  const accepted = [
+    'ring',
+    'p-2 -mt-1',
+    'text-indigo-600',
+    'dark:text-indigo-400',
+    'md:size-6',
+    'group-hover:opacity-50',
+    '[--wavelo-size:24px]',
+    'lg:[--wavelo-size:3rem]',
+    'bg-red-500/50',
+    '!flex',
+    'top-0.5',
+    'data-[state=open]:opacity-50',
+    '@container',
+    'motion-safe:animate-none',
+    '[mask-image:linear-gradient(90deg,#fff,transparent)]'
+  ];
+  for (const className of accepted) {
+    const result = renderLoader({ type: 'ring', className, label: 'Loading' });
+    assert.ok(result.html.includes(`class="wavelo wavelo--ring wavelo--ring ${className}"`), `rejected a valid class string: ${className}`);
+  }
+
+  // What stays refused: characters that could end an attribute or start a tag, separators no
+  // class can contain, and anything past the length cap. Arbitrary *selector* variants need `&`
+  // and `>`, so they belong on a wrapper element — that trade is deliberate, not an oversight.
+  const refused = ['a"b', "a'b", 'a<b', 'a>b', 'a&b', 'a\\b', 'a\nb', 'a;b', 'a{b}', 'a|b', 'a+b', 'a`b', 'a\tb', 'x'.repeat(257)];
+  for (const className of refused) {
+    assert.throws(
+      () => renderLoader({ type: 'ring', className, label: 'Loading' }),
+      LoaderConfigurationError,
+      `accepted a class that should be refused: ${JSON.stringify(className)}`
+    );
+  }
+});
+
 test('loaderConfigKeys covers the whole documented configuration surface', () => {
   assert.deepEqual([...loaderConfigKeys].sort(), [
     'backgroundColor', 'className', 'color', 'count', 'data-testid', 'decorative', 'describedBy', 'direction',
