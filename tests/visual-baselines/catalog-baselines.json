@@ -1,0 +1,1157 @@
+{
+  "circular": {
+    "id": "circular",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 10021,
+    "hash": "e96983e6b50dcb08dba3ff46226618d25e90320788679bc43c3dc3be30840bd6"
+  },
+  "ring": {
+    "id": "ring",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 8838,
+    "hash": "8075c2588f5e5f24fd0a107e067cb33b27562a61a9fd54a49957d89b71479897"
+  },
+  "dual-ring": {
+    "id": "dual-ring",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9280,
+    "hash": "4fcd3fdfa35c2201e4ccaa58a75e406e324e4a9e4989903a828befbb03af7d39"
+  },
+  "multi-arc": {
+    "id": "multi-arc",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 8908,
+    "hash": "86f84154a34b746caf624471eecd2daaa825c7699ede5a492870c850fc7efe8e"
+  },
+  "dotted-circle": {
+    "id": "dotted-circle",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9201,
+    "hash": "70a2b981c252ef8129d9264bf2d0dd72faebca0539c297b72f87d3d4aa729764"
+  },
+  "segmented-ring": {
+    "id": "segmented-ring",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 11374,
+    "hash": "6962702c346bea6af8e8324757adb0c33cf21bbae81825bfbda600fa09434a89"
+  },
+  "ellipse": {
+    "id": "ellipse",
+    "category": "spinner",
+    "dimension": "3d",
+    "size": 8384,
+    "hash": "7c85f5404858a742fa4454138a9dfcaf9c5d813b448c2699d84faf3b38468b78"
+  },
+  "rotating-square": {
+    "id": "rotating-square",
+    "category": "spinner",
+    "dimension": "3d",
+    "size": 8246,
+    "hash": "6f6e421c647d5c7d507ecfcfd80f3bf619100d51efd5992e8e5f5becb53b1d1a"
+  },
+  "orbiting-dots": {
+    "id": "orbiting-dots",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 8484,
+    "hash": "58c647d63e771565ec7e80847c1bbeda30d6142613d6d4c6f3fc98bfa238dca4"
+  },
+  "comet-orbit": {
+    "id": "comet-orbit",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 7903,
+    "hash": "b146d21cbc3b547803123deeb673e30dc86418cffdaacfd13f91f74ba12abf0f"
+  },
+  "gradient-ring": {
+    "id": "gradient-ring",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9007,
+    "hash": "a34a296d2b97e3566a353e8e57f79dabda89ba105968b979ab99c1357d5dea9d"
+  },
+  "neon-ring": {
+    "id": "neon-ring",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 8705,
+    "hash": "c3d2657503c66e10b3ba36fd9fc99d57483969f178193b26ef2c3afd1e320de2"
+  },
+  "rubber-band": {
+    "id": "rubber-band",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 10580,
+    "hash": "9c4ba61e50b4daa9f5625404c85c6bca752a1b91766030834731960b143f2804"
+  },
+  "snake": {
+    "id": "snake",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9142,
+    "hash": "42e0d664a437a86ff706c94967d5abb677f4d7b0a19624c332b0e161d8c4c121"
+  },
+  "clock-spinner": {
+    "id": "clock-spinner",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9375,
+    "hash": "a6cfe9ef359acc8bc1f859f5759786c4db36d329f87fa1558876b063345b076f"
+  },
+  "monochrome": {
+    "id": "monochrome",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 9306,
+    "hash": "713def44326e85044b65d5f158772f178e6c2dd27a94c204c83fac6d5a0201d4"
+  },
+  "svg-star": {
+    "id": "svg-star",
+    "category": "spinner",
+    "dimension": "2d",
+    "size": 8469,
+    "hash": "3ff8c28bca2e1264936d51c1a15d406c3bbfcbfda1b2945a83e09494df91df30"
+  },
+  "three-dots": {
+    "id": "three-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7110,
+    "hash": "66e567f127da9031752c6382027defb1e64f0a086c35bb1492ff0b17bb17cb6f"
+  },
+  "pulsing-dots": {
+    "id": "pulsing-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7519,
+    "hash": "7969e1fb2f1727a083f14bd0c3679614df4816f224f5338be6e30b37280cbbf9"
+  },
+  "fading-dots": {
+    "id": "fading-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7281,
+    "hash": "f6aef1b3a0102bc1e5ecf2471b114dc672621a925a5c02e2be27c48cebb3d2c5"
+  },
+  "rotating-dots": {
+    "id": "rotating-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8750,
+    "hash": "a5667d67c1318c7b1d033f8e8a72c797fc4c78a3c577b085a51f256d59b75c1a"
+  },
+  "dot-wave": {
+    "id": "dot-wave",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8208,
+    "hash": "f017f1e2934f82fa90c01d396e22f08f9598b2c8799ed4bf04e3028f937d9364"
+  },
+  "dot-matrix": {
+    "id": "dot-matrix",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 9403,
+    "hash": "fa3707e1c035f3d80a0c65eb328ab9fe2931e7a69163e162f5913d8f51cd186d"
+  },
+  "grid-pulse": {
+    "id": "grid-pulse",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 10049,
+    "hash": "4fe0d83f02a0a5e5b701d53f8078743078d017d2c2e764465b40b827aeb25f6f"
+  },
+  "alternating-dots": {
+    "id": "alternating-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7494,
+    "hash": "bce229ba8127c1d035f0526739f8fab284abd9007fec78511c08011c55ab2a5f"
+  },
+  "expanding-dot": {
+    "id": "expanding-dot",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8179,
+    "hash": "ca4d2bae737029cc9d5f328644abb394df66ce02f04eebfd8cb3981bbf9c1a81"
+  },
+  "ripple-dot": {
+    "id": "ripple-dot",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8526,
+    "hash": "699180c2f019f4b18e603731bccc96c06c5242fe3f9ff769447332e585872a5b"
+  },
+  "staggered-dots": {
+    "id": "staggered-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7460,
+    "hash": "5cc347b82681e09dc12c7756eebe2416ca0e708720fd28e555ba4b206f481fc8"
+  },
+  "magnetic-dots": {
+    "id": "magnetic-dots",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 7578,
+    "hash": "47214061f0eea8d1dc1c1e8e82927daa630f54d638d4214b82d35bc8587d485d"
+  },
+  "pendulum": {
+    "id": "pendulum",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8269,
+    "hash": "e66f7ce13f23ae63455270b0cf38b3d1f2ef2d538492992120f783c0b439e5b0"
+  },
+  "constellation": {
+    "id": "constellation",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 9088,
+    "hash": "480969511dbdd13e21b74bbc1a64556df8c5ec292ae4fa2f0eb10520e5bcdba8"
+  },
+  "bubble-rise": {
+    "id": "bubble-rise",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8226,
+    "hash": "ff826017e4904e91375a21949b4e4101c3eca56388c76255b09e341fd61bb7f7"
+  },
+  "fireflies": {
+    "id": "fireflies",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 8927,
+    "hash": "4555da32a93039409d925b57aea66e0d61240d6160d5bf910670416824237295"
+  },
+  "solar-system": {
+    "id": "solar-system",
+    "category": "dots",
+    "dimension": "2d",
+    "size": 11657,
+    "hash": "7b5583ec2f31e8ec746eefa4d6af3de642e2b93f0431affb2ae8265fc66b7dcc"
+  },
+  "equalizer": {
+    "id": "equalizer",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8500,
+    "hash": "debaa8874bfec123173a57184b9cf9b5809c4e503776a0f8cd323a6aa41f5e9a"
+  },
+  "horizontal-pulse-bars": {
+    "id": "horizontal-pulse-bars",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 7445,
+    "hash": "ea8c97133aafc6e0ae77441f2233efd89e0b4ddd173fe60a78e5eab99b212cbe"
+  },
+  "fading-bars": {
+    "id": "fading-bars",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 7938,
+    "hash": "a3184ae4aa9fe70096ab20a4921faeaff02decd63b447acec58d5e7d6f58890b"
+  },
+  "growing-bars": {
+    "id": "growing-bars",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8455,
+    "hash": "a0f4473bc7951e003be7e3467ed2e5fa2326936d931a5df2de23b543ad660d74"
+  },
+  "alternating-bars": {
+    "id": "alternating-bars",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8249,
+    "hash": "2673336f15101f2758ab8cd53d1b6042cc478e8f01713dd7e4572121707b7fa3"
+  },
+  "piano-keys": {
+    "id": "piano-keys",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8133,
+    "hash": "242e552dca4064d722b6b6fe98728d4503f9820cdcfdc24f5be58090ea1af98a"
+  },
+  "fire-rise": {
+    "id": "fire-rise",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 14437,
+    "hash": "b3e335966e24bb983c1bcc00c65e84a18d992a5ebf0433de4d7d2fa2fe724cd0"
+  },
+  "heartbeat": {
+    "id": "heartbeat",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 9726,
+    "hash": "5e1b30470fcc5cd9f4de6990678d30e740edf72c92d6062f9d1566728fd68e7b"
+  },
+  "breathing": {
+    "id": "breathing",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 7660,
+    "hash": "98cd8f277296379017821c3b3531fbcc4e67bcab5b561ceec1f203f89c38275f"
+  },
+  "segmented-bar": {
+    "id": "segmented-bar",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7275,
+    "hash": "99c2810ea72293bdfc43d17b04d81f06a8a99862a99cdf3c16d4cc970f400b41"
+  },
+  "moving-stripe": {
+    "id": "moving-stripe",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8029,
+    "hash": "1bbf59754a210a5a29c482d0da405f5d7340458bacc080d7f4ccbc12286c4be6"
+  },
+  "traveling-highlight": {
+    "id": "traveling-highlight",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 8179,
+    "hash": "8b3d90133de0f8a0af8b5d29a1a7d9d5db428f648b985659aef77fc8775a6a7d"
+  },
+  "oscillating-line": {
+    "id": "oscillating-line",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 10250,
+    "hash": "fd32d740c126e80532127722e54866558914e9d9913d7f63f9f000e99129b5bb"
+  },
+  "multi-wave": {
+    "id": "multi-wave",
+    "category": "bars",
+    "dimension": "2d",
+    "size": 7689,
+    "hash": "e061488040b58bc2eddb0cf5c503766f97436ce82eb6de150be7c95357c40ea4"
+  },
+  "ripple-circles": {
+    "id": "ripple-circles",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9730,
+    "hash": "7db278097be5fbf9fe7eb8b23b80c8b97c90699fe7a5fd7e24ad2c9c55c5261f"
+  },
+  "morphing-shapes": {
+    "id": "morphing-shapes",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8637,
+    "hash": "094e815407081a143fe2135b3af0f2deee970d72e23cdb343a3b8c796fb90183"
+  },
+  "infinity": {
+    "id": "infinity",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 15266,
+    "hash": "a0f15fbd849016aae1b8cb110a0d15cece8c393ad1b1f3eb6d307d4b6359cc61"
+  },
+  "helix": {
+    "id": "helix",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 17914,
+    "hash": "8de98c98717992fdbdc10fa2b38e4f95d2b81f2bfcc061be60ea0c437f79ba8b"
+  },
+  "cube": {
+    "id": "cube",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 7687,
+    "hash": "9858a956f6c3793af6baa3ba2b71807e31f4c0754079409089af90b412d57e53"
+  },
+  "polygon": {
+    "id": "polygon",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9581,
+    "hash": "ffd23c8920f9999e1b0fc12fc238911c820cb2d8bb14a15eb690f0db3ad96849"
+  },
+  "triangles": {
+    "id": "triangles",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8613,
+    "hash": "d788a8203b5585e71f45abdc2ae0a46dd4f0802e819e3e868b0470279e5f047c"
+  },
+  "folding-squares": {
+    "id": "folding-squares",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 10056,
+    "hash": "696ea834a31a8b1a97e44370b3f4132629620821b6170b7bee5310dd445aa838"
+  },
+  "nested-squares": {
+    "id": "nested-squares",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9840,
+    "hash": "05ea309997291747611a6fb4fa81f180e4de0e27506d2fe7a169b04c614db15f"
+  },
+  "concentric-pulse": {
+    "id": "concentric-pulse",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9756,
+    "hash": "7866caa648e41090f9bb4673e6c743c84ef865b49a8dfdfd0266c75a197bdefa"
+  },
+  "trip-orbit": {
+    "id": "trip-orbit",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 7994,
+    "hash": "6e5a5fa569b59ce149864c64eee9b3f21c2efdcf5614a20cd7eb4c510c513c45"
+  },
+  "liquid-blob": {
+    "id": "liquid-blob",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 12754,
+    "hash": "1e2c40f77127bd948710105e3ad09c00690457f398925a6d6d53fc0d679b6037"
+  },
+  "sand-timer": {
+    "id": "sand-timer",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8465,
+    "hash": "5a6f5435073ea9a87871a5f99a5aeecbced9611ec1426396f2ad44913c82da9f"
+  },
+  "eye-blink": {
+    "id": "eye-blink",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8364,
+    "hash": "4b3371cb729a5209229bbde3597cebd479e21102d65f5756ac9433361c630734"
+  },
+  "metronome": {
+    "id": "metronome",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8744,
+    "hash": "5cf647c0b56cdfad62e70f20ca7fc0d3bb6eff3f16c9c2b5c5d8dfda35fdca8f"
+  },
+  "spiral": {
+    "id": "spiral",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9401,
+    "hash": "21a40f6356782c89421e3a09cb80f3100539d4aae0e5f33206bdf0cbc08e77c4"
+  },
+  "radar": {
+    "id": "radar",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 11981,
+    "hash": "ce8bc4aa651dcd1223da40c7fd987ba2bb0315569f21d84e0993ead2cccf946d"
+  },
+  "particle-orbit": {
+    "id": "particle-orbit",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8437,
+    "hash": "62cff8c56ae1d8f44aa433944082aa3165e46159899feff38aad3f2a007f4f27"
+  },
+  "typing-dots": {
+    "id": "typing-dots",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 7644,
+    "hash": "7e1a8eecc436dfbdf584609748de1e10b479b3e8f14d66f5a3d3584fe6f5c376"
+  },
+  "thinking-glow": {
+    "id": "thinking-glow",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 8511,
+    "hash": "b9610e24ea4f38e1dd3cb84b95496f1cf5528093519a6ccd43b93934321f9267"
+  },
+  "stream-cursor": {
+    "id": "stream-cursor",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 7659,
+    "hash": "b06a2861bb8713f1fbecdd5d42a2847bc4cf8bcbcd12a138d6a2e0c66fc4482a"
+  },
+  "token-stream": {
+    "id": "token-stream",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 7755,
+    "hash": "37dcf4b6cd54fa9175c9adc6ff8c916ee92fe7bb29f12f6e90c49625505930ff"
+  },
+  "ai-shimmer": {
+    "id": "ai-shimmer",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 8398,
+    "hash": "ed86639f17bd822cae37ec599e73b1c9ca5dc780be22e7e081cce7960f26fe7f"
+  },
+  "neural-grid": {
+    "id": "neural-grid",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 12969,
+    "hash": "168aefaed6a7b81b7324459dd9d1b886885a270a68923a4a0b02603ac0b1e934"
+  },
+  "skeleton-line": {
+    "id": "skeleton-line",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 7491,
+    "hash": "c08fcda1a789cdc7ee26fc729673d72c14f9ffab5653ba9699cf8c203d3d6018"
+  },
+  "skeleton-card": {
+    "id": "skeleton-card",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9365,
+    "hash": "ead9ac72c7297969093989d86f371c77e34593d17d14812a2a0be2a40218bbbb"
+  },
+  "skeleton-avatar": {
+    "id": "skeleton-avatar",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8475,
+    "hash": "0ebdd9ae9d416a3bafb5d9a266d29f251d4be8325ea90376948607eb297991a3"
+  },
+  "skeleton-table": {
+    "id": "skeleton-table",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8459,
+    "hash": "dafdd46e3ee949da81bb38404af7dd2b42ea31eb807f0e041cbed6ada2901d47"
+  },
+  "skeleton-inbox": {
+    "id": "skeleton-inbox",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 11115,
+    "hash": "90e905ad6a7d5ab74b2e30de589d09b588b4e91b2d6aa3849737bbbd317807bb"
+  },
+  "skeleton-chat": {
+    "id": "skeleton-chat",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 10357,
+    "hash": "60945746c62ec3d597bd71fce74110f3b00497c715c2efa7d6aa4aea0526eba1"
+  },
+  "skeleton-code": {
+    "id": "skeleton-code",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9617,
+    "hash": "9218febee4ebecde7263e9235313e1a2572e2c6ff125415dd25b3ef3fa52d834"
+  },
+  "skeleton-metric": {
+    "id": "skeleton-metric",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9222,
+    "hash": "3c23e6bdffb782b159185a370bb0e31c5f5e3c43a072bf8455e4a418e6cc9cab"
+  },
+  "skeleton-dashboard": {
+    "id": "skeleton-dashboard",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8672,
+    "hash": "abb02a6e7952c2a0bedc006d4845591166a9ddc16694b54b6b0ebc4abef5bc2a"
+  },
+  "skeleton-product-card": {
+    "id": "skeleton-product-card",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8849,
+    "hash": "f7f3a64c70e8cb6d438566202226568fcd797e32aa4a8b2b3b12b36cf8670c18"
+  },
+  "skeleton-product-page": {
+    "id": "skeleton-product-page",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 10099,
+    "hash": "7811091ffac8ad912f61ac77da2c5565842f39bcbfde41a3991436589f3637bd"
+  },
+  "skeleton-cart": {
+    "id": "skeleton-cart",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8659,
+    "hash": "36838d31fa83ebbb73db9e4053f3564bc9dc10461731dbbaaac1206eec03ec21"
+  },
+  "skeleton-review": {
+    "id": "skeleton-review",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9116,
+    "hash": "1dfe4c79909833d95584e892a2ee8a826e333592ef16cd1c783e0d0a5a301831"
+  },
+  "skeleton-chart-bar": {
+    "id": "skeleton-chart-bar",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8895,
+    "hash": "deae652e1a2f52328630791b1c634ea0134f8c70e6ab719e37e54a984d915cf0"
+  },
+  "skeleton-chart-line": {
+    "id": "skeleton-chart-line",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8628,
+    "hash": "783970d066f1774ad3881d67f876009500def420abf6be1010688f5d19b01b84"
+  },
+  "skeleton-chart-donut": {
+    "id": "skeleton-chart-donut",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9479,
+    "hash": "7d5fe46d6eed2b523c985125539c4bc2c8771506ba72fa492159102b840e7703"
+  },
+  "skeleton-data-table": {
+    "id": "skeleton-data-table",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9084,
+    "hash": "a747fa939531794ab75c222b73863a8ea2e3594e36078c941c909c6562ff07a5"
+  },
+  "skeleton-kanban": {
+    "id": "skeleton-kanban",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9904,
+    "hash": "36c8f0a8eb7d597e2bb64a14afcfc483c2c3a731766420a5afad4e61519457ea"
+  },
+  "skeleton-timeline": {
+    "id": "skeleton-timeline",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8234,
+    "hash": "fb0a35e98b6d953ffb53f71bdf66f36c2ec5bdeae875d4e5d80872c9de0fbbfd"
+  },
+  "skeleton-calendar": {
+    "id": "skeleton-calendar",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 7823,
+    "hash": "3a19a17033623b607aa52f168e63dbbde2acb42b1162071b28045a966ff81176"
+  },
+  "skeleton-sidebar": {
+    "id": "skeleton-sidebar",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 10065,
+    "hash": "a8d4c149b950140e30c6b4cf9d594f7f56687823418a0dd4570cac50a86ff094"
+  },
+  "skeleton-notification": {
+    "id": "skeleton-notification",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 8792,
+    "hash": "f53ee6a61fc0b976f771247b5120de11bab573e6ed8e2f6221d193dcd35f6d53"
+  },
+  "skeleton-command": {
+    "id": "skeleton-command",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 10764,
+    "hash": "9d3a261d1e574399ea48d174d2331db4645ade1b2dae22708c6212fe13bdbabe"
+  },
+  "skeleton-feed": {
+    "id": "skeleton-feed",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 11010,
+    "hash": "d281bd7ef41a3f5a4fc730f9bde1f7c92c26aeb417f62090aac443608d4962ab"
+  },
+  "skeleton-filter-panel": {
+    "id": "skeleton-filter-panel",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 9373,
+    "hash": "93aa59845f34c38681e26b3adcca4c7e1a69fa397013fd3501955b46dc5f0fa6"
+  },
+  "skeleton-map": {
+    "id": "skeleton-map",
+    "category": "skeleton",
+    "dimension": "2d",
+    "size": 10079,
+    "hash": "1a1daf52a7e6292f6b3675bf8ab889eefc9848f838ac4d48e2ea35c697d136c6"
+  },
+  "progress-bar": {
+    "id": "progress-bar",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7770,
+    "hash": "d53737937230094b4b319154c5f9c6dbdc3c789cda9ba6560cbe6aceb6a4a7ec"
+  },
+  "progress-ring": {
+    "id": "progress-ring",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 9034,
+    "hash": "09d1e09c1bd6ee68c055ddd6c6e0495a0ad44a88fa06b976bdd73f1aabc923be"
+  },
+  "progress-steps": {
+    "id": "progress-steps",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7603,
+    "hash": "60ab9bfc09580a40b0c3766eda3c7433aeee65bcf27ca10a179b214b024e3c53"
+  },
+  "progress-top": {
+    "id": "progress-top",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7302,
+    "hash": "a2514ec6f784a63b939c19310b384092fee16ff271dd8178555c07a8be4f83f5"
+  },
+  "progress-upload": {
+    "id": "progress-upload",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7519,
+    "hash": "7c37b02081a91209e3fef31096b90b5151b4c428cfe9bca41200102182d60508"
+  },
+  "progress-scroll": {
+    "id": "progress-scroll",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8427,
+    "hash": "2494445533f34d7e53ba3b86a22eacc823433ec60c1f15b35291fa271bb8d93f"
+  },
+  "progress-view": {
+    "id": "progress-view",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7504,
+    "hash": "4990204349534a79d5053b15fdf4cfaa31d2523eb7cfd4bf0808df9b997184bb"
+  },
+  "progress-battery": {
+    "id": "progress-battery",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8336,
+    "hash": "6ee18f14551a6728f08de4d5e886683d01d33b0284f2c3db1269c0f286795cff"
+  },
+  "progress-half-ring": {
+    "id": "progress-half-ring",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 9360,
+    "hash": "3728b40bdee7dacd8171797727d338416e96aa58aee38d6ccf8a6c59de2800a8"
+  },
+  "progress-wave-fill": {
+    "id": "progress-wave-fill",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 15527,
+    "hash": "357fb0acf6e366e0bc5d46b46feb6b5c4bb6f53f271c7e780a151f4dc64395d5"
+  },
+  "progress-count": {
+    "id": "progress-count",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8652,
+    "hash": "e6761b7811f9875feb87576972ba1f43a70c44df529373d8aeac806bedcf7998"
+  },
+  "progress-dots-fill": {
+    "id": "progress-dots-fill",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8611,
+    "hash": "c5612352771407bca81206e5b929d8a1d2ce666e1313e0767d7168e9ac7dd570"
+  },
+  "progress-label-inline": {
+    "id": "progress-label-inline",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7768,
+    "hash": "1979cef98493164b406388e9dd40187d312e440c8a8f11ffadcd7587b3a3f960"
+  },
+  "progress-multi-step": {
+    "id": "progress-multi-step",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8806,
+    "hash": "fab50a2c1d23adf592bbf8c78db6b22a0b29a3e7613b3cf658d9da46cdfdacdd"
+  },
+  "progress-upload-multi": {
+    "id": "progress-upload-multi",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7142,
+    "hash": "83e1d4061bfb1ed1ef9e7adb69e907d596af05098628fb7d076ce6631a0c3187"
+  },
+  "progress-ai-generate": {
+    "id": "progress-ai-generate",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7819,
+    "hash": "7b5df6f187dd5e1ec2da5a0c022e5e51d3dbe24f25dd30286c06ca5e84064bd0"
+  },
+  "progress-skill": {
+    "id": "progress-skill",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 7682,
+    "hash": "b4237cc2e2f79649fd07015ca6c786799154b1d0e5ce911244de62de721e8e8f"
+  },
+  "progress-orbit-fill": {
+    "id": "progress-orbit-fill",
+    "category": "progress",
+    "dimension": "2d",
+    "size": 8432,
+    "hash": "942f553d1831cd6082386c10e865f2d5f449687f5e6efee5d09b4b8a6ddfae2c"
+  },
+  "inline": {
+    "id": "inline",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7226,
+    "hash": "fb63c103c5e36c3aa1e3688ace2e9314056d4f0571f9c9c69d216f2a5e26d970"
+  },
+  "button": {
+    "id": "button",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7285,
+    "hash": "eeebf908159ddbb46b4be2987e600b7497dcc981c1417ecac2c4d6bd8e38909f"
+  },
+  "overlay": {
+    "id": "overlay",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9309,
+    "hash": "85c848ec1813914f1a7bbce64ea850f70d4ec861ed54b7c08112685dcad56549"
+  },
+  "fullscreen": {
+    "id": "fullscreen",
+    "category": "application",
+    "dimension": "2d",
+    "size": 2483,
+    "hash": "1e28c887f8a9b123daa3aa7fa4cce47d3b5179a8293a9019b2f979ae05e264d1"
+  },
+  "page-transition": {
+    "id": "page-transition",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7263,
+    "hash": "7afdffe99f350a1e91280884cc0a664aa11bae446e7a908f0b7fcad2ba0f34aa"
+  },
+  "image-placeholder": {
+    "id": "image-placeholder",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7645,
+    "hash": "8ea301c99b9fae65f1686f267560f383e3ce52cabb8b997a1027d2700c99f303"
+  },
+  "infinite-scroll": {
+    "id": "infinite-scroll",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8304,
+    "hash": "338fe8809a44ebc24b2b0b617ffe6756d7365d022730334b1e78149615882c58"
+  },
+  "background-operation": {
+    "id": "background-operation",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7193,
+    "hash": "557471a1e2ae5e314deb4af4e3b50cdb7ccdc78628b3a2658ab73b308ff220fa"
+  },
+  "success-ring": {
+    "id": "success-ring",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9391,
+    "hash": "97cbe1c838358f6718008bacf7f0a45445ead2fda5b82fca2c7fa700c41c86aa"
+  },
+  "error-shake": {
+    "id": "error-shake",
+    "category": "application",
+    "dimension": "2d",
+    "size": 11037,
+    "hash": "f0a3284b47b56fe85fe54ce56a8a8ca84f07ce96e39522c89dbfcb88670961d6"
+  },
+  "button-confirm": {
+    "id": "button-confirm",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8114,
+    "hash": "bacdc8f313977941a4ca681b66c7e7336f1c4325f26a18739abee8c72b45edb3"
+  },
+  "toast-loading": {
+    "id": "toast-loading",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8970,
+    "hash": "3410ed7592e072670aa9a6a1a8dde8d145398d3eaa476e99d708b7b639bb92e7"
+  },
+  "drag-drop-pulse": {
+    "id": "drag-drop-pulse",
+    "category": "application",
+    "dimension": "2d",
+    "size": 13183,
+    "hash": "c698dd3ec2bca6f05a0bb5e3bebeca5b0dbeaf4ac0f027c98ec8244a7ece0deb"
+  },
+  "page-skeleton": {
+    "id": "page-skeleton",
+    "category": "application",
+    "dimension": "2d",
+    "size": 11070,
+    "hash": "2c11b65f4969506542946e56dded427b4ad0aa28cac1823d1c79ec86de697125"
+  },
+  "offline-dot": {
+    "id": "offline-dot",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8198,
+    "hash": "f9449c901077805d821035bb2d0877f5955fa497f914dd4ccf5979050ebd5fb9"
+  },
+  "save-indicator": {
+    "id": "save-indicator",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9073,
+    "hash": "8fa967ec33cd4880bc0c9c41dbd1c840af674f0648fba2cf85bde3cdddbf236e"
+  },
+  "undo-progress": {
+    "id": "undo-progress",
+    "category": "application",
+    "dimension": "2d",
+    "size": 7156,
+    "hash": "79184ffd4a62a99d85509de25923176d8ed7f889b398d058315eeb240dfed56c"
+  },
+  "gyroscope": {
+    "id": "gyroscope",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11210,
+    "hash": "5f75816cfa85c6263dc88166ea2b00b61fb91a3ff423489bf8c2766be28b5e3e"
+  },
+  "tesseract": {
+    "id": "tesseract",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11616,
+    "hash": "542e6bce19222585a2a9b074ff75e94dcf948b70820a113886676a237f543657"
+  },
+  "sphere-lattice": {
+    "id": "sphere-lattice",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11917,
+    "hash": "4ffed55bd10a7efeb240feca58805d652f09c80dce749f4137a0c48bdddc0f8b"
+  },
+  "prism-refraction": {
+    "id": "prism-refraction",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 9880,
+    "hash": "5f52d2ef00e633ac1914aeea5fa400428e775f38b5f55010b9a2dd4fe42f83b7"
+  },
+  "atom-orbital": {
+    "id": "atom-orbital",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 15046,
+    "hash": "c37098a1b1efc7f5b81fd636b89fb38d074f5e2f1cb7262ca829eeca8138deb8"
+  },
+  "dna-double-helix": {
+    "id": "dna-double-helix",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 19511,
+    "hash": "3cbedec18be0a37c3cbd1d15ad751ad22f731dc432a9f92fb8a114bd354bbc74"
+  },
+  "hologram-pyramid": {
+    "id": "hologram-pyramid",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11170,
+    "hash": "1e72c1f26a86f9986450684a04afc9492e7f2db3c01cea9750bbe3fac51be9ff"
+  },
+  "black-hole-accretion": {
+    "id": "black-hole-accretion",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 13916,
+    "hash": "a8837e6d67332361883d405dadcf3b6ad61f32fa34b92e11f1e5026d443f76b0"
+  },
+  "crystal-cluster": {
+    "id": "crystal-cluster",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11259,
+    "hash": "d5d2cff6763d866b97a57c934a9da3f646dee622f50a9cfae65ea854202f480f"
+  },
+  "mobius-band": {
+    "id": "mobius-band",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 12699,
+    "hash": "9b2136a26630026dfdec66ed96ab9c81dbcf08a58c112d97560373baa6273da2"
+  },
+  "vortex-tunnel": {
+    "id": "vortex-tunnel",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11884,
+    "hash": "9f460442adfa704b93071819ed37fceef8ae3c57a27a190a7a0fb43acc0c7f66"
+  },
+  "isometric-deck": {
+    "id": "isometric-deck",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 9697,
+    "hash": "b59758ca2ec4e5354e9cd6ecf33271339bf16e4508b04b95487893096bb95074"
+  },
+  "voxel-cluster": {
+    "id": "voxel-cluster",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 10485,
+    "hash": "e9fe4492e5c1cfa3f3a0b8aa7cca77951e173d18f61cc5ba76145cb221d0d43f"
+  },
+  "torus-ring": {
+    "id": "torus-ring",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11960,
+    "hash": "0705cd235e734c4f62d5fd117a26e2cba8445a9fff196e090552efb981477ccb"
+  },
+  "cylindrical-wave": {
+    "id": "cylindrical-wave",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 10313,
+    "hash": "d670ef1732eabe43f4dba8a78ac5d69328b677bc4116d8ceb12bb933afcfd56b"
+  },
+  "liquid-mercury": {
+    "id": "liquid-mercury",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 10270,
+    "hash": "5e81e004190e4f5b165488c430a8de1c63c15584db66af0e9dab5c8f467eb389"
+  },
+  "dna-decode": {
+    "id": "dna-decode",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 13858,
+    "hash": "5b0e31283fb8eb28a7a69fa4f109986287faec4eb5b44f7e9d8dbe76e63bff98"
+  },
+  "quantum-superposition": {
+    "id": "quantum-superposition",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 15936,
+    "hash": "dc750bf976f754248d191cc6b50f3fa8b809f6aafdf3ff7713ebe948de679a18"
+  },
+  "magnetic-field": {
+    "id": "magnetic-field",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 11333,
+    "hash": "3e8dc543667ff95aea75ae3d765762adcc80e5128095e13914f4e8d26720c327"
+  },
+  "aurora-borealis": {
+    "id": "aurora-borealis",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 15755,
+    "hash": "06254fec4068601cec91e3cf92bd32dd605a7e316bc749a0846761e4c71df44c"
+  },
+  "agent-tree": {
+    "id": "agent-tree",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 11069,
+    "hash": "fa1713d61968a80ac2390f69c93357bd39d4905dc14f2fed1427e0d0f3acfe9c"
+  },
+  "aurora-ribbon": {
+    "id": "aurora-ribbon",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 8962,
+    "hash": "1b0840627477fde297aefdb7d402e56aabf168fa9f351565347a161c0d4f8cda"
+  },
+  "glyph-matrix": {
+    "id": "glyph-matrix",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 9150,
+    "hash": "2d2f64e2d647408162ed561e40aa689a2c6204691355154f4756022149d3676d"
+  },
+  "coin-flip": {
+    "id": "coin-flip",
+    "category": "creative",
+    "dimension": "3d",
+    "size": 10005,
+    "hash": "071be6f20dd7de91163d3794cd1a3416e6cc8c7721c05313ce5e04f6b722a9d5"
+  },
+  "biometric-reticle": {
+    "id": "biometric-reticle",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 12778,
+    "hash": "b21610e25d9ef77ec31a4e8cafe2c1a08558c3a179124a6bd6a201665a3ed9de"
+  },
+  "vault-tumbler": {
+    "id": "vault-tumbler",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 12608,
+    "hash": "d45398c473fe0f5257d3fb1ecf650823ea97eb7fb9177eaa94d7288f5f7744a2"
+  },
+  "git-rebase": {
+    "id": "git-rebase",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9686,
+    "hash": "032de9970c8ee1378b56fb41060195764bdb0e9600033adada9854861d89d930"
+  },
+  "packet-pipeline": {
+    "id": "packet-pipeline",
+    "category": "application",
+    "dimension": "2d",
+    "size": 10127,
+    "hash": "d2faa1036bf5faef151e7595ec358610aa8206d5af42dd4734237593e20440b2"
+  },
+  "crt-scanline": {
+    "id": "crt-scanline",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9887,
+    "hash": "ee2415c0d0085939c7d96468cd4b331eae7a02ddafd26aba31e5cfeea3646e2f"
+  },
+  "gooey-metaballs": {
+    "id": "gooey-metaballs",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9948,
+    "hash": "2f11c4ef141c175a4bf426d399a31508a4b66e675917fdee3cb9b95ad60a6794"
+  },
+  "camera-iris": {
+    "id": "camera-iris",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 13913,
+    "hash": "c433bac447da4157944e04498bbf11fd4b6013649426ae1776148197584bfbda"
+  },
+  "newton-cradle": {
+    "id": "newton-cradle",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 10802,
+    "hash": "18b410e1e01e9a93369eda298c30b99a5950dd01b8bb41304be1dd74b4139fea"
+  }
+}

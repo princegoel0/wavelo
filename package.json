@@ -33,7 +33,9 @@
     "pack:verify": "node scripts/verify-packed.mjs",
     "test:browser": "node tests/browser.test.mjs",
     "test:browser:firefox": "node tests/browser-firefox.test.mjs",
-    "test:browser:webkit": "node tests/browser-webkit.test.mjs"
+    "test:browser:webkit": "node tests/browser-webkit.test.mjs",
+    "test:visual": "node scripts/visual-regression.mjs",
+    "test:visual:update": "node scripts/visual-regression.mjs --update-baselines"
   },
   "devDependencies": {
     "@angular/common": "^22.2.4",
