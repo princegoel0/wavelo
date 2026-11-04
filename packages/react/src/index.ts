@@ -78,3 +78,5 @@ export function loaderFor(type: string, defaults: WaveloDefaults = {}): FC<Wavel
 export function renderReactLoader(props: WaveloProps = {}, defaults?: WaveloDefaults): RenderResult {
   return renderLoader(mergeWaveloConfig(defaults, props));
 }
+
+export * from './hooks.js';

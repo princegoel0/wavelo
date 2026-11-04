@@ -86,3 +86,5 @@ export function loaderFor(type: string, defaults: WaveloDefaults = {}): DefineCo
 export function renderVueLoader(props: WaveloProps = {}, defaults?: WaveloDefaults): RenderResult {
   return renderLoader(mergeWaveloConfig(defaults, props));
 }
+
+export * from './composables.js';

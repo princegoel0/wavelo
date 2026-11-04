@@ -237,3 +237,104 @@ test('universal Wavelo component and element aliases are exported across framewo
   const { WaveloElement, WaveloLoaderElement } = await import('../packages/web-components/dist/index.js');
   assert.equal(WaveloElement, WaveloLoaderElement);
 });
+
+test('React useWaveloState and useWaveloProgress hooks provide state orchestration and progress tracking', async () => {
+  const { useWaveloState, useWaveloProgress } = await import('../packages/react/dist/index.js');
+  assert.equal(typeof useWaveloState, 'function');
+  assert.equal(typeof useWaveloProgress, 'function');
+
+  let hookResult;
+  function TestStateComponent() {
+    hookResult = useWaveloState({ initial: 'idle' });
+    return createElement('div', null, hookResult.state);
+  }
+
+  const html = renderToStaticMarkup(createElement(TestStateComponent));
+  assert.equal(html, '<div>idle</div>');
+  assert.equal(hookResult.state, 'idle');
+  assert.equal(hookResult.stateProps.loading, false);
+  assert.equal(hookResult.stateProps['data-wavelo-state'], 'idle');
+
+  let progressResult;
+  function TestProgressComponent() {
+    progressResult = useWaveloProgress({ initial: 25 });
+    return createElement('div', null, progressResult.percent);
+  }
+
+  const progHtml = renderToStaticMarkup(createElement(TestProgressComponent));
+  assert.equal(progHtml, '<div>25%</div>');
+  assert.equal(progressResult.progress, 25);
+  assert.equal(progressResult.percent, '25%');
+  assert.equal(progressResult.isComplete, false);
+});
+
+test('Vue useWaveloState and useWaveloProgress composables provide reactive state and progress simulation', async () => {
+  const { useWaveloState, useWaveloProgress } = await import('../packages/vue/dist/index.js');
+  assert.equal(typeof useWaveloState, 'function');
+  assert.equal(typeof useWaveloProgress, 'function');
+
+  // Test state composable
+  const stateMgr = useWaveloState({ initial: 'idle' });
+  assert.equal(stateMgr.state.value, 'idle');
+  assert.equal(stateMgr.stateProps.value.loading, false);
+  assert.equal(stateMgr.stateProps.value['data-wavelo-state'], 'idle');
+
+  stateMgr.startLoading();
+  assert.equal(stateMgr.state.value, 'loading');
+  assert.equal(stateMgr.stateProps.value.loading, true);
+  assert.equal(stateMgr.stateProps.value['data-wavelo-state'], 'loading');
+
+  stateMgr.setSuccess(0);
+  assert.equal(stateMgr.state.value, 'success');
+  assert.equal(stateMgr.stateProps.value.loading, false);
+
+  stateMgr.setError(0);
+  assert.equal(stateMgr.state.value, 'error');
+
+  stateMgr.reset();
+  assert.equal(stateMgr.state.value, 'idle');
+
+  // Test wrapAsync on resolved promise
+  let called = false;
+  const res = await stateMgr.wrapAsync(async () => {
+    called = true;
+    return 'ok';
+  });
+  assert.equal(res, 'ok');
+  assert.equal(called, true);
+  assert.equal(stateMgr.state.value, 'success');
+
+  // Test wrapAsync on rejected promise
+  await assert.rejects(async () => {
+    await stateMgr.wrapAsync(async () => {
+      throw new Error('fail');
+    });
+  });
+  assert.equal(stateMgr.state.value, 'error');
+
+  // Test progress composable
+  let completed = false;
+  const progressMgr = useWaveloProgress({
+    initial: 20,
+    onComplete: () => {
+      completed = true;
+    }
+  });
+  assert.equal(progressMgr.progress.value, 20);
+  assert.equal(progressMgr.percent.value, '20%');
+  assert.equal(progressMgr.isComplete.value, false);
+
+  progressMgr.setProgress(75);
+  assert.equal(progressMgr.progress.value, 75);
+  assert.equal(progressMgr.percent.value, '75%');
+
+  progressMgr.finish();
+  assert.equal(progressMgr.progress.value, 100);
+  assert.equal(progressMgr.percent.value, '100%');
+  assert.equal(progressMgr.isComplete.value, true);
+  assert.equal(completed, true);
+
+  progressMgr.reset(10);
+  assert.equal(progressMgr.progress.value, 10);
+  assert.equal(progressMgr.percent.value, '10%');
+});
