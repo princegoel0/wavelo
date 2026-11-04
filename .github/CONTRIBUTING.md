@@ -75,5 +75,7 @@ say why in the layout audit.
 
 ## Questions
 
-Open an issue. If you are unsure whether something is a defect or a design decision, the
-answer is usually in `PRD.md` or in the header comment of the script that enforces it.
+[Discussions](https://github.com/princegoel0/wavelo/discussions) is where "how do I do X
+with Wavelo" belongs; an issue is for a defect or a change to the surface. If you are unsure
+which one you have, the answer is usually in `PRD.md` or in the header comment of the script
+that enforces it.

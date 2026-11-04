@@ -42,7 +42,9 @@ only draw.
 ## Reporting
 
 Report privately through a [security advisory](https://github.com/princegoel0/wavelo/security/advisories/new).
-Do not open a public issue for an exploitable defect.
+Do not open a public issue for an exploitable defect. If that form is not available to you,
+open an issue whose title is only `security report` with no detail in it: the maintainer
+converts it into a private advisory and closes the issue.
 
 There is no formal response-time SLA: this is a pre-1.0 project maintained by one person.
 What is real is the shape of the fix — forward-port it in the next release, publish it as
