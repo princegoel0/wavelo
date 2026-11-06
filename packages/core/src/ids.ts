@@ -159,6 +159,7 @@ export const loaderIds = [
   "agent-tree",
   "aurora-ribbon",
   "glyph-matrix",
+  "ai-tool-handoff",
   "coin-flip",
   "biometric-reticle",
   "vault-tumbler",

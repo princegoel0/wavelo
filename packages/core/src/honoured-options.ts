@@ -166,6 +166,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "agent-tree": "26fbff6",
    "aurora-ribbon": "26fbff7",
    "glyph-matrix": "26fbff6",
+   "ai-tool-handoff": "27fbff6",
    "coin-flip": "27fbef6",
    "biometric-reticle": "27fbff6",
    "vault-tumbler": "27fbff6",

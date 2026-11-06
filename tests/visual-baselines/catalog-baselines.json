@@ -1091,6 +1091,13 @@
     "size": 9150,
     "hash": "2d2f64e2d647408162ed561e40aa689a2c6204691355154f4756022149d3676d"
   },
+  "ai-tool-handoff": {
+    "id": "ai-tool-handoff",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 8768,
+    "hash": "b85f773811c5899ef5bcdfdb4b1eb52b156f4e0d66b4af064603fb6cf3975b6e"
+  },
   "coin-flip": {
     "id": "coin-flip",
     "category": "creative",
@@ -1102,22 +1109,22 @@
     "id": "biometric-reticle",
     "category": "creative",
     "dimension": "2d",
-    "size": 12778,
-    "hash": "b21610e25d9ef77ec31a4e8cafe2c1a08558c3a179124a6bd6a201665a3ed9de"
+    "size": 12792,
+    "hash": "81bf14222cf58e9f29b8c9c07867e043f30ff85c37b758eb5238f690e5387a1e"
   },
   "vault-tumbler": {
     "id": "vault-tumbler",
     "category": "creative",
     "dimension": "2d",
-    "size": 12608,
-    "hash": "d45398c473fe0f5257d3fb1ecf650823ea97eb7fb9177eaa94d7288f5f7744a2"
+    "size": 12579,
+    "hash": "f1519e0036ba4c255d53b9a4b174dd799951fa3cb70a571225ab48f2567e2d18"
   },
   "git-rebase": {
     "id": "git-rebase",
     "category": "application",
     "dimension": "2d",
-    "size": 9686,
-    "hash": "032de9970c8ee1378b56fb41060195764bdb0e9600033adada9854861d89d930"
+    "size": 9776,
+    "hash": "d795b43b510e364b632060d3061d8a7fd4bb2be157d7073869cf2a1c4c52bf53"
   },
   "packet-pipeline": {
     "id": "packet-pipeline",
@@ -1137,21 +1144,21 @@
     "id": "gooey-metaballs",
     "category": "creative",
     "dimension": "2d",
-    "size": 9948,
-    "hash": "2f11c4ef141c175a4bf426d399a31508a4b66e675917fdee3cb9b95ad60a6794"
+    "size": 9875,
+    "hash": "955abcdaa5fa0778aac8372a88c13216b8757f1e1859c79fc9d60c40457ca5e7"
   },
   "camera-iris": {
     "id": "camera-iris",
     "category": "creative",
     "dimension": "2d",
-    "size": 13913,
-    "hash": "c433bac447da4157944e04498bbf11fd4b6013649426ae1776148197584bfbda"
+    "size": 14158,
+    "hash": "0243b9664a1eb384cf5ffc15b75b26b74921f6d2476325e6cc3b5ba287a6451f"
   },
   "newton-cradle": {
     "id": "newton-cradle",
     "category": "creative",
     "dimension": "2d",
-    "size": 10802,
-    "hash": "18b410e1e01e9a93369eda298c30b99a5950dd01b8bb41304be1dd74b4139fea"
+    "size": 11408,
+    "hash": "b980b7e9b42536de59dddbbf34fd46519b6c51bc36cc18d4958f43bf16be3754"
   }
 }

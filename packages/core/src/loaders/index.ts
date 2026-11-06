@@ -157,6 +157,7 @@ export { auroraBorealis } from './aurora-borealis.js';
 export { agentTree } from './agent-tree.js';
 export { auroraRibbon } from './aurora-ribbon.js';
 export { glyphMatrix } from './glyph-matrix.js';
+export { aiToolHandoff } from './ai-tool-handoff.js';
 export { coinFlip } from './coin-flip.js';
 export { biometricReticle } from './biometric-reticle.js';
 export { vaultTumbler } from './vault-tumbler.js';

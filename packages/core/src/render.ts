@@ -94,7 +94,8 @@ const PART_COUNTS: Record<string, number> = {
   'crt-scanline': 1,
   'gooey-metaballs': 2,
   'camera-iris': 6,
-  'newton-cradle': 3
+  'newton-cradle': 3,
+  'ai-tool-handoff': 3
 };
 
 /**

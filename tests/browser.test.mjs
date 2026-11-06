@@ -1571,7 +1571,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     `<div id="save-error">${renderLoader({ type: 'save-indicator', 'data-wavelo-state': 'error' }).html}</div>`,
     `<div id="undo-loading">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="undo-success">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'success' }).html}</div>`,
-    `<div id="undo-error">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'error' }).html}</div>`
+    `<div id="undo-error">${renderLoader({ type: 'undo-progress', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="handoff-loading">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="handoff-approval">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'approval' }).html}</div>`,
+    `<div id="handoff-success">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="handoff-error">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'error' }).html}</div>`
   ].join('');
 
   await setContentPage(microBody);
@@ -1630,7 +1634,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
       saveErrorColor,
       undoLoadingPartAnim,
       undoSuccessColor,
-      undoErrorColor
+      undoErrorColor,
+      handoffLoadingTravelAnim: getComputedStyle(document.querySelector('#handoff-loading .wavelo__part:nth-child(2)'), '::after').animationName,
+      handoffApprovalTravelAnim: getComputedStyle(document.querySelector('#handoff-approval .wavelo__part:nth-child(2)'), '::after').animationName,
+      handoffSuccessToolColor: getComputedStyle(document.querySelector('#handoff-success .wavelo__part:nth-child(3)')).borderColor,
+      handoffErrorToolColor: getComputedStyle(document.querySelector('#handoff-error .wavelo__part:nth-child(3)')).borderColor
     };
   });
 
@@ -1658,6 +1666,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.undoLoadingPartAnim, 'wavelo-drain');
   assert.equal(states.undoSuccessColor, 'rgb(34, 197, 94)');
   assert.equal(states.undoErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.handoffLoadingTravelAnim, 'wavelo-handoff-travel');
+  assert.equal(states.handoffApprovalTravelAnim, 'none');
+  assert.equal(states.handoffSuccessToolColor, 'rgb(34, 197, 94)');
+  assert.equal(states.handoffErrorToolColor, 'rgb(239, 68, 68)');
 });
 
 test('constellations render distinct astronomical star maps and connecting lines', async () => {
