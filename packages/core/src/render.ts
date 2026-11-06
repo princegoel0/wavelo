@@ -96,7 +96,8 @@ const PART_COUNTS: Record<string, number> = {
   'camera-iris': 6,
   'newton-cradle': 3,
   'ai-tool-handoff': 3,
-  'ai-image-develop': 9
+  'ai-image-develop': 9,
+  'document-extract': 4
 };
 
 /**
@@ -129,7 +130,8 @@ const SKELETON_TRACKS: Record<string, number> = {
   'skeleton-filter-panel': 5,
   'skeleton-map': 4,
   'page-skeleton': 5,
-  'ai-image-develop': 9
+  'ai-image-develop': 9,
+  'document-extract': 4
 };
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };

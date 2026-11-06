@@ -34,7 +34,7 @@ import { bundleSize, entries } from './bundle-entries.mjs';
 // Budgets are set from those two realities, not from a per-design ideal: each ceiling is a
 // clean half-KiB number sitting about 12% above the heaviest bundle it covers, and the
 // rounding lands a few tens of bytes either side of exactly 12%.
-const runtime = 51 * 1024;
+const runtime = 52 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can

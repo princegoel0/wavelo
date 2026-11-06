@@ -1579,7 +1579,10 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     `<div id="image-dev-loading">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="image-dev-preview">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'preview' }).html}</div>`,
     `<div id="image-dev-success">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'success' }).html}</div>`,
-    `<div id="image-dev-error">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'error' }).html}</div>`
+    `<div id="image-dev-error">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="doc-extract-loading">${renderLoader({ type: 'document-extract', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="doc-extract-success">${renderLoader({ type: 'document-extract', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="doc-extract-error">${renderLoader({ type: 'document-extract', 'data-wavelo-state': 'error' }).html}</div>`
   ].join('');
 
   await setContentPage(microBody);
@@ -1649,7 +1652,13 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
       imageDevPreviewOpacity: getComputedStyle(document.querySelector('#image-dev-preview .wavelo__part')).opacity,
       imageDevSuccessAnim: getComputedStyle(document.querySelector('#image-dev-success .wavelo__part')).animationName,
       imageDevSuccessColor: getComputedStyle(document.querySelector('#image-dev-success .wavelo')).borderColor,
-      imageDevErrorColor: getComputedStyle(document.querySelector('#image-dev-error .wavelo')).borderColor
+      imageDevErrorColor: getComputedStyle(document.querySelector('#image-dev-error .wavelo')).borderColor,
+      docExtractParts: document.querySelectorAll('#doc-extract-loading .wavelo__part').length,
+      docExtractLoadingBeamAnim: getComputedStyle(document.querySelector('#doc-extract-loading .wavelo__part:nth-child(2)')).animationName,
+      docExtractLoadingTokenAnim: getComputedStyle(document.querySelector('#doc-extract-loading .wavelo__part:nth-child(3)')).animationName,
+      docExtractSuccessBeamOpacity: getComputedStyle(document.querySelector('#doc-extract-success .wavelo__part:nth-child(2)')).opacity,
+      docExtractSuccessSchemaColor: getComputedStyle(document.querySelector('#doc-extract-success .wavelo__part:nth-child(4)')).borderColor,
+      docExtractErrorDocColor: getComputedStyle(document.querySelector('#doc-extract-error .wavelo__part:nth-child(1)')).borderColor
     };
   });
 
@@ -1690,6 +1699,13 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.imageDevSuccessAnim, 'none');
   assert.equal(states.imageDevSuccessColor, 'rgb(34, 197, 94)');
   assert.equal(states.imageDevErrorColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.docExtractParts, 4);
+  assert.equal(states.docExtractLoadingBeamAnim, 'wavelo-scan-beam');
+  assert.equal(states.docExtractLoadingTokenAnim, 'wavelo-extract-token');
+  assert.equal(states.docExtractSuccessBeamOpacity, '0');
+  assert.equal(states.docExtractSuccessSchemaColor, 'rgb(34, 197, 94)');
+  assert.equal(states.docExtractErrorDocColor, 'rgb(239, 68, 68)');
 });
 
 test('constellations render distinct astronomical star maps and connecting lines', async () => {

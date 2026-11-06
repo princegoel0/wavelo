@@ -161,6 +161,7 @@ export const loaderIds = [
   "glyph-matrix",
   "ai-tool-handoff",
   "ai-image-develop",
+  "document-extract",
   "coin-flip",
   "biometric-reticle",
   "vault-tumbler",

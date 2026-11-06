@@ -222,13 +222,13 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs (Shipped: **167 active designs** across 8 functional categories, including 26 authentic 3D designs).
+- At least 60 distinct animation designs (Shipped: **168 designs**, 168 active designs across 8 functional categories, including 26 authentic 3D designs).
 - At least 20 skeleton presets or primitives (Shipped: 27 skeleton designs).
 - At least 10 progress-indicator designs or variants (Shipped: 20 progress designs).
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
-- Dedicated AI/streaming loading lane (Shipped: 11 AI designs).
+- Dedicated AI/streaming loading lane (Shipped: 12 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **261 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Shipped: **264 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -474,7 +474,7 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 ### 5.11.1 Spatial Dimensionality Taxonomy (2D & 3D Loaders)
 
-- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 141 of the 167 designs are 2D.
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 142 of the 168 designs are 2D.
 - **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 26 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
 - **Dimensionality Requirements:**
   1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
@@ -1537,9 +1537,9 @@ Documentation must never drift from the underlying codebase. The following autom
 
 1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
    - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
-   - Enforces exact matches across code and docs for catalog counts (167 active designs, 261 named presets, 94 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
+   - Enforces exact matches across code and docs for catalog counts (168 active designs, 264 named presets, 96 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
 2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
-   - Validates that all 167 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
+   - Validates that all 168 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
 3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds `apps/docs` into `apps/docs/dist/index.html` and deploys to GitHub Pages on every merge to `main`.
 4. **Atomic Release Synchronization (`.github/workflows/release.yml`):**
@@ -2163,8 +2163,8 @@ A release is complete only when all mandatory release gates pass.
 
 The stable release must satisfy all mandatory criteria:
 
-- At least 60 distinct animation designs (Shipped: 167 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 261 named presets).
+- At least 60 distinct animation designs (Shipped: 168 active designs).
+- At least 100 total named presets and loading patterns (Shipped: 264 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.

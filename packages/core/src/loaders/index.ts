@@ -159,6 +159,7 @@ export { auroraRibbon } from './aurora-ribbon.js';
 export { glyphMatrix } from './glyph-matrix.js';
 export { aiToolHandoff } from './ai-tool-handoff.js';
 export { aiImageDevelop } from './ai-image-develop.js';
+export { documentExtract } from './document-extract.js';
 export { coinFlip } from './coin-flip.js';
 export { biometricReticle } from './biometric-reticle.js';
 export { vaultTumbler } from './vault-tumbler.js';

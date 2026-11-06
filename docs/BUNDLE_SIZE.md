@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 32,326 | 9.4 KB (9,591 B) | 10,240 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 59,905 | 13,764 | 13,824 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 59,615 | 13,533 | 14,336 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 280,571 | 49.9 KB (51,109 B) | 52,224 |
-| `@wavelo/core` + registry walk over all 167 designs | 280,574 | 49.9 KB (51,117 B) | 52,224 |
-| `@wavelo/react` | 281,403 | 50.4 KB (51,571 B) | 52,224 |
-| `@wavelo/vue` | 282,388 | 50.8 KB (52,043 B) | 52,224 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 32,389 | 9.4 KB (9,603 B) | 10,240 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 59,968 | 13,777 | 13,824 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 63,593 | 14,064 | 14,336 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 284,800 | 50.5 KB (51,665 B) | 53,248 |
+| `@wavelo/core` + registry walk over all 168 designs | 284,803 | 50.5 KB (51,673 B) | 53,248 |
+| `@wavelo/react` | 285,632 | 50.9 KB (52,134 B) | 53,248 |
+| `@wavelo/vue` | 286,617 | 51.3 KB (52,553 B) | 53,248 |
 | `@wavelo/angular` | 240,228 | 44.7 KB (45,780 B) | 52,224 |
-| `@wavelo/svelte` | 280,763 | 50.0 KB (51,217 B) | 52,224 |
-| `@wavelo/web-components` | 282,882 | 50.9 KB (52,098 B) | 52,224 |
-| `@wavelo/vanilla` | 281,093 | 50.2 KB (51,391 B) | 52,224 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 239,481 raw | 37,527 | — |
+| `@wavelo/svelte` | 284,992 | 50.6 KB (51,780 B) | 53,248 |
+| `@wavelo/web-components` | 287,111 | 51.4 KB (52,609 B) | 53,248 |
+| `@wavelo/vanilla` | 285,322 | 50.7 KB (51,948 B) | 53,248 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 243,267 raw | 38,071 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not

@@ -168,6 +168,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "glyph-matrix": "26fbff6",
    "ai-tool-handoff": "27fbff7",
    "ai-image-develop": "2653e7f",
+   "document-extract": "2673e76",
    "coin-flip": "27fbef6",
    "biometric-reticle": "27fbff6",
    "vault-tumbler": "27fbff6",

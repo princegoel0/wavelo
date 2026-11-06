@@ -1105,26 +1105,33 @@
     "size": 10753,
     "hash": "9e89a78413dd47e4bc886fedbba9b8907af13386318a57e5dc0fe13cd4e6e5c1"
   },
+  "document-extract": {
+    "id": "document-extract",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 9770,
+    "hash": "b9fa7ca35420cc11e0640e084f7893c35047a6dd98df0bef84360a8ba368b5a7"
+  },
   "coin-flip": {
     "id": "coin-flip",
     "category": "creative",
     "dimension": "3d",
-    "size": 9885,
-    "hash": "c641d6830fb266bfb389192379f3356306af3a3bad3c1f733e6f82061debfec9"
+    "size": 9898,
+    "hash": "48c7465a302b9117012ccef54cad1f4bfbebbd617fd82e0b70ebf62ec6f67b42"
   },
   "biometric-reticle": {
     "id": "biometric-reticle",
     "category": "creative",
     "dimension": "2d",
-    "size": 12342,
-    "hash": "90e701672efa227fff0ac61eb57accccc992e1cce2cfa3a8378e2764ec15c1cd"
+    "size": 12778,
+    "hash": "b21610e25d9ef77ec31a4e8cafe2c1a08558c3a179124a6bd6a201665a3ed9de"
   },
   "vault-tumbler": {
     "id": "vault-tumbler",
     "category": "creative",
     "dimension": "2d",
-    "size": 12363,
-    "hash": "8b0a054acd380ddc2aa5bc716850c5d71108d54370eb3e1c86ef915d70a6e294"
+    "size": 12608,
+    "hash": "d45398c473fe0f5257d3fb1ecf650823ea97eb7fb9177eaa94d7288f5f7744a2"
   },
   "git-rebase": {
     "id": "git-rebase",
@@ -1137,22 +1144,22 @@
     "id": "packet-pipeline",
     "category": "application",
     "dimension": "2d",
-    "size": 10127,
-    "hash": "d2faa1036bf5faef151e7595ec358610aa8206d5af42dd4734237593e20440b2"
+    "size": 10074,
+    "hash": "7d7381a8d9ab059de14dbf0423262645e378bb5703498122aa012f2f30fb8e07"
   },
   "crt-scanline": {
     "id": "crt-scanline",
     "category": "application",
     "dimension": "2d",
-    "size": 9624,
-    "hash": "618ff268eb3980af71fa5a8d99c9ebccdbd8d9d4bbfd2d3ad94bda65b61d626e"
+    "size": 9813,
+    "hash": "fc455affdfb915bb1d6886dcab98c9910ad5812562f07d7a711abd597fcfc799"
   },
   "gooey-metaballs": {
     "id": "gooey-metaballs",
     "category": "creative",
     "dimension": "2d",
-    "size": 9215,
-    "hash": "5ab3e3d0d6b1692a525a41a33817e06c23f4797d5de74020888d7358d52f354e"
+    "size": 9808,
+    "hash": "ad228ba02eeee959e3bea358f31ae414109463ab27f75dedb4d760d01198bd91"
   },
   "camera-iris": {
     "id": "camera-iris",
