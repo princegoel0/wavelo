@@ -160,6 +160,7 @@ export const loaderIds = [
   "aurora-ribbon",
   "glyph-matrix",
   "ai-tool-handoff",
+  "ai-image-develop",
   "coin-flip",
   "biometric-reticle",
   "vault-tumbler",

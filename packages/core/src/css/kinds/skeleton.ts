@@ -1,6 +1,7 @@
 import { css as shimmerFrames } from '../keyframes/shimmer.js';
 import { css as responseShimmerFrames } from '../keyframes/response-shimmer.js';
 import { css as chatTypingFrames } from '../keyframes/chat-typing.js';
+import { css as tileDevelopFrames } from '../keyframes/tile-develop.js';
 
 export const skeletonCss = `
 .wavelo--skeleton{display:block;width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));border-radius:var(--wavelo-radius,.4rem);background:linear-gradient(90deg,var(--wavelo-skeleton-base),var(--wavelo-skeleton-highlight),var(--wavelo-skeleton-base));background-size:200% 100%;animation:wavelo-shimmer var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -170,4 +171,22 @@ export const skeletonCss = `
 .wavelo--page-skeleton .wavelo__part:nth-child(3){width:85%;height:16px;margin-top:2px}
 .wavelo--page-skeleton .wavelo__part:nth-child(4){width:95%;height:26px}
 .wavelo--page-skeleton .wavelo__part:nth-child(5){width:70%;height:22px}
-${shimmerFrames}${responseShimmerFrames}${chatTypingFrames}`;
+.wavelo--ai-image-develop{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:var(--wavelo-gap,3px);width:var(--wavelo-width,var(--wavelo-size,7.5rem));height:var(--wavelo-height,var(--wavelo-size,7.5rem));aspect-ratio:1/1;padding:4px;border-radius:var(--wavelo-radius,8px);border:1px solid color-mix(in srgb,currentColor 14%,transparent);background:var(--wavelo-background,color-mix(in srgb,var(--wavelo-skeleton-base) 40%,transparent));overflow:hidden;animation:none}
+.wavelo--ai-image-develop .wavelo__part{display:block;width:100%;height:100%;border-radius:calc(var(--wavelo-radius,8px)*.4);background:linear-gradient(135deg,var(--wavelo-skeleton-base),var(--wavelo-skeleton-highlight));animation:wavelo-tile-develop var(--wavelo-duration,2.2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:opacity .25s ease,transform .25s ease}
+.wavelo--ai-image-develop .wavelo__part:nth-child(1){animation-delay:calc(var(--wavelo-duration,2.2s)*-.15)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,2.2s)*-.55)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,2.2s)*-.3)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,2.2s)*-.7)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(5){animation-delay:0s;background:linear-gradient(135deg,color-mix(in srgb,currentColor 16%,var(--wavelo-skeleton-base)),var(--wavelo-skeleton-highlight))}
+.wavelo--ai-image-develop .wavelo__part:nth-child(6){animation-delay:calc(var(--wavelo-duration,2.2s)*-.85)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration,2.2s)*-.4)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,2.2s)*-.1)}
+.wavelo--ai-image-develop .wavelo__part:nth-child(9){animation-delay:calc(var(--wavelo-duration,2.2s)*-.65)}
+.wavelo--ai-image-develop:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--ai-image-develop[data-wavelo-state="preview"] .wavelo__part{opacity:.18;transform:scale(.95)}
+.wavelo--ai-image-develop[data-wavelo-state="preview"]{border-color:color-mix(in srgb,var(--wavelo-secondary-color,#818cf8) 60%,transparent);box-shadow:0 0 10px -2px color-mix(in srgb,var(--wavelo-secondary-color,#818cf8) 25%,transparent)}
+.wavelo--ai-image-develop[data-wavelo-state="success"] .wavelo__part{opacity:0;transform:scale(1)}
+.wavelo--ai-image-develop[data-wavelo-state="success"]{border-color:var(--wavelo-success-color,#22c55e)}
+.wavelo--ai-image-develop:is([data-wavelo-state="error"],[data-wavelo-state="canceled"]) .wavelo__part{opacity:.3;background:color-mix(in srgb,var(--wavelo-error-color,#ef4444) 30%,var(--wavelo-skeleton-base))}
+.wavelo--ai-image-develop:is([data-wavelo-state="error"],[data-wavelo-state="canceled"]){border-color:var(--wavelo-error-color,#ef4444)}
+${shimmerFrames}${responseShimmerFrames}${chatTypingFrames}${tileDevelopFrames}`;

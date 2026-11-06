@@ -27,12 +27,12 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 166 designs, each visually distinct, built from 12
+The catalog holds 167 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 27 configuration keys.
 
-Ten of them are the streaming and AI workflow lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
-`token-stream`, `ai-shimmer`, `neural-grid`, `ai-tool-handoff`, plus the composite `skeleton-chat`,
+Eleven of them are the streaming and AI workflow lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
+`token-stream`, `ai-shimmer`, `neural-grid`, `ai-tool-handoff`, `ai-image-develop`, plus the composite `skeleton-chat`,
 `skeleton-code` and `skeleton-inbox` layouts): what an assistant shows while it is
 composing an answer, which no loading library has as a category. Thirteen more are the
 progress family that real products report with a number — a battery, a half-ring gauge,

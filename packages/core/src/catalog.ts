@@ -175,6 +175,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['aurora-ribbon', 'Aurora input ribbon', 'ai', 'ring', 'Fluid rotating ambient gradient ribbon hugging a container with subtle glowing blur', '2d'],
   ['glyph-matrix', 'Glyph decryption', 'ai', 'shape', 'Monospace matrix cells rapidly flipping through alphanumeric runes into stable state', '2d'],
   ['ai-tool-handoff', 'AI tool handoff', 'ai', 'bars', 'Tool execution pipeline with interactive approval, completion, and error states', '2d'],
+  ['ai-image-develop', 'AI image develop', 'ai', 'skeleton', 'Image generation development canvas with 3x3 staggered latent tile formation and preview frame', '2d'],
   ['coin-flip', '3D Coin flip', 'creative', 'shape', 'Isometric bevelled coin performing continuous 3D rotation with specular glint', '3d'],
   ['biometric-reticle', 'Biometric reticle', 'creative', 'rings', 'Concentric biometric fingerprint ridges with oscillating radial radar laser sweep', '2d'],
   ['vault-tumbler', 'Vault tumbler', 'creative', 'rings', 'Dual counter-rotating notched tumbler gear rings snapping into alignment with elastic notch latch', '2d'],
@@ -238,6 +239,7 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['terminal-scan', 'crt-scanline'], ['viscous-drops', 'gooey-metaballs'],
   ['camera-shutter', 'camera-iris'], ['kinetic-balls', 'newton-cradle'],
   ['tool-approval', 'ai-tool-handoff'], ['tool-call', 'ai-tool-handoff'],
+  ['image-generation', 'ai-image-develop'], ['ai-image', 'ai-image-develop'],
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

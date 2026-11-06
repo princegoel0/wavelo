@@ -1575,7 +1575,11 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     `<div id="handoff-loading">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="handoff-approval">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'approval' }).html}</div>`,
     `<div id="handoff-success">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'success' }).html}</div>`,
-    `<div id="handoff-error">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'error' }).html}</div>`
+    `<div id="handoff-error">${renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="image-dev-loading">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="image-dev-preview">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'preview' }).html}</div>`,
+    `<div id="image-dev-success">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'success' }).html}</div>`,
+    `<div id="image-dev-error">${renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'error' }).html}</div>`
   ].join('');
 
   await setContentPage(microBody);
@@ -1638,7 +1642,14 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
       handoffLoadingTravelAnim: getComputedStyle(document.querySelector('#handoff-loading .wavelo__part:nth-child(2)'), '::after').animationName,
       handoffApprovalTravelAnim: getComputedStyle(document.querySelector('#handoff-approval .wavelo__part:nth-child(2)'), '::after').animationName,
       handoffSuccessToolColor: getComputedStyle(document.querySelector('#handoff-success .wavelo__part:nth-child(3)')).borderColor,
-      handoffErrorToolColor: getComputedStyle(document.querySelector('#handoff-error .wavelo__part:nth-child(3)')).borderColor
+      handoffErrorToolColor: getComputedStyle(document.querySelector('#handoff-error .wavelo__part:nth-child(3)')).borderColor,
+      imageDevLoadingParts: document.querySelectorAll('#image-dev-loading .wavelo__part').length,
+      imageDevLoadingAnim: getComputedStyle(document.querySelector('#image-dev-loading .wavelo__part')).animationName,
+      imageDevPreviewAnim: getComputedStyle(document.querySelector('#image-dev-preview .wavelo__part')).animationName,
+      imageDevPreviewOpacity: getComputedStyle(document.querySelector('#image-dev-preview .wavelo__part')).opacity,
+      imageDevSuccessAnim: getComputedStyle(document.querySelector('#image-dev-success .wavelo__part')).animationName,
+      imageDevSuccessColor: getComputedStyle(document.querySelector('#image-dev-success .wavelo')).borderColor,
+      imageDevErrorColor: getComputedStyle(document.querySelector('#image-dev-error .wavelo')).borderColor
     };
   });
 
@@ -1671,6 +1682,14 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.handoffApprovalTravelAnim, 'none');
   assert.equal(states.handoffSuccessToolColor, 'rgb(34, 197, 94)');
   assert.equal(states.handoffErrorToolColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.imageDevLoadingParts, 9);
+  assert.equal(states.imageDevLoadingAnim, 'wavelo-tile-develop');
+  assert.equal(states.imageDevPreviewAnim, 'none');
+  assert.equal(states.imageDevPreviewOpacity, '0.18');
+  assert.equal(states.imageDevSuccessAnim, 'none');
+  assert.equal(states.imageDevSuccessColor, 'rgb(34, 197, 94)');
+  assert.equal(states.imageDevErrorColor, 'rgb(239, 68, 68)');
 });
 
 test('constellations render distinct astronomical star maps and connecting lines', async () => {

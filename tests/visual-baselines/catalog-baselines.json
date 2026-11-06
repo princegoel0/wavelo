@@ -1098,26 +1098,33 @@
     "size": 8768,
     "hash": "b85f773811c5899ef5bcdfdb4b1eb52b156f4e0d66b4af064603fb6cf3975b6e"
   },
+  "ai-image-develop": {
+    "id": "ai-image-develop",
+    "category": "ai",
+    "dimension": "2d",
+    "size": 10753,
+    "hash": "9e89a78413dd47e4bc886fedbba9b8907af13386318a57e5dc0fe13cd4e6e5c1"
+  },
   "coin-flip": {
     "id": "coin-flip",
     "category": "creative",
     "dimension": "3d",
-    "size": 10005,
-    "hash": "071be6f20dd7de91163d3794cd1a3416e6cc8c7721c05313ce5e04f6b722a9d5"
+    "size": 9885,
+    "hash": "c641d6830fb266bfb389192379f3356306af3a3bad3c1f733e6f82061debfec9"
   },
   "biometric-reticle": {
     "id": "biometric-reticle",
     "category": "creative",
     "dimension": "2d",
-    "size": 12792,
-    "hash": "81bf14222cf58e9f29b8c9c07867e043f30ff85c37b758eb5238f690e5387a1e"
+    "size": 12342,
+    "hash": "90e701672efa227fff0ac61eb57accccc992e1cce2cfa3a8378e2764ec15c1cd"
   },
   "vault-tumbler": {
     "id": "vault-tumbler",
     "category": "creative",
     "dimension": "2d",
-    "size": 12579,
-    "hash": "f1519e0036ba4c255d53b9a4b174dd799951fa3cb70a571225ab48f2567e2d18"
+    "size": 12363,
+    "hash": "8b0a054acd380ddc2aa5bc716850c5d71108d54370eb3e1c86ef915d70a6e294"
   },
   "git-rebase": {
     "id": "git-rebase",
@@ -1137,15 +1144,15 @@
     "id": "crt-scanline",
     "category": "application",
     "dimension": "2d",
-    "size": 9887,
-    "hash": "ee2415c0d0085939c7d96468cd4b331eae7a02ddafd26aba31e5cfeea3646e2f"
+    "size": 9624,
+    "hash": "618ff268eb3980af71fa5a8d99c9ebccdbd8d9d4bbfd2d3ad94bda65b61d626e"
   },
   "gooey-metaballs": {
     "id": "gooey-metaballs",
     "category": "creative",
     "dimension": "2d",
-    "size": 9875,
-    "hash": "955abcdaa5fa0778aac8372a88c13216b8757f1e1859c79fc9d60c40457ca5e7"
+    "size": 9215,
+    "hash": "5ab3e3d0d6b1692a525a41a33817e06c23f4797d5de74020888d7358d52f354e"
   },
   "camera-iris": {
     "id": "camera-iris",

@@ -672,11 +672,15 @@ test('micro-interactions pass through data-wavelo-state', () => {
     assert.match(undo.html, new RegExp(`data-wavelo-state="${state}"`));
     const handoff = renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': state });
     assert.match(handoff.html, new RegExp(`data-wavelo-state="${state}"`));
+    const imageDev = renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': state });
+    assert.match(imageDev.html, new RegExp(`data-wavelo-state="${state}"`));
   }
   for (const extraState of ['approval', 'denied']) {
     const handoff = renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': extraState });
     assert.match(handoff.html, new RegExp(`data-wavelo-state="${extraState}"`));
   }
+  const previewDev = renderLoader({ type: 'ai-image-develop', 'data-wavelo-state': 'preview' });
+  assert.match(previewDev.html, /data-wavelo-state="preview"/);
 });
 
 test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
@@ -687,10 +691,11 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloCategories.includes(cat));
   }
   assert.ok(Array.isArray(WaveloTypes));
-  assert.equal(WaveloTypes.length, 166);
+  assert.equal(WaveloTypes.length, 167);
   assert.equal(WaveloTypes, loaderIds);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));
   assert.ok(WaveloTypes.includes('ai-tool-handoff'));
+  assert.ok(WaveloTypes.includes('ai-image-develop'));
 });
 

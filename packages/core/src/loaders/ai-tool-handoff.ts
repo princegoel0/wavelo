@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "ai-tool-handoff", name: "AI tool handoff", category: "ai", dimension: "2d", kind: "bars", description: "Tool execution pipeline with interactive approval, completion, and error states", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-tool-handoff" };
+const definition: LoaderDefinition = { id: "ai-tool-handoff", name: "AI tool handoff", category: "ai", dimension: "2d", kind: "bars", description: "Tool execution pipeline with interactive approval, completion, and error states", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-tool-handoff" };
 const styles = `${baseCss}${barsCss}`;
 
 export const aiToolHandoff = (config: Omit<LoaderConfig, 'type'> = {}) =>
