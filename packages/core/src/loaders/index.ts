@@ -99,6 +99,7 @@ export { skeletonCommand } from './skeleton-command.js';
 export { skeletonFeed } from './skeleton-feed.js';
 export { skeletonFilterPanel } from './skeleton-filter-panel.js';
 export { skeletonMap } from './skeleton-map.js';
+export { skeletonVideoPlayer } from './skeleton-video-player.js';
 export { progressBar } from './progress-bar.js';
 export { progressRing } from './progress-ring.js';
 export { progressSteps } from './progress-steps.js';

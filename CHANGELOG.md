@@ -97,7 +97,7 @@
 - **`cube` is a closed cube:** it shipped three quads, so for half its turn every face was turned away and the loader read as an open shell — measured at 12 of 24 sampled phases with no face toward the camera. Each face now carries its opposite, turned outward, and exactly three faces face the camera at every phase.
 - The Chromium suite's part-stacking check compares transforms as well as bounding boxes. Two ellipses authored at 60° and 120° fill the same axis-aligned box while being plainly different drawings; the check still fires when two parts collapse onto the same transform, which is the bug it exists for.
 - **Studio & DX Upgrades:** Added high-contrast canvas background modes (Pure Black `#000` and Brand gradient) and standalone accessible HTML & CSS exporter tab with `currentColor` inheritance and `@media (prefers-reduced-motion: reduce)`.
-- **Catalog Totals:** 168 public IDs, 168 active designs, no deprecated aliases, 264 named presets, 96 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
+- **Catalog Totals:** 169 public IDs, 169 active designs, no deprecated aliases, 268 named presets, 99 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
 
 ## 0.3.0
 

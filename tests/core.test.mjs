@@ -676,6 +676,8 @@ test('micro-interactions pass through data-wavelo-state', () => {
     assert.match(imageDev.html, new RegExp(`data-wavelo-state="${state}"`));
     const docExtract = renderLoader({ type: 'document-extract', 'data-wavelo-state': state });
     assert.match(docExtract.html, new RegExp(`data-wavelo-state="${state}"`));
+    const videoPlayer = renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': state });
+    assert.match(videoPlayer.html, new RegExp(`data-wavelo-state="${state}"`));
   }
   for (const extraState of ['approval', 'denied']) {
     const handoff = renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': extraState });
@@ -685,6 +687,8 @@ test('micro-interactions pass through data-wavelo-state', () => {
   assert.match(previewDev.html, /data-wavelo-state="preview"/);
   const canceledDoc = renderLoader({ type: 'document-extract', 'data-wavelo-state': 'canceled' });
   assert.match(canceledDoc.html, /data-wavelo-state="canceled"/);
+  const readyVideo = renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'ready' });
+  assert.match(readyVideo.html, /data-wavelo-state="ready"/);
 });
 
 test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
@@ -695,12 +699,13 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloCategories.includes(cat));
   }
   assert.ok(Array.isArray(WaveloTypes));
-  assert.equal(WaveloTypes.length, 168);
+  assert.equal(WaveloTypes.length, 169);
   assert.equal(WaveloTypes, loaderIds);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));
   assert.ok(WaveloTypes.includes('ai-tool-handoff'));
   assert.ok(WaveloTypes.includes('ai-image-develop'));
   assert.ok(WaveloTypes.includes('document-extract'));
+  assert.ok(WaveloTypes.includes('skeleton-video-player'));
 });
 

@@ -18,7 +18,7 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**166 of the 168 designs cost no layout per frame.** Two do, each for a reason a
+**167 of the 169 designs cost no layout per frame.** Two do, each for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
@@ -29,7 +29,7 @@ transform would take away:
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 166.
+frame for a design that animates a box property, and zero for the other 167.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -76,13 +76,13 @@ Gzipped together, as shipped — every slice, cheapest first:
 | `overlay` | 1,899 | `progress` | 4,786 |
 | `scroll` | 2,117 | `orbit` | 5,116 |
 | `pulse` | 3,058 | `wave` | 5,667 |
-| `bars` | 3,710 | `skeleton` | 5,973 |
+| `bars` | 3,710 | `skeleton` | 6,384 |
 | `rings` | 4,514 | `dots` | 7,277 |
 | `ring` | 4,747 | `shape` | 8,642 |
 
 The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,474 bytes of every row above. The whole
-catalog sheet is 38,071 bytes gzipped, loaded once, for all 168 designs. Read down the
+catalog sheet is 38,474 bytes gzipped, loaded once, for all 169 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every

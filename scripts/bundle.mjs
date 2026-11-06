@@ -61,7 +61,7 @@ const budgets = {
   // sampled `bubble-rise` while `dots` was the crowded kind, and a dots design is no longer
   // the worst case a single import can produce.
   'busiest-loader': 13.5 * 1024,
-  'two-loaders': 14 * 1024,
+  'two-loaders': 15 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,

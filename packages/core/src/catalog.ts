@@ -116,6 +116,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['skeleton-feed', 'Skeleton feed post', 'skeleton', 'skeleton', 'Social feed post placeholder with avatar, author header, media box, and action bar', '2d'],
   ['skeleton-filter-panel', 'Skeleton filter panel', 'skeleton', 'skeleton', 'Faceted search filter panel placeholder with chips, checkbox groups, and range slider', '2d'],
   ['skeleton-map', 'Skeleton map view', 'skeleton', 'skeleton', 'Geographic map view placeholder with pin markers, route path, and zoom controls', '2d'],
+  ['skeleton-video-player', 'Skeleton video player', 'skeleton', 'skeleton', 'Video player 16:9 placeholder with center play badge, scrubber timeline, and controls strip', '2d'],
   ['progress-bar', 'Progress bar', 'progress', 'progress', 'Determinate progress bar', '2d'],
   ['progress-ring', 'Progress ring', 'progress', 'progress', 'Determinate circular progress', '2d'],
   ['progress-steps', 'Progress steps', 'progress', 'progress', 'Multi-step progress', '2d'],
@@ -242,6 +243,7 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['tool-approval', 'ai-tool-handoff'], ['tool-call', 'ai-tool-handoff'],
   ['image-generation', 'ai-image-develop'], ['ai-image', 'ai-image-develop'],
   ['ocr-extract', 'document-extract'], ['document-scan', 'document-extract'],
+  ['video-player', 'skeleton-video-player'], ['video-skeleton', 'skeleton-video-player'], ['player-loading', 'skeleton-video-player'],
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

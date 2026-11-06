@@ -101,6 +101,7 @@ export const loaderIds = [
   "skeleton-feed",
   "skeleton-filter-panel",
   "skeleton-map",
+  "skeleton-video-player",
   "progress-bar",
   "progress-ring",
   "progress-steps",

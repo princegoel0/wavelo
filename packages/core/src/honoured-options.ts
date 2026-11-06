@@ -108,6 +108,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "skeleton-feed": "26dbdfe",
    "skeleton-filter-panel": "26dbdfe",
    "skeleton-map": "26dbff6",
+   "skeleton-video-player": "2653e77",
    "progress-bar": "3e77e76",
    "progress-ring": "1f77c76",
    "progress-steps": "3e77e7e",
