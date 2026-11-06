@@ -1585,7 +1585,16 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
     `<div id="doc-extract-error">${renderLoader({ type: 'document-extract', 'data-wavelo-state': 'error' }).html}</div>`,
     `<div id="video-player-loading">${renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'loading' }).html}</div>`,
     `<div id="video-player-ready">${renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'ready' }).html}</div>`,
-    `<div id="video-player-error">${renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'error' }).html}</div>`
+    `<div id="video-player-error">${renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="transcode-loading">${renderLoader({ type: 'media-transcode', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="transcode-ready">${renderLoader({ type: 'media-transcode', 'data-wavelo-state': 'ready' }).html}</div>`,
+    `<div id="transcode-error">${renderLoader({ type: 'media-transcode', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="doc-viewer-loading">${renderLoader({ type: 'skeleton-document-viewer', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="doc-viewer-ready">${renderLoader({ type: 'skeleton-document-viewer', 'data-wavelo-state': 'ready' }).html}</div>`,
+    `<div id="doc-viewer-error">${renderLoader({ type: 'skeleton-document-viewer', 'data-wavelo-state': 'error' }).html}</div>`,
+    `<div id="eclipse-loading">${renderLoader({ type: 'eclipse-corona', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="galaxy-loading">${renderLoader({ type: 'spiral-galaxy', 'data-wavelo-state': 'loading' }).html}</div>`,
+    `<div id="nebula-loading">${renderLoader({ type: 'nebula-drift', 'data-wavelo-state': 'loading' }).html}</div>`
   ].join('');
 
   await setContentPage(microBody);
@@ -1666,7 +1675,16 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
       videoPlayerLoadingBadgeAnim: getComputedStyle(document.querySelector('#video-player-loading .wavelo__part:nth-child(2)')).animationName,
       videoPlayerReadyBorderColor: getComputedStyle(document.querySelector('#video-player-ready .wavelo__part:nth-child(1)')).borderColor,
       videoPlayerReadyBadgeColor: getComputedStyle(document.querySelector('#video-player-ready .wavelo__part:nth-child(2)')).borderColor,
-      videoPlayerErrorBorderColor: getComputedStyle(document.querySelector('#video-player-error .wavelo__part:nth-child(1)')).borderColor
+      videoPlayerErrorBorderColor: getComputedStyle(document.querySelector('#video-player-error .wavelo__part:nth-child(1)')).borderColor,
+      transcodeParts: document.querySelectorAll('#transcode-loading .wavelo__part').length,
+      transcodeReadyPart2Color: getComputedStyle(document.querySelector('#transcode-ready .wavelo__part:nth-child(2)')).borderColor,
+      transcodeErrorPart2Color: getComputedStyle(document.querySelector('#transcode-error .wavelo__part:nth-child(2)')).borderColor,
+      docViewerParts: document.querySelectorAll('#doc-viewer-loading .wavelo__part').length,
+      docViewerReadyPart1Color: getComputedStyle(document.querySelector('#doc-viewer-ready .wavelo__part:nth-child(1)')).borderColor,
+      docViewerErrorPart1Color: getComputedStyle(document.querySelector('#doc-viewer-error .wavelo__part:nth-child(1)')).borderColor,
+      eclipseParts: document.querySelectorAll('#eclipse-loading .wavelo__part').length,
+      galaxyParts: document.querySelectorAll('#galaxy-loading .wavelo__part').length,
+      nebulaParts: document.querySelectorAll('#nebula-loading .wavelo__part').length
     };
   });
 
@@ -1720,6 +1738,18 @@ test('specialized skeletons and micro-interactions render distinct geometry and 
   assert.equal(states.videoPlayerReadyBorderColor, 'rgb(34, 197, 94)');
   assert.equal(states.videoPlayerReadyBadgeColor, 'rgb(34, 197, 94)');
   assert.equal(states.videoPlayerErrorBorderColor, 'rgb(239, 68, 68)');
+
+  assert.equal(states.transcodeParts, 3);
+  assert.equal(states.transcodeReadyPart2Color, 'rgb(34, 197, 94)');
+  assert.equal(states.transcodeErrorPart2Color, 'rgb(239, 68, 68)');
+
+  assert.equal(states.docViewerParts, 4);
+  assert.equal(states.docViewerReadyPart1Color, 'rgb(34, 197, 94)');
+  assert.equal(states.docViewerErrorPart1Color, 'rgb(239, 68, 68)');
+
+  assert.equal(states.eclipseParts, 3);
+  assert.equal(states.galaxyParts, 4);
+  assert.equal(states.nebulaParts, 3);
 });
 
 test('constellations render distinct astronomical star maps and connecting lines', async () => {

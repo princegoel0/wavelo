@@ -6,18 +6,18 @@ fails the build rather than getting documented.
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 32,441 | 9.4 KB (9,612 B) | 10,240 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 60,020 | 13,787 | 13,824 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 67,964 | 14,660 | 15,360 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 289,503 | 51.0 KB (52,179 B) | 53,248 |
-| `@wavelo/core` + registry walk over all 169 designs | 289,506 | 51.0 KB (52,187 B) | 53,248 |
-| `@wavelo/react` | 290,335 | 51.4 KB (52,607 B) | 53,248 |
-| `@wavelo/vue` | 291,320 | 51.8 KB (53,011 B) | 53,248 |
-| `@wavelo/angular` | 240,228 | 44.7 KB (45,780 B) | 52,224 |
-| `@wavelo/svelte` | 289,695 | 51.1 KB (52,298 B) | 53,248 |
-| `@wavelo/web-components` | 291,814 | 51.8 KB (53,073 B) | 53,248 |
-| `@wavelo/vanilla` | 290,025 | 51.2 KB (52,458 B) | 53,248 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 247,614 raw | 38,474 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 32,573 | 9.4 KB (9,662 B) | 10,240 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 60,152 | 13,838 | 14,848 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 71,297 | 14,985 | 15,872 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 306,088 | 53.0 KB (54,334 B) | 56,320 |
+| `@wavelo/core` + registry walk over all 174 designs | 306,091 | 53.1 KB (54,341 B) | 56,320 |
+| `@wavelo/react` | 306,920 | 53.5 KB (54,768 B) | 56,320 |
+| `@wavelo/vue` | 307,905 | 53.9 KB (55,243 B) | 56,320 |
+| `@wavelo/angular` | 240,228 | 44.7 KB (45,780 B) | 53,248 |
+| `@wavelo/svelte` | 306,280 | 53.2 KB (54,441 B) | 56,320 |
+| `@wavelo/web-components` | 308,399 | 54.1 KB (55,352 B) | 56,320 |
+| `@wavelo/vanilla` | 306,610 | 53.3 KB (54,603 B) | 56,320 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 262,570 raw | 40,032 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not

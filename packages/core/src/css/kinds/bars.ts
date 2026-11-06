@@ -5,6 +5,7 @@ import { css as pianoFrames } from '../keyframes/piano.js';
 import { css as fireFrames } from '../keyframes/fire.js';
 import { css as packetFlowFrames } from '../keyframes/packet-flow.js';
 import { css as handoffFrames } from '../keyframes/handoff.js';
+import { css as transcodeScanFrames } from '../keyframes/transcode-scan.js';
 
 export const barsCss = `
 .wavelo--bars{align-items:flex-end;gap:var(--wavelo-gap,3px)}
@@ -82,4 +83,22 @@ export const barsCss = `
 .wavelo--ai-tool-handoff:is([data-wavelo-state="error"],[data-wavelo-state="denied"]) .wavelo__part:nth-child(2):before{content:"\\00d7";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:700;line-height:1;z-index:2}
 .wavelo--ai-tool-handoff:is([data-wavelo-state="error"],[data-wavelo-state="denied"]) .wavelo__part:nth-child(3){border-color:var(--wavelo-error-color,#ef4444)}
 .wavelo--ai-tool-handoff:is([data-wavelo-state="error"],[data-wavelo-state="denied"]) .wavelo__part:nth-child(3):before{background:var(--wavelo-error-color,#ef4444)}
-${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}${packetFlowFrames}${handoffFrames}`;
+.wavelo--media-transcode{display:flex;align-items:center;justify-content:space-between;width:var(--wavelo-width,calc(var(--wavelo-size,2.5rem)*1.8));height:var(--wavelo-height,calc(var(--wavelo-size,2.5rem)*.7));margin:auto;border:0}
+.wavelo--media-transcode .wavelo__part{border-radius:0;animation:none}
+.wavelo--media-transcode .wavelo__part:nth-child(1){position:relative;width:30%;height:80%;border:var(--wavelo-stroke,2px) solid currentColor;border-radius:3px;background:color-mix(in srgb,currentColor 10%,transparent);flex-shrink:0;overflow:hidden;animation:wavelo-pulse var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--media-transcode .wavelo__part:nth-child(1):before{content:"";position:absolute;inset:2px 2px auto 2px;height:3px;background:repeating-linear-gradient(90deg,currentColor 0 3px,transparent 3px 6px)}
+.wavelo--media-transcode .wavelo__part:nth-child(1):after{content:"";position:absolute;inset:auto 2px 2px 2px;height:3px;background:repeating-linear-gradient(90deg,currentColor 0 3px,transparent 3px 6px)}
+.wavelo--media-transcode .wavelo__part:nth-child(2){position:relative;width:24%;height:92%;border:var(--wavelo-stroke,2px) solid var(--wavelo-secondary-color,#38bdf8);border-radius:4px;background:color-mix(in srgb,var(--wavelo-secondary-color,#38bdf8) 12%,transparent);flex-shrink:0;overflow:hidden}
+.wavelo--media-transcode .wavelo__part:nth-child(2):before{content:"";position:absolute;left:0;right:0;height:3px;top:0;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 6px var(--wavelo-secondary-color,#38bdf8);animation:wavelo-transcode-scan var(--wavelo-duration,1.4s) ease-in-out infinite alternate var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--media-transcode .wavelo__part:nth-child(3){position:relative;width:30%;height:80%;border:var(--wavelo-stroke,2px) dashed color-mix(in srgb,currentColor 40%,transparent);border-radius:4px;background:color-mix(in srgb,currentColor 6%,transparent);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.wavelo--media-transcode .wavelo__part:nth-child(3):before{content:"";width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid color-mix(in srgb,currentColor 50%,transparent);margin-left:2px;animation:wavelo-pulse var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1.4s)*-.7)}
+.wavelo--media-transcode:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--media-transcode:not([data-wavelo-state="loading"]) .wavelo__part:before{animation:none}
+.wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(2){border-color:var(--wavelo-success-color,#22c55e);background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 15%,transparent)}
+.wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(2):before{display:none}
+.wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(3){border-style:solid;border-color:var(--wavelo-success-color,#22c55e);background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 15%,transparent)}
+.wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(3):before{border-left-color:var(--wavelo-success-color,#22c55e)}
+.wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(2){border-color:var(--wavelo-error-color,#ef4444);background:color-mix(in srgb,var(--wavelo-error-color,#ef4444) 15%,transparent)}
+.wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(2):before{content:"\\00d7";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--wavelo-error-color,#ef4444);font-size:12px;font-weight:700;line-height:1;background:none;box-shadow:none}
+.wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(3){border-color:var(--wavelo-error-color,#ef4444)}
+${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}${packetFlowFrames}${handoffFrames}${transcodeScanFrames}`;

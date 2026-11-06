@@ -117,6 +117,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['skeleton-filter-panel', 'Skeleton filter panel', 'skeleton', 'skeleton', 'Faceted search filter panel placeholder with chips, checkbox groups, and range slider', '2d'],
   ['skeleton-map', 'Skeleton map view', 'skeleton', 'skeleton', 'Geographic map view placeholder with pin markers, route path, and zoom controls', '2d'],
   ['skeleton-video-player', 'Skeleton video player', 'skeleton', 'skeleton', 'Video player 16:9 placeholder with center play badge, scrubber timeline, and controls strip', '2d'],
+  ['skeleton-document-viewer', 'Document viewer skeleton', 'skeleton', 'skeleton', 'Document review workspace with top toolbar, thumbnail sidebar, and portrait sheet', '2d'],
   ['progress-bar', 'Progress bar', 'progress', 'progress', 'Determinate progress bar', '2d'],
   ['progress-ring', 'Progress ring', 'progress', 'progress', 'Determinate circular progress', '2d'],
   ['progress-steps', 'Progress steps', 'progress', 'progress', 'Multi-step progress', '2d'],
@@ -183,6 +184,10 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['vault-tumbler', 'Vault tumbler', 'creative', 'rings', 'Dual counter-rotating notched tumbler gear rings snapping into alignment with elastic notch latch', '2d'],
   ['git-rebase', 'Git commit graph', 'application', 'dots', 'Branch commits splitting, advancing, and merging into trunk with elastic snap', '2d'],
   ['packet-pipeline', 'Packet burst pipeline', 'application', 'bars', 'Modular circuit bus with high-speed neon data packet pulses', '2d'],
+  ['media-transcode', 'Media transcode', 'application', 'bars', 'Filmstrip processing frames through transcode optical window with state transitions', '2d'],
+  ['eclipse-corona', 'Eclipse corona', 'creative', 'orbit', 'Lateral lunar transit across luminous solar disk revealing radiant corona halo', '2d'],
+  ['spiral-galaxy', 'Spiral galaxy', 'creative', 'orbit', 'Luminous galactic core with logarithmic curved spiral arms and cosmic dust rotation', '2d'],
+  ['nebula-drift', 'Nebula drift', 'creative', 'wave', 'Interstellar gas clouds gently drifting with multi-spectrum luminescence', '2d'],
   ['crt-scanline', 'Retro CRT scanline bar', 'application', 'progress', 'Bracketed ASCII terminal progress bar with stepped fill and horizontal phosphor scanline', '2d'],
   ['gooey-metaballs', 'Gooey metaballs', 'creative', 'dots', 'Fluid droplets stretching, coalescing, and pulling apart with visceral surface tension', '2d'],
   ['camera-iris', 'Camera aperture iris', 'creative', 'shape', 'Polygonal blades rotating inward to constrict and expand an optical aperture', '2d'],
@@ -244,6 +249,11 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['image-generation', 'ai-image-develop'], ['ai-image', 'ai-image-develop'],
   ['ocr-extract', 'document-extract'], ['document-scan', 'document-extract'],
   ['video-player', 'skeleton-video-player'], ['video-skeleton', 'skeleton-video-player'], ['player-loading', 'skeleton-video-player'],
+  ['media-processing', 'media-transcode'], ['transcoding', 'media-transcode'], ['video-transcode', 'media-transcode'],
+  ['document-viewer', 'skeleton-document-viewer'], ['pdf-skeleton', 'skeleton-document-viewer'], ['viewer-loading', 'skeleton-document-viewer'],
+  ['solar-eclipse', 'eclipse-corona'], ['lunar-transit', 'eclipse-corona'], ['totality', 'eclipse-corona'],
+  ['andromeda', 'spiral-galaxy'], ['milky-way', 'spiral-galaxy'], ['cosmic-spiral', 'spiral-galaxy'],
+  ['cosmic-nebula', 'nebula-drift'], ['stellar-drift', 'nebula-drift'], ['orion-nebula', 'nebula-drift'],
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

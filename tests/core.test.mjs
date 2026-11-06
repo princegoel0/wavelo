@@ -678,6 +678,16 @@ test('micro-interactions pass through data-wavelo-state', () => {
     assert.match(docExtract.html, new RegExp(`data-wavelo-state="${state}"`));
     const videoPlayer = renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': state });
     assert.match(videoPlayer.html, new RegExp(`data-wavelo-state="${state}"`));
+    const transcode = renderLoader({ type: 'media-transcode', 'data-wavelo-state': state });
+    assert.match(transcode.html, new RegExp(`data-wavelo-state="${state}"`));
+    const docViewer = renderLoader({ type: 'skeleton-document-viewer', 'data-wavelo-state': state });
+    assert.match(docViewer.html, new RegExp(`data-wavelo-state="${state}"`));
+    const eclipse = renderLoader({ type: 'eclipse-corona', 'data-wavelo-state': state });
+    assert.match(eclipse.html, new RegExp(`data-wavelo-state="${state}"`));
+    const galaxy = renderLoader({ type: 'spiral-galaxy', 'data-wavelo-state': state });
+    assert.match(galaxy.html, new RegExp(`data-wavelo-state="${state}"`));
+    const nebula = renderLoader({ type: 'nebula-drift', 'data-wavelo-state': state });
+    assert.match(nebula.html, new RegExp(`data-wavelo-state="${state}"`));
   }
   for (const extraState of ['approval', 'denied']) {
     const handoff = renderLoader({ type: 'ai-tool-handoff', 'data-wavelo-state': extraState });
@@ -689,6 +699,8 @@ test('micro-interactions pass through data-wavelo-state', () => {
   assert.match(canceledDoc.html, /data-wavelo-state="canceled"/);
   const readyVideo = renderLoader({ type: 'skeleton-video-player', 'data-wavelo-state': 'ready' });
   assert.match(readyVideo.html, /data-wavelo-state="ready"/);
+  const readyTranscode = renderLoader({ type: 'media-transcode', 'data-wavelo-state': 'ready' });
+  assert.match(readyTranscode.html, /data-wavelo-state="ready"/);
 });
 
 test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
@@ -699,7 +711,7 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloCategories.includes(cat));
   }
   assert.ok(Array.isArray(WaveloTypes));
-  assert.equal(WaveloTypes.length, 169);
+  assert.equal(WaveloTypes.length, 174);
   assert.equal(WaveloTypes, loaderIds);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));
@@ -707,5 +719,10 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
   assert.ok(WaveloTypes.includes('ai-image-develop'));
   assert.ok(WaveloTypes.includes('document-extract'));
   assert.ok(WaveloTypes.includes('skeleton-video-player'));
+  assert.ok(WaveloTypes.includes('media-transcode'));
+  assert.ok(WaveloTypes.includes('skeleton-document-viewer'));
+  assert.ok(WaveloTypes.includes('eclipse-corona'));
+  assert.ok(WaveloTypes.includes('spiral-galaxy'));
+  assert.ok(WaveloTypes.includes('nebula-drift'));
 });
 

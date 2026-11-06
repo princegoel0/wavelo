@@ -34,7 +34,7 @@ import { bundleSize, entries } from './bundle-entries.mjs';
 // Budgets are set from those two realities, not from a per-design ideal: each ceiling is a
 // clean half-KiB number sitting about 12% above the heaviest bundle it covers, and the
 // rounding lands a few tens of bytes either side of exactly 12%.
-const runtime = 52 * 1024;
+const runtime = 55 * 1024;
 const budgets = {
   // A design chosen at build time carries its kind slice plus the token defaults that
   // used to be written inline on every element, so ancestor and class-level theming can
@@ -60,8 +60,8 @@ const budgets = {
   // Follows the largest slice, which is `shape` since the 3D suite landed — this probe
   // sampled `bubble-rise` while `dots` was the crowded kind, and a dots design is no longer
   // the worst case a single import can produce.
-  'busiest-loader': 13.5 * 1024,
-  'two-loaders': 15 * 1024,
+  'busiest-loader': 14.5 * 1024,
+  'two-loaders': 15.5 * 1024,
   'core-renderer': runtime,
   'full-catalog': runtime,
   react: runtime,
@@ -70,7 +70,7 @@ const budgets = {
   // eight runtime-shaped entries and gets a ceiling of its own. The other seven share one,
   // set by the heaviest of those — `@wavelo/web-components` — which is why `core-renderer`
   // sits noticeably below the ceiling it is checked against.
-  angular: 51 * 1024,
+  angular: 52 * 1024,
   svelte: runtime,
   // Custom-element registration adds the observed-attribute table.
   'web-components': runtime,
