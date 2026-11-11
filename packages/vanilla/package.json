@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/vanilla",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Vanilla DOM mount helpers for Wavelo loaders, including a route progress bar that stays inert on a server",
   "type": "module",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "vanilla-js"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

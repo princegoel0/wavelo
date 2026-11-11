@@ -7,7 +7,7 @@ import { stylesheetMarkup } from '@wavelo/core/styles';
 
 const brandPreviewScript = buildSync({ stdin: { contents: "import { brandLoader } from '@wavelo/core/loaders/brand-loader'; window.waveloBrand = brandLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
 
-const version = '0.4.0';
+const version = '0.5.0';
 
 const totalCount = loaderRegistry.length;
 const categoryCounts = loaderRegistry.reduce((acc, l) => {

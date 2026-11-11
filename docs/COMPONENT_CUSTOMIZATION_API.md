@@ -1,8 +1,8 @@
 # Wavelo — Component Customization API Specification
 
-> **Scope:** Architectural audit and complete customization API reference for all **153 active loading designs** across **8 functional categories** in `@wavelo/core`.
+> **Scope:** Architectural audit and complete customization API reference for all **181 active loading designs** across **8 functional categories** in `@wavelo/core`.
 > **Status:** Authoritative reference for developer customization, framework adapter props, and design system governance.
-> **Version Alignment:** Wavelo 0.3.0 on branch `dev` (Post Phase 4 3D expansion; zero-layout compositor performance verified).
+> **Version Alignment:** Wavelo 0.5.0 on branch `dev` (181 designs including brand-loader; zero-layout compositor performance verified).
 
 ---
 
@@ -36,11 +36,11 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 
 The following baseline parameters apply universally or across all standard loading components.
 
-### Tier 1: Universal Structural & Accessibility Settings (174 / 174 Loaders)
+### Tier 1: Universal Structural & Accessibility Settings (181 / 181 Loaders)
 
 | Property | TypeScript Type | Default Value | Target DOM / CSS | What it Controls |
 |---|---|---|---|---|
-| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 174 active designs or 288 presets. |
+| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 181 active designs or 295 presets. |
 | `color` | `string` | `'#6366f1'` (currentColor) | `--wavelo-color` | Primary foreground accent, stroke, or fill color. |
 | `backgroundColor` | `string` | `'transparent'` | `--wavelo-background` | Outer container background fill, track surface, or modal scrim. |
 | `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | `data-wavelo-theme` | Page color palette: light shimmer, dark surface (`#374151`), or OS dark mode. |
@@ -551,7 +551,6 @@ Mathematical curves, physics simulations, 3D illusions, and complex organic moti
 - **DOM Structure:** 3 concentric circles expanding and fading outward.
 - **Unique & Design-Specific Options:**
   - `strokeWidth` (`number`, default `3`): Ripple border thickness.
-  - `secondaryColor` (`string`, default `'rgba(99, 102, 241, 0.4)'`): Fading outer ripple ring color.
 
 #### 94. `morphing-shapes` — Shape-Shifting Polygon
 - **DOM Structure:** Morphing shape transitioning between square, circle, diamond, and triangle.
@@ -596,14 +595,12 @@ Mathematical curves, physics simulations, 3D illusions, and complex organic moti
 #### 101. `nested-squares` — Nested Counter-Rotating Squares
 - **DOM Structure:** 3 concentric squares rotating at staggered angles (0°, 45°, 22°).
 - **Unique & Design-Specific Options:**
-  - `secondaryColor` (`string`, default `'#a5b4fc'`): Color of inner nested squares.
   - `strokeWidth` (`number`, default `3`): Square border thickness.
 
 #### 102. `concentric-pulse` — Pulsing Target Circles
 - **DOM Structure:** 2 nested circular borders pulsing with staggered timing.
 - **Unique & Design-Specific Options:**
   - `strokeWidth` (`number`, default `3`): Ring border thickness.
-  - `secondaryColor` (`string`, default `'#a5b4fc'`): Inner circle tone.
 
 #### 103. `trip-orbit` — Triple Arc Orbit
 - **DOM Structure:** Three arcs spaced 120° apart, sweeping and shrinking in synchrony.
@@ -801,7 +798,6 @@ Contextual viewports, modals, and reactive state machines.
 #### 134. `gyroscope` — Triple Gimbal 3D Rings
 - **DOM Structure:** Three nested concentric gimbal rings rotating on orthogonal X, Y, and Z axes with 3D depth.
 - **Unique & Design-Specific Options:**
-  - `secondaryColor` (`string`): Color of outer and intermediate gimbal rings.
   - `strokeWidth` (`number | string`): Thickness of gimbal ring borders.
   - `backgroundColor` (`string`): Gimbal container backdrop.
 
@@ -850,7 +846,6 @@ Contextual viewports, modals, and reactive state machines.
 - **DOM Structure:** Non-orientable single-sided continuous Mobius strip twisting in 3D coordinate space.
 - **Unique & Design-Specific Options:**
   - `secondaryColor` (`string`): Reverse-twist surface tone.
-  - `strokeWidth` (`number | string`): Ribbon gauge.
 
 #### 144. `vortex-tunnel` — Hyperspace Concentric Gates
 - **DOM Structure:** Concentric perspective gate rings cascading into infinite depth.
@@ -924,3 +919,38 @@ The following index summarizes the primary bespoke parameter availability across
 │ • data-wavelo-constellation (1 design): 5 astronomical star patterns   │
 └────────────────────────────────────────────────────────────────────────┘
 ```
+## Additional compositions
+
+### `lotus-bloom`
+
+Five translucent petals open and close around a shared base. `color` and
+`secondaryColor` set the petal gradient; `duration` controls the breathing cycle.
+
+### `signal-beacon`
+
+Three wireless arcs illuminate outward above a source dot. `strokeWidth` sets
+the arc thickness and `secondaryColor` colors the source dot.
+
+### `conveyor-belt`
+
+Three packages travel across a roller belt. `secondaryColor` colors the packages,
+`strokeWidth` sets the conveyor outline and `width` sets the track length.
+
+### `zipper-flow`
+
+Four pairs of teeth open and close in a travelling wave. `color` and
+`secondaryColor` distinguish the two sides.
+
+### `book-pages`
+
+An open book holds three animated page edges. `strokeWidth` sets the cover outline
+and `secondaryColor` colors the pages.
+
+### `pixel-weave`
+
+Nine square tiles shrink and turn in a diagonal wave. `color` and
+`secondaryColor` set the checkerboard colors.
+
+These six designs support the shared `paused`, `reducedMotion`, `duration`,
+`direction`, theme, sizing and accessibility options. They are indeterminate
+animations, so `value` does not represent their progress.

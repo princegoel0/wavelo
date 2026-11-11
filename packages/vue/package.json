@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/vue",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Vue 3 components for CSS loading spinners, skeletons and progress, server-rendered with a provide and inject house style",
   "type": "module",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "peerDependencies": {
     "vue": ">=3.0.0 <4.0.0"

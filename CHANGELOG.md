@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.0
 
 - Corrected Tesseract, Mobius Band, Torus Ring and Magnetic Field after review of
   their full animation cycles. Kept projected geometry away from edge-on collapse,

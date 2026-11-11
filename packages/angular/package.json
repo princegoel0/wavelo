@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/angular",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "An Angular standalone component for CSS loading spinners, skeletons and progress, library-compiled so AOT builds accept it",
   "type": "module",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "peerDependencies": {
     "@angular/core": ">=14.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/svelte",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Svelte 5 components for CSS loading spinners, skeletons and progress, built with runes and a context for shared defaults",
   "type": "module",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "peerDependencies": {
     "svelte": ">=5.0.0 <6.0.0"

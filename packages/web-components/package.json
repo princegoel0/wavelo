@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/web-components",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A framework-free custom element for CSS loading spinners, skeletons and progress indicators, styled with custom properties",
   "type": "module",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "progress"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
