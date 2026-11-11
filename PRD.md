@@ -222,13 +222,13 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs (Shipped: **174 designs**, 174 active designs across 8 functional categories, including 26 authentic 3D designs).
+- At least 60 distinct animation designs (Shipped: **181 designs**, 181 active designs across 8 functional categories, including 26 authentic 3D designs).
 - At least 20 skeleton presets or primitives (Shipped: 28 skeleton designs).
 - At least 10 progress-indicator designs or variants (Shipped: 20 progress designs).
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
 - Dedicated AI/streaming loading lane (Shipped: 12 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **288 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Shipped: **295 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -474,7 +474,7 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 ### 5.11.1 Spatial Dimensionality Taxonomy (2D & 3D Loaders)
 
-- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 148 of the 174 designs are 2D.
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 155 of the 181 designs are 2D.
 - **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 26 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
 - **Dimensionality Requirements:**
   1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
@@ -1511,7 +1511,7 @@ Wavelo documentation must be accessible through three integrated tiers:
 
 To eliminate developer friction across diverse web ecosystems, documentation must maintain a unified four-part structure for every supported framework:
 
-1. **Unified Configuration Contract:** Document that all framework adapters expose the exact same 27 configuration keys and 23 CSS custom properties (`--wavelo-*`) with deterministic precedence (Provider / context defaults < bound `loaderFor` component < call-site props).
+1. **Unified Configuration Contract:** Document that all framework adapters expose the exact same 28 configuration keys and 23 CSS custom properties (`--wavelo-*`) with deterministic precedence (Provider / context defaults < bound `loaderFor` component < call-site props).
 2. **Framework-Specific Idiomatic Patterns:**
    - **React:** `<Loader>`, `<WaveloProvider defaults={...}>`, and `loaderFor(type, defaults)`.
    - **Vue:** `<WaveloLoader>`, `provideWaveloDefaults(...)`, and `loaderFor(type, defaults)`.
@@ -1537,9 +1537,9 @@ Documentation must never drift from the underlying codebase. The following autom
 
 1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
    - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
-   - Enforces exact matches across code and docs for catalog counts (174 active designs, 288 named presets, 114 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
+   - Enforces exact matches across code and docs for catalog counts (181 active designs, 295 named presets, 114 pattern presets), token counts (23 custom properties), configuration keys (28 keys), and measured bundle sizes. Any drift fails the build.
 2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
-   - Validates that all 174 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
+   - Validates that all 181 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
 3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds `apps/docs` into `apps/docs/dist/index.html` and deploys to GitHub Pages on every merge to `main`.
 4. **Atomic Release Synchronization (`.github/workflows/release.yml`):**
@@ -2163,8 +2163,8 @@ A release is complete only when all mandatory release gates pass.
 
 The stable release must satisfy all mandatory criteria:
 
-- At least 60 distinct animation designs (Shipped: 174 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 288 named presets).
+- At least 60 distinct animation designs (Shipped: 181 active designs).
+- At least 100 total named presets and loading patterns (Shipped: 295 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.
@@ -2221,7 +2221,7 @@ implementation ambiguities discovered during technical review:
 - The registry is the source of truth for catalog counts, documentation, search,
   previews, supported options and catalog validation.
 - Dimensionality is a first-class metadata property: `LoaderDimension = '2d' | '3d'` on `LoaderDefinition`, exposed in the catalog as a 6-element tuple and surfaced via gallery filtering.
-- The configuration surface is strictly bounded to 27 declared keys in `loaderConfigKeys`, verified by `config.ts` type-level constraints.
+- The configuration surface is strictly bounded to 28 declared keys in `loaderConfigKeys`, verified by `config.ts` type-level constraints.
 - The token surface consists of exactly 23 verified `--wavelo-*` properties declared in `WaveloTokens`.
 - Micro-interactions communicate state changes via `data-wavelo-state` across `'idle'`, `'loading'`, `'success'`, and `'error'`.
 - `LoaderDefinition.category` is strictly taxonomic metadata used by the documentation gallery filter and catalog organization. The runtime core, validators, and framework adapters never branch on or restrict configuration based on `category`.

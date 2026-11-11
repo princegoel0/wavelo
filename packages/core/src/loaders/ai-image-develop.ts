@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "ai-image-develop", name: "AI image develop", category: "ai", dimension: "2d", kind: "skeleton", description: "Image generation development canvas with 3x3 staggered latent tile formation and preview frame", options: ["backgroundColor","className","color","count","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","size","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-image-develop" };
+const definition: LoaderDefinition = { id: "ai-image-develop", name: "AI image develop", category: "ai", dimension: "2d", kind: "skeleton", description: "Image generation development canvas with 3x3 staggered latent tile formation and preview frame", options: ["backgroundColor","className","color","count","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-image-develop" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const aiImageDevelop = (config: Omit<LoaderConfig, 'type'> = {}) =>

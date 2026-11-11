@@ -3,6 +3,7 @@
 
 /** Every public catalog ID. */
 export const loaderIds = [
+  "brand-loader",
   "circular",
   "ring",
   "dual-ring",
@@ -177,6 +178,12 @@ export const loaderIds = [
   "gooey-metaballs",
   "camera-iris",
   "newton-cradle",
+  "lotus-bloom",
+  "signal-beacon",
+  "conveyor-belt",
+  "zipper-flow",
+  "book-pages",
+  "pixel-weave",
 ] as const;
 
 export type LoaderId = (typeof loaderIds)[number];

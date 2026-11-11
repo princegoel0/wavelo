@@ -80,7 +80,7 @@ workspace, not a restructure. `npm install @wavelo/core` and
 - every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
   `"access": "public"` under one `@wavelo` scope;
 - each package ships its own stylesheet — a consumer that never imports the new family
-  never downloads its rules, and the loaders' 40,032 B gzipped catalog sheet does not grow;
+  never downloads its rules, and the loaders' 42,596 B gzipped catalog sheet does not grow;
 - framework packages declare their framework as a peer and bundle none of it, and the
   core has no runtime dependency, so a second family cannot drag a first one's weight in;
 - design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.

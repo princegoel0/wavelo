@@ -29,6 +29,7 @@ const props = Object.fromEntries(
     if (numericKeys.has(key)) return [key, Number as PropType<number>];
     if (lengthKeys.has(key)) return [key, [String, Number] as PropType<string | number>];
     if (key === 'style') return [key, Object as PropType<Record<string, string | number>>];
+    if (key === 'brand') return [key, Object as PropType<LoaderConfig['brand']>];
     return [key, String as PropType<string>];
   })
 );

@@ -4,20 +4,25 @@ Measured by `npm run measure` (`scripts/bundle.mjs`) with esbuild, minified and
 gzipped, framework peers external. Budgets are enforced in CI: a regression
 fails the build rather than getting documented.
 
+The brand loader adds about 1.4 KB gzipped to the shared renderer used by modular
+imports, and about 2.7 KB to the full runtime including its animation rules.
+Budgets below allow approximately 12% headroom over the measured entries. Angular
+now measures the current workspace core; its earlier figure used a stale local dependency.
+
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 32,573 | 9.4 KB (9,662 B) | 10,240 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 60,152 | 13,838 | 14,848 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 71,297 | 14,985 | 15,872 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 306,088 | 53.0 KB (54,334 B) | 56,320 |
-| `@wavelo/core` + registry walk over all 174 designs | 306,091 | 53.1 KB (54,341 B) | 56,320 |
-| `@wavelo/react` | 306,920 | 53.5 KB (54,768 B) | 56,320 |
-| `@wavelo/vue` | 307,905 | 53.9 KB (55,243 B) | 56,320 |
-| `@wavelo/angular` | 240,228 | 44.7 KB (45,780 B) | 53,248 |
-| `@wavelo/svelte` | 306,280 | 53.2 KB (54,441 B) | 56,320 |
-| `@wavelo/web-components` | 308,399 | 54.1 KB (55,352 B) | 56,320 |
-| `@wavelo/vanilla` | 306,610 | 53.3 KB (54,603 B) | 56,320 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 262,570 raw | 40,032 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 37,671 | 11.1 KB (11,391 B) | 12,800 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 66,629 | 15.5 KB (15,858 B) | 17,920 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 77,397 | 16.6 KB (16,968 B) | 19,456 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 326,907 | 57.7 KB (59,036 B) | 67,584 |
+| `@wavelo/core` + registry walk over all 181 designs | 326,910 | 57.7 KB (59,043 B) | 67,584 |
+| `@wavelo/react` | 327,868 | 58.2 KB (59,552 B) | 67,584 |
+| `@wavelo/vue` | 328,884 | 58.6 KB (60,040 B) | 67,584 |
+| `@wavelo/angular` | 330,466 | 59.1 KB (60,500 B) | 68,096 |
+| `@wavelo/svelte` | 327,228 | 57.8 KB (59,210 B) | 67,584 |
+| `@wavelo/web-components` | 329,328 | 58.7 KB (60,139 B) | 67,584 |
+| `@wavelo/vanilla` | 327,429 | 57.9 KB (59,316 B) | 67,584 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 277,390 raw | 42,596 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -29,7 +34,7 @@ tranche's per-part fill logic cost every design a further ~227 B, including a ri
 which uses none of it. `busiest-loader` is measured alongside `individual-loader` so a
 crowded kind cannot grow unnoticed, and it is pointed at whatever the largest slice is
 now rather than at the kind that held the record when the probe was written: `shape`
-(8,156 B with the base) leads `dots` (6,844), `wave` (5,553) and `skeleton` (4,966), so
+(8,924 B with the base) leads `dots` (7,312), `skeleton` (6,894) and `wave` (6,141), so
 the probe samples `voxel-cluster`. It has moved twice — `progress` while twelve determinate
 designs made that the largest slice, then `dots` (through `bubble-rise`) after the motion
 and skeleton tranches, now `shape` after the 3D suite — and each move was only visible

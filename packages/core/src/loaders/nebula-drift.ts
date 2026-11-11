@@ -5,7 +5,7 @@ import { waveCss } from '../css/kinds/wave.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "nebula-drift", name: "Nebula drift", category: "creative", dimension: "2d", kind: "wave", description: "Interstellar gas clouds gently drifting with multi-spectrum luminescence", options: ["className","color","data-testid","decorative","describedBy","inline","label","labelledBy","loading","reducedMotion","secondaryColor","size","style","theme"], supportsProgress: false, stability: "stable", visualSignature: "nebula-drift" };
+const definition: LoaderDefinition = { id: "nebula-drift", name: "Nebula drift", category: "creative", dimension: "2d", kind: "wave", description: "Interstellar gas clouds gently drifting with multi-spectrum luminescence", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "nebula-drift" };
 const styles = `${baseCss}${waveCss}`;
 
 export const nebulaDrift = (config: Omit<LoaderConfig, 'type'> = {}) =>

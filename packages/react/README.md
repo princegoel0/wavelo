@@ -1,7 +1,7 @@
 # @wavelo/react
 
 React component for Wavelo, supporting React 16.8+, 17, 18, and 19. Import `Loader` and pass the shared loader
-configuration as props — all 27 keys, including `data-*`.
+configuration as props — all 28 keys, including `data-*`.
 
 ```tsx
 import { Loader } from '@wavelo/react';

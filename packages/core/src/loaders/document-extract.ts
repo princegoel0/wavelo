@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "document-extract", name: "Document extract", category: "ai", dimension: "2d", kind: "skeleton", description: "Document scan line and structured data extraction pipeline with key-value illumination", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","secondaryColor","size","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "document-extract" };
+const definition: LoaderDefinition = { id: "document-extract", name: "Document extract", category: "ai", dimension: "2d", kind: "skeleton", description: "Document scan line and structured data extraction pipeline with key-value illumination", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "document-extract" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const documentExtract = (config: Omit<LoaderConfig, 'type'> = {}) =>

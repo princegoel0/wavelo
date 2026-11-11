@@ -63,9 +63,9 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 174 public IDs, each with its own implementation, built from
+The catalog holds 181 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
-same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
+same 28 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
 `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
@@ -79,7 +79,7 @@ one reaches the element, so a bridge that falls behind the core fails the build.
 | `@wavelo/core/loaders/<id>` | one design, config minus `type`; ships only that design's slice |
 | `@wavelo/react` | the whole props object is passed to the core |
 | `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config. The boolean keys are declared without a type: Vue casts an absent `Boolean` prop to `false`, which would override a registered default and hide a loader nobody asked to hide |
-| `@wavelo/angular` | 27 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
+| `@wavelo/angular` | 28 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
 | `@wavelo/svelte` | `$props()` is forwarded to the core whole, so any key reaches it |
 | `@wavelo/web-components` | one attribute per key in kebab case (`stroke-width`, `secondary-color`, `reduced-motion`), plus any `data-*` |
 | `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement`, `createWavelo` and the style helpers |
@@ -242,7 +242,7 @@ ESM and CSS.
   in CI. Neither check needs a browser or a runtime compiler.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 174
+  `theme`, style-slice injection counts, per-design slice isolation for all 181
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —

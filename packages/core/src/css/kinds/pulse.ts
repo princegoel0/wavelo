@@ -1,3 +1,6 @@
+import { css as addition0Frames } from '../keyframes/lotus-bloom.js';
+import { css as addition1Frames } from '../keyframes/signal-beacon.js';
+import { css as addition2Frames } from '../keyframes/pixel-weave.js';
 import { css as scaleDotFrames } from '../keyframes/scale-dot.js';
 import { css as thinkFrames } from '../keyframes/think.js';
 import { css as thinkHaloFrames } from '../keyframes/think-halo.js';
@@ -35,9 +38,9 @@ export const pulseCss = `
 .wavelo--button-confirm .wavelo__part{flex:none;width:6px;height:6px;border-radius:50%;margin:0 2px;background:#fff;animation:wavelo-pulse var(--wavelo-duration,1s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:opacity .2s ease,transform .2s ease}
 .wavelo--button-confirm .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--button-confirm .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
-.wavelo--button-confirm[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:wavelo-confirm calc(var(--wavelo-duration,1s) * .4) ease forwards}
+.wavelo--button-confirm[data-wavelo-state="success"]{background:var(--wavelo-success-color,#22c55e);animation:wavelo-confirm calc(var(--wavelo-duration,1s) * .4) ease forwards var(--wavelo-play-state,running)}
 .wavelo--button-confirm[data-wavelo-state="success"] .wavelo__part{display:none}
-.wavelo--button-confirm[data-wavelo-state="success"]:after{content:"\\2713";color:#fff;font-size:1.1rem;font-weight:700;line-height:1;animation:wavelo-pop .25s cubic-bezier(.175,.885,.32,1.275) forwards}
+.wavelo--button-confirm[data-wavelo-state="success"]:after{content:"\\2713";color:#fff;font-size:1.1rem;font-weight:700;line-height:1;animation:wavelo-pop .25s cubic-bezier(.175,.885,.32,1.275) forwards var(--wavelo-play-state,running)}
 .wavelo--button-confirm[data-wavelo-state="error"]{background:var(--wavelo-error-color,#ef4444);animation:none}
 .wavelo--button-confirm[data-wavelo-state="error"] .wavelo__part{display:none}
 .wavelo--button-confirm[data-wavelo-state="error"]:after{content:"\\00d7";color:#fff;font-size:1.3rem;font-weight:700;line-height:1}
@@ -56,4 +59,20 @@ export const pulseCss = `
 .wavelo--offline-dot[data-wavelo-state="error"]:before{border-color:var(--wavelo-error-color,#ef4444);animation:none;transform:scale(1.4);opacity:.4}
 .wavelo--offline-dot[data-wavelo-state="idle"]{opacity:.5}
 .wavelo--offline-dot[data-wavelo-state="idle"]:before{display:none}
-${scaleDotFrames}${thinkFrames}${thinkHaloFrames}${blinkFrames}${confirmFrames}${dragDropFrames}${pingFrames}`;
+${scaleDotFrames}${thinkFrames}${thinkHaloFrames}${blinkFrames}${confirmFrames}${dragDropFrames}${pingFrames}
+.wavelo--lotus-bloom .wavelo__part{position:absolute;left:34%;top:12%;width:32%;height:68%;border-radius:90% 10% 80% 20%;transform-origin:50% 95%;background:linear-gradient(150deg,var(--wavelo-secondary-color,#f472b6),currentColor);border:1px solid color-mix(in srgb,currentColor 35%,transparent);animation:wavelo-lotus-bloom var(--wavelo-duration,2.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--lotus-bloom .wavelo__part:nth-child(1){--petal-angle:-60deg}.wavelo--lotus-bloom .wavelo__part:nth-child(2){--petal-angle:-30deg}.wavelo--lotus-bloom .wavelo__part:nth-child(3){--petal-angle:0deg}.wavelo--lotus-bloom .wavelo__part:nth-child(4){--petal-angle:30deg}.wavelo--lotus-bloom .wavelo__part:nth-child(5){--petal-angle:60deg}
+.wavelo--signal-beacon:after{content:"";position:absolute;bottom:5%;left:44%;width:12%;height:12%;background:var(--wavelo-secondary-color,currentColor);border-radius:50%}
+.wavelo--signal-beacon .wavelo__part{position:absolute;left:7.5%;top:5%;width:85%;height:85%;box-sizing:border-box;border:var(--wavelo-stroke,3px) solid transparent;border-top-color:currentColor;border-radius:50%;background:transparent;animation:wavelo-signal-beacon var(--wavelo-duration,1.8s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1.8s)*-.3)}
+.wavelo--signal-beacon .wavelo__part:nth-child(2){left:20%;top:30%;width:60%;height:60%;animation-delay:calc(var(--wavelo-duration,1.8s)*-.45)}
+.wavelo--signal-beacon .wavelo__part:nth-child(3){left:32.5%;top:55%;width:35%;height:35%;animation-delay:calc(var(--wavelo-duration,1.8s)*-.6)}
+.wavelo--pixel-weave{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8%}
+.wavelo--pixel-weave.wavelo-inline{display:inline-grid}
+.wavelo--pixel-weave .wavelo__part{width:100%;height:100%;border-radius:12%;background:currentColor;animation:wavelo-pixel-weave var(--wavelo-duration,1.8s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--pixel-weave .wavelo__part:nth-child(even){background:var(--wavelo-secondary-color,#38bdf8)}
+.wavelo--pixel-weave .wavelo__part:is(:nth-child(2),:nth-child(4)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.15)}
+.wavelo--pixel-weave .wavelo__part:is(:nth-child(3),:nth-child(5),:nth-child(7)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.3)}
+.wavelo--pixel-weave .wavelo__part:is(:nth-child(6),:nth-child(8)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.45)}
+.wavelo--pixel-weave .wavelo__part:nth-child(9){animation-delay:calc(var(--wavelo-duration,1.8s)*-.6)}
+${addition0Frames}${addition1Frames}${addition2Frames}
+`;

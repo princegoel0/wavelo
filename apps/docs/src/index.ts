@@ -1,6 +1,11 @@
+import { buildSync } from 'esbuild';
+// The documentation generator runs in Node; the library's TS config stays DOM-only.
+declare const process: { cwd(): string };
 import { loaderRegistry, renderLoader } from '@wavelo/core';
 import { allStyles } from '@wavelo/core/css';
 import { stylesheetMarkup } from '@wavelo/core/styles';
+
+const brandPreviewScript = buildSync({ stdin: { contents: "import { brandLoader } from '@wavelo/core/loaders/brand-loader'; window.waveloBrand = brandLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
 
 const version = '0.4.0';
 
@@ -307,6 +312,17 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
   .ctrl-row select, .ctrl-row input[type=range], .ctrl-row .preset-segments, .ctrl-row .swatches { grid-column: 1 / -1; width: 100%; }
 }
 
+/* Brand editor shares the studio controls and keeps long option lists compact. */
+#brand-controls{margin:0;padding:1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);max-height:420px;overflow:auto;min-width:0}
+#brand-controls[hidden]{display:none}
+#brand-controls legend{font-weight:600;font-size:.85rem;padding:0 .4rem;color:var(--text-main)}
+#brand-controls .ctrl-row{grid-template-columns:minmax(110px,1fr) minmax(0,1.5fr);margin-bottom:.65rem;gap:.7rem}
+#brand-controls input:not([type=checkbox]),#brand-controls select{min-width:0;width:100%;font:inherit;font-size:.8rem;color:var(--text-main);background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:.45rem .6rem}
+#brand-controls input[type=color]{height:34px;padding:3px}
+#brand-controls input[type=checkbox]{accent-color:var(--accent);justify-self:start}
+#brand-controls>label{display:flex;align-items:center;gap:.5rem;font-size:.8rem;margin-top:.6rem}
+#brand-error{font-size:.8rem;color:var(--text-main)}
+#brand-error:empty{display:none}
 /* Code Box */
 .code-panel { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
 .code-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem; }
@@ -712,6 +728,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 
       <!-- Right Column: Controls Column -->
       <div class="controls-column">
+
         <div class="framework-tab-bar" aria-label="Target framework">
           <button type="button" class="fw-tab active" data-fw="core">Core</button>
           <button type="button" class="fw-tab" data-fw="html">HTML &amp; CSS</button>
@@ -871,6 +888,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
           </label>
         </div>
 
+<fieldset id="brand-controls" hidden><legend>Brand customization</legend><div class="ctrl-row"><label for="brand-text">Brand text</label><input id="brand-text" data-brand-key="text" type="text" value="ACME"  maxlength="80"></div><div class="ctrl-row"><label for="brand-caption">Caption</label><input id="brand-caption" data-brand-key="caption" type="text" value="Preparing your workspace"  maxlength="160"></div><div class="ctrl-row"><label for="brand-animation">Text animation</label><select id="brand-animation" data-brand-key="animation"><option selected>wave</option><option>bounce</option><option>pulse</option><option>flip</option><option>shimmer</option><option>typewriter</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-indicator">Indicator</label><select id="brand-indicator" data-brand-key="indicator"><option selected>ring</option><option>bar</option><option>dots</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-layout">Layout</label><select id="brand-layout" data-brand-key="layout"><option selected>stacked</option><option>inline</option></select></div><div class="ctrl-row"><label for="brand-indicatorPosition">Indicator position</label><select id="brand-indicatorPosition" data-brand-key="indicatorPosition"><option selected>before</option><option>after</option></select></div><div class="ctrl-row"><label for="brand-align">Alignment</label><select id="brand-align" data-brand-key="align"><option>start</option><option selected>center</option><option>end</option></select></div><div class="ctrl-row"><label for="brand-fontFamily">Font family</label><input id="brand-fontFamily" data-brand-key="fontFamily" type="text" value="system-ui, sans-serif"  ></div><div class="ctrl-row"><label for="brand-fontSize">Font size (px)</label><input id="brand-fontSize" data-brand-key="fontSize" type="number" value="32" step="any" ></div><div class="ctrl-row"><label for="brand-fontWeight">Font weight</label><input id="brand-fontWeight" data-brand-key="fontWeight" type="number" value="700" step="any" ></div><div class="ctrl-row"><label for="brand-fontStyle">Font style</label><select id="brand-fontStyle" data-brand-key="fontStyle"><option selected>normal</option><option>italic</option><option>oblique</option></select></div><div class="ctrl-row"><label for="brand-letterSpacing">Letter spacing (px)</label><input id="brand-letterSpacing" data-brand-key="letterSpacing" type="number" value="1" step="any" ></div><div class="ctrl-row"><label for="brand-lineHeight">Line height</label><input id="brand-lineHeight" data-brand-key="lineHeight" type="number" value="1.3" step="any" ></div><div class="ctrl-row"><label for="brand-textTransform">Letter case</label><select id="brand-textTransform" data-brand-key="textTransform"><option selected>none</option><option>uppercase</option><option>lowercase</option><option>capitalize</option></select></div><div class="ctrl-row"><label for="brand-textColor">Text color</label><input id="brand-textColor" data-brand-key="textColor" type="color" value="#6366f1"  ></div><div class="ctrl-row"><label for="brand-trackColor">Track color</label><input id="brand-trackColor" data-brand-key="trackColor" type="color" value="#cbd5e1"  ></div><div class="ctrl-row"><label for="brand-captionColor">Caption color</label><input id="brand-captionColor" data-brand-key="captionColor" type="color" value="#818cf8"  ></div><div class="ctrl-row"><label for="brand-captionSize">Caption size (px)</label><input id="brand-captionSize" data-brand-key="captionSize" type="number" value="13" step="any" ></div><div class="ctrl-row"><label for="brand-indicatorSize">Indicator size (px)</label><input id="brand-indicatorSize" data-brand-key="indicatorSize" type="number" value="40" step="any" ></div><div class="ctrl-row"><label for="brand-gap">Gap (px)</label><input id="brand-gap" data-brand-key="gap" type="number" value="12" step="any" ></div><div class="ctrl-row"><label for="brand-radius">Bar radius (px)</label><input id="brand-radius" data-brand-key="radius" type="number" value="4" step="any" ></div><div class="ctrl-row"><label for="brand-stagger">Letter stagger (seconds)</label><input id="brand-stagger" data-brand-key="stagger" type="number" value="0.08" step="any" ></div><div class="ctrl-row"><label for="brand-delay">Text delay (seconds)</label><input id="brand-delay" data-brand-key="delay" type="number" value="0" step="any" ></div><div class="ctrl-row"><label for="brand-amplitude">Text movement (px)</label><input id="brand-amplitude" data-brand-key="amplitude" type="number" value="6" step="any" ></div><div class="ctrl-row"><label for="brand-easing">Easing</label><select id="brand-easing" data-brand-key="easing"><option>linear</option><option>ease</option><option>ease-in</option><option>ease-out</option><option selected>ease-in-out</option></select></div><div class="ctrl-row"><label for="brand-showValue">Show percentage</label><input id="brand-showValue" data-brand-key="showValue" type="checkbox" checked  ></div><label><input id="brand-determinate" type="checkbox"> Use real progress</label><label><input id="brand-reduced" type="checkbox"> Reduce motion</label><p id="brand-error" role="alert"></p></fieldset>
         <!-- Generated Code Box -->
         <div class="code-panel">
           <div class="code-header">
@@ -1021,6 +1039,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 </footer>
 
 <script>
+${brandPreviewScript}
 const stage = document.querySelector('#stage');
 const code = document.querySelector('#code');
 const design = document.querySelector('#design');
@@ -1096,6 +1115,24 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+
+function brandConfig(values) {
+  const brand = {};
+  document.querySelectorAll('[data-brand-key]').forEach(input => { brand[input.dataset.brandKey] = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value; });
+  return { type: 'brand-loader', brand, color: values.color, secondaryColor: values['secondary-color'], strokeWidth: Number(values.stroke), duration: values.duration + 's', paused: values.paused, direction: values.reverse ? 'reverse' : 'normal', theme: values.dark ? 'dark' : 'light', reducedMotion: document.querySelector('#brand-reduced').checked ? 'always' : 'auto', ...(document.querySelector('#brand-determinate').checked ? {value: Number(values.progress)} : {}) };
+}
+function brandSnippet(fw, config) {
+  const json = JSON.stringify(config, null, 2).replaceAll('<', String.fromCharCode(92) + 'u003c');
+  if (fw === 'react') return "import { Loader } from '@wavelo/react';\\nimport '@wavelo/core/styles.css';\\n\\nconst config = " + json + " as const;\\n<Loader {...config} />";
+  if (fw === 'vue') return '<scr' + 'ipt setup>\\nimport { Loader } from "@wavelo/vue";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<template><Loader v-bind="config" /></template>';
+  if (fw === 'svelte') return '<scr' + 'ipt>\\nimport Loader from "@wavelo/svelte/WaveloLoader.svelte";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<Loader {...config} />';
+  if (fw === 'angular') return '// Import LoaderConfig from @wavelo/core. Component field:\\nconfig: LoaderConfig = ' + json + ';\\n\\n// Template (import LoaderComponent):\\n<wavelo-loader type="brand-loader" [brand]="config.brand" [color]="config.color" [secondaryColor]="config.secondaryColor" [duration]="config.duration" [strokeWidth]="config.strokeWidth" [paused]="config.paused" [direction]="config.direction" [theme]="config.theme" [reducedMotion]="config.reducedMotion" [value]="config.value" />';
+  if (fw === 'web-components') return "import { defineWaveloElements } from '@wavelo/web-components';\\ndefineWaveloElements();\\nconst config = " + json + ";\\nconst loader = document.createElement('wavelo-loader');\\nfor (const [key, value] of Object.entries(config)) loader.setAttribute(key.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), typeof value === 'object' ? JSON.stringify(value) : String(value));\\ndocument.querySelector('#slot').append(loader);";
+  if (fw === 'html') return window.waveloBrand(config).html + '\\n<style>' + window.waveloBrand(config).css + '</style>';
+  if (fw === 'vanilla') return "import { mountLoader } from '@wavelo/vanilla';\\nmountLoader(document.querySelector('#slot'), " + json + ');';
+  return "import { brandLoader } from '@wavelo/core/loaders/brand-loader';\\nconst { html, css } = brandLoader(" + json + ');';
+}
+
 function read() {
   const values = {};
   for (const name of fields) values[name] = document.querySelector('#' + name).value;
@@ -1129,6 +1166,7 @@ function getContrastRatio(colorHex, bgHex) {
 
 function generateCodeSnippet(id, fw, values) {
   if (!values) values = read();
+  if (id === 'brand-loader') return brandSnippet(fw, brandConfig(values));
   const info = loaderData.find((l) => l.id === id) || {
     name: id,
     dimension: '2d',
@@ -1307,6 +1345,7 @@ function generateCodeSnippet(id, fw, values) {
 function paint() {
   const id = design.value;
   const values = read();
+  document.querySelector('#brand-controls').hidden = id !== 'brand-loader';
   const info = loaderData.find((l) => l.id === id) || { name: id, dimension: '2d', category: 'general', honoursStroke: true, honoursDuration: true, honoursPaused: true, honoursReverse: true, honoursSize: true, honoursValue: false, honoursCount: false, honoursSecondaryColor: false, honoursRadius: false };
   
   const rowVariant = document.querySelector('#row-variant');
@@ -1387,7 +1426,8 @@ function paint() {
     grid: '#0b0f19'
   };
   const stageBg = bgColors[activeBgMode] || (values.dark ? '#030712' : '#ffffff');
-  const contrastRatio = getContrastRatio(values.color, stageBg);
+  const brandColors = id === 'brand-loader' ? [document.querySelector('#brand-textColor').value, document.querySelector('#brand-captionColor').value, ...(document.querySelector('#brand-animation').value === 'shimmer' ? [values['secondary-color']] : [])] : [values.color];
+  const contrastRatio = Math.min(...brandColors.map(color => getContrastRatio(color, stageBg)));
   const contrastLabel = contrastRatio >= 7.0 ? 'AAA' : contrastRatio >= 4.5 ? 'AA' : 'Low';
   const contrastBadge = document.querySelector('#contrast-badge');
   if (contrastBadge) {
@@ -1402,7 +1442,15 @@ function paint() {
 
   const source = document.querySelector('.card[data-id="' + id + '"] .wavelo');
   if (!source) return;
-  const rendered = source.cloneNode(true);
+  let rendered = source.cloneNode(true);
+  if (id === 'brand-loader') {
+    try {
+      const template = document.createElement('template');
+      template.innerHTML = window.waveloBrand(brandConfig(values)).html;
+      rendered = template.content.firstElementChild;
+      document.querySelector('#brand-error').textContent = '';
+    } catch (error) { document.querySelector('#brand-error').textContent = error.message; return; }
+  }
   rendered.setAttribute('data-wavelo-theme', values.dark ? 'dark' : 'light');
 
   if (id === 'constellation' && variantSelect) {

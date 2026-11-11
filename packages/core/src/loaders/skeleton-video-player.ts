@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-video-player", name: "Skeleton video player", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Video player 16:9 placeholder with center play badge, scrubber timeline, and controls strip", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","size","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-video-player" };
+const definition: LoaderDefinition = { id: "skeleton-video-player", name: "Skeleton video player", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Video player 16:9 placeholder with center play badge, scrubber timeline, and controls strip", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-video-player" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonVideoPlayer = (config: Omit<LoaderConfig, 'type'> = {}) =>

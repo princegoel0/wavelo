@@ -27,9 +27,13 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 174 designs, each visually distinct, built from 12
+The catalog holds 181 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
-27 configuration keys.
+28 configuration keys.
+
+For custom wordmarks, use [`brand-loader`](docs/BRAND_LOADER.md): custom brand text,
+seven text animations, optional spinner/progress indicators, fonts, colors, spacing,
+and timing controls, with the same API in every framework.
 
 Twelve of them are the streaming and AI workflow lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
 `token-stream`, `ai-shimmer`, `neural-grid`, `ai-tool-handoff`, `ai-image-develop`, `document-extract`, plus the composite `skeleton-chat`,
@@ -312,12 +316,13 @@ own CSS would.
 
 ## What the configuration does
 
-These 27 keys are the whole surface, and a test asserts each one reaches the
+These 28 keys are the whole surface, and a test asserts each one reaches the
 rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
 `paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`,
 `max`, `labelledBy`, `describedBy`, `valueText`, `decorative`, `loading`, `count`,
-`inline`, plus arbitrary `data-*` attributes.
+`inline`, `brand`, plus arbitrary `data-*` attributes. `brand` is the typed nested
+configuration for [custom wordmark loaders](docs/BRAND_LOADER.md).
 
 `loading` decides whether there is a loader at all. `count` sets the number of
 tracks in the designs that are built from repeating tracks — a stack of skeleton

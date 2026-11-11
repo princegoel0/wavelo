@@ -5,7 +5,7 @@ import { barsCss } from '../css/kinds/bars.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "media-transcode", name: "Media transcode", category: "application", dimension: "2d", kind: "bars", description: "Filmstrip processing frames through transcode optical window with state transitions", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","secondaryColor","size","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "media-transcode" };
+const definition: LoaderDefinition = { id: "media-transcode", name: "Media transcode", category: "application", dimension: "2d", kind: "bars", description: "Filmstrip processing frames through transcode optical window with state transitions", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "media-transcode" };
 const styles = `${baseCss}${barsCss}`;
 
 export const mediaTranscode = (config: Omit<LoaderConfig, 'type'> = {}) =>

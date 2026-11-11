@@ -1,4 +1,5 @@
 import { LoaderConfigurationError, LoaderConfig, NormalizedLoaderConfig, Theme } from './types.js';
+import { normalizeBrand } from './brand.js';
 
 /**
  * Anything that could end a declaration, open a block, load a URL or break out of
@@ -198,6 +199,7 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   if (input.theme !== undefined && !THEMES.includes(input.theme)) throw new LoaderConfigurationError('theme must be light, dark, or system.');
   return {
     ...input,
+    brand: normalizeBrand(input.brand),
     size: dimension(input.size, '2.5rem'),
     width: dimension(input.width, dimension(input.size, '2.5rem')),
     height: dimension(input.height, dimension(input.size, '2.5rem')),

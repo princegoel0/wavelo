@@ -12,6 +12,15 @@ import { Loader as VueLoader, loaderFor as vueLoaderFor } from '../packages/vue/
 import { LoaderComponent } from '../packages/angular/dist/index.js';
 import { compile } from 'svelte/compiler';
 
+test('React and Vue render the same nested brand configuration as core', async () => {
+  const config = { type: 'brand-loader', brand: { text: 'ACME', caption: 'Starting', animation: 'shimmer', fontFamily: 'Georgia, serif', indicator: 'bar', showValue: true }, value: 60 };
+  const core = renderLoader(config).html;
+  assert.ok(renderToStaticMarkup(createElement(ReactLoader, config)).includes(core));
+  assert.ok((await renderToString(createSSRApp(VueLoader, config))).includes(core));
+  assert.equal(VueLoader.props.brand, Object);
+  assert.ok(Object.keys(LoaderComponent.ɵcmp.declaredInputs).includes('brand'));
+});
+
 const fullConfig = {
   type: 'progress-bar',
   size: 48,
@@ -199,6 +208,9 @@ test('Svelte component server-renders a loader with no DOM to leak into', async 
   assert.match(body, /--wavelo-size:48px/);
   assert.match(body, /aria-label="Loading data" role="status"/);
   assert.equal(head, '', 'the component styles itself on the client, so a server render must emit nothing into <head>');
+  const branded = render(WaveloLoader, { props: { type: 'brand-loader', brand: { text: 'ACME', animation: 'none', showValue: true }, value: 50 } });
+  assert.match(branded.body, /aria-label="ACME loading"/);
+  assert.match(branded.body, />50%<\/span>/);
 });
 
 test('registered defaults apply underneath a loader and lose to its own options', async () => {

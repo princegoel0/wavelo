@@ -16,6 +16,7 @@ export type CatalogEntry = [
 ];
 
 export const catalogEntries: readonly CatalogEntry[] = [
+  ['brand-loader', 'Brand text loader', 'application', 'progress', 'Custom brand lettering with selectable text motion and an optional spinner or progress indicator', '2d'],
   ['circular', 'Circular border', 'spinner', 'ring', 'Closed circular border with a sweeping accent arc', '2d'],
   ['ring', 'Ring', 'spinner', 'ring', 'Open ring spinner', '2d'],
   ['dual-ring', 'Dual ring', 'spinner', 'rings', 'Nested dual-ring rotation', '2d'],
@@ -88,7 +89,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['thinking-glow', 'Thinking glow', 'ai', 'pulse', 'An orb breathes inside a halo that leaves it', '2d'],
   ['stream-cursor', 'Stream cursor', 'ai', 'pulse', 'Block cursor blinking at the end of a streamed answer', '2d'],
   ['token-stream', 'Token stream', 'ai', 'wave', 'Short dashes appear at the left and travel right as tokens arrive', '2d'],
-  ['ai-shimmer', 'AI response shimmer', 'ai', 'skeleton', 'A tall rounded panel swept by one bright band', '2d'],
+  ['ai-shimmer', 'AI response shimmer', 'ai', 'skeleton', 'A wide rounded panel swept by one bright band', '2d'],
   ['neural-grid', 'Neural grid', 'ai', 'dots', 'Nine nodes pulse along a diagonal across a three-by-three grid', '2d'],
   ['skeleton-line', 'Skeleton text line', 'skeleton', 'skeleton', 'Single skeleton line', '2d'],
   ['skeleton-card', 'Skeleton card', 'skeleton', 'skeleton', 'Card placeholder', '2d'],
@@ -154,7 +155,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['save-indicator', 'Save indicator', 'application', 'ring', 'Document save status transitioning from spinning sync to saved check or error', '2d'],
   ['undo-progress', 'Undo progress', 'application', 'progress', 'Action toast bar that drains its time track and morphs to undone or dismissed state', '2d'],
   ['gyroscope', 'Gyroscope', 'creative', 'rings', 'Triple concentric gimbal rings rotating along three orthogonal axes with gyroscopic precession', '3d'],
-  ['tesseract', 'Tesseract', 'creative', 'shape', 'Four-dimensional hypercube isometric wireframe rotating and inverting through 3D perspective', '3d'],
+  ['tesseract', 'Tesseract', 'creative', 'shape', 'Projected hypercube wireframe with nested cubes and eight connecting edges turning in space', '3d'],
   ['sphere-lattice', 'Sphere lattice', 'creative', 'rings', 'Geodesic wireframe sphere composed of meridian and parallel rings spinning in true 3D space', '3d'],
   ['prism-refraction', 'Prism refraction', 'creative', 'shape', 'Rotating triangular crystal prism casting an iridescent rainbow spectral dispersion fan', '3d'],
   ['atom-orbital', 'Atom orbital', 'creative', 'orbit', 'Nuclear core with three orbital planes inclined in 3D space with electrons in planetary orbit', '3d'],
@@ -162,20 +163,20 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['hologram-pyramid', 'Hologram pyramid', 'creative', 'shape', 'Inverted translucent holographic pyramid hovering and rotating above a glowing laser pedestal', '3d'],
   ['black-hole-accretion', 'Black hole accretion', 'creative', 'orbit', 'Supermassive black hole event horizon encircled by a tilted relativistic accretion disk with Doppler beaming', '3d'],
   ['crystal-cluster', 'Crystal cluster', 'creative', 'shape', 'Cluster of three interlocking faceted quartz crystal points rotating with specular reflections in 3D space', '3d'],
-  ['mobius-band', 'Mobius band', 'creative', 'rings', 'Topological single-sided Mobius strip twisting 180 degrees through 3D space with a continuous light pulse traversing both faces', '3d'],
+  ['mobius-band', 'Mobius band', 'creative', 'rings', 'Continuous ribbon with a half twist rotating through 3D space', '3d'],
   ['vortex-tunnel', 'Vortex tunnel', 'creative', 'rings', 'Concentric depth gates accelerating along the Z axis from a vanishing point into a hyperspace warp tunnel', '3d'],
   ['isometric-deck', 'Isometric deck', 'creative', 'shape', 'Four floating document cards in isometric 3D space performing rhythmic cascading restacking and shuffling', '3d'],
   ['voxel-cluster', 'Voxel cluster', 'creative', 'shape', 'Four corner voxel cubes exploding radially in 3D space and snapping together with elastic bounce overshoot', '3d'],
-  ['torus-ring', 'Torus ring', 'creative', 'rings', 'Three-dimensional geometric torus loops rotating in 3D perspective with an orbiting photon energy bead', '3d'],
+  ['torus-ring', 'Torus ring', 'creative', 'rings', 'Continuous shaded torus with an open center, gently tilting as a bead orbits its surface', '3d'],
   ['cylindrical-wave', 'Cylindrical wave', 'creative', 'wave', 'Circular pin-matrix cylinder viewed at an isometric angle where vertical pins extrude in traveling sinusoidal waves', '3d'],
   ['liquid-mercury', 'Liquid mercury', 'creative', 'shape', 'Physics-simulated fluid metallic droplet floating and rippling under surface tension in microgravity', '3d'],
   ['dna-decode', 'DNA decode', 'creative', 'wave', 'Genome sequencing scanner with traveling holographic laser beam illuminating complementary base-pair nucleotides in 3D', '3d'],
   ['quantum-superposition', 'Quantum superposition', 'creative', 'dots', 'Wavefunction probability cloud in multiple eigenstates collapsing into a unified quantum singularity and re-expanding', '3d'],
-  ['magnetic-field', 'Magnetic field', 'creative', 'orbit', 'Toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow', '3d'],
+  ['magnetic-field', 'Magnetic field', 'creative', 'orbit', 'Six spatial field loops arching between two pulsing magnetic poles, rotating around their shared axis', '3d'],
   ['aurora-borealis', 'Aurora borealis', 'creative', 'wave', 'Volumetric curtains of solar wind plasma undulating slowly in 3D perspective with ethereal northern lights gradients', '3d'],
   ['agent-tree', 'Agent reasoning tree', 'ai', 'dots', 'Bioluminescent node graph simulating multi-step agent reasoning and tool retrieval', '2d'],
   ['aurora-ribbon', 'Aurora input ribbon', 'ai', 'ring', 'Fluid rotating ambient gradient ribbon hugging a container with subtle glowing blur', '2d'],
-  ['glyph-matrix', 'Glyph decryption', 'ai', 'shape', 'Monospace matrix cells rapidly flipping through alphanumeric runes into stable state', '2d'],
+  ['glyph-matrix', 'Glyph decryption', 'ai', 'shape', 'Monospace matrix of four fixed glyphs continuously flipping and fading', '2d'],
   ['ai-tool-handoff', 'AI tool handoff', 'ai', 'bars', 'Tool execution pipeline with interactive approval, completion, and error states', '2d'],
   ['ai-image-develop', 'AI image develop', 'ai', 'skeleton', 'Image generation development canvas with 3x3 staggered latent tile formation and preview frame', '2d'],
   ['document-extract', 'Document extract', 'ai', 'skeleton', 'Document scan line and structured data extraction pipeline with key-value illumination', '2d'],
@@ -191,7 +192,13 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['crt-scanline', 'Retro CRT scanline bar', 'application', 'progress', 'Bracketed ASCII terminal progress bar with stepped fill and horizontal phosphor scanline', '2d'],
   ['gooey-metaballs', 'Gooey metaballs', 'creative', 'dots', 'Fluid droplets stretching, coalescing, and pulling apart with visceral surface tension', '2d'],
   ['camera-iris', 'Camera aperture iris', 'creative', 'shape', 'Polygonal blades rotating inward to constrict and expand an optical aperture', '2d'],
-  ['newton-cradle', 'Newton cradle', 'creative', 'dots', 'Three-ball kinetic pendulum with elastic momentum transfer and trailing shockwaves', '2d']
+  ['newton-cradle', 'Newton cradle', 'creative', 'dots', 'Three-ball kinetic pendulum with elastic momentum transfer and trailing shockwaves', '2d'],
+  ['lotus-bloom', 'Lotus bloom', 'creative', 'pulse', 'Five translucent petals gently opening and closing around a shared base', '2d'],
+  ['signal-beacon', 'Signal beacon', 'application', 'pulse', 'Three wireless signal arcs lighting outward above a stationary source dot', '2d'],
+  ['conveyor-belt', 'Conveyor belt', 'application', 'bars', 'Three packages travelling across a roller conveyor in a continuous loop', '2d'],
+  ['zipper-flow', 'Zipper flow', 'creative', 'bars', 'Four pairs of zipper teeth drawing together and separating in a travelling wave', '2d'],
+  ['book-pages', 'Book pages', 'application', 'shape', 'An open book with three pages fanning across its central spine', '2d'],
+  ['pixel-weave', 'Pixel weave', 'creative', 'pulse', 'A checkerboard of nine square tiles shrinking and turning in a diagonal wave', '2d']
 ];
 
 /**

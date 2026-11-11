@@ -1,6 +1,4 @@
-export const css = `@keyframes wavelo-magnetic-spin{0%{transform:rotateX(25deg) rotateY(0deg) rotateZ(0deg)}100%{transform:rotateX(25deg) rotateY(360deg) rotateZ(360deg)}}
-@keyframes wavelo-magnetic-pole-n{0%,100%{transform:translateY(0) translateZ(14px) scale(1)}50%{transform:translateY(-3px) translateZ(18px) scale(1.18)}}
-@keyframes wavelo-magnetic-pole-s{0%,100%{transform:translateY(0) translateZ(-14px) scale(1)}50%{transform:translateY(3px) translateZ(-18px) scale(.88)}}
-@keyframes wavelo-magnetic-flux-1{0%{transform:rotateX(65deg) rotateY(25deg) translateZ(0) rotateZ(0deg)}100%{transform:rotateX(65deg) rotateY(25deg) translateZ(0) rotateZ(360deg)}}
-@keyframes wavelo-magnetic-flux-2{0%{transform:rotateX(65deg) rotateY(-35deg) translateZ(0) rotateZ(0deg)}100%{transform:rotateX(65deg) rotateY(-35deg) translateZ(0) rotateZ(360deg)}}`;
+export const css = `@keyframes wavelo-magnetic-spin{from{transform:rotateZ(-15deg) rotateX(15deg) rotateY(0deg)}to{transform:rotateZ(-15deg) rotateX(15deg) rotateY(360deg)}}
+@keyframes wavelo-magnetic-pole-n{0%{transform:rotateY(0deg) scale(1)}50%{transform:rotateY(-180deg) scale(1.15)}100%{transform:rotateY(-360deg) scale(1)}}
+@keyframes wavelo-magnetic-pole-s{0%{transform:rotateY(0deg) scale(1.15)}50%{transform:rotateY(-180deg) scale(1)}100%{transform:rotateY(-360deg) scale(1.15)}}`;
 

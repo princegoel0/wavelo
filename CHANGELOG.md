@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+- Corrected Tesseract, Mobius Band, Torus Ring and Magnetic Field after review of
+  their full animation cycles. Kept projected geometry away from edge-on collapse,
+  strengthened small wireframe strokes, closed the torus surface, and rebuilt the
+  magnetic field with six coordinated loops and two anchored poles.
+
+- Added `brand-loader` with custom text, captions, seven text animations, optional
+  ring/bar/dot indicators, typography and timing controls, and determinate progress.
+  The typed `brand` configuration works across every adapter and merges with app
+  defaults. The gallery includes a live brand editor and framework examples.
+  The catalog now has 181 public IDs, no deprecated aliases, and 28 configuration keys.
+
+- Added Lotus Bloom, Signal Beacon, Conveyor Belt, Zipper Flow, Book Pages and
+  Pixel Weave, bringing the catalog to 180 public IDs with no deprecated aliases.
+  Each ships as a modular import and works through all seven framework packages.
+
+- Fixed all 18 findings from the design audit: default loading animations, pause and
+  reduced-motion handling (including pseudo-elements and delays), 3D flattening,
+  inherited ring/orbit decoration, dark-theme ring contrast, aurora and metaball motion.
+- Rebuilt tesseract, voxel and Möbius geometry; restored the monochrome half disc,
+  code line numbers and map route; removed chat overlap. Corrected the AI shimmer
+  and glyph matrix descriptions to match their rendered designs.
+- Added catalog-wide animation-control regressions and targeted geometry checks.
+- Moved the restored Media Transcode scan to transform animation to avoid layout
+  on every frame; expanded customization measurement to include SVG strokes.
+
 - **Fix — `className` now accepts the way consumers actually style things.** The validator
   allowed letters, digits, space, dash and underscore, so every Tailwind variant
   (`dark:text-indigo-400`, `md:size-6`, `group-hover:opacity-50`) and every arbitrary value

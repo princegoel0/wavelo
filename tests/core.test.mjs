@@ -3,6 +3,35 @@ import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, renderStylesheets, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
+test('brand text is escaped, segmented and labelled consistently', () => {
+  const text = 'A👩‍💻e\u0301 & <x>';
+  const r = renderLoader({ type: 'brand-loader', brand: { text, caption: '<img src=x>', fontFamily: '"My Font", sans-serif' } });
+  assert.ok(r.html.includes('👩‍💻</span>') && r.html.includes('e\u0301</span>'));
+  assert.ok(r.html.includes('&lt;img src=x&gt;') && !r.html.includes('<img'));
+  assert.match(r.html, /role="status"/);
+  assert.match(r.html, /aria-label="A👩‍💻é &amp; &lt;x&gt; loading"/);
+  assert.match(r.html, /font-family:&quot;My Font&quot;, sans-serif/);
+  const p = renderLoader({ type: 'brand-loader', value: 25, max: 50, brand: { showValue: true } });
+  assert.match(p.html, /role="progressbar"/);
+  assert.match(p.html, /aria-valuenow="25"/);
+  assert.match(p.html, />50%<\/span>/);
+  assert.match(p.html, /--brand-progress:0.5/);
+  assert.doesNotMatch(renderLoader({ type: 'brand-loader', decorative: true }).html, /role="status"/);
+  assert.equal(renderLoader({ type: 'brand-loader', loading: false }).html, '');
+});
+
+test('brand validation rejects invalid configuration and preserves attribute objects', async () => {
+  for (const brand of [null, [], 'ACME', { animation: 'unknown' }, { indicator: 'svg' }, { amplitude: Infinity }, { delay: -1 }, { stagger: 3 }, { fontSize: -2 }, { fontFamily: 'serif; color:red' }, { textColor: 'red;display:none' }, { easing: 'cubic-bezier(2,0,0,1)' }, { text: 'a'.repeat(81) }, { text: 'a\nb' }, { showValue: 'true' }, { unknown: 1 }]) {
+    assert.throws(() => renderLoader({ type: 'brand-loader', brand }), LoaderConfigurationError);
+  }
+  assert.throws(() => configFromAttributes({ brand: '{bad' }));
+  assert.deepEqual(configFromAttributes({ brand: '{"text":"ACME","showValue":true}' }).brand, { text: 'ACME', showValue: true });
+  const { mergeWaveloConfig } = await import('../packages/core/dist/index.js');
+  assert.deepEqual(mergeWaveloConfig({ brand: { text: 'ACME', fontWeight: 700 } }, { brand: { animation: 'pulse', text: undefined } }).brand, { text: 'ACME', fontWeight: 700, animation: 'pulse' });
+  const joined = renderLoader({ type: 'brand-loader', brand: { text: 'مرحبا', animation: 'shimmer' } });
+  assert.match(joined.html, />مرحبا<\/span>/);
+});
+
 test('catalog has distinct metadata and required categories', () => {
   assert.ok(new Set(loaderRegistry.map((loader) => loader.id)).size >= 60);
   const active = loaderRegistry.filter((loader) => !loader.deprecated);
@@ -252,7 +281,7 @@ test('className accepts the strings real stylesheets emit and refuses the ones t
 
 test('loaderConfigKeys covers the whole documented configuration surface', () => {
   assert.deepEqual([...loaderConfigKeys].sort(), [
-    'backgroundColor', 'className', 'color', 'count', 'data-testid', 'decorative', 'describedBy', 'direction',
+    'backgroundColor', 'brand', 'className', 'color', 'count', 'data-testid', 'decorative', 'describedBy', 'direction',
     'duration', 'height', 'inline', 'label', 'labelledBy', 'loading', 'max', 'paused', 'reducedMotion',
     'secondaryColor', 'size', 'speed', 'strokeWidth', 'style', 'theme', 'type', 'value', 'valueText', 'width'
   ]);
@@ -711,7 +740,10 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloCategories.includes(cat));
   }
   assert.ok(Array.isArray(WaveloTypes));
-  assert.equal(WaveloTypes.length, 174);
+  assert.equal(WaveloTypes.length, 181);
+  for (const id of ['lotus-bloom', 'signal-beacon', 'conveyor-belt', 'zipper-flow', 'book-pages', 'pixel-weave']) {
+    assert.ok(WaveloTypes.includes(id));
+  }
   assert.equal(WaveloTypes, loaderIds);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));

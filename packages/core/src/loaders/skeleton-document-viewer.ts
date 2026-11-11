@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "skeleton-document-viewer", name: "Document viewer skeleton", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Document review workspace with top toolbar, thumbnail sidebar, and portrait sheet", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","size","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-document-viewer" };
+const definition: LoaderDefinition = { id: "skeleton-document-viewer", name: "Document viewer skeleton", category: "skeleton", dimension: "2d", kind: "skeleton", description: "Document review workspace with top toolbar, thumbnail sidebar, and portrait sheet", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "skeleton-document-viewer" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const skeletonDocumentViewer = (config: Omit<LoaderConfig, 'type'> = {}) =>

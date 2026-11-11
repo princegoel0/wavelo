@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "spiral-galaxy", name: "Spiral galaxy", category: "creative", dimension: "2d", kind: "orbit", description: "Luminous galactic core with logarithmic curved spiral arms and cosmic dust rotation", options: ["className","color","data-testid","decorative","describedBy","height","inline","label","labelledBy","loading","reducedMotion","secondaryColor","size","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "spiral-galaxy" };
+const definition: LoaderDefinition = { id: "spiral-galaxy", name: "Spiral galaxy", category: "creative", dimension: "2d", kind: "orbit", description: "Luminous galactic core with logarithmic curved spiral arms and cosmic dust rotation", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "spiral-galaxy" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const spiralGalaxy = (config: Omit<LoaderConfig, 'type'> = {}) =>

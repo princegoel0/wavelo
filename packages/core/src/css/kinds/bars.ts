@@ -1,3 +1,5 @@
+import { css as addition0Frames } from '../keyframes/conveyor-belt.js';
+import { css as addition1Frames } from '../keyframes/zipper-flow.js';
 import { css as equalizerFrames } from '../keyframes/equalizer.js';
 import { css as fadeBarFrames } from '../keyframes/fade-bar.js';
 import { css as growBarFrames } from '../keyframes/grow-bar.js';
@@ -70,7 +72,7 @@ export const barsCss = `
 .wavelo--ai-tool-handoff .wavelo__part:nth-child(2):after{content:"";position:absolute;left:0;top:calc(50% - 3px);width:26%;height:6px;border-radius:999px;background:linear-gradient(90deg,currentColor,var(--wavelo-secondary-color,#a855f7));box-shadow:0 0 6px currentColor;animation:wavelo-handoff-travel var(--wavelo-duration,1.4s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--ai-tool-handoff .wavelo__part:nth-child(3){position:relative;width:calc(var(--wavelo-size,2.5rem)*.24);height:calc(var(--wavelo-size,2.5rem)*.24);min-width:9px;min-height:9px;border-radius:2px;border:var(--wavelo-stroke,2px) solid var(--wavelo-secondary-color,#a855f7);transform:rotate(45deg);flex-shrink:0;background:color-mix(in srgb,var(--wavelo-secondary-color,#a855f7) 15%,transparent);animation:wavelo-pulse var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1.4s)*-.7)}
 .wavelo--ai-tool-handoff .wavelo__part:nth-child(3):before{content:"";position:absolute;inset:20%;border-radius:1px;background:var(--wavelo-secondary-color,#a855f7)}
-.wavelo--ai-tool-handoff:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--ai-tool-handoff[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
 .wavelo--ai-tool-handoff[data-wavelo-state="approval"] .wavelo__part:nth-child(2){background:color-mix(in srgb,var(--wavelo-secondary-color,#f59e0b) 35%,transparent)}
 .wavelo--ai-tool-handoff[data-wavelo-state="approval"] .wavelo__part:nth-child(2):after{left:50%;transform:translateX(-50%);animation:none;width:14px;height:14px;top:calc(50% - 7px);border-radius:3px;background:var(--wavelo-secondary-color,#f59e0b);box-shadow:0 0 6px var(--wavelo-secondary-color,#f59e0b)}
 .wavelo--ai-tool-handoff[data-wavelo-state="approval"] .wavelo__part:nth-child(2):before{content:"";position:absolute;left:50%;top:calc(50% - 4px);width:6px;height:8px;transform:translateX(-50%);border-left:2px solid #000;border-right:2px solid #000;z-index:2}
@@ -89,11 +91,11 @@ export const barsCss = `
 .wavelo--media-transcode .wavelo__part:nth-child(1):before{content:"";position:absolute;inset:2px 2px auto 2px;height:3px;background:repeating-linear-gradient(90deg,currentColor 0 3px,transparent 3px 6px)}
 .wavelo--media-transcode .wavelo__part:nth-child(1):after{content:"";position:absolute;inset:auto 2px 2px 2px;height:3px;background:repeating-linear-gradient(90deg,currentColor 0 3px,transparent 3px 6px)}
 .wavelo--media-transcode .wavelo__part:nth-child(2){position:relative;width:24%;height:92%;border:var(--wavelo-stroke,2px) solid var(--wavelo-secondary-color,#38bdf8);border-radius:4px;background:color-mix(in srgb,var(--wavelo-secondary-color,#38bdf8) 12%,transparent);flex-shrink:0;overflow:hidden}
-.wavelo--media-transcode .wavelo__part:nth-child(2):before{content:"";position:absolute;left:0;right:0;height:3px;top:0;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 6px var(--wavelo-secondary-color,#38bdf8);animation:wavelo-transcode-scan var(--wavelo-duration,1.4s) ease-in-out infinite alternate var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--media-transcode .wavelo__part:nth-child(2):before{content:"";position:absolute;left:0;right:0;height:100%;top:0;background:linear-gradient(90deg,transparent,#fff,transparent) top/100% 3px no-repeat;filter:drop-shadow(0 0 6px var(--wavelo-secondary-color,#38bdf8));animation:wavelo-transcode-scan var(--wavelo-duration,1.4s) ease-in-out infinite alternate var(--wavelo-play-state,running)}
 .wavelo--media-transcode .wavelo__part:nth-child(3){position:relative;width:30%;height:80%;border:var(--wavelo-stroke,2px) dashed color-mix(in srgb,currentColor 40%,transparent);border-radius:4px;background:color-mix(in srgb,currentColor 6%,transparent);flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .wavelo--media-transcode .wavelo__part:nth-child(3):before{content:"";width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid color-mix(in srgb,currentColor 50%,transparent);margin-left:2px;animation:wavelo-pulse var(--wavelo-duration,1.4s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1.4s)*-.7)}
-.wavelo--media-transcode:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
-.wavelo--media-transcode:not([data-wavelo-state="loading"]) .wavelo__part:before{animation:none}
+.wavelo--media-transcode[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--media-transcode[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part:before{animation:none}
 .wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(2){border-color:var(--wavelo-success-color,#22c55e);background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 15%,transparent)}
 .wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(2):before{display:none}
 .wavelo--media-transcode:is([data-wavelo-state="ready"],[data-wavelo-state="success"]) .wavelo__part:nth-child(3){border-style:solid;border-color:var(--wavelo-success-color,#22c55e);background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 15%,transparent)}
@@ -101,4 +103,18 @@ export const barsCss = `
 .wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(2){border-color:var(--wavelo-error-color,#ef4444);background:color-mix(in srgb,var(--wavelo-error-color,#ef4444) 15%,transparent)}
 .wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(2):before{content:"\\00d7";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--wavelo-error-color,#ef4444);font-size:12px;font-weight:700;line-height:1;background:none;box-shadow:none}
 .wavelo--media-transcode:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(3){border-color:var(--wavelo-error-color,#ef4444)}
-${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}${packetFlowFrames}${handoffFrames}${transcodeScanFrames}`;
+${equalizerFrames}${fadeBarFrames}${growBarFrames}${pianoFrames}${fireFrames}${packetFlowFrames}${handoffFrames}${transcodeScanFrames}
+.wavelo--conveyor-belt{width:var(--wavelo-width,calc(var(--wavelo-size,2.5rem)*2));overflow:hidden}
+.wavelo--conveyor-belt:before{content:"";position:absolute;left:0;right:0;bottom:18%;height:14%;border:var(--wavelo-stroke,2px) solid currentColor;border-radius:999px;background:radial-gradient(circle,currentColor 25%,transparent 30%) 0 50%/12% 100% repeat-x}
+.wavelo--conveyor-belt .wavelo__part{position:absolute;left:-22%;top:34%;width:18%;height:34%;box-sizing:border-box;border:1px solid currentColor;border-radius:2px;background:linear-gradient(90deg,transparent 42%,currentColor 42% 58%,transparent 58%),color-mix(in srgb,var(--wavelo-secondary-color,#fbbf24) 45%,transparent);animation:wavelo-conveyor-belt var(--wavelo-duration,2.4s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--conveyor-belt .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,2.4s)/-3)}.wavelo--conveyor-belt .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,2.4s)*-2/3)}
+.wavelo--zipper-flow{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);gap:8% 4%;padding:calc(var(--wavelo-size,2.5rem)*.08) calc(var(--wavelo-size,2.5rem)*.18)}
+.wavelo--zipper-flow.wavelo-inline{display:inline-grid}
+.wavelo--zipper-flow .wavelo__part{width:100%;height:100%;border-radius:2px;--tooth-shift:-35%;background:currentColor;animation:wavelo-zipper-flow var(--wavelo-duration,1.8s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--zipper-flow .wavelo__part:is(:nth-child(1),:nth-child(2)){animation-delay:0s}
+.wavelo--zipper-flow .wavelo__part:nth-child(even){--tooth-shift:35%;background:var(--wavelo-secondary-color,#38bdf8)}
+.wavelo--zipper-flow .wavelo__part:is(:nth-child(3),:nth-child(4)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.15)}
+.wavelo--zipper-flow .wavelo__part:is(:nth-child(5),:nth-child(6)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.3)}
+.wavelo--zipper-flow .wavelo__part:is(:nth-child(7),:nth-child(8)){animation-delay:calc(var(--wavelo-duration,1.8s)*-.45)}
+${addition0Frames}${addition1Frames}
+`;

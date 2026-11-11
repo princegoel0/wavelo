@@ -1,31 +1,38 @@
 {
+  "brand-loader": {
+    "id": "brand-loader",
+    "category": "application",
+    "dimension": "2d",
+    "size": 13369,
+    "hash": "63bc1bcaa82fa97c3b993ef627a3441e0eb7f0aaba00ec890058ef4892d5701a"
+  },
   "circular": {
     "id": "circular",
     "category": "spinner",
     "dimension": "2d",
-    "size": 10021,
-    "hash": "e96983e6b50dcb08dba3ff46226618d25e90320788679bc43c3dc3be30840bd6"
+    "size": 9421,
+    "hash": "1b2ccdc8f31d6bd62a1aa257108031b75017c97c2260eb8866c7c4ab47e6acfb"
   },
   "ring": {
     "id": "ring",
     "category": "spinner",
     "dimension": "2d",
-    "size": 8838,
-    "hash": "8075c2588f5e5f24fd0a107e067cb33b27562a61a9fd54a49957d89b71479897"
+    "size": 9012,
+    "hash": "849f4e36e223b364d206c2801c150d7592f62f43596e4d501cb88b4472f772ee"
   },
   "dual-ring": {
     "id": "dual-ring",
     "category": "spinner",
     "dimension": "2d",
-    "size": 9280,
-    "hash": "4fcd3fdfa35c2201e4ccaa58a75e406e324e4a9e4989903a828befbb03af7d39"
+    "size": 9415,
+    "hash": "6d7540d9d3cb11970677b8f43b188757f88667a7f82d5650e705abfa8c6f0e10"
   },
   "multi-arc": {
     "id": "multi-arc",
     "category": "spinner",
     "dimension": "2d",
-    "size": 8908,
-    "hash": "86f84154a34b746caf624471eecd2daaa825c7699ede5a492870c850fc7efe8e"
+    "size": 9287,
+    "hash": "4660e1768cbc60e4105ddebc8a0b781ba5a5604be56c5b0170b3c87e11ea4613"
   },
   "dotted-circle": {
     "id": "dotted-circle",
@@ -45,15 +52,15 @@
     "id": "ellipse",
     "category": "spinner",
     "dimension": "3d",
-    "size": 8384,
-    "hash": "7c85f5404858a742fa4454138a9dfcaf9c5d813b448c2699d84faf3b38468b78"
+    "size": 8279,
+    "hash": "be1b880d0655948e4b6ef1f267d933f806f43c8d8db5b4f95d628a0dcb537141"
   },
   "rotating-square": {
     "id": "rotating-square",
     "category": "spinner",
     "dimension": "3d",
-    "size": 8246,
-    "hash": "6f6e421c647d5c7d507ecfcfd80f3bf619100d51efd5992e8e5f5becb53b1d1a"
+    "size": 8111,
+    "hash": "3d55045b75ad2c85e831bdcf8b2f5f401ffb0893f211b0d77f98c8456fab6e5f"
   },
   "orbiting-dots": {
     "id": "orbiting-dots",
@@ -73,15 +80,15 @@
     "id": "gradient-ring",
     "category": "spinner",
     "dimension": "2d",
-    "size": 9007,
-    "hash": "a34a296d2b97e3566a353e8e57f79dabda89ba105968b979ab99c1357d5dea9d"
+    "size": 8947,
+    "hash": "0105d20f457be41f801f1d12ca3dedf3ad0fb410c90846c2b2c43adaefd174c1"
   },
   "neon-ring": {
     "id": "neon-ring",
     "category": "spinner",
     "dimension": "2d",
-    "size": 8705,
-    "hash": "c3d2657503c66e10b3ba36fd9fc99d57483969f178193b26ef2c3afd1e320de2"
+    "size": 9010,
+    "hash": "48221709754995daa7dd1056b94ce52349f9df022130c5d3c95b043b0752a0ee"
   },
   "rubber-band": {
     "id": "rubber-band",
@@ -101,15 +108,15 @@
     "id": "clock-spinner",
     "category": "spinner",
     "dimension": "2d",
-    "size": 9375,
-    "hash": "a6cfe9ef359acc8bc1f859f5759786c4db36d329f87fa1558876b063345b076f"
+    "size": 9338,
+    "hash": "6e3691719b3fad3c806a070205b4ee71046b56afd36b0a85533335304a4c78f3"
   },
   "monochrome": {
     "id": "monochrome",
     "category": "spinner",
     "dimension": "2d",
-    "size": 9306,
-    "hash": "713def44326e85044b65d5f158772f178e6c2dd27a94c204c83fac6d5a0201d4"
+    "size": 7360,
+    "hash": "4b1b33d7dd044ed5ac60dab2cd60a7a8e4ead4bac67d9ace2ae03bb95aea4e5c"
   },
   "svg-star": {
     "id": "svg-star",
@@ -129,15 +136,15 @@
     "id": "pulsing-dots",
     "category": "dots",
     "dimension": "2d",
-    "size": 7519,
-    "hash": "7969e1fb2f1727a083f14bd0c3679614df4816f224f5338be6e30b37280cbbf9"
+    "size": 7412,
+    "hash": "16b858e3a4c5aa940aa4612a3996564345e261a3ec4cd0967ea54f6330eaa8af"
   },
   "fading-dots": {
     "id": "fading-dots",
     "category": "dots",
     "dimension": "2d",
-    "size": 7281,
-    "hash": "f6aef1b3a0102bc1e5ecf2471b114dc672621a925a5c02e2be27c48cebb3d2c5"
+    "size": 7555,
+    "hash": "41b06f991ba0501484fc662e38ec5bcf412cfabf82ec9cf5c67f102644f2193a"
   },
   "rotating-dots": {
     "id": "rotating-dots",
@@ -157,15 +164,15 @@
     "id": "dot-matrix",
     "category": "dots",
     "dimension": "2d",
-    "size": 9403,
-    "hash": "fa3707e1c035f3d80a0c65eb328ab9fe2931e7a69163e162f5913d8f51cd186d"
+    "size": 9328,
+    "hash": "e03cdf32c007eeb283815088f3a18e876bccf4bb4ec786cac390ed9192718582"
   },
   "grid-pulse": {
     "id": "grid-pulse",
     "category": "dots",
     "dimension": "2d",
-    "size": 10049,
-    "hash": "4fe0d83f02a0a5e5b701d53f8078743078d017d2c2e764465b40b827aeb25f6f"
+    "size": 9734,
+    "hash": "145cce1b7205b2eb93414a8074ca4f372c67dfd51460c7afa3f03b5378baa1a7"
   },
   "alternating-dots": {
     "id": "alternating-dots",
@@ -185,15 +192,15 @@
     "id": "ripple-dot",
     "category": "dots",
     "dimension": "2d",
-    "size": 8526,
-    "hash": "699180c2f019f4b18e603731bccc96c06c5242fe3f9ff769447332e585872a5b"
+    "size": 8421,
+    "hash": "d24685cc6147d4279f6bec9bbe377e1bb7ca47476c284d4c2b7bbceab20a29ae"
   },
   "staggered-dots": {
     "id": "staggered-dots",
     "category": "dots",
     "dimension": "2d",
-    "size": 7460,
-    "hash": "5cc347b82681e09dc12c7756eebe2416ca0e708720fd28e555ba4b206f481fc8"
+    "size": 7759,
+    "hash": "9c3e215ccc50d90d7da3bf5e9d5ca7441569ac873db190aa2e6e8656c1db5232"
   },
   "magnetic-dots": {
     "id": "magnetic-dots",
@@ -213,71 +220,71 @@
     "id": "constellation",
     "category": "dots",
     "dimension": "2d",
-    "size": 9088,
-    "hash": "480969511dbdd13e21b74bbc1a64556df8c5ec292ae4fa2f0eb10520e5bcdba8"
+    "size": 8984,
+    "hash": "4cd9a1943389bc4f05ceafd63e174c9699d74c186b520afff6c0feec2f6d8cd4"
   },
   "bubble-rise": {
     "id": "bubble-rise",
     "category": "dots",
     "dimension": "2d",
-    "size": 8226,
-    "hash": "ff826017e4904e91375a21949b4e4101c3eca56388c76255b09e341fd61bb7f7"
+    "size": 8506,
+    "hash": "5605e59d4869153dd2adaa887d7d0d1039e17c8a72700ae1884fc0e01e7b9749"
   },
   "fireflies": {
     "id": "fireflies",
     "category": "dots",
     "dimension": "2d",
-    "size": 8927,
-    "hash": "4555da32a93039409d925b57aea66e0d61240d6160d5bf910670416824237295"
+    "size": 9383,
+    "hash": "289b52e0e111b769543a2b6e25160824affc832849e60c7c3f46af186bacd2dc"
   },
   "solar-system": {
     "id": "solar-system",
     "category": "dots",
     "dimension": "2d",
-    "size": 11657,
-    "hash": "7b5583ec2f31e8ec746eefa4d6af3de642e2b93f0431affb2ae8265fc66b7dcc"
+    "size": 11386,
+    "hash": "d813720d51c96cdb090d85354997a7ad4aa0f5753d11be46e10c839e414f76df"
   },
   "equalizer": {
     "id": "equalizer",
     "category": "bars",
     "dimension": "2d",
-    "size": 8500,
-    "hash": "debaa8874bfec123173a57184b9cf9b5809c4e503776a0f8cd323a6aa41f5e9a"
+    "size": 7872,
+    "hash": "80e500d0da74acf8fd8d6da4e91f3e49efef0e212be5596a6081d7a5d2886f6b"
   },
   "horizontal-pulse-bars": {
     "id": "horizontal-pulse-bars",
     "category": "bars",
     "dimension": "2d",
-    "size": 7445,
-    "hash": "ea8c97133aafc6e0ae77441f2233efd89e0b4ddd173fe60a78e5eab99b212cbe"
+    "size": 7499,
+    "hash": "7ddea55b25df4092dbb3d93352c2b0da34bc261611e2482354dcbd38e0322148"
   },
   "fading-bars": {
     "id": "fading-bars",
     "category": "bars",
     "dimension": "2d",
-    "size": 7938,
-    "hash": "a3184ae4aa9fe70096ab20a4921faeaff02decd63b447acec58d5e7d6f58890b"
+    "size": 8263,
+    "hash": "0dc80e595908854f0bebd9086893018fe620b99861f1ee1129fa6a2236f48b05"
   },
   "growing-bars": {
     "id": "growing-bars",
     "category": "bars",
     "dimension": "2d",
-    "size": 8455,
-    "hash": "a0f4473bc7951e003be7e3467ed2e5fa2326936d931a5df2de23b543ad660d74"
+    "size": 8659,
+    "hash": "0d48ddb00aa5f8b3c2ded54100045a6e0f1a6fc3d0f51925106ed2dc0dbc54ad"
   },
   "alternating-bars": {
     "id": "alternating-bars",
     "category": "bars",
     "dimension": "2d",
-    "size": 8249,
-    "hash": "2673336f15101f2758ab8cd53d1b6042cc478e8f01713dd7e4572121707b7fa3"
+    "size": 8347,
+    "hash": "1ae10514b4afc0200f1727fde660228dade4a38079338e869d96cc959431945c"
   },
   "piano-keys": {
     "id": "piano-keys",
     "category": "bars",
     "dimension": "2d",
-    "size": 8133,
-    "hash": "242e552dca4064d722b6b6fe98728d4503f9820cdcfdc24f5be58090ea1af98a"
+    "size": 8536,
+    "hash": "0bad2dce0293e33c9c65092fa48ab440719c9e1c47f00dc098ad332afb02adc5"
   },
   "fire-rise": {
     "id": "fire-rise",
@@ -297,50 +304,50 @@
     "id": "breathing",
     "category": "bars",
     "dimension": "2d",
-    "size": 7660,
-    "hash": "98cd8f277296379017821c3b3531fbcc4e67bcab5b561ceec1f203f89c38275f"
+    "size": 7587,
+    "hash": "b0b0140f69b421e944a361687d72cb713ef51de5fbb6882f617cab1e37aa62f9"
   },
   "segmented-bar": {
     "id": "segmented-bar",
     "category": "progress",
     "dimension": "2d",
-    "size": 7275,
-    "hash": "99c2810ea72293bdfc43d17b04d81f06a8a99862a99cdf3c16d4cc970f400b41"
+    "size": 7285,
+    "hash": "8782b4d57496f912a86d14d031bacc0b17ff7236332d65cf3dab1258f728a0c9"
   },
   "moving-stripe": {
     "id": "moving-stripe",
     "category": "bars",
     "dimension": "2d",
-    "size": 8029,
-    "hash": "1bbf59754a210a5a29c482d0da405f5d7340458bacc080d7f4ccbc12286c4be6"
+    "size": 8057,
+    "hash": "0075c3804ae504d00d541c69002898892ebf6b95eb80d00012c55c2862a70300"
   },
   "traveling-highlight": {
     "id": "traveling-highlight",
     "category": "bars",
     "dimension": "2d",
-    "size": 8179,
-    "hash": "8b3d90133de0f8a0af8b5d29a1a7d9d5db428f648b985659aef77fc8775a6a7d"
+    "size": 8426,
+    "hash": "e94dfa547161b074f1fec8c7f59792c9d30d6b953e5382e5ce4f7d7311350727"
   },
   "oscillating-line": {
     "id": "oscillating-line",
     "category": "bars",
     "dimension": "2d",
-    "size": 10250,
-    "hash": "fd32d740c126e80532127722e54866558914e9d9913d7f63f9f000e99129b5bb"
+    "size": 9945,
+    "hash": "5436b211a8321b47dfc3db6e0c1c2b9909ecd02a0d92edb90b7715bb7463895d"
   },
   "multi-wave": {
     "id": "multi-wave",
     "category": "bars",
     "dimension": "2d",
-    "size": 7689,
-    "hash": "e061488040b58bc2eddb0cf5c503766f97436ce82eb6de150be7c95357c40ea4"
+    "size": 7343,
+    "hash": "3aa162e2ba3d59eeb1b3be818c0ae951480a4cbfc25f8fea5a6466ac7e19f9c4"
   },
   "ripple-circles": {
     "id": "ripple-circles",
     "category": "creative",
     "dimension": "2d",
-    "size": 9730,
-    "hash": "7db278097be5fbf9fe7eb8b23b80c8b97c90699fe7a5fd7e24ad2c9c55c5261f"
+    "size": 7524,
+    "hash": "5dc691bad5214ee521a62f3cc88d250626f4d174feef21c203779ca4dba141c5"
   },
   "morphing-shapes": {
     "id": "morphing-shapes",
@@ -353,71 +360,71 @@
     "id": "infinity",
     "category": "creative",
     "dimension": "2d",
-    "size": 15266,
-    "hash": "a0f15fbd849016aae1b8cb110a0d15cece8c393ad1b1f3eb6d307d4b6359cc61"
+    "size": 15163,
+    "hash": "985493e70826f6eb14abdc768a8d1e696286f3c10124ad902babdab8d0604ac1"
   },
   "helix": {
     "id": "helix",
     "category": "creative",
     "dimension": "3d",
-    "size": 17914,
-    "hash": "8de98c98717992fdbdc10fa2b38e4f95d2b81f2bfcc061be60ea0c437f79ba8b"
+    "size": 17479,
+    "hash": "e667d844e2542555e25f4baed374d78c27bba24732b5bbf8505f0785c5299607"
   },
   "cube": {
     "id": "cube",
     "category": "creative",
     "dimension": "3d",
-    "size": 7687,
-    "hash": "9858a956f6c3793af6baa3ba2b71807e31f4c0754079409089af90b412d57e53"
+    "size": 9517,
+    "hash": "3d936ee2409b1cbc99a0ce1f1048624b8759847fd2c3a02a738578147fe79852"
   },
   "polygon": {
     "id": "polygon",
     "category": "creative",
     "dimension": "2d",
-    "size": 9581,
-    "hash": "ffd23c8920f9999e1b0fc12fc238911c820cb2d8bb14a15eb690f0db3ad96849"
+    "size": 9593,
+    "hash": "7b3162ea5b39614563758b76333225cde5029a531e56099d2b52c0412301dfc1"
   },
   "triangles": {
     "id": "triangles",
     "category": "creative",
     "dimension": "2d",
-    "size": 8613,
-    "hash": "d788a8203b5585e71f45abdc2ae0a46dd4f0802e819e3e868b0470279e5f047c"
+    "size": 8478,
+    "hash": "52e72fe12e2019dae1b7f545c744bc09f109ca6111a46491c92008f98b530058"
   },
   "folding-squares": {
     "id": "folding-squares",
     "category": "creative",
     "dimension": "3d",
-    "size": 10056,
-    "hash": "696ea834a31a8b1a97e44370b3f4132629620821b6170b7bee5310dd445aa838"
+    "size": 10512,
+    "hash": "290404f324b2745558029f5bd0f46d73c52bc920102c91c076ee2aead1efdc27"
   },
   "nested-squares": {
     "id": "nested-squares",
     "category": "creative",
     "dimension": "2d",
-    "size": 9840,
-    "hash": "05ea309997291747611a6fb4fa81f180e4de0e27506d2fe7a169b04c614db15f"
+    "size": 9446,
+    "hash": "85de9ddb8499f97f56fd5e82646e43496afb8ff0de59c00d7c4f4f343682320e"
   },
   "concentric-pulse": {
     "id": "concentric-pulse",
     "category": "creative",
     "dimension": "2d",
-    "size": 9756,
-    "hash": "7866caa648e41090f9bb4673e6c743c84ef865b49a8dfdfd0266c75a197bdefa"
+    "size": 9800,
+    "hash": "0d7d4d7ba83b3b998e61b22fa1af31398f8cf293425364cea6efb3c6755c1be9"
   },
   "trip-orbit": {
     "id": "trip-orbit",
     "category": "creative",
     "dimension": "2d",
-    "size": 7994,
-    "hash": "6e5a5fa569b59ce149864c64eee9b3f21c2efdcf5614a20cd7eb4c510c513c45"
+    "size": 8174,
+    "hash": "db3e807a463a5a05243d9c6cc5730225a06976347df4d41c0eace7fe9ba8d800"
   },
   "liquid-blob": {
     "id": "liquid-blob",
     "category": "creative",
     "dimension": "2d",
-    "size": 12754,
-    "hash": "1e2c40f77127bd948710105e3ad09c00690457f398925a6d6d53fc0d679b6037"
+    "size": 13195,
+    "hash": "5e35313fcdcb2e7ffa8445cf0c4357f1ab47189f8bc290f3275f017f23f02491"
   },
   "sand-timer": {
     "id": "sand-timer",
@@ -437,15 +444,15 @@
     "id": "metronome",
     "category": "creative",
     "dimension": "2d",
-    "size": 8744,
-    "hash": "5cf647c0b56cdfad62e70f20ca7fc0d3bb6eff3f16c9c2b5c5d8dfda35fdca8f"
+    "size": 8693,
+    "hash": "b6a059e916e71236a00404e0660850f7218d481613d656c03563ba8bf5b06c97"
   },
   "spiral": {
     "id": "spiral",
     "category": "creative",
     "dimension": "2d",
-    "size": 9401,
-    "hash": "21a40f6356782c89421e3a09cb80f3100539d4aae0e5f33206bdf0cbc08e77c4"
+    "size": 9208,
+    "hash": "f008d9454da6f5f1fe9208efd5b24eed51de5fae7e9e2349fcf4582897586db0"
   },
   "radar": {
     "id": "radar",
@@ -465,15 +472,15 @@
     "id": "typing-dots",
     "category": "ai",
     "dimension": "2d",
-    "size": 7644,
-    "hash": "7e1a8eecc436dfbdf584609748de1e10b479b3e8f14d66f5a3d3584fe6f5c376"
+    "size": 7514,
+    "hash": "646d776a8e5e80fd38f8e7082888524a5a9052edf3a1f7a4b6c80a7d9e3d6b71"
   },
   "thinking-glow": {
     "id": "thinking-glow",
     "category": "ai",
     "dimension": "2d",
-    "size": 8511,
-    "hash": "b9610e24ea4f38e1dd3cb84b95496f1cf5528093519a6ccd43b93934321f9267"
+    "size": 8835,
+    "hash": "90288656999c62eff62ebe854428bb7116274fa39d3123362e0341c49d7abea8"
   },
   "stream-cursor": {
     "id": "stream-cursor",
@@ -493,15 +500,15 @@
     "id": "ai-shimmer",
     "category": "ai",
     "dimension": "2d",
-    "size": 8398,
-    "hash": "ed86639f17bd822cae37ec599e73b1c9ca5dc780be22e7e081cce7960f26fe7f"
+    "size": 7869,
+    "hash": "fd8bb90f985642cc7ae612e4c3b72a0149198df84bd40ef01921834f63fb4b4e"
   },
   "neural-grid": {
     "id": "neural-grid",
     "category": "ai",
     "dimension": "2d",
-    "size": 12969,
-    "hash": "168aefaed6a7b81b7324459dd9d1b886885a270a68923a4a0b02603ac0b1e934"
+    "size": 12479,
+    "hash": "73516c12ffdfa7e74bba5d92b4b34af90b06bd99d97ea1f4386427f01ddddfc3"
   },
   "skeleton-line": {
     "id": "skeleton-line",
@@ -521,323 +528,323 @@
     "id": "skeleton-avatar",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8475,
-    "hash": "0ebdd9ae9d416a3bafb5d9a266d29f251d4be8325ea90376948607eb297991a3"
+    "size": 8380,
+    "hash": "c1c6b286200ac35b47b6541ca90a4d77dfef13c85bbb32743983bdb065e37c4d"
   },
   "skeleton-table": {
     "id": "skeleton-table",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8459,
-    "hash": "dafdd46e3ee949da81bb38404af7dd2b42ea31eb807f0e041cbed6ada2901d47"
+    "size": 8688,
+    "hash": "ca32a1362b494a4a33ab0be8407f3728f4a4a411f7df38ed93da6ae2203bb300"
   },
   "skeleton-inbox": {
     "id": "skeleton-inbox",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 11115,
-    "hash": "90e905ad6a7d5ab74b2e30de589d09b588b4e91b2d6aa3849737bbbd317807bb"
+    "size": 10939,
+    "hash": "6da1ab405f52e86b37098513fdefbce3014f05ef93a2c89cf8144135e0456835"
   },
   "skeleton-chat": {
     "id": "skeleton-chat",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10357,
-    "hash": "60945746c62ec3d597bd71fce74110f3b00497c715c2efa7d6aa4aea0526eba1"
+    "size": 10350,
+    "hash": "3ac86eb5fbcc7053cbaac813a13995f45db71a917f482189803c012eb74303e8"
   },
   "skeleton-code": {
     "id": "skeleton-code",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9617,
-    "hash": "9218febee4ebecde7263e9235313e1a2572e2c6ff125415dd25b3ef3fa52d834"
+    "size": 9234,
+    "hash": "563a79c55677566157ac573f562935089c18defb9fc35fce4241def2e7b75898"
   },
   "skeleton-metric": {
     "id": "skeleton-metric",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9222,
-    "hash": "3c23e6bdffb782b159185a370bb0e31c5f5e3c43a072bf8455e4a418e6cc9cab"
+    "size": 9053,
+    "hash": "e1ba56b14c2045021e529cd1ff75ef5e7e7930cc24223bbd3e2da0e90694615b"
   },
   "skeleton-dashboard": {
     "id": "skeleton-dashboard",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8672,
-    "hash": "abb02a6e7952c2a0bedc006d4845591166a9ddc16694b54b6b0ebc4abef5bc2a"
+    "size": 8596,
+    "hash": "828925910a0c75dc0a0eeec53b692dde2cf1091675918545dc3d6e439d1bf4b1"
   },
   "skeleton-product-card": {
     "id": "skeleton-product-card",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8849,
-    "hash": "f7f3a64c70e8cb6d438566202226568fcd797e32aa4a8b2b3b12b36cf8670c18"
+    "size": 8736,
+    "hash": "0611263e007e3cc724e5a2929b8c053be174cb1f91fa2660d1229fd3abaf3b3b"
   },
   "skeleton-product-page": {
     "id": "skeleton-product-page",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10099,
-    "hash": "7811091ffac8ad912f61ac77da2c5565842f39bcbfde41a3991436589f3637bd"
+    "size": 9950,
+    "hash": "39e0ac7185e079dd910adf3d24cfd736884a2df993defa7c21dfc45db3cd22db"
   },
   "skeleton-cart": {
     "id": "skeleton-cart",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8659,
-    "hash": "36838d31fa83ebbb73db9e4053f3564bc9dc10461731dbbaaac1206eec03ec21"
+    "size": 8574,
+    "hash": "77c1f06df14c270fff717704b400d1bba7cbbb9584bf0a2e7ae57a6e4b80edda"
   },
   "skeleton-review": {
     "id": "skeleton-review",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9116,
-    "hash": "1dfe4c79909833d95584e892a2ee8a826e333592ef16cd1c783e0d0a5a301831"
+    "size": 9257,
+    "hash": "d76b567eaba3ff46b999fa6ba267bbba46cd82c93d0345065ca5d3233bf62592"
   },
   "skeleton-chart-bar": {
     "id": "skeleton-chart-bar",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8895,
-    "hash": "deae652e1a2f52328630791b1c634ea0134f8c70e6ab719e37e54a984d915cf0"
+    "size": 8896,
+    "hash": "604ea669cc11204a42cfef27401391de199ef9af6bb4009e0b59ee2cb2876457"
   },
   "skeleton-chart-line": {
     "id": "skeleton-chart-line",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8628,
-    "hash": "783970d066f1774ad3881d67f876009500def420abf6be1010688f5d19b01b84"
+    "size": 8213,
+    "hash": "2912c5b8a121995b9dd176ca745a46d35f6d05edba0d707a9b01a24ba5e362e4"
   },
   "skeleton-chart-donut": {
     "id": "skeleton-chart-donut",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9479,
-    "hash": "7d5fe46d6eed2b523c985125539c4bc2c8771506ba72fa492159102b840e7703"
+    "size": 9509,
+    "hash": "0915c225b845c6e20fa5a3845fef56ee0276be49d6c3aa3e56d68cb991b27167"
   },
   "skeleton-data-table": {
     "id": "skeleton-data-table",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9084,
-    "hash": "a747fa939531794ab75c222b73863a8ea2e3594e36078c941c909c6562ff07a5"
+    "size": 9016,
+    "hash": "4b080ad5ef98359346d3dca8bda79215c6da6c275d1208ff883f3e008deeccfd"
   },
   "skeleton-kanban": {
     "id": "skeleton-kanban",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9904,
-    "hash": "36c8f0a8eb7d597e2bb64a14afcfc483c2c3a731766420a5afad4e61519457ea"
+    "size": 9781,
+    "hash": "6e3ca11ad9df3c735160a30eb30febd7b9190c0c8312bc968e7ebc9d12fa759d"
   },
   "skeleton-timeline": {
     "id": "skeleton-timeline",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8234,
-    "hash": "fb0a35e98b6d953ffb53f71bdf66f36c2ec5bdeae875d4e5d80872c9de0fbbfd"
+    "size": 8237,
+    "hash": "38bf144e3e8069cf5303381c5cafaccb7bd030e8809c3b6aa1c558c24e855d7e"
   },
   "skeleton-calendar": {
     "id": "skeleton-calendar",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 7823,
-    "hash": "3a19a17033623b607aa52f168e63dbbde2acb42b1162071b28045a966ff81176"
+    "size": 7899,
+    "hash": "20e8d4614573891e176c638245801331b9494f680fc031a8ba7e41f54d2dcb6c"
   },
   "skeleton-sidebar": {
     "id": "skeleton-sidebar",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10065,
-    "hash": "a8d4c149b950140e30c6b4cf9d594f7f56687823418a0dd4570cac50a86ff094"
+    "size": 10231,
+    "hash": "ae9937a54e7119e92d7e6bf791c84a1e22fceb97a88753ef38caa6d4c6987a0c"
   },
   "skeleton-notification": {
     "id": "skeleton-notification",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 8792,
-    "hash": "f53ee6a61fc0b976f771247b5120de11bab573e6ed8e2f6221d193dcd35f6d53"
+    "size": 8989,
+    "hash": "93b0fad5013ad15a05c6a9fe77addfcfde2e45514d8b789592e6b29a1ffeeebb"
   },
   "skeleton-command": {
     "id": "skeleton-command",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10764,
-    "hash": "9d3a261d1e574399ea48d174d2331db4645ade1b2dae22708c6212fe13bdbabe"
+    "size": 10650,
+    "hash": "42d20df5418ff63f69304ea2d53fba6b460cefbed14aa9e52537050549d37228"
   },
   "skeleton-feed": {
     "id": "skeleton-feed",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 11010,
-    "hash": "d281bd7ef41a3f5a4fc730f9bde1f7c92c26aeb417f62090aac443608d4962ab"
+    "size": 11020,
+    "hash": "753ddf22242f68b1d10f28a22202acd62296bfd55bd56af58fb9f011ea937061"
   },
   "skeleton-filter-panel": {
     "id": "skeleton-filter-panel",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9373,
-    "hash": "93aa59845f34c38681e26b3adcca4c7e1a69fa397013fd3501955b46dc5f0fa6"
+    "size": 9636,
+    "hash": "47275bf94e68ff6312450912c56b144d6622a2fcfbf99b2c2e220e30b9babec9"
   },
   "skeleton-map": {
     "id": "skeleton-map",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10079,
-    "hash": "1a1daf52a7e6292f6b3675bf8ab889eefc9848f838ac4d48e2ea35c697d136c6"
+    "size": 10637,
+    "hash": "5393e0062cb9080bf3edba1e39246b69a6066742b99c3985d9ec31f0124c69ed"
   },
   "skeleton-video-player": {
     "id": "skeleton-video-player",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 9728,
-    "hash": "7ad814e29421cc970d13f10f86fb0acbfabea01cad36886e2adce6a946bb5072"
+    "size": 8067,
+    "hash": "b1f971aa41752a1195113c5de01e8ce09caff44fb300f34bf1da9d25a1190a6b"
   },
   "skeleton-document-viewer": {
     "id": "skeleton-document-viewer",
     "category": "skeleton",
     "dimension": "2d",
-    "size": 10800,
-    "hash": "20c50727678f163b2f472484c644cb8757c6f625866ed90bce778c2b387a2afe"
+    "size": 9644,
+    "hash": "4fea97041408ce6cedd519fde66983fe39abaaab60195254f6ab556b41639c00"
   },
   "progress-bar": {
     "id": "progress-bar",
     "category": "progress",
     "dimension": "2d",
-    "size": 7571,
-    "hash": "8d7189c9d8405c128e6e2807f2c75e12795d8c04ad2a099bbde081d4f86d6c89"
+    "size": 7740,
+    "hash": "e66936feb92d6887e7f157ef390013da3657bec3543a0331fa12195df0388eae"
   },
   "progress-ring": {
     "id": "progress-ring",
     "category": "progress",
     "dimension": "2d",
-    "size": 9096,
-    "hash": "78ddd4b201bf8b43b37011f7b0edc77fee27905e4a8f839523d37eb15157c9a6"
+    "size": 8892,
+    "hash": "0e17fde0eb44afa68cfdc45e1621701bb662fb4c4a1c3310f20106002e5b723c"
   },
   "progress-steps": {
     "id": "progress-steps",
     "category": "progress",
     "dimension": "2d",
-    "size": 7517,
-    "hash": "ff7cf4950777b427bb7e3074629197142129e3e92f3dabe34d0ffa6b706f9c1c"
+    "size": 7436,
+    "hash": "686a5f65974bd43ffd513c54da4f0dd0b254928107363659b1550cb125f85815"
   },
   "progress-top": {
     "id": "progress-top",
     "category": "progress",
     "dimension": "2d",
-    "size": 6836,
-    "hash": "b8ea3fc66dde4de658ec691764f8ee6a3ff1414f54c16b3851542e8ceba31ef2"
+    "size": 6911,
+    "hash": "c0d28c2a7109f218d321e0f8c98412dd18a8c857bcec9754a888c460a8742e25"
   },
   "progress-upload": {
     "id": "progress-upload",
     "category": "progress",
     "dimension": "2d",
-    "size": 7472,
-    "hash": "e9dd2b4663fa35c31652e44964c15bbf68021430937858ba921b3d7db749bd58"
+    "size": 7672,
+    "hash": "11d4e684af074645e33565525329019659f62de44c80edcfc63d6a0985206e1a"
   },
   "progress-scroll": {
     "id": "progress-scroll",
     "category": "progress",
     "dimension": "2d",
-    "size": 8474,
-    "hash": "9947ca67b845e36e626fe29fc1076abc99d560c6b506746f1d98271a930557c6"
+    "size": 8831,
+    "hash": "cb2da7818ac32a1079f4864db61cb693fbdd67cf1911916cbc81e24978564c4b"
   },
   "progress-view": {
     "id": "progress-view",
     "category": "progress",
     "dimension": "2d",
-    "size": 8414,
-    "hash": "31572be6b07a60cac3938cdefdcca038b0f70e6acedbe154c111f2d030487b0c"
+    "size": 8035,
+    "hash": "0462f4dc0662e55189a6ab19eb1515c67b5956207711a49e469103e3e457700e"
   },
   "progress-battery": {
     "id": "progress-battery",
     "category": "progress",
     "dimension": "2d",
-    "size": 7718,
-    "hash": "b2d0838ef3f518392e4f3798e4c70f301168f28c240cfc03f0bc8a17f5cff14a"
+    "size": 8336,
+    "hash": "6ee18f14551a6728f08de4d5e886683d01d33b0284f2c3db1269c0f286795cff"
   },
   "progress-half-ring": {
     "id": "progress-half-ring",
     "category": "progress",
     "dimension": "2d",
-    "size": 9359,
-    "hash": "ee1ca49515f7c9eed7c2ac57a7fcafdc50c2c9c04019ababed117107be8a8ac6"
+    "size": 9360,
+    "hash": "3728b40bdee7dacd8171797727d338416e96aa58aee38d6ccf8a6c59de2800a8"
   },
   "progress-wave-fill": {
     "id": "progress-wave-fill",
     "category": "progress",
     "dimension": "2d",
-    "size": 15638,
-    "hash": "d2fb4983a9a4c2cf816af72fa2462edf63d9b1a0734f14fd177ddb99f995a864"
+    "size": 15712,
+    "hash": "9c36532a6d04eb5109c28d80b5f94ee30679c3df67aca5540595a1d057bd5305"
   },
   "progress-count": {
     "id": "progress-count",
     "category": "progress",
     "dimension": "2d",
-    "size": 8895,
-    "hash": "4e1f99df0221e2a07ecb3cfd51508c9fe77dfda8549dbef7e49552bf8b09858d"
+    "size": 8676,
+    "hash": "abf72c43bbb21b80e854a13b7397fc62d4d85c5954835c81066b312689d55785"
   },
   "progress-dots-fill": {
     "id": "progress-dots-fill",
     "category": "progress",
     "dimension": "2d",
-    "size": 8512,
-    "hash": "0f2def2849203957eb18681c5189cd4a5a6da2b468315d67d092877a0ae704fb"
+    "size": 8593,
+    "hash": "7efc5e754b0a3ea31531c6ce167721920ec74d8d1bf31fb2d180c6c250bc2670"
   },
   "progress-label-inline": {
     "id": "progress-label-inline",
     "category": "progress",
     "dimension": "2d",
-    "size": 7566,
-    "hash": "a95d3b33153517379de081f7310ee6812b8ecaf2ff63a51b8e6330714c6902f8"
+    "size": 7735,
+    "hash": "d724637e479220cbce866bb480ef3d1e9bcbedd3c5773e5e7a029652f3dcacff"
   },
   "progress-multi-step": {
     "id": "progress-multi-step",
     "category": "progress",
     "dimension": "2d",
-    "size": 9039,
-    "hash": "6915aee85c1008f21431c001965a06c58a121fa0cf7aaf39db1991a09d82d549"
+    "size": 8759,
+    "hash": "5894b27b31310dd668f93ffbc3a32da5c2b70658e95f9b819b5005db484056cb"
   },
   "progress-upload-multi": {
     "id": "progress-upload-multi",
     "category": "progress",
     "dimension": "2d",
-    "size": 7039,
-    "hash": "6d1393a90c88946f8014181a403998c32692c7f87f448b23758e9b9d2dfbd2e5"
+    "size": 6917,
+    "hash": "8319923d45e30cc3f42394976bdbf22c4d5d6cf0edf4c05fc77ece34f29af19c"
   },
   "progress-ai-generate": {
     "id": "progress-ai-generate",
     "category": "progress",
     "dimension": "2d",
-    "size": 7368,
-    "hash": "d95e67f3f804dfb8b46885adbb633d45c7e5e9802911cbc2e9656018fc0adb9a"
+    "size": 7453,
+    "hash": "c0b3fd7da98aa669d8c40d32be8ab0a77c2732714278b91144b0ed5213fad78a"
   },
   "progress-skill": {
     "id": "progress-skill",
     "category": "progress",
     "dimension": "2d",
-    "size": 7632,
-    "hash": "62516a11eaa4c7407cabc9c582dd8f8a547d935138c66f3a1ff0d173e979830c"
+    "size": 7768,
+    "hash": "e852dde9cd1a713f284271b30a5e457bfcc897eeb90d0f2edf72bb4a4c27a071"
   },
   "progress-orbit-fill": {
     "id": "progress-orbit-fill",
     "category": "progress",
     "dimension": "2d",
-    "size": 8650,
-    "hash": "b8c93e96ebe96b6c1fb009f675bcf73f2ae69c650241242de4934d13fa046275"
+    "size": 8687,
+    "hash": "f005bd2dfac1b98e90ed1f61559976cd7a67e7ca89f1003f536a7a951a12f591"
   },
   "inline": {
     "id": "inline",
     "category": "application",
     "dimension": "2d",
-    "size": 8032,
-    "hash": "4856c6a74c2133c91b0c3beeeec4c5114bd47005ef118ca92f842613a52b2236"
+    "size": 7871,
+    "hash": "5d137833a9b70dab7596d2b1f4a7292e34aac60c90641a6530ab24c25649fbaf"
   },
   "button": {
     "id": "button",
     "category": "application",
     "dimension": "2d",
-    "size": 7191,
-    "hash": "df3c8223976f58c465b92acdb0c54d5669975c807944284b4d78eba419a38da5"
+    "size": 7299,
+    "hash": "bf44a4140b9ed4c38b3053cc204432a1212c99224dded3949d78e5126ff1e5ca"
   },
   "overlay": {
     "id": "overlay",
@@ -857,22 +864,22 @@
     "id": "page-transition",
     "category": "application",
     "dimension": "2d",
-    "size": 7545,
-    "hash": "669749ad92612273b59947a4d4e4b2ebce878bbf37718b9372bec98dde3aa04d"
+    "size": 7492,
+    "hash": "b691b4a1a6106cc2aab0d555da357bae64b586536d7fe263c35cee466101b79e"
   },
   "image-placeholder": {
     "id": "image-placeholder",
     "category": "application",
     "dimension": "2d",
-    "size": 7572,
-    "hash": "7b87c26dbd8ba46e5b66a5744244895be487851dbdb3d731ba0bc324cc875015"
+    "size": 8048,
+    "hash": "f0d97f14b8128574f3726de4dd4c01ff316b543408781cbf61bba45979dc0d32"
   },
   "infinite-scroll": {
     "id": "infinite-scroll",
     "category": "application",
     "dimension": "2d",
-    "size": 7661,
-    "hash": "a1b6f4c4ba1bf3cd887db07135d34d25e83ec4e29b6fc999949b37d08939ecbe"
+    "size": 8269,
+    "hash": "c8073e77a25d10518e7fed15273d178d59763941d9eb93f0c3b7ac176624b2c9"
   },
   "background-operation": {
     "id": "background-operation",
@@ -885,15 +892,15 @@
     "id": "success-ring",
     "category": "application",
     "dimension": "2d",
-    "size": 9391,
-    "hash": "97cbe1c838358f6718008bacf7f0a45445ead2fda5b82fca2c7fa700c41c86aa"
+    "size": 9322,
+    "hash": "711c4687a17cb8ee091c713a626a8d9bd40fb797c94a17d07afe3aac1b237aba"
   },
   "error-shake": {
     "id": "error-shake",
     "category": "application",
     "dimension": "2d",
-    "size": 11006,
-    "hash": "09341e5fb9779cddea370c0dd85b43d569eebfe60cd187766c07f8ecda615661"
+    "size": 10707,
+    "hash": "52daf3bd577c4c43aa4ae50997c08ee283556408b844542b75893aadcb02f711"
   },
   "button-confirm": {
     "id": "button-confirm",
@@ -913,22 +920,22 @@
     "id": "drag-drop-pulse",
     "category": "application",
     "dimension": "2d",
-    "size": 13183,
-    "hash": "c698dd3ec2bca6f05a0bb5e3bebeca5b0dbeaf4ac0f027c98ec8244a7ece0deb"
+    "size": 13205,
+    "hash": "a9c77ee49f31df8e012b07d35f4e4a4a3e4ac0867b2f3681612e5e020cae9a0b"
   },
   "page-skeleton": {
     "id": "page-skeleton",
     "category": "application",
     "dimension": "2d",
-    "size": 10484,
-    "hash": "3475fde3c49d799973c279786f0fb7f51caeee990546b39850231456b8e7f017"
+    "size": 11070,
+    "hash": "2c11b65f4969506542946e56dded427b4ad0aa28cac1823d1c79ec86de697125"
   },
   "offline-dot": {
     "id": "offline-dot",
     "category": "application",
     "dimension": "2d",
-    "size": 7507,
-    "hash": "8000d82d878ad49be5790fdebc24b1bacb53667987ce2376ddf4080ac0601159"
+    "size": 8198,
+    "hash": "f9449c901077805d821035bb2d0877f5955fa497f914dd4ccf5979050ebd5fb9"
   },
   "save-indicator": {
     "id": "save-indicator",
@@ -941,43 +948,43 @@
     "id": "undo-progress",
     "category": "application",
     "dimension": "2d",
-    "size": 7156,
-    "hash": "79184ffd4a62a99d85509de25923176d8ed7f889b398d058315eeb240dfed56c"
+    "size": 6618,
+    "hash": "d70a29b3c018232efc9c1a805aee0ed9f6c20df7c39942cfdd58b829ce324c5d"
   },
   "gyroscope": {
     "id": "gyroscope",
     "category": "creative",
     "dimension": "3d",
-    "size": 11193,
-    "hash": "144f42df3afa2b514a1b37095bc481c8836fc9fa21f6f9bfe8eaaae29e4fb192"
+    "size": 10751,
+    "hash": "a2e0021c4e19cfa723523a2414895198ed62560904e30a0cb5edd7a61a289afd"
   },
   "tesseract": {
     "id": "tesseract",
     "category": "creative",
     "dimension": "3d",
-    "size": 11921,
-    "hash": "74f17fb56f0cabebc41bf2d9bf7a0ce995be15c1c48a4f582a51f1e271cc022a"
+    "size": 10714,
+    "hash": "539ca6d55da63edfad08afc523e1833988db793a61ff448ce98d5e5ee197073c"
   },
   "sphere-lattice": {
     "id": "sphere-lattice",
     "category": "creative",
     "dimension": "3d",
-    "size": 12340,
-    "hash": "2d96a92d7d1103221cb52ead342346b59418c7753999e42e95ad7f48a81145c1"
+    "size": 13593,
+    "hash": "b4e7683d58a22f1ae50bd7eb3bf797edc252bf500b66e1ff45f07dfc61ffc570"
   },
   "prism-refraction": {
     "id": "prism-refraction",
     "category": "creative",
     "dimension": "3d",
-    "size": 9880,
-    "hash": "5f52d2ef00e633ac1914aeea5fa400428e775f38b5f55010b9a2dd4fe42f83b7"
+    "size": 9807,
+    "hash": "6d1081661e8d169985389288de0b4cd34f5f46636fe73a4a663163219a6e45ce"
   },
   "atom-orbital": {
     "id": "atom-orbital",
     "category": "creative",
     "dimension": "3d",
-    "size": 14880,
-    "hash": "c1453d79bfa829d2564fd89c9840bee05b3e7225331723419b3a1c764816b712"
+    "size": 14809,
+    "hash": "175d227f6c16ae628e16e009b2681aa7fd63f3785caebea44bc69c6ceffce0d0"
   },
   "dna-double-helix": {
     "id": "dna-double-helix",
@@ -990,57 +997,57 @@
     "id": "hologram-pyramid",
     "category": "creative",
     "dimension": "3d",
-    "size": 10855,
-    "hash": "7b83371ab5572645b61a526e1c21a9e0291dbe26a9747c85bbcc0c261267f157"
+    "size": 10901,
+    "hash": "c77a5224d93f252edf8f2cb4707516c02c4b88c4b37e3c58478ecefb2f18a9fb"
   },
   "black-hole-accretion": {
     "id": "black-hole-accretion",
     "category": "creative",
     "dimension": "3d",
-    "size": 13916,
-    "hash": "a8837e6d67332361883d405dadcf3b6ad61f32fa34b92e11f1e5026d443f76b0"
+    "size": 13808,
+    "hash": "059d39b2d303b056fa5eebcb0a569a3715f28869484f60875d11f7bd85b44fe8"
   },
   "crystal-cluster": {
     "id": "crystal-cluster",
     "category": "creative",
     "dimension": "3d",
-    "size": 11146,
-    "hash": "287d362ac0cf74cfaaa89f361e000a99ed175769573d236f677ac088fa56c0e8"
+    "size": 11259,
+    "hash": "d5d2cff6763d866b97a57c934a9da3f646dee622f50a9cfae65ea854202f480f"
   },
   "mobius-band": {
     "id": "mobius-band",
     "category": "creative",
     "dimension": "3d",
-    "size": 12699,
-    "hash": "9b2136a26630026dfdec66ed96ab9c81dbcf08a58c112d97560373baa6273da2"
+    "size": 9497,
+    "hash": "00b44bd9c739626b6163a99f7feda314df36f746c63496a885318fda8e8d42f0"
   },
   "vortex-tunnel": {
     "id": "vortex-tunnel",
     "category": "creative",
     "dimension": "3d",
-    "size": 12495,
-    "hash": "56e4dcdf81c2e7b0f504e9fdfe20e4a08595f4949bae62a6da1f0149693ab73a"
+    "size": 12417,
+    "hash": "9ce5db969c23f110bb9b968bdd363635438aefa72ce3455573885adb35e241e1"
   },
   "isometric-deck": {
     "id": "isometric-deck",
     "category": "creative",
     "dimension": "3d",
-    "size": 10016,
-    "hash": "75ff78b2308fc3923cdf2d47be91537c43304b62a0ed23a03e783f9e372b0f62"
+    "size": 10057,
+    "hash": "80d40841c742eb31da7a002985b45e2b5478c0ea35db25fe3ba162ba32299dde"
   },
   "voxel-cluster": {
     "id": "voxel-cluster",
     "category": "creative",
     "dimension": "3d",
-    "size": 10361,
-    "hash": "498086898b30ab6083ad2486a40bd1e35c886ab6d16b1a18920cf806e2d9046b"
+    "size": 12195,
+    "hash": "ba276d963807ab126edc16aeb4e697ec4bd9aaeef0074856c77625e000077923"
   },
   "torus-ring": {
     "id": "torus-ring",
     "category": "creative",
     "dimension": "3d",
-    "size": 12261,
-    "hash": "77e9ad58072b6603c357ac9358bdfdb50165f7e749fe8252d73292f0b1642106"
+    "size": 10254,
+    "hash": "58b1d26b44a588141d130421a401bb09fc614890f19747efd9ebd6e9dd96f7f4"
   },
   "cylindrical-wave": {
     "id": "cylindrical-wave",
@@ -1053,15 +1060,15 @@
     "id": "liquid-mercury",
     "category": "creative",
     "dimension": "3d",
-    "size": 10270,
-    "hash": "5e81e004190e4f5b165488c430a8de1c63c15584db66af0e9dab5c8f467eb389"
+    "size": 10152,
+    "hash": "e45c58ba2f15582d750dd86d5653c6c39d16774367199a42f4f7a4ff817b8b9f"
   },
   "dna-decode": {
     "id": "dna-decode",
     "category": "creative",
     "dimension": "3d",
-    "size": 13792,
-    "hash": "e47330a78528d33e3bfc6311eca0c81e825a15011b8d4964ebd7e074342bbb1d"
+    "size": 13614,
+    "hash": "22ebd32c26cc43c766892c8923479dbf257bfc2ac259e01511cb04568eda17d7"
   },
   "quantum-superposition": {
     "id": "quantum-superposition",
@@ -1074,78 +1081,78 @@
     "id": "magnetic-field",
     "category": "creative",
     "dimension": "3d",
-    "size": 11253,
-    "hash": "c6971a5ff954ac9b8c0ba97aad8e04dd917029b70e8c144d898394665ee4a8b8"
+    "size": 10977,
+    "hash": "ad384a0ab58766d3f2426d617e17cb251f666060342a811477130cd8ed35027d"
   },
   "aurora-borealis": {
     "id": "aurora-borealis",
     "category": "creative",
     "dimension": "3d",
-    "size": 15755,
-    "hash": "06254fec4068601cec91e3cf92bd32dd605a7e316bc749a0846761e4c71df44c"
+    "size": 15647,
+    "hash": "8fd78164141e6244a66f05ee07bd5737a419dec825a0354d20a5ad6dd3ae311c"
   },
   "agent-tree": {
     "id": "agent-tree",
     "category": "ai",
     "dimension": "2d",
-    "size": 10966,
-    "hash": "c574c88d3554544caf5ac410edb506a755e45cd17307505b366730620a9859b9"
+    "size": 11069,
+    "hash": "fa1713d61968a80ac2390f69c93357bd39d4905dc14f2fed1427e0d0f3acfe9c"
   },
   "aurora-ribbon": {
     "id": "aurora-ribbon",
     "category": "ai",
     "dimension": "2d",
-    "size": 9121,
-    "hash": "23582aa573bebb860f37f51e0a01cf24efb8875f8f90c078d38650ecb992c35e"
+    "size": 9373,
+    "hash": "53e729eb6fdaf1fe3f954759752b9f7059a26cd592672a05735329df74128924"
   },
   "glyph-matrix": {
     "id": "glyph-matrix",
     "category": "ai",
     "dimension": "2d",
-    "size": 9559,
-    "hash": "0eba2a30526f5723b19078b2cde8af44e39416067ff689cd8577e25daa57d174"
+    "size": 9896,
+    "hash": "5c558a434241a2a73b7c75760585dc192e857f08b04ce32a01446d3141b77509"
   },
   "ai-tool-handoff": {
     "id": "ai-tool-handoff",
     "category": "ai",
     "dimension": "2d",
-    "size": 8768,
-    "hash": "b85f773811c5899ef5bcdfdb4b1eb52b156f4e0d66b4af064603fb6cf3975b6e"
+    "size": 7861,
+    "hash": "9aa97384e22f87a868807242429701bb447ac9282f1cfa91eac6121dfd40ceca"
   },
   "ai-image-develop": {
     "id": "ai-image-develop",
     "category": "ai",
     "dimension": "2d",
-    "size": 10401,
-    "hash": "82e68aff3a3bda49e6ecc6bc60c36d93aeae7765f967653af0a675bb62f4a315"
+    "size": 11315,
+    "hash": "1d29046024dc88c9acf0a5c06e2fdbab7c2c2de35165a71d18aed3bd5934fc60"
   },
   "document-extract": {
     "id": "document-extract",
     "category": "ai",
     "dimension": "2d",
-    "size": 10026,
-    "hash": "36c12c15558b7f1bff318dc7104314a77ddf86e2f15cf36ebc3b745ba5344d28"
+    "size": 9398,
+    "hash": "d37f85bf47db79d78b58c6fa6a42d01ea90aba43fd38e31e4d55d4d5b465426d"
   },
   "coin-flip": {
     "id": "coin-flip",
     "category": "creative",
     "dimension": "3d",
-    "size": 9885,
-    "hash": "c641d6830fb266bfb389192379f3356306af3a3bad3c1f733e6f82061debfec9"
+    "size": 9983,
+    "hash": "447e21f93451b10cf9c74c1b7b59804d017bc453c33f443d9ed538bb53cf752d"
   },
   "biometric-reticle": {
     "id": "biometric-reticle",
     "category": "creative",
     "dimension": "2d",
-    "size": 12792,
-    "hash": "81bf14222cf58e9f29b8c9c07867e043f30ff85c37b758eb5238f690e5387a1e"
+    "size": 12159,
+    "hash": "63807ecce75f558b1e4af660975fa046b31472e56b02572e9c1b1d5b1b2038f2"
   },
   "vault-tumbler": {
     "id": "vault-tumbler",
     "category": "creative",
     "dimension": "2d",
-    "size": 12579,
-    "hash": "f1519e0036ba4c255d53b9a4b174dd799951fa3cb70a571225ab48f2567e2d18"
+    "size": 12058,
+    "hash": "8eb4b210839a996b111090ee50637909a19fdbdf11f935245bc374411e46d4e5"
   },
   "git-rebase": {
     "id": "git-rebase",
@@ -1165,43 +1172,43 @@
     "id": "media-transcode",
     "category": "application",
     "dimension": "2d",
-    "size": 9222,
-    "hash": "91b971436069c80fabc8dac1777db2db4953871f3e0f042868db132a6184501a"
+    "size": 8789,
+    "hash": "6b19222b6cd10ffcb4ec1eb693df96f1f9493c33214e611fc2c23f5f2fca8c82"
   },
   "eclipse-corona": {
     "id": "eclipse-corona",
     "category": "creative",
     "dimension": "2d",
-    "size": 9084,
-    "hash": "049a4cf610cb39e4221ac80e0ad92986b971524e04a767b9026770dcc8353911"
+    "size": 12036,
+    "hash": "fd188986aff09a6fd966096dc2dc4018f90adfc055af1e4a2221da01bc42c684"
   },
   "spiral-galaxy": {
     "id": "spiral-galaxy",
     "category": "creative",
     "dimension": "2d",
-    "size": 10542,
-    "hash": "a25f1f8e417728844c9a651cb27f49a13714a7920990956d98ec6e828b187eee"
+    "size": 12536,
+    "hash": "a3a1c800614981d3cc6aaf2d930adffe1d1b2ed7879ee77726bd32016ef49e49"
   },
   "nebula-drift": {
     "id": "nebula-drift",
     "category": "creative",
     "dimension": "2d",
-    "size": 11804,
-    "hash": "28b1373e60f24ca69a58b674f6845468feeea6f94ddcbb9f3f3f19cde72194dd"
+    "size": 11318,
+    "hash": "e3e199f580b96d3d2f06164e3e72d544ba00e8f0ff4c2f37e3cc3683c53f4a41"
   },
   "crt-scanline": {
     "id": "crt-scanline",
     "category": "application",
     "dimension": "2d",
-    "size": 9733,
-    "hash": "2a903e7917aa5471d8bd2ed2acc0792a936a8c4ea83413f2518b654a96f11815"
+    "size": 9670,
+    "hash": "9b4cff39a78e1624731be85c8f46a3eb532aaf071c512025521710fc427aa785"
   },
   "gooey-metaballs": {
     "id": "gooey-metaballs",
     "category": "creative",
     "dimension": "2d",
-    "size": 9555,
-    "hash": "b0b5ad9f3393a92bec3e8fb5b3de9ac176f31d363879c5f98b848efae195ae7d"
+    "size": 8755,
+    "hash": "758f54eb2b59872bc8083b35ac7d1547bc75550372469c965ead4177e595de45"
   },
   "camera-iris": {
     "id": "camera-iris",
@@ -1214,7 +1221,49 @@
     "id": "newton-cradle",
     "category": "creative",
     "dimension": "2d",
-    "size": 11408,
-    "hash": "b980b7e9b42536de59dddbbf34fd46519b6c51bc36cc18d4958f43bf16be3754"
+    "size": 11459,
+    "hash": "46344f8b733126135fa187707b64a12feec705ff3c01289db8b17d77d7214536"
+  },
+  "lotus-bloom": {
+    "id": "lotus-bloom",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8296,
+    "hash": "b412dbf2e538ffb6e2d4657b709001e46c93932d517236a8d3a6a1c91076f237"
+  },
+  "signal-beacon": {
+    "id": "signal-beacon",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8302,
+    "hash": "ab26a54a00b78a3db3ef8deeddcbf32a3229e5863ab5fe92747fd7219bef43c7"
+  },
+  "conveyor-belt": {
+    "id": "conveyor-belt",
+    "category": "application",
+    "dimension": "2d",
+    "size": 8480,
+    "hash": "ec85801e9461a5238236211d8ea2cc9ee18730958fdd83de44111602b1ff1dc6"
+  },
+  "zipper-flow": {
+    "id": "zipper-flow",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 8746,
+    "hash": "ed9abfd7cada2bc12436ca54afe73bfdef3b1aa04fdecfe2d6b30d3fb72ffdd2"
+  },
+  "book-pages": {
+    "id": "book-pages",
+    "category": "application",
+    "dimension": "2d",
+    "size": 9060,
+    "hash": "4905f6115f8c81f098395c8f29367ce08a6d34460b3d849b29d7dd52c7af93d1"
+  },
+  "pixel-weave": {
+    "id": "pixel-weave",
+    "category": "creative",
+    "dimension": "2d",
+    "size": 9010,
+    "hash": "a671dfcd8eec855c3b81e8a20ee79245dd16307e829a85137ec1b77fb0c46623"
   }
 }

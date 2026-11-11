@@ -41,6 +41,183 @@ async function setContentPage(body, head = `<style>${allStyles}</style>`) {
   await page.addScriptTag({ content: coreBundle });
 }
 
+test('brand animations, typography and all indicator combinations work with motion controls', async () => {
+  const animations = ['wave', 'bounce', 'pulse', 'flip', 'shimmer', 'typewriter', 'none'];
+  const indicators = ['ring', 'bar', 'dots', 'none'];
+  for (const motion of ['normal', 'paused', 'reduced']) {
+    await setContentPage(animations.flatMap(animation => indicators.map(indicator => renderLoader({ type: 'brand-loader', paused: motion === 'paused', reducedMotion: motion === 'reduced' ? 'always' : 'never', brand: { text: 'ACME', animation, indicator, fontSize: 36, fontFamily: 'Georgia, serif', fontWeight: 600, letterSpacing: 2, caption: 'Loading', textColor: '#123456' } }).html)).join(''));
+    const results = await page.locator('.wavelo').evaluateAll(roots => roots.map(root => {
+      const brand = root.querySelector('.wavelo__brand'), text = root.querySelector('.wavelo__brand-text');
+      const s = getComputedStyle(text);
+      return { mode: brand.dataset.animation, indicator: root.querySelector('.wavelo__brand-indicator')?.dataset.indicator ?? 'none', font: s.fontFamily, size: s.fontSize, weight: s.fontWeight, spacing: s.letterSpacing, width: text.getBoundingClientRect().width, animations: root.getAnimations({subtree:true}).map(a => ({name:a.animationName, state:a.playState, duration:a.effect.getTiming().duration, delay:a.effect.getTiming().delay, iterations:a.effect.getTiming().iterations})) };
+    }));
+    for (const r of results) {
+      assert.equal(r.size, '36px'); assert.equal(r.weight, '600'); assert.equal(r.spacing, '2px'); assert.match(r.font, /Georgia/); assert.ok(r.width > 40);
+      if (motion !== 'reduced' && (r.mode !== 'none' || r.indicator !== 'none')) assert.ok(r.animations.length, JSON.stringify(r));
+      for (const a of r.animations) {
+        if (motion === 'paused') assert.equal(a.state, 'paused');
+        if (motion === 'reduced') assert.ok(a.duration <= .001 && a.delay === 0 && a.iterations === 1);
+      }
+    }
+    if (motion === 'reduced') assert.ok((await page.locator('.wavelo__brand-char').evaluateAll(chars => chars.map(c=>getComputedStyle(c).opacity))).every(o=>o==='1'));
+  }
+});
+
+test('brand progress handles zero, completion, updates and safe text in custom elements', async () => {
+  await page.goto('about:blank');
+  await setContentPage('<wavelo-loader type="brand-loader"></wavelo-loader>');
+  await page.evaluate(() => window.Wavelo.defineWaveloElements());
+  for (const value of [0, 25, 100]) {
+    await page.locator('wavelo-loader').evaluate((el, value) => {
+      el.setAttribute('brand', JSON.stringify({text:'ACME <img src=x>', animation:'none', indicator:'bar', showValue:true}));
+      el.setAttribute('value', String(value));
+    }, value);
+    assert.equal(await page.locator('.wavelo').getAttribute('role'), 'progressbar');
+    assert.equal(await page.locator('.wavelo').getAttribute('aria-valuenow'), String(value));
+    assert.equal(await page.locator('.wavelo__brand-value').textContent(), `${value}%`);
+    assert.equal(await page.locator('img').count(), 0);
+    const scale = await page.locator('.wavelo__brand-indicator i').first().evaluate(el=>new DOMMatrix(getComputedStyle(el).transform).a);
+    assert.equal(scale, value/100);
+  }
+  await page.locator('wavelo-loader').evaluate(el => { el.removeAttribute('value'); el.setAttribute('brand', JSON.stringify({text:'ACME',animation:'none',indicator:'ring'})); });
+  assert.equal(await page.locator('.wavelo').getAttribute('role'), 'status');
+  assert.equal(await page.locator('.wavelo__brand-indicator').evaluate(el=>getComputedStyle(el).animationName), 'wavelo-spin');
+  await page.goto('about:blank');
+});
+
+test('spatial loaders retain readable silhouettes throughout their animation cycles', async () => {
+  const ids = ['tesseract', 'mobius-band', 'torus-ring', 'magnetic-field'];
+  for (const size of [40, 80]) {
+    await setContentPage(ids.map(type => renderLoader({type, size} ).html).join(''));
+    const results = await page.locator('.wavelo').evaluateAll(roots => roots.map(root => {
+      const animations = root.getAnimations({subtree:true});
+      const silhouettes = Array.from({length:24}, (_,i) => {
+        for (const a of animations) { a.pause(); a.currentTime = Number(a.effect.getTiming().duration)*i/24; }
+        const boxes = [...root.querySelectorAll('.wavelo__part')].map(p=>p.getBoundingClientRect());
+        return {width:Math.max(...boxes.map(b=>b.right))-Math.min(...boxes.map(b=>b.left)),height:Math.max(...boxes.map(b=>b.bottom))-Math.min(...boxes.map(b=>b.top))};
+      });
+      return {id:root.className, silhouettes};
+    }));
+    for (const r of results) for (const b of r.silhouettes) {
+      assert.ok(b.width >= size*.45 && b.height >= size*.35, JSON.stringify({size,...r,box:b}));
+    }
+    assert.equal(await page.locator('.wavelo--magnetic-field .wavelo__part').count(),8);
+    const poleWidths = await page.locator('.wavelo--magnetic-field').evaluate(root => Array.from({length:24}, (_,i) => {
+      for (const a of root.getAnimations({subtree:true})) {a.pause();a.currentTime=Number(a.effect.getTiming().duration)*i/24;}
+      return [...root.querySelectorAll('.wavelo__part')].slice(0,2).map(p=>p.getBoundingClientRect().width);
+    }).flat());
+    assert.ok(poleWidths.every(width=>width>=size*.1), 'magnetic poles remain visible when the field turns side-on');
+    assert.equal(await page.locator('.wavelo--torus-ring .wavelo__part').first().evaluate(e=>getComputedStyle(e).borderTopColor==='rgba(0, 0, 0, 0)'),false);
+    assert.ok((await page.locator('.wavelo--tesseract path').evaluateAll(es=>es.map(e=>getComputedStyle(e).vectorEffect))).every(v=>v==='non-scaling-stroke'));
+  }
+});
+
+test('audit regression: every indeterminate default animates, including newly added stateful designs', async () => {
+  const determinate = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top', 'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline', 'progress-multi-step', 'progress-upload-multi', 'progress-skill', 'progress-orbit-fill']);
+  await setContentPage(loaderRegistry.map(l => `<div data-design="${l.id}">${renderLoader({ type: l.id }).html}</div>`).join(''));
+  const missing = await page.evaluate(() => [...document.querySelectorAll('[data-design]')].filter(w => !w.firstElementChild.getAnimations({ subtree: true }).some(a => a instanceof CSSAnimation)).map(w => w.dataset.design));
+  assert.deepEqual(missing.filter(id => !determinate.has(id)), []);
+});
+
+test('new compositions preserve their named geometry and move through distinct phases', async () => {
+  const counts = { 'lotus-bloom': 5, 'signal-beacon': 3, 'conveyor-belt': 3, 'zipper-flow': 8, 'book-pages': 3, 'pixel-weave': 9 };
+  for (const theme of ['light', 'dark']) {
+    await setContentPage(Object.keys(counts).map(id => `<section data-design="${id}">${renderLoader({ type: id, size: 64, theme }).html}</section>`).join(''));
+    const results = await page.evaluate(() => [...document.querySelectorAll('[data-design]')].map(w => {
+      const root = w.firstElementChild, parts = [...root.querySelectorAll('.wavelo__part')];
+      const animations = root.getAnimations({ subtree: true });
+      const phases = [0, 600, 1200].map(time => {
+        for (const a of animations) { a.pause(); a.currentTime = time; }
+        return parts.map(p => { const s = getComputedStyle(p); return `${s.transform}/${s.opacity}`; }).join('|');
+      });
+      const boxes = parts.map(p => p.getBoundingClientRect());
+      return { id: w.dataset.design, count: parts.length, phases: new Set(phases).size,
+        visibleBoxes: boxes.every(b => b.width > 0 && b.height > 0),
+        layout: getComputedStyle(root).display, rootAnimation: getComputedStyle(root).animationName,
+        before: getComputedStyle(root, '::before').content, after: getComputedStyle(root, '::after').content };
+    }));
+    for (const r of results) {
+      assert.equal(r.count, counts[r.id], r.id);
+      assert.ok(r.visibleBoxes && r.phases > 1, `${r.id} / ${theme}`);
+      if (['pixel-weave', 'zipper-flow'].includes(r.id)) assert.equal(r.layout, 'grid');
+      if (r.id === 'book-pages') { assert.equal(r.rootAnimation, 'none'); assert.equal(r.before, '""'); assert.equal(r.after, '""'); }
+      if (r.id === 'signal-beacon') assert.equal(r.after, '""');
+    }
+  }
+  await setContentPage(['pixel-weave', 'zipper-flow'].map(type => renderLoader({ type, inline: true }).html).join(''));
+  assert.deepEqual(await page.locator('.wavelo').evaluateAll(nodes => nodes.map(n => getComputedStyle(n).display)), ['inline-grid', 'inline-grid']);
+});
+
+test('audit regression: pause and reduced motion reach every design and pseudo-element', async () => {
+  for (const state of [undefined, 'loading', 'success', 'error', 'idle']) {
+    for (const mode of ['paused', 'always', 'system']) {
+      await page.emulateMedia({ reducedMotion: mode === 'system' ? 'reduce' : 'no-preference' });
+      await setContentPage(loaderRegistry.map(l => `<div data-design="${l.id}">${renderLoader({ type: l.id, ...(state ? { 'data-wavelo-state': state } : {}), ...(mode === 'paused' ? { paused: true } : mode === 'always' ? { reducedMotion: 'always' } : {}) }).html}</div>`).join(''));
+      const failures = await page.evaluate(mode => [...document.querySelectorAll('[data-design]')].flatMap(w => w.firstElementChild.getAnimations({ subtree: true }).filter(a => a instanceof CSSAnimation).flatMap(a => {
+        const t = a.effect.getTiming();
+        return (mode === 'paused' ? a.playState !== 'paused' : Number(t.duration) > .001 || t.iterations !== 1 || t.delay !== 0) ? [`${w.dataset.design}: ${a.animationName} ${a.effect.pseudoElement ?? ''}`] : [];
+      })), mode);
+      assert.deepEqual(failures, [], `${state ?? 'default'} / ${mode}`);
+    }
+  }
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+});
+
+test('audit regression: repaired geometry retains depth, distinct layers and clear motion', async () => {
+  const ids = ['cube', 'sphere-lattice', 'tesseract', 'voxel-cluster', 'mobius-band', 'eclipse-corona', 'spiral-galaxy', 'aurora-ribbon', 'circular', 'gradient-ring', 'monochrome', 'skeleton-code', 'skeleton-map', 'skeleton-chat', 'gooey-metaballs'];
+  await setContentPage(ids.map(id => `<div data-design="${id}">${renderLoader({ type: id, size: 100, theme: 'dark' }).html}</div>`).join(''));
+  const result = await page.evaluate(() => {
+    const el = id => document.querySelector(`[data-design="${id}"] .wavelo`);
+    const style = (id, pseudo) => getComputedStyle(el(id), pseudo);
+    const parts = id => [...el(id).querySelectorAll('.wavelo__part')];
+    const blobs = parts('gooey-metaballs');
+    const distances = [];
+    for (const time of [0, 400, 800]) {
+      for (const a of el('gooey-metaballs').getAnimations({ subtree: true })) { a.pause(); a.currentTime = time; }
+      const b = blobs.map(e => e.getBoundingClientRect());
+      distances.push(Math.abs((b[0].left + b[0].width / 2) - (b[1].left + b[1].width / 2)));
+    }
+    return {
+      isolation: ['cube', 'sphere-lattice', 'mobius-band', 'voxel-cluster'].map(id => style(id).isolation),
+      hypercubePaths: el('tesseract').querySelectorAll('svg path').length,
+      voxelFaces: el('voxel-cluster').querySelectorAll('.wavelo__face').length,
+      bandSegments: parts('mobius-band').length,
+      layerWidths: ['eclipse-corona', 'spiral-galaxy'].map(id => parseFloat(getComputedStyle(parts(id)[0]).width)),
+      ribbonAnimation: style('aurora-ribbon').animationName,
+      ribbonFill: getComputedStyle(parts('aurora-ribbon')[0]).backgroundColor,
+      circularTrack: style('circular').borderTopColor,
+      circularAccent: style('circular', '::before').borderTopColor,
+      gradient: style('gradient-ring').backgroundImage,
+      monochromeMask: style('monochrome').maskImage,
+      codeNumber: getComputedStyle(parts('skeleton-code')[0], '::before').content,
+      mapRoute: style('skeleton-map', '::after').maskImage,
+      distances
+    };
+  });
+  assert.deepEqual(result.isolation, ['auto', 'auto', 'auto', 'auto']);
+  assert.equal(result.hypercubePaths, 3);
+  assert.equal(result.voxelFaces, 24);
+  assert.equal(result.bandSegments, 48);
+  assert.ok(result.layerWidths[0] > 85 && result.layerWidths[1] > 25, JSON.stringify(result.layerWidths));
+  assert.equal(result.ribbonAnimation, 'none');
+  assert.equal(result.ribbonFill, 'rgba(0, 0, 0, 0)');
+  assert.notEqual(result.circularTrack, result.circularAccent);
+  assert.match(result.gradient, /conic-gradient/);
+  assert.equal(result.monochromeMask, 'none');
+  assert.match(result.codeNumber, /counter/);
+  assert.notEqual(result.mapRoute, 'none');
+  assert.ok(Math.max(...result.distances) > 45 && Math.min(...result.distances) < 5, JSON.stringify(result.distances));
+
+  await setContentPage(renderLoader({ type: 'skeleton-chat' }).html);
+  const overlap = await page.evaluate(() => {
+    const root = document.querySelector('.wavelo');
+    for (const a of root.getAnimations({ subtree: true })) { a.pause(); a.currentTime = 420; }
+    const parts = [...root.children].map(el => el.getBoundingClientRect());
+    return parts[1].bottom - parts[2].top;
+  });
+  assert.ok(overlap <= 0, `chat bubbles overlap by ${overlap}px`);
+});
+
 async function loadCases(cases, head) {
   const body = cases.map((item) => `<div data-case="${item.name}">${renderLoader(item.config).html}</div>`).join('');
   await setContentPage(body, head);
@@ -545,7 +722,7 @@ test('the default palette, gradients and overlay scrim actually paint', async ()
   assert.equal(at('ring').color, 'rgb(99, 102, 241)', 'the documented default colour must paint without configuration');
   assert.equal(at('explicit').color, 'rgb(18, 52, 86)', 'an explicit colour must win');
   assert.equal(at('inherited').color, 'rgb(0, 255, 0)', 'a page-level --wavelo-color must still override the default');
-  assert.match(at('gradient-ring').backgroundImage, /linear-gradient/, 'gradient-ring must paint a gradient by default');
+  assert.match(at('gradient-ring').backgroundImage, /conic-gradient/, 'gradient-ring must paint a gradient by default');
   assert.match(at('gradient-ring').mask, /radial-gradient/, 'and carve it into a ring, because border-image ignores border-radius');
   assert.notEqual(at('overlay').background, 'rgba(0, 0, 0, 0)', 'the section overlay must have a scrim');
 });
@@ -610,8 +787,11 @@ test('no design has parts stacked on one another or squeezed out of round', asyn
         // are flex items, so any row whose parts overflow the loader gets squeezed
         // sideways and draws an ellipse while still being called a dot.
         for (const [index, box] of boxes.entries()) {
-          const round = getComputedStyle(parts[index]).borderTopLeftRadius.endsWith('%');
-          if (round && box.width > 1 && Math.abs(box.width / box.height - 1) > 0.06)
+          const shape = getComputedStyle(parts[index]);
+          const round = ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'].every(key => shape[key] === '50%');
+          // Bordered loops are not dots, and projecting a circle in 3D naturally
+          // changes its screen bounds. Inspect the filled dot's layout dimensions.
+          if (round && Number.parseFloat(shape.borderTopWidth) === 0 && box.width > 1 && Math.abs(Number.parseFloat(shape.width) / Number.parseFloat(shape.height) - 1) > 0.06)
             out.push(`${wrap.dataset.design} part ${index + 1} is ${box.width.toFixed(1)}x${box.height.toFixed(1)}`);
         }
         // A stack is a shared box *and* a shared transform: an ellipse authored at 60° and one
@@ -745,7 +925,7 @@ test('each design renders what its name says', async () => {
   assert.equal(at('segmented-ring').borderStyle, 'dashed');
   assert.equal(at('segmented-ring').sides, 4, 'a segmented ring is a complete dashed circle');
   assert.match(at('monochrome').backgroundImage, /conic-gradient/, 'monochrome must be a half-filled disc');
-  assert.match(at('gradient-ring').backgroundImage ?? '', /linear-gradient/);
+  assert.match(at('gradient-ring').backgroundImage ?? '', /conic-gradient/);
 
   // Layered arcs: the element plus both pseudo-elements, at three insets.
   const multi = at('multi-arc');
@@ -1014,6 +1194,24 @@ test('documentation gallery renders and has no axe violations', async () => {
     assert.match(staged.code, /"type": "ring"/);
     assert.match(staged.code, /"size": 96/);
     assert.match(staged.code, /"theme": "dark"/);
+    await galleryPage.selectOption('#design', 'brand-loader');
+    await galleryPage.locator('#brand-text').fill('NOVA <safe>');
+    await galleryPage.selectOption('#brand-animation', 'shimmer');
+    await galleryPage.selectOption('#brand-indicator', 'bar');
+    await galleryPage.locator('#brand-determinate').check();
+    assert.equal(await galleryPage.locator('#stage .wavelo__brand-text').textContent(), 'NOVA <safe>');
+    assert.equal(await galleryPage.locator('#stage .wavelo').getAttribute('role'), 'progressbar');
+    for (const fw of ['core', 'react', 'vue', 'svelte', 'angular', 'vanilla', 'web-components']) {
+      await galleryPage.locator(`.fw-tab[data-fw="${fw}"]`).click();
+      const code = await galleryPage.locator('#code').textContent();
+      assert.ok(code.includes('"brand":') && code.includes('"animation": "shimmer"'), fw);
+      assert.ok(code.includes('\n') && !code.includes('\\n'), `${fw}: real line breaks in copyable code`);
+      assert.ok(!code.includes('<safe>'), `${fw}: escape markup in generated code`);
+    }
+    await galleryPage.locator('#brand-fontSize').fill('-1');
+    assert.match(await galleryPage.locator('#brand-error').textContent(), /fontSize/);
+    await galleryPage.locator('#brand-fontSize').fill('36');
+    assert.equal(await galleryPage.locator('#brand-error').textContent(), '');
     assert.deepEqual(consoleErrors, []);
     assert.deepEqual(pageErrors, []);
   } finally {

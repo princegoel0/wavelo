@@ -55,9 +55,10 @@ export const skeletonCss = `
 .wavelo--skeleton-chat .wavelo__part:last-child{animation:wavelo-chat-typing calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* Code: a numbered gutter down the left, lines of uneven width, and a last line that
    ends short because a block of code ends mid-line. */
-.wavelo--skeleton-code{grid-template-columns:minmax(0,1fr);position:relative}
+.wavelo--skeleton-code{counter-reset:code-line;grid-template-columns:minmax(0,1fr);position:relative}
 .wavelo--skeleton-code:before{content:"";position:absolute;top:8px;bottom:8px;left:8px;width:22px;border-radius:var(--wavelo-radius,4px);background:var(--wavelo-skeleton-base)}
-.wavelo--skeleton-code .wavelo__part{width:88%;margin-left:30px}
+.wavelo--skeleton-code .wavelo__part{position:relative;counter-increment:code-line;width:calc(100% - 30px);margin-left:30px}
+.wavelo--skeleton-code .wavelo__part:before{content:counter(code-line);position:absolute;left:-30px;width:22px;text-align:center;font:8px/10px monospace;color:currentColor;opacity:.65}
 .wavelo--skeleton-code .wavelo__part:nth-child(3n){width:64%}
 .wavelo--skeleton-code .wavelo__part:last-child{width:42%}
 /* A metric card: the number, its label, then the trend chip. */
@@ -163,6 +164,7 @@ export const skeletonCss = `
 .wavelo--skeleton-filter-panel .wavelo__part:nth-child(5){width:100%;height:8px;border-radius:4px;margin-top:4px}
 .wavelo--skeleton-map{display:block;position:relative;width:var(--wavelo-width,var(--wavelo-size,14rem));height:var(--wavelo-height,var(--wavelo-size,8rem));border-radius:var(--wavelo-radius,8px);overflow:hidden}
 .wavelo--skeleton-map .wavelo__part:nth-child(1){width:100%;height:100%;border-radius:var(--wavelo-radius,6px)}
+.wavelo--skeleton-map:after{content:"";position:absolute;left:38%;top:38%;width:34%;height:26%;background:currentColor;opacity:.4;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H28 V50 H70 V100 H100' fill='none' stroke='%23000' stroke-width='6'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H28 V50 H70 V100 H100' fill='none' stroke='%23000' stroke-width='6'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 .wavelo--skeleton-map .wavelo__part:nth-child(2){position:absolute;left:35%;top:30%;width:16px;height:16px;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
 .wavelo--skeleton-map .wavelo__part:nth-child(3){position:absolute;left:68%;top:55%;width:14px;height:14px;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
 .wavelo--skeleton-map .wavelo__part:nth-child(4){position:absolute;right:14px;top:14px;width:16px;height:32px;border-radius:var(--wavelo-radius,4px)}
@@ -183,7 +185,7 @@ export const skeletonCss = `
 .wavelo--ai-image-develop .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration,2.2s)*-.4)}
 .wavelo--ai-image-develop .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,2.2s)*-.1)}
 .wavelo--ai-image-develop .wavelo__part:nth-child(9){animation-delay:calc(var(--wavelo-duration,2.2s)*-.65)}
-.wavelo--ai-image-develop:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--ai-image-develop[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
 .wavelo--ai-image-develop[data-wavelo-state="preview"] .wavelo__part{opacity:.18;transform:scale(.95)}
 .wavelo--ai-image-develop[data-wavelo-state="preview"]{border-color:color-mix(in srgb,var(--wavelo-secondary-color,#818cf8) 60%,transparent);box-shadow:0 0 10px -2px color-mix(in srgb,var(--wavelo-secondary-color,#818cf8) 25%,transparent)}
 .wavelo--ai-image-develop[data-wavelo-state="success"] .wavelo__part{opacity:0;transform:scale(1)}
@@ -196,7 +198,7 @@ export const skeletonCss = `
 .wavelo--document-extract .wavelo__part:nth-child(2){position:absolute;left:6px;top:6px;width:calc(44% - 4px);height:2px;border-radius:1px;background:var(--wavelo-color,#6366f1);box-shadow:0 0 6px 1px var(--wavelo-color,#6366f1);z-index:2;animation:wavelo-scan-beam var(--wavelo-duration,2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:opacity .25s ease,background-color .25s ease}
 .wavelo--document-extract .wavelo__part:nth-child(3){position:absolute;left:47%;top:46%;width:6px;height:6px;border-radius:50%;background:var(--wavelo-secondary-color,#818cf8);box-shadow:0 0 4px 1px var(--wavelo-secondary-color,#818cf8);animation:wavelo-extract-token var(--wavelo-duration,2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:opacity .25s ease}
 .wavelo--document-extract .wavelo__part:nth-child(4){right:4px;border:1px dashed color-mix(in srgb,currentColor 16%,transparent);background:repeating-linear-gradient(180deg,var(--wavelo-skeleton-highlight) 0px,var(--wavelo-skeleton-highlight) 6px,transparent 6px,transparent 12px);animation:wavelo-pulse var(--wavelo-duration,2s) ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--document-extract:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--document-extract[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
 .wavelo--document-extract[data-wavelo-state="success"] .wavelo__part:nth-child(1){border-color:var(--wavelo-success-color,#22c55e)}
 .wavelo--document-extract[data-wavelo-state="success"] .wavelo__part:is(:nth-child(2),:nth-child(3)){opacity:0}
 .wavelo--document-extract[data-wavelo-state="success"] .wavelo__part:nth-child(4){border-color:var(--wavelo-success-color,#22c55e);border-style:solid;opacity:1;background-color:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 12%,transparent)}
@@ -211,7 +213,7 @@ export const skeletonCss = `
 .wavelo--skeleton-video-player .wavelo__part:nth-child(3){position:absolute;left:10px;right:10px;bottom:22px;height:3px;border-radius:2px;background:color-mix(in srgb,currentColor 18%,transparent);overflow:hidden}
 .wavelo--skeleton-video-player .wavelo__part:nth-child(3)::before{content:"";display:block;width:35%;height:100%;border-radius:inherit;background:var(--wavelo-color,#6366f1);animation:wavelo-shimmer var(--wavelo-duration,2s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--skeleton-video-player .wavelo__part:nth-child(4){position:absolute;left:10px;right:10px;bottom:8px;height:8px;border-radius:3px;background:repeating-linear-gradient(90deg,color-mix(in srgb,currentColor 22%,transparent) 0px,color-mix(in srgb,currentColor 22%,transparent) 16px,transparent 16px,transparent 24px);opacity:.75}
-.wavelo--skeleton-video-player:not([data-wavelo-state="loading"]) .wavelo__part,.wavelo--skeleton-video-player:not([data-wavelo-state="loading"]) .wavelo__part::before{animation:none}
+.wavelo--skeleton-video-player[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part,.wavelo--skeleton-video-player[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part::before{animation:none}
 .wavelo--skeleton-video-player:is([data-wavelo-state="success"],[data-wavelo-state="ready"]) .wavelo__part:nth-child(1){border-color:var(--wavelo-success-color,#22c55e)}
 .wavelo--skeleton-video-player:is([data-wavelo-state="success"],[data-wavelo-state="ready"]) .wavelo__part:nth-child(2){background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 20%,transparent);border-color:var(--wavelo-success-color,#22c55e);transform:scale(1.08)}
 .wavelo--skeleton-video-player:is([data-wavelo-state="success"],[data-wavelo-state="ready"]) .wavelo__part:nth-child(2)::before{border-color:transparent transparent transparent var(--wavelo-success-color,#22c55e)}
@@ -226,7 +228,7 @@ export const skeletonCss = `
 .wavelo--skeleton-document-viewer .wavelo__part:nth-child(2){position:absolute;left:4px;top:calc(14% + 8px);width:22%;height:calc(86% - 12px);border-radius:calc(var(--wavelo-radius,8px)*.3);background:repeating-linear-gradient(180deg,var(--wavelo-skeleton-base) 0 20px,transparent 20px 24px);border:1px solid color-mix(in srgb,currentColor 10%,transparent);opacity:.85}
 .wavelo--skeleton-document-viewer .wavelo__part:nth-child(3){position:absolute;left:calc(22% + 8px);top:calc(14% + 8px);width:calc(78% - 12px);height:calc(86% - 12px);border-radius:calc(var(--wavelo-radius,8px)*.3);border:1px solid color-mix(in srgb,currentColor 14%,transparent);background:linear-gradient(120deg,var(--wavelo-skeleton-base) 20%,var(--wavelo-skeleton-highlight) 35%,var(--wavelo-skeleton-base) 50%);background-size:250% 100%;animation:wavelo-shimmer var(--wavelo-duration,2s) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);transition:border-color .25s ease}
 .wavelo--skeleton-document-viewer .wavelo__part:nth-child(4){position:absolute;left:calc(22% + 14px);top:calc(14% + 16px);width:calc(78% - 24px);height:calc(86% - 28px);border-radius:2px;background:repeating-linear-gradient(180deg,color-mix(in srgb,currentColor 25%,transparent) 0 5px,transparent 5px 11px);opacity:.75}
-.wavelo--skeleton-document-viewer:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
+.wavelo--skeleton-document-viewer[data-wavelo-state]:not([data-wavelo-state="loading"]) .wavelo__part{animation:none}
 .wavelo--skeleton-document-viewer:is([data-wavelo-state="success"],[data-wavelo-state="ready"]) .wavelo__part:nth-child(1){border-color:var(--wavelo-success-color,#22c55e)}
 .wavelo--skeleton-document-viewer:is([data-wavelo-state="success"],[data-wavelo-state="ready"]) .wavelo__part:nth-child(3){border-color:var(--wavelo-success-color,#22c55e);background:color-mix(in srgb,var(--wavelo-success-color,#22c55e) 8%,var(--wavelo-skeleton-base))}
 .wavelo--skeleton-document-viewer:is([data-wavelo-state="error"],[data-wavelo-state="failed"]) .wavelo__part:nth-child(1){border-color:var(--wavelo-error-color,#ef4444)}

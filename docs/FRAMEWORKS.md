@@ -1,6 +1,6 @@
 # Framework usage
 
-Every bridge renders the same core markup contract and accepts the same 27
+Every bridge renders the same core markup contract and accepts the same 28
 configuration keys; only the lifecycle plumbing differs. None of them inline CSS
 — `ensureStyles` puts each stylesheet slice in the document head once, and for
 server rendering you include the sheet yourself.
