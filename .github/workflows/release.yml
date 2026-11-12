@@ -63,7 +63,7 @@ jobs:
         run: mkdir -p release-tarballs && npm pack --workspaces --pack-destination release-tarballs
       - name: Upload validated release tarballs
         if: steps.gate.outputs.enabled == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wavelo-${{ steps.version.outputs.version }}-tarballs
           path: release-tarballs/*.tgz
