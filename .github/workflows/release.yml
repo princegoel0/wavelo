@@ -18,7 +18,7 @@ jobs:
       release_enabled: ${{ steps.gate.outputs.enabled }}
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
       - uses: actions/setup-node@v4
