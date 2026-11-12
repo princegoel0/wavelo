@@ -23,11 +23,11 @@ head(renderStylesheets(results.map((result) => result.css)));
 
 | Stack | Recipe | Verified by |
 | --- | --- | --- |
-| React 19 `renderToStaticMarkup` | `renderReactLoader(props, defaults)` returns `{ html, css }`; put the markup in the body and the slices in the head, or import `@wavelo/core/styles.css` once | tested (`tests/framework.test.mjs`) |
+| React 19 `renderToStaticMarkup` | `renderReactLoader(props, defaults)` from `@wavelo/react/server` returns `{ html, css }`; put the markup in the body and the slices in the head, or import `@wavelo/core/styles.css` once | tested (`tests/framework.test.mjs`) |
 | Vue 3 `renderToString` | `renderVueLoader(props, defaults)`, same split; `ensureStyles` runs in `watchEffect` on the client only | tested |
 | Angular SSR `renderApplication` | add `node_modules/@wavelo/core/styles.css` to the server builder's `styles` | tested (`tests/angular-ssr.test.mjs`) |
 | Svelte 5 `render()` / SvelteKit | import the sheet in `src/app.css` or `+layout.ts`; the component calls `ensureStyles` in an `$effect`, which does not run during SSR | server-rendered in `tests/framework.test.mjs`; SvelteKit wiring is documented |
-| Next.js app router | `import '@wavelo/core/styles.css'` in the root layout, and mark the component that renders a loader `'use client'` — `Loader` uses an effect | documented |
+| Next.js app router | `import '@wavelo/core/styles.css'` in the root layout; `<Loader>` already declares its own client boundary, and `@wavelo/react/server` is the half that stays on the server | boundary and server entry tested (`npm run verify:react`, `npm run pack:verify`); Next.js wiring documented |
 | Nuxt 3 | add `@wavelo/core/styles.css` to `css: []` in `nuxt.config.ts` and register the component in a plugin | documented |
 | Astro | `import '@wavelo/core/styles.css'` in the layout, or render the markup at build time with `renderLoader` from an `.astro` file — the core has no framework peer | documented |
 | Vite / plain SPA | nothing: `ensureStyles` injects each slice on first use and shares it | tested |
@@ -36,20 +36,34 @@ A server-rendered page that skips the sheet still renders correct markup — wit
 styling. That is the deliberate trade for not shipping one copy of the stylesheet per
 component instance.
 
+[`examples/`](../examples/README.md) has these stacks as runnable projects, and
+`npm run verify:examples` compiles them against the built packages.
+
 ## React Server Components
 
-`@wavelo/react`'s `Loader` is a client component: it injects its stylesheet slice in an
-effect, so importing it from a Server Component crosses a client boundary. Two ways to
-keep the server tree on the server.
-
-Render the markup with the core, which is a function that returns strings and uses no
-hooks, and import the sheet once through the bundler:
+The package is split in two so that each half of an App Router tree imports the
+half it needs. `Loader` injects its stylesheet slice in an effect, so the module
+that defines it declares a client boundary — rendering it from a Server Component
+needs no wrapper file of your own:
 
 ```tsx
 // app/thread-preview.tsx — a Server Component
-import { renderLoader } from '@wavelo/core';
+import { Loader } from '@wavelo/react';
 
-const loader = renderLoader({ type: 'typing-dots', label: 'Assistant is typing' });
+export default function Preview() {
+  return <Loader type="typing-dots" label="Assistant is typing" />;
+}
+```
+
+When the state is already known while the page renders, `@wavelo/react/server` is
+the narrower shape: a function that returns strings, uses no hooks and declares no
+boundary, so the loader costs no JavaScript at all. Include the sheet once:
+
+```tsx
+// app/thread-preview.tsx — a Server Component
+import { renderReactLoader } from '@wavelo/react/server';
+
+const loader = renderReactLoader({ type: 'typing-dots', label: 'Assistant is typing' });
 
 export default function Preview() {
   return <div dangerouslySetInnerHTML={{ __html: loader.html }} />;
@@ -61,24 +75,19 @@ export default function Preview() {
 @import '@wavelo/core/styles.css';
 ```
 
-That ships no JavaScript for the loader at all, which is the right trade when the state
-is known while the page is being rendered. When it arrives after hydration, wrap the
-client component once and import the wrapper instead:
-
-```tsx
-// components/wavelo-loader.tsx
-'use client';
-export { Loader } from '@wavelo/react';
-```
-
-`renderStylesheets(slices)` is the narrower variant of the first shape: it emits only the
+`renderStylesheets(slices)` is the same trade with a smaller head: it emits only the
 slices the page actually rendered, so a route that shows one ring does not send the sheet
 for the other 97 designs.
 
-Verified: the server render and the markup/stylesheet split are tested in
-`tests/framework.test.mjs` (React `renderToStaticMarkup`), and slice injection is tested
-in Chromium. The App Router wiring itself is documented, not executed here — there is no
-Next.js fixture in this repository.
+Verified: `npm run verify:react` reads the built files — the client entry declares a
+boundary, the server entry declares none and reaches no module inside the package that
+does, and the package entry still exports all eight names — and `npm run pack:verify`
+resolves `@wavelo/react`, `@wavelo/react/client` and `@wavelo/react/server` out of the
+installed tarball, checks the directives there and renders through the server entry with
+no DOM. The markup/stylesheet split is tested in `tests/framework.test.mjs`, and slice
+injection in Chromium. The App Router runtime itself is not installed here: there is no
+Next.js fixture in this repository, so how the bundler applies those boundaries stays
+documented rather than executed.
 
 ## Content security policy
 
@@ -129,6 +138,36 @@ in the light DOM:
   --wavelo-size: 1em;
 }
 ```
+
+### Utility classes on the loader itself
+
+A class passed as `className` lands on the same element as Wavelo's own rules, and it
+wins: measured in Chromium with the consumer stylesheet loaded before the Wavelo sheet, a
+class setting `width` and `height` to 24px overrode the sheet's
+`width: var(--wavelo-width, var(--wavelo-size, 2rem))`. Sizing by utility class needs no
+token at all.
+
+Colour is the exception, and it is deliberate. The sheet declares an explicit default, so
+a parent's `text-indigo-600` does not reach the loader — the element resolves its own
+`color` first. Either ask for the inherited colour:
+
+```tsx
+<Loader type="ring" color="currentColor" className="text-indigo-600 dark:text-indigo-400" />
+```
+
+or set the token, which is what the class is for anyway:
+
+```tsx
+<Loader type="ring" className="[--wavelo-color:var(--color-indigo-600)] dark:[--wavelo-color:var(--color-indigo-400)]" />
+```
+
+`className` accepts the shapes real stylesheets emit: variants (`dark:`, `md:`,
+`group-hover:`, `motion-safe:`), arbitrary values (`[--wavelo-size:24px]`,
+`bg-red-500/50`, `data-[state=open]:opacity-50`, `[mask-image:linear-gradient(90deg,#fff,transparent)]`),
+and `!` important. Arbitrary *selector* variants (`[&>*]:mt-2`) are refused, because `&`
+and `>` have no business in an attribute value — put those rules on a wrapper element.
+Quotes, angle brackets, semicolons, braces, backslashes, control characters and anything
+over 256 characters are rejected with a `LoaderConfigurationError` naming the value.
 
 Set the token rather than the property it backs. Wavelo's own rules declare `width`,
 `height`, `color`, `display`, `background` and the animation longhands from those

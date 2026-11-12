@@ -1,0 +1,19 @@
+/* Application layout only. Nothing in this file styles a loader: their colour, size and
+   speed are Wavelo configuration, and their rules come from the sheet the layout imports. */
+:root {
+  color-scheme: light dark;
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+.page {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+}
+
+.save-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-block: 2rem;
+}

@@ -222,13 +222,13 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs (Shipped: **165 active designs** across 8 functional categories, including 26 authentic 3D designs).
-- At least 20 skeleton presets or primitives (Shipped: 26 skeleton designs).
+- At least 60 distinct animation designs (Shipped: **181 designs**, 181 active designs across 8 functional categories, including 26 authentic 3D designs).
+- At least 20 skeleton presets or primitives (Shipped: 28 skeleton designs).
 - At least 10 progress-indicator designs or variants (Shipped: 20 progress designs).
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
-- Dedicated AI/streaming loading lane (Shipped: 9 AI designs).
+- Dedicated AI/streaming loading lane (Shipped: 12 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **255 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Shipped: **295 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -247,9 +247,10 @@ Wavelo enforces strict separation between marketing/organizational categories an
 > been consolidated into a surviving design because they rendered the same thing — the ring
 > thickness and mask variants, five dot rows, seven bar rows, the concentric-circle pair, the
 > orbiting-circle and the two determinate forms. The full list, with what each one was folded
-> into and whether configuration genuinely reproduces it, is in
-> `docs/VISUAL_DEDUPLICATION_REPORT.md`; `docs/LOADER_AUDIT.md` §5 marks each affected row
-> **consolidated** in place. Nothing in this section should be read as "unimplemented"
+> into and whether configuration genuinely reproduces it is the `retiredDesignIds` list in
+> `scripts/validate-docs.mjs`, which fails the build if any of those names reappears in a
+> maintained document; the audit that produced the list is a review artifact and is not
+> shipped with the package. Nothing in this section should be read as "unimplemented"
 > because a name is absent from the catalog: coverage is the requirement, the specific ID is
 > not.
 
@@ -473,7 +474,7 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 ### 5.11.1 Spatial Dimensionality Taxonomy (2D & 3D Loaders)
 
-- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 139 of the 165 designs are 2D.
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 155 of the 181 designs are 2D.
 - **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 26 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
 - **Dimensionality Requirements:**
   1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
@@ -485,7 +486,7 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 A thorough UX, visual, and kinesthetic audit across the active catalog identifies several existing loaders that, while functionally operational, originally appeared visually flat, simplistic, or lacking in physical realism. Modern frontend developers and design-system engineers demand loading indicators that communicate craft, visual polish, and organic motion dynamics (similar to micro-interactions found in Apple, Stripe, Linear, and Vercel products).
 
-**Scope of this review:** it was written against the 133-design catalog and its seven sections cover **107 designs** — Spinners 17, Dots 17, Bars 13, Creative 18, Progress 19, Application 17, AI 6. The 26 skeleton layouts are not reviewed here, and neither are the 20 designs added in 0.2.0; the per-design census of all 153, including both, is [`docs/COMPREHENSIVE_DESIGN_AUDIT_REPORT.md`](COMPREHENSIVE_DESIGN_AUDIT_REPORT.md). The counts below are the designs this section actually evaluates, not the category totals, which are in §5.10.
+**Scope of this review:** it was written against the 133-design catalog and its seven sections cover **107 designs** — Spinners 17, Dots 17, Bars 13, Creative 18, Progress 19, Application 17, AI 6. The 26 skeleton layouts are not reviewed here, and neither are the 20 designs added in 0.2.0; the per-design census of all 153, including both, was an internal review artifact and is not shipped with the package — the catalog and the audits re-measure it. The counts below are the designs this section actually evaluates, not the category totals, which are in §5.10.
 
 ### 🔴 Priority Key
 - 🔴 **Must fix** — obvious visual problem or physics mismatch
@@ -1245,6 +1246,10 @@ Requirements:
 - Avoid unnecessary re-renders.
 - Clean up resources correctly.
 - Support SSR where applicable.
+- Split the surface by React Server Component boundary: the module that defines the
+  component declares a client boundary, the render-only function declares none, and the
+  package entry exports both — so a Server Component renders a loader without writing a
+  wrapper, and a route that only needs markup imports the half that stays on the server.
 - Avoid browser-global access during server rendering.
 - Avoid hydration mismatches.
 - Use framework-appropriate types and lifecycle patterns.
@@ -1338,10 +1343,10 @@ Before public release, define, verify, and maintain in CI:
 
 | Package | Floor | Declared `peerDependencies` | What the floor rests on | Exercised in CI against |
 | :--- | :--- | :--- | :--- | :--- |
-| `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | The adapter imports only `createContext`, `useContext`, `useEffect`, `createElement`, `FC`, `ReactNode` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
+| `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Read off the built files: the runtime imports are `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef`, `useState` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
 | `@wavelo/vue` | Vue 3.0.0 | `vue: ">=3.0.0 <4.0.0"` | `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs` — every one present since 3.0. Vue 2 is EOL and out of scope; a Vue 2 page can still consume `@wavelo/web-components`. | Vue 3.5.44 |
 | `@wavelo/svelte` | Svelte 5.0.0 | `svelte: ">=5.0.0 <6.0.0"` | The shipped component uses runes (`$props()`, `$derived()`, `$effect()`), so 5.0 is the real floor and the 6.x cap is deliberate. | Svelte 5.57.3 |
-| `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and the emitted declarations carry `minVersion: "14.0.0"` — the oldest application that can link them. `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that `minVersion`. | Angular 22.2.4, plus an AOT consumer fixture compiled with the Angular compiler |
+| `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component declaration carries `minVersion: "14.0.0"` (the metadata and factory declarations around it say 12.0.0; the floor is the newest of the three, since a linking application must satisfy every declaration). `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that newest `minVersion`. | Angular 22.2.4, plus an AOT consumer fixture compiled with the Angular compiler |
 | `@wavelo/web-components` | Browser baseline | *None (zero runtime dependencies)* | Native Custom Elements v1 in light DOM — `this.innerHTML`, no `attachShadow`; SSR-safe guards. | Chromium, Firefox, WebKit suites |
 | `@wavelo/vanilla` / `@wavelo/core` | Browser baseline | *None (zero runtime dependencies)* | Pure CSS and DOM; framework-independent. | Chromium, Firefox, WebKit suites |
 
@@ -1506,7 +1511,7 @@ Wavelo documentation must be accessible through three integrated tiers:
 
 To eliminate developer friction across diverse web ecosystems, documentation must maintain a unified four-part structure for every supported framework:
 
-1. **Unified Configuration Contract:** Document that all framework adapters expose the exact same 27 configuration keys and 23 CSS custom properties (`--wavelo-*`) with deterministic precedence (Provider / context defaults < bound `loaderFor` component < call-site props).
+1. **Unified Configuration Contract:** Document that all framework adapters expose the exact same 28 configuration keys and 23 CSS custom properties (`--wavelo-*`) with deterministic precedence (Provider / context defaults < bound `loaderFor` component < call-site props).
 2. **Framework-Specific Idiomatic Patterns:**
    - **React:** `<Loader>`, `<WaveloProvider defaults={...}>`, and `loaderFor(type, defaults)`.
    - **Vue:** `<WaveloLoader>`, `provideWaveloDefaults(...)`, and `loaderFor(type, defaults)`.
@@ -1532,9 +1537,9 @@ Documentation must never drift from the underlying codebase. The following autom
 
 1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
    - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
-   - Enforces exact matches across code and docs for catalog counts (165 active designs, 255 named presets, 90 pattern presets), token counts (23 custom properties), configuration keys (27 keys), and measured bundle sizes. Any drift fails the build.
+   - Enforces exact matches across code and docs for catalog counts (181 active designs, 295 named presets, 114 pattern presets), token counts (23 custom properties), configuration keys (28 keys), and measured bundle sizes. Any drift fails the build.
 2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
-   - Validates that all 165 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
+   - Validates that all 181 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
 3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
    - Automatically builds `apps/docs` into `apps/docs/dist/index.html` and deploys to GitHub Pages on every merge to `main`.
 4. **Atomic Release Synchronization (`.github/workflows/release.yml`):**
@@ -1780,7 +1785,7 @@ A release candidate must pass:
 
 - Linting and strict TypeScript type checking (`tsc --noEmit`).
 - Unit and framework adapter test suites (52 tests).
-- Cross-browser test suites (Chromium 36 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
+- Cross-browser test suites (Chromium 37 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
 - Layout recalculation profiler (`npm run audit:layout` — 151/153 zero-layout).
 - Visual correctness audit (`npm run audit:visual:correctness`).
 - Measured options customization verification (`npm run audit:customization`).
@@ -2158,8 +2163,8 @@ A release is complete only when all mandatory release gates pass.
 
 The stable release must satisfy all mandatory criteria:
 
-- At least 60 distinct animation designs (Shipped: 165 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 255 named presets).
+- At least 60 distinct animation designs (Shipped: 181 active designs).
+- At least 100 total named presets and loading patterns (Shipped: 295 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.
@@ -2216,7 +2221,7 @@ implementation ambiguities discovered during technical review:
 - The registry is the source of truth for catalog counts, documentation, search,
   previews, supported options and catalog validation.
 - Dimensionality is a first-class metadata property: `LoaderDimension = '2d' | '3d'` on `LoaderDefinition`, exposed in the catalog as a 6-element tuple and surfaced via gallery filtering.
-- The configuration surface is strictly bounded to 27 declared keys in `loaderConfigKeys`, verified by `config.ts` type-level constraints.
+- The configuration surface is strictly bounded to 28 declared keys in `loaderConfigKeys`, verified by `config.ts` type-level constraints.
 - The token surface consists of exactly 23 verified `--wavelo-*` properties declared in `WaveloTokens`.
 - Micro-interactions communicate state changes via `data-wavelo-state` across `'idle'`, `'loading'`, `'success'`, and `'error'`.
 - `LoaderDefinition.category` is strictly taxonomic metadata used by the documentation gallery filter and catalog organization. The runtime core, validators, and framework adapters never branch on or restrict configuration based on `category`.

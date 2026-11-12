@@ -3,6 +3,7 @@
 
 /** Every public catalog ID. */
 export const loaderIds = [
+  "brand-loader",
   "circular",
   "ring",
   "dual-ring",
@@ -101,6 +102,8 @@ export const loaderIds = [
   "skeleton-feed",
   "skeleton-filter-panel",
   "skeleton-map",
+  "skeleton-video-player",
+  "skeleton-document-viewer",
   "progress-bar",
   "progress-ring",
   "progress-steps",
@@ -159,15 +162,28 @@ export const loaderIds = [
   "agent-tree",
   "aurora-ribbon",
   "glyph-matrix",
+  "ai-tool-handoff",
+  "ai-image-develop",
+  "document-extract",
   "coin-flip",
   "biometric-reticle",
   "vault-tumbler",
   "git-rebase",
   "packet-pipeline",
+  "media-transcode",
+  "eclipse-corona",
+  "spiral-galaxy",
+  "nebula-drift",
   "crt-scanline",
   "gooey-metaballs",
   "camera-iris",
   "newton-cradle",
+  "lotus-bloom",
+  "signal-beacon",
+  "conveyor-belt",
+  "zipper-flow",
+  "book-pages",
+  "pixel-weave",
 ] as const;
 
 export type LoaderId = (typeof loaderIds)[number];

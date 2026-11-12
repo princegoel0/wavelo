@@ -12,6 +12,10 @@ release-consumer/
 # 4.6 MB of PNGs describing a catalog that no longer ships ended up in the repository.
 release-audit/
 
+# Review previews and findings written by design-review runs. Same rule as
+# release-audit/: reproducible artifacts describing a catalog that keeps moving.
+outputs/
+
 # scripts/deep-design-audit.mjs writes its per-design results here. A generated report at
 # the repository root shows up in `git status` and gets swept into the next commit.
 audit-results.json

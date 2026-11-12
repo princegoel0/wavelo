@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "glyph-matrix", name: "Glyph decryption", category: "ai", dimension: "2d", kind: "shape", description: "Monospace matrix cells rapidly flipping through alphanumeric runes into stable state", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "glyph-matrix" };
+const definition: LoaderDefinition = { id: "glyph-matrix", name: "Glyph decryption", category: "ai", dimension: "2d", kind: "shape", description: "Monospace matrix of four fixed glyphs continuously flipping and fading", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "glyph-matrix" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const glyphMatrix = (config: Omit<LoaderConfig, 'type'> = {}) =>

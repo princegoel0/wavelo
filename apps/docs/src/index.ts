@@ -1,8 +1,13 @@
+import { buildSync } from 'esbuild';
+// The documentation generator runs in Node; the library's TS config stays DOM-only.
+declare const process: { cwd(): string };
 import { loaderRegistry, renderLoader } from '@wavelo/core';
 import { allStyles } from '@wavelo/core/css';
 import { stylesheetMarkup } from '@wavelo/core/styles';
 
-const version = '0.4.0';
+const brandPreviewScript = buildSync({ stdin: { contents: "import { brandLoader } from '@wavelo/core/loaders/brand-loader'; window.waveloBrand = brandLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
+
+const version = '0.5.0';
 
 const totalCount = loaderRegistry.length;
 const categoryCounts = loaderRegistry.reduce((acc, l) => {
@@ -26,6 +31,13 @@ const cards = loaderRegistry.map((loader) => `
         <svg class="copy-id-icon" aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       </button>
       <div>${loader.id === 'constellation' ? '<span class="badge badge-feat" title="5 Astronomical Patterns: Ursa Major, Orion, Cassiopeia, Cygnus, Ursa Minor">5 Patterns</span> ' : ''}<span class="badge badge-cat">${loader.category}</span></div>
+    </div>
+    <div class="quick-swatches" aria-label="Quick preview colors">
+      <button type="button" class="quick-dot active" style="background:#6366f1" data-color="#6366f1" title="Indigo" aria-label="Set card color to indigo"></button>
+      <button type="button" class="quick-dot" style="background:#10b981" data-color="#10b981" title="Emerald" aria-label="Set card color to emerald"></button>
+      <button type="button" class="quick-dot" style="background:#0ea5e9" data-color="#0ea5e9" title="Sky" aria-label="Set card color to sky"></button>
+      <button type="button" class="quick-dot" style="background:#f43f5e" data-color="#f43f5e" title="Rose" aria-label="Set card color to rose"></button>
+      <button type="button" class="quick-dot" style="background:#f59e0b" data-color="#f59e0b" title="Amber" aria-label="Set card color to amber"></button>
     </div>
     <div class="action-bar" aria-label="${loader.name} actions">
       <button type="button" class="btn-card-action btn-test-card" data-id="${loader.id}" aria-label="Test ${loader.name} in studio">
@@ -173,6 +185,9 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-dark { background: #030712 !important; }
 .stage.stage-black { background: #000000 !important; }
 .stage.stage-brand { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important; }
+.stage.stage-glass { background: radial-gradient(circle at 20% 25%, rgba(99, 102, 241, 0.28) 0%, transparent 50%), radial-gradient(circle at 80% 75%, rgba(16, 185, 129, 0.22) 0%, transparent 50%), #0d111c !important; }
+.stage.stage-neon { background: radial-gradient(circle at 50% 50%, #2e1065 0%, #070514 85%) !important; }
+.stage.stage-grid { background-color: #0b0f19 !important; background-image: radial-gradient(#334155 1.2px, transparent 1.2px) !important; background-size: 18px 18px !important; }
 
 .stage-footer-info { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0 0.25rem; }
 .stage-pill { font-size: 0.78rem; font-weight: 600; color: var(--text-main); }
@@ -225,6 +240,27 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .stage.stage-brand .mock-row span { color: #e0e7ff; }
 .stage.stage-brand .mock-row .status-text { color: #c7d2fe; }
 
+.stage.stage-glass .mock-card,
+.stage.stage-glass .mock-table { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); color: #f8fafc; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); }
+.stage.stage-glass .mock-line { background: rgba(255, 255, 255, 0.2); }
+.stage.stage-glass .mock-row { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.stage.stage-glass .mock-row span { color: #f8fafc; }
+.stage.stage-glass .mock-row .status-text { color: #cbd5e1; }
+
+.stage.stage-neon .mock-card,
+.stage.stage-neon .mock-table { background: rgba(15, 7, 34, 0.85); border: 1px solid rgba(168, 85, 247, 0.45); color: #f8fafc; box-shadow: 0 0 30px rgba(168, 85, 247, 0.25); }
+.stage.stage-neon .mock-line { background: rgba(168, 85, 247, 0.35); }
+.stage.stage-neon .mock-row { border-bottom: 1px solid rgba(168, 85, 247, 0.2); }
+.stage.stage-neon .mock-row span { color: #f8fafc; }
+.stage.stage-neon .mock-row .status-text { color: #d8b4fe; }
+
+.stage.stage-grid .mock-card,
+.stage.stage-grid .mock-table { background: #0f172a; border: 1px solid #1e293b; color: #f8fafc; }
+.stage.stage-grid .mock-line { background: #1e293b; }
+.stage.stage-grid .mock-row { border-bottom: 1px solid #1e293b; }
+.stage.stage-grid .mock-row span { color: #f8fafc; }
+.stage.stage-grid .mock-row .status-text { color: #94a3b8; }
+
 /* Studio Right: Controls Column */
 .controls-column { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
 .framework-tab-bar { display: flex; gap: 0.3rem; flex-wrap: wrap; background: var(--bg-subtle); padding: 0.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); }
@@ -247,9 +283,9 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
 
 /* Preset Segmented Buttons */
 .preset-segments { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.preset-btn { flex: 1; min-width: 0; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.preset-btn.active { color: #ffffff; background: var(--accent); border-color: var(--accent); }
-.preset-btn:hover:not(.active) { color: var(--text-main); border-color: var(--border-focus); }
+.preset-btn, .speed-btn { flex: 1; min-width: 0; padding: 0.35rem; font-size: 0.75rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.preset-btn.active, .speed-btn.active { color: #ffffff; background: var(--accent); border-color: var(--accent); }
+.preset-btn:hover:not(.active), .speed-btn:hover:not(.active) { color: var(--text-main); border-color: var(--border-focus); }
 
 /* Color Palette Swatches & Integrated Picker */
 .swatches { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
@@ -276,13 +312,28 @@ input[type=range]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--acce
   .ctrl-row select, .ctrl-row input[type=range], .ctrl-row .preset-segments, .ctrl-row .swatches { grid-column: 1 / -1; width: 100%; }
 }
 
+/* Brand editor shares the studio controls and keeps long option lists compact. */
+#brand-controls{margin:0;padding:1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);max-height:420px;overflow:auto;min-width:0}
+#brand-controls[hidden]{display:none}
+#brand-controls legend{font-weight:600;font-size:.85rem;padding:0 .4rem;color:var(--text-main)}
+#brand-controls .ctrl-row{grid-template-columns:minmax(110px,1fr) minmax(0,1.5fr);margin-bottom:.65rem;gap:.7rem}
+#brand-controls input:not([type=checkbox]),#brand-controls select{min-width:0;width:100%;font:inherit;font-size:.8rem;color:var(--text-main);background:var(--bg-subtle);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:.45rem .6rem}
+#brand-controls input[type=color]{height:34px;padding:3px}
+#brand-controls input[type=checkbox]{accent-color:var(--accent);justify-self:start}
+#brand-controls>label{display:flex;align-items:center;gap:.5rem;font-size:.8rem;margin-top:.6rem}
+#brand-error{font-size:.8rem;color:var(--text-main)}
+#brand-error:empty{display:none}
 /* Code Box */
 .code-panel { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
-.code-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+.code-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem; }
+.code-actions { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 pre#code { margin: 0; padding: 1rem; background: var(--code-bg); color: var(--code-text); border-radius: var(--radius-lg); font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; border: 1px solid var(--border-card); overflow: auto; max-height: 220px; white-space: pre-wrap; }
 pre#code:focus { outline: 2px solid var(--border-focus); }
-.btn-copy-code { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; border-radius: var(--radius-sm); border: none; background: var(--accent); color: #ffffff; cursor: pointer; transition: background 0.15s; }
+.btn-copy-code { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; border-radius: var(--radius-sm); border: none; background: var(--accent); color: #ffffff; cursor: pointer; transition: all 0.15s; }
 .btn-copy-code:hover { background: var(--accent-hover); }
+.btn-copy-standalone { background: var(--bg-subtle) !important; color: var(--text-main) !important; border: 1px solid var(--border-subtle) !important; }
+.btn-copy-standalone:hover { background: var(--border-subtle) !important; border-color: var(--border-focus) !important; }
+.btn-copy-standalone.copied { background: rgba(16, 185, 129, 0.15) !important; border-color: #10b981 !important; color: #10b981 !important; }
 
 /* Showcase Section & Sticky Filter Bar */
 .showcase-section { scroll-margin-top: 5rem; }
@@ -396,6 +447,29 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 .action-bar { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.25rem; padding-top: 0.5rem; border-top: 1px solid var(--border-subtle); }
 .btn-card-action { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.35rem 0.4rem; border-radius: var(--radius-sm); font-size: 0.72rem; font-weight: 600; border: 1px solid var(--border-subtle); background: var(--bg-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
 .btn-card-action:hover { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+
+/* In-Card Quick Color Swatches */
+.quick-swatches { display: flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0; }
+.quick-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid transparent; cursor: pointer; padding: 0; transition: transform 0.15s ease, border-color 0.15s ease; flex-shrink: 0; }
+.quick-dot:hover { transform: scale(1.25); }
+.quick-dot.active { border-color: #ffffff; box-shadow: 0 0 0 1px var(--accent); }
+
+/* WCAG 2.2 Contrast Badges & Indicators */
+.contrast-badge { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: var(--radius-sm); letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 0.25rem; }
+.contrast-good, .pill-good { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.contrast-warn, .pill-warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+.stage-pill.pill-contrast { font-weight: 700; }
+
+/* Modal Snippet Framework Tabs */
+.modal-snippet-section { background: var(--bg-subtle); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.modal-snippet-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.btn-copy-modal-snippet { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.75rem; border-radius: var(--radius-sm); background: var(--accent); color: #fff; border: none; cursor: pointer; transition: all 0.15s ease; }
+.btn-copy-modal-snippet:hover { background: var(--accent-hover); }
+.btn-copy-modal-snippet.copied { background: #10b981 !important; color: #fff !important; }
+.modal-fw-tabs { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
+.modal-fw-tab { font-size: 0.74rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); cursor: pointer; transition: all 0.12s ease; }
+.modal-fw-tab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+.modal-fw-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 /* API Modal */
 .modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 1.5rem; }
@@ -625,6 +699,9 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <button type="button" class="mode-btn" data-bg="light">Light</button>
             <button type="button" class="mode-btn" data-bg="black">Black #000</button>
             <button type="button" class="mode-btn" data-bg="brand">Brand</button>
+            <button type="button" class="mode-btn" data-bg="glass" aria-label="Frosted glass surface">Glass</button>
+            <button type="button" class="mode-btn" data-bg="neon" aria-label="Cyber neon gradient surface">Neon</button>
+            <button type="button" class="mode-btn" data-bg="grid" aria-label="Matrix blueprint grid surface">Grid</button>
           </div>
           <div class="canvas-modes" aria-label="Simulated UI context">
             <button type="button" class="mode-btn active" data-ctx="isolated">Isolated</button>
@@ -645,11 +722,13 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <svg class="copy-id-icon" aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </button>
           <span id="stage-spec-badge" class="stage-pill pill-sub">2D · 48px · 1s</span>
+          <span id="stage-contrast-pill" class="stage-pill pill-contrast pill-good" title="WCAG 2.2 Relative Contrast Ratio">WCAG: 4.5:1 AA</span>
         </div>
       </div>
 
       <!-- Right Column: Controls Column -->
       <div class="controls-column">
+
         <div class="framework-tab-bar" aria-label="Target framework">
           <button type="button" class="fw-tab active" data-fw="core">Core</button>
           <button type="button" class="fw-tab" data-fw="html">HTML &amp; CSS</button>
@@ -732,6 +811,17 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <output for="duration">1s</output>
           </div>
 
+          <div class="ctrl-row" id="row-speed">
+            <label>Speed</label>
+            <div class="preset-segments speed-segments" aria-label="Animation speed presets">
+              <button type="button" class="speed-btn" data-speed="2" aria-label="Set animation speed to 0.5x slow">0.5x</button>
+              <button type="button" class="speed-btn active" data-speed="1" aria-label="Set animation speed to 1x normal">1x</button>
+              <button type="button" class="speed-btn" data-speed="0.67" aria-label="Set animation speed to 1.5x brisk">1.5x</button>
+              <button type="button" class="speed-btn" data-speed="0.5" aria-label="Set animation speed to 2x rapid">2x</button>
+            </div>
+            <output></output>
+          </div>
+
           <div class="ctrl-row">
             <label for="radius">Radius</label>
             <input id="radius" type="range" min="0" max="24" step="1" value="6" aria-label="Border radius in pixels">
@@ -763,10 +853,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
               <button type="button" class="swatch" style="background:#f43f5e" data-color="#f43f5e" aria-label="Select rose color"></button>
               <button type="button" class="swatch" style="background:#f59e0b" data-color="#f59e0b" aria-label="Select amber color"></button>
             </div>
-            <output></output>
-          </div>
-
-          <div class="ctrl-row" id="row-secondary-color">
+            <output id="contrast-badge" class="contrast-badge contrast-good" title="WCAG 2.2 Relative Contrast Ratio" aria-label="WCAG 2.2 Relative Contrast Ratio">4.5:1 AA</output>
             <label for="secondary-color">Secondary</label>
             <div class="swatches">
               <div class="color-picker-wrap" title="Secondary accent color picker">
@@ -801,11 +888,15 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
           </label>
         </div>
 
+<fieldset id="brand-controls" hidden><legend>Brand customization</legend><div class="ctrl-row"><label for="brand-text">Brand text</label><input id="brand-text" data-brand-key="text" type="text" value="ACME"  maxlength="80"></div><div class="ctrl-row"><label for="brand-caption">Caption</label><input id="brand-caption" data-brand-key="caption" type="text" value="Preparing your workspace"  maxlength="160"></div><div class="ctrl-row"><label for="brand-animation">Text animation</label><select id="brand-animation" data-brand-key="animation"><option selected>wave</option><option>bounce</option><option>pulse</option><option>flip</option><option>shimmer</option><option>typewriter</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-indicator">Indicator</label><select id="brand-indicator" data-brand-key="indicator"><option selected>ring</option><option>bar</option><option>dots</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-layout">Layout</label><select id="brand-layout" data-brand-key="layout"><option selected>stacked</option><option>inline</option></select></div><div class="ctrl-row"><label for="brand-indicatorPosition">Indicator position</label><select id="brand-indicatorPosition" data-brand-key="indicatorPosition"><option selected>before</option><option>after</option></select></div><div class="ctrl-row"><label for="brand-align">Alignment</label><select id="brand-align" data-brand-key="align"><option>start</option><option selected>center</option><option>end</option></select></div><div class="ctrl-row"><label for="brand-fontFamily">Font family</label><input id="brand-fontFamily" data-brand-key="fontFamily" type="text" value="system-ui, sans-serif"  ></div><div class="ctrl-row"><label for="brand-fontSize">Font size (px)</label><input id="brand-fontSize" data-brand-key="fontSize" type="number" value="32" step="any" ></div><div class="ctrl-row"><label for="brand-fontWeight">Font weight</label><input id="brand-fontWeight" data-brand-key="fontWeight" type="number" value="700" step="any" ></div><div class="ctrl-row"><label for="brand-fontStyle">Font style</label><select id="brand-fontStyle" data-brand-key="fontStyle"><option selected>normal</option><option>italic</option><option>oblique</option></select></div><div class="ctrl-row"><label for="brand-letterSpacing">Letter spacing (px)</label><input id="brand-letterSpacing" data-brand-key="letterSpacing" type="number" value="1" step="any" ></div><div class="ctrl-row"><label for="brand-lineHeight">Line height</label><input id="brand-lineHeight" data-brand-key="lineHeight" type="number" value="1.3" step="any" ></div><div class="ctrl-row"><label for="brand-textTransform">Letter case</label><select id="brand-textTransform" data-brand-key="textTransform"><option selected>none</option><option>uppercase</option><option>lowercase</option><option>capitalize</option></select></div><div class="ctrl-row"><label for="brand-textColor">Text color</label><input id="brand-textColor" data-brand-key="textColor" type="color" value="#6366f1"  ></div><div class="ctrl-row"><label for="brand-trackColor">Track color</label><input id="brand-trackColor" data-brand-key="trackColor" type="color" value="#cbd5e1"  ></div><div class="ctrl-row"><label for="brand-captionColor">Caption color</label><input id="brand-captionColor" data-brand-key="captionColor" type="color" value="#818cf8"  ></div><div class="ctrl-row"><label for="brand-captionSize">Caption size (px)</label><input id="brand-captionSize" data-brand-key="captionSize" type="number" value="13" step="any" ></div><div class="ctrl-row"><label for="brand-indicatorSize">Indicator size (px)</label><input id="brand-indicatorSize" data-brand-key="indicatorSize" type="number" value="40" step="any" ></div><div class="ctrl-row"><label for="brand-gap">Gap (px)</label><input id="brand-gap" data-brand-key="gap" type="number" value="12" step="any" ></div><div class="ctrl-row"><label for="brand-radius">Bar radius (px)</label><input id="brand-radius" data-brand-key="radius" type="number" value="4" step="any" ></div><div class="ctrl-row"><label for="brand-stagger">Letter stagger (seconds)</label><input id="brand-stagger" data-brand-key="stagger" type="number" value="0.08" step="any" ></div><div class="ctrl-row"><label for="brand-delay">Text delay (seconds)</label><input id="brand-delay" data-brand-key="delay" type="number" value="0" step="any" ></div><div class="ctrl-row"><label for="brand-amplitude">Text movement (px)</label><input id="brand-amplitude" data-brand-key="amplitude" type="number" value="6" step="any" ></div><div class="ctrl-row"><label for="brand-easing">Easing</label><select id="brand-easing" data-brand-key="easing"><option>linear</option><option>ease</option><option>ease-in</option><option>ease-out</option><option selected>ease-in-out</option></select></div><div class="ctrl-row"><label for="brand-showValue">Show percentage</label><input id="brand-showValue" data-brand-key="showValue" type="checkbox" checked  ></div><label><input id="brand-determinate" type="checkbox"> Use real progress</label><label><input id="brand-reduced" type="checkbox"> Reduce motion</label><p id="brand-error" role="alert"></p></fieldset>
         <!-- Generated Code Box -->
         <div class="code-panel">
           <div class="code-header">
             <span id="code-framework-label">Generated Code</span>
-            <button type="button" id="copy" class="btn-copy-code">Copy Code</button>
+            <div class="code-actions">
+              <button type="button" id="copy-standalone" class="btn-copy-code btn-copy-standalone" title="Copy standalone HTML and CSS with scoped styles" aria-label="Copy standalone HTML and CSS">Copy Standalone HTML</button>
+              <button type="button" id="copy" class="btn-copy-code">Copy Code</button>
+            </div>
           </div>
           <pre id="code" tabindex="0" aria-label="Generated component code" aria-live="polite"></pre>
         </div>
@@ -899,17 +990,17 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     <button type="button" class="popover-item" data-fw="react" role="menuitem">
       <span class="popover-fw-badge">React</span>
       <span class="popover-fw-name">React JSX</span>
-      <span class="popover-fw-tag">&lt;Loader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="vue" role="menuitem">
       <span class="popover-fw-badge">Vue</span>
       <span class="popover-fw-name">Vue SFC</span>
-      <span class="popover-fw-tag">&lt;Loader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="svelte" role="menuitem">
       <span class="popover-fw-badge">Svelte</span>
       <span class="popover-fw-name">Svelte 5</span>
-      <span class="popover-fw-tag">&lt;WaveloLoader /&gt;</span>
+      <span class="popover-fw-tag">&lt;Wavelo /&gt;</span>
     </button>
     <button type="button" class="popover-item" data-fw="angular" role="menuitem">
       <span class="popover-fw-badge">Angular</span>
@@ -924,7 +1015,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
     <button type="button" class="popover-item" data-fw="vanilla" role="menuitem">
       <span class="popover-fw-badge">JS</span>
       <span class="popover-fw-name">Vanilla JS</span>
-      <span class="popover-fw-tag">mountLoader</span>
+      <span class="popover-fw-tag">mountWavelo</span>
     </button>
     <button type="button" class="popover-item" data-fw="core" role="menuitem">
       <span class="popover-fw-badge">Core</span>
@@ -948,6 +1039,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 </footer>
 
 <script>
+${brandPreviewScript}
 const stage = document.querySelector('#stage');
 const code = document.querySelector('#code');
 const design = document.querySelector('#design');
@@ -1023,6 +1115,24 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+
+function brandConfig(values) {
+  const brand = {};
+  document.querySelectorAll('[data-brand-key]').forEach(input => { brand[input.dataset.brandKey] = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value; });
+  return { type: 'brand-loader', brand, color: values.color, secondaryColor: values['secondary-color'], strokeWidth: Number(values.stroke), duration: values.duration + 's', paused: values.paused, direction: values.reverse ? 'reverse' : 'normal', theme: values.dark ? 'dark' : 'light', reducedMotion: document.querySelector('#brand-reduced').checked ? 'always' : 'auto', ...(document.querySelector('#brand-determinate').checked ? {value: Number(values.progress)} : {}) };
+}
+function brandSnippet(fw, config) {
+  const json = JSON.stringify(config, null, 2).replaceAll('<', String.fromCharCode(92) + 'u003c');
+  if (fw === 'react') return "import { Loader } from '@wavelo/react';\\nimport '@wavelo/core/styles.css';\\n\\nconst config = " + json + " as const;\\n<Loader {...config} />";
+  if (fw === 'vue') return '<scr' + 'ipt setup>\\nimport { Loader } from "@wavelo/vue";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<template><Loader v-bind="config" /></template>';
+  if (fw === 'svelte') return '<scr' + 'ipt>\\nimport Loader from "@wavelo/svelte/WaveloLoader.svelte";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<Loader {...config} />';
+  if (fw === 'angular') return '// Import LoaderConfig from @wavelo/core. Component field:\\nconfig: LoaderConfig = ' + json + ';\\n\\n// Template (import LoaderComponent):\\n<wavelo-loader type="brand-loader" [brand]="config.brand" [color]="config.color" [secondaryColor]="config.secondaryColor" [duration]="config.duration" [strokeWidth]="config.strokeWidth" [paused]="config.paused" [direction]="config.direction" [theme]="config.theme" [reducedMotion]="config.reducedMotion" [value]="config.value" />';
+  if (fw === 'web-components') return "import { defineWaveloElements } from '@wavelo/web-components';\\ndefineWaveloElements();\\nconst config = " + json + ";\\nconst loader = document.createElement('wavelo-loader');\\nfor (const [key, value] of Object.entries(config)) loader.setAttribute(key.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), typeof value === 'object' ? JSON.stringify(value) : String(value));\\ndocument.querySelector('#slot').append(loader);";
+  if (fw === 'html') return window.waveloBrand(config).html + '\\n<style>' + window.waveloBrand(config).css + '</style>';
+  if (fw === 'vanilla') return "import { mountLoader } from '@wavelo/vanilla';\\nmountLoader(document.querySelector('#slot'), " + json + ');';
+  return "import { brandLoader } from '@wavelo/core/loaders/brand-loader';\\nconst { html, css } = brandLoader(" + json + ');';
+}
+
 function read() {
   const values = {};
   for (const name of fields) values[name] = document.querySelector('#' + name).value;
@@ -1030,8 +1140,33 @@ function read() {
   return values;
 }
 
+function hexToRgb(hex) {
+  let c = (hex || '#6366f1').replace('#', '');
+  if (c.length === 3) c = c.split('').map((x) => x + x).join('');
+  const num = Number.parseInt(c, 16);
+  if (Number.isNaN(num)) return [99, 102, 241];
+  return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+}
+
+function relativeLuminance(rgb) {
+  const [rs, gs, bs] = rgb.map((val) => {
+    const s = val / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function getContrastRatio(colorHex, bgHex) {
+  const l1 = relativeLuminance(hexToRgb(colorHex));
+  const l2 = relativeLuminance(hexToRgb(bgHex));
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 function generateCodeSnippet(id, fw, values) {
   if (!values) values = read();
+  if (id === 'brand-loader') return brandSnippet(fw, brandConfig(values));
   const info = loaderData.find((l) => l.id === id) || {
     name: id,
     dimension: '2d',
@@ -1099,9 +1234,9 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  style={{ \\x27--wavelo-radius\\x27: \\x27' + values.radius + 'px\\x27 }}';
     }
-    snippet = "import { Loader } from '@wavelo/react';\\n\\n<Loader\\n" + props + "\\n/>";
+    snippet = "import { Wavelo } from '@wavelo/react';\\n\\n<Wavelo\\n" + props + "\\n/>";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
-      snippet += "\\n\\n// Shortcut preset type:\\n// <Loader type='constellation-" + vSelect.value + "' size={" + values.size + "} />";
+      snippet += "\\n\\n// Shortcut preset type:\\n// <Wavelo type='constellation-" + vSelect.value + "' size={" + values.size + "} />";
     }
   } else if (fw === 'vue') {
     let props = '  type="' + id + '"';
@@ -1121,7 +1256,7 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  :style="{ \\x27--wavelo-radius\\x27: \\x27' + values.radius + 'px\\x27 }"';
     }
-    snippet = "<sc" + "ript setup>\\nimport { Loader } from '@wavelo/vue';\\n</sc" + "ript>\\n\\n<template>\\n  <Loader\\n" + props + "\\n  />\\n</template>";
+    snippet = "<sc" + "ript setup>\\nimport { Wavelo } from '@wavelo/vue';\\n</sc" + "ript>\\n\\n<template>\\n  <Wavelo\\n" + props + "\\n  />\\n</template>";
   } else if (fw === 'svelte') {
     let props = '  type="' + id + '"';
     if (extraAttr) props += '\\n ' + extraAttr.trim();
@@ -1140,7 +1275,7 @@ function generateCodeSnippet(id, fw, values) {
     if (info.honoursRadius && values.radius && values.radius !== '6') {
       props += '\\n  style="--wavelo-radius: ' + values.radius + 'px"';
     }
-    snippet = "<sc" + "ript>\\n  import WaveloLoader from '@wavelo/svelte/WaveloLoader.svelte';\\n</sc" + "ript>\\n\\n<WaveloLoader\\n" + props + "\\n/>";
+    snippet = "<sc" + "ript>\\n  import Wavelo from '@wavelo/svelte/Wavelo.svelte';\\n</sc" + "ript>\\n\\n<Wavelo\\n" + props + "\\n/>";
   } else if (fw === 'angular') {
     let props = '  type="' + id + '"';
     if (extraAttr) props += '\\n ' + extraAttr.trim();
@@ -1197,7 +1332,7 @@ function generateCodeSnippet(id, fw, values) {
       '}\\n' +
       '</style>';
   } else if (fw === 'vanilla') {
-    snippet = "import { mountLoader } from '@wavelo/vanilla';\\n\\nconst detach = mountLoader(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
+    snippet = "import { mountWavelo } from '@wavelo/vanilla';\\n\\nconst detach = mountWavelo(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
   } else {
     snippet = "renderLoader(" + JSON.stringify(config, null, 2) + ")";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
@@ -1210,6 +1345,7 @@ function generateCodeSnippet(id, fw, values) {
 function paint() {
   const id = design.value;
   const values = read();
+  document.querySelector('#brand-controls').hidden = id !== 'brand-loader';
   const info = loaderData.find((l) => l.id === id) || { name: id, dimension: '2d', category: 'general', honoursStroke: true, honoursDuration: true, honoursPaused: true, honoursReverse: true, honoursSize: true, honoursValue: false, honoursCount: false, honoursSecondaryColor: false, honoursRadius: false };
   
   const rowVariant = document.querySelector('#row-variant');
@@ -1224,6 +1360,7 @@ function paint() {
   // Row IDs correspond to the control they govern
   const rowStroke = document.querySelector('#stroke').closest('.ctrl-row');
   const rowDuration = document.querySelector('#duration').closest('.ctrl-row');
+  const rowSpeed = document.querySelector('#row-speed');
   const rowPreset = document.querySelector('.preset-segments').closest('.ctrl-row');
   const rowSize = document.querySelector('#size').closest('.ctrl-row');
   const rowRadius = document.querySelector('#radius').closest('.ctrl-row');
@@ -1235,6 +1372,7 @@ function paint() {
 
   if (rowStroke) rowStroke.hidden = !info.honoursStroke;
   if (rowDuration) rowDuration.hidden = !info.honoursDuration;
+  if (rowSpeed) rowSpeed.hidden = !info.honoursDuration;
   // Size slider and size presets are linked — hide both or neither
   if (rowSize) rowSize.hidden = !info.honoursSize;
   if (rowPreset) rowPreset.hidden = !info.honoursSize;
@@ -1244,6 +1382,18 @@ function paint() {
   if (rowProgress) rowProgress.hidden = !determinate.has(id);
   if (labelPaused) labelPaused.hidden = !info.honoursPaused;
   if (labelReverse) labelReverse.hidden = !info.honoursReverse;
+
+  // Sync speed and size preset buttons state
+  const durVal = Number(values.duration || 1);
+  document.querySelectorAll('.speed-btn').forEach((b) => {
+    const s = Number(b.getAttribute('data-speed'));
+    b.classList.toggle('active', Math.abs(s - durVal) < 0.05);
+  });
+  const sizeVal = Number(values.size || 48);
+  document.querySelectorAll('.preset-btn').forEach((b) => {
+    const s = Number(b.getAttribute('data-size'));
+    b.classList.toggle('active', s === sizeVal);
+  });
 
   if (stageDesignName) stageDesignName.textContent = info.name;
   const stageDesignId = document.querySelector('#stage-design-id');
@@ -1263,9 +1413,44 @@ function paint() {
     stageSpecBadge.textContent = specText;
   }
 
+  const activeBgBtn = document.querySelector('.canvas-modes [data-bg].active');
+  const activeBgMode = activeBgBtn ? activeBgBtn.getAttribute('data-bg') : (values.dark ? 'dark' : 'light');
+  const bgColors = {
+    light: '#ffffff',
+    dim: '#0f172a',
+    dark: '#030712',
+    black: '#000000',
+    brand: '#1e1b4b',
+    glass: '#0d111c',
+    neon: '#070514',
+    grid: '#0b0f19'
+  };
+  const stageBg = bgColors[activeBgMode] || (values.dark ? '#030712' : '#ffffff');
+  const brandColors = id === 'brand-loader' ? [document.querySelector('#brand-textColor').value, document.querySelector('#brand-captionColor').value, ...(document.querySelector('#brand-animation').value === 'shimmer' ? [values['secondary-color']] : [])] : [values.color];
+  const contrastRatio = Math.min(...brandColors.map(color => getContrastRatio(color, stageBg)));
+  const contrastLabel = contrastRatio >= 7.0 ? 'AAA' : contrastRatio >= 4.5 ? 'AA' : 'Low';
+  const contrastBadge = document.querySelector('#contrast-badge');
+  if (contrastBadge) {
+    contrastBadge.textContent = contrastRatio.toFixed(1) + ':1 ' + contrastLabel;
+    contrastBadge.className = 'contrast-badge ' + (contrastRatio >= 4.5 ? 'contrast-good' : 'contrast-warn');
+  }
+  const stageContrastPill = document.querySelector('#stage-contrast-pill');
+  if (stageContrastPill) {
+    stageContrastPill.textContent = 'WCAG ' + contrastRatio.toFixed(1) + ':1 (' + contrastLabel + ')';
+    stageContrastPill.className = 'stage-pill pill-contrast ' + (contrastRatio >= 4.5 ? 'pill-good' : 'pill-warn');
+  }
+
   const source = document.querySelector('.card[data-id="' + id + '"] .wavelo');
   if (!source) return;
-  const rendered = source.cloneNode(true);
+  let rendered = source.cloneNode(true);
+  if (id === 'brand-loader') {
+    try {
+      const template = document.createElement('template');
+      template.innerHTML = window.waveloBrand(brandConfig(values)).html;
+      rendered = template.content.firstElementChild;
+      document.querySelector('#brand-error').textContent = '';
+    } catch (error) { document.querySelector('#brand-error').textContent = error.message; return; }
+  }
   rendered.setAttribute('data-wavelo-theme', values.dark ? 'dark' : 'light');
 
   if (id === 'constellation' && variantSelect) {
@@ -1369,6 +1554,8 @@ function paint() {
     if (info.honoursSecondaryColor && values['secondary-color']) hashParams.set('secondaryColor', values['secondary-color']);
     if (id === 'constellation' && variantSelect) hashParams.set('pattern', variantSelect.value);
     if (STATEFUL_DESIGNS.has(id) && stateSelect) hashParams.set('state', stateSelect.value);
+    const activeBg = document.querySelector('.canvas-modes [data-bg].active');
+    if (activeBg && activeBg.getAttribute('data-bg') !== 'dark') hashParams.set('surface', activeBg.getAttribute('data-bg'));
     window.history.replaceState(null, '', '#' + hashParams.toString());
   } catch (e) {}
 }
@@ -1394,6 +1581,16 @@ document.querySelectorAll('.preset-btn').forEach((btn) => {
     document.querySelectorAll('.preset-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelector('#size').value = btn.dataset.size;
+    paint();
+  });
+});
+
+// Speed presets
+document.querySelectorAll('.speed-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector('#duration').value = btn.dataset.speed;
     paint();
   });
 });
@@ -1439,8 +1636,9 @@ document.querySelectorAll('.canvas-modes [data-bg]').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.canvas-modes [data-bg]').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand');
+    stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand', 'stage-glass', 'stage-neon', 'stage-grid');
     stage.classList.add('stage-' + btn.dataset.bg);
+    paint();
   });
 });
 
@@ -1515,10 +1713,31 @@ document.querySelector('#copy').addEventListener('click', async () => {
   const oldText = btn.textContent;
   btn.textContent = 'Copied!';
   const fwName = framework.value;
-  const fwLabels = { core: '@wavelo/core', react: 'React', vue: 'Vue', svelte: 'Svelte', angular: 'Angular', vanilla: 'Vanilla JS', 'web-components': 'Web Component' };
+  const fwLabels = { core: '@wavelo/core', html: 'HTML & CSS', react: 'React', vue: 'Vue', svelte: 'Svelte', angular: 'Angular', vanilla: 'Vanilla JS', 'web-components': 'Web Component' };
   showToast('Copied ' + design.value + ' (' + (fwLabels[fwName] || fwName) + ') code to clipboard!');
   setTimeout(() => { btn.textContent = oldText; }, 1500);
 });
+
+// Copy standalone HTML & CSS button
+const copyStandaloneBtn = document.querySelector('#copy-standalone');
+if (copyStandaloneBtn) {
+  copyStandaloneBtn.addEventListener('click', async () => {
+    const id = design.value;
+    const values = read();
+    const standaloneHtml = generateCodeSnippet(id, 'html', values);
+    try {
+      await navigator.clipboard.writeText(standaloneHtml);
+    } catch (_) {}
+    const oldText = copyStandaloneBtn.textContent;
+    copyStandaloneBtn.textContent = 'Copied Standalone!';
+    copyStandaloneBtn.classList.add('copied');
+    showToast('Copied standalone zero-install HTML & CSS for ' + id + ' to clipboard!');
+    setTimeout(() => {
+      copyStandaloneBtn.textContent = oldText;
+      copyStandaloneBtn.classList.remove('copied');
+    }, 1500);
+  });
+}
 
 // Package manager install command tabs
 const pkgTabs = document.querySelectorAll('.t-tab');
@@ -1606,6 +1825,15 @@ try {
         s.classList.toggle('active', s.dataset.color.toLowerCase() === params.get('secondaryColor').toLowerCase());
       });
     }
+    if (params.has('surface') && document.querySelector('.canvas-modes [data-bg="' + params.get('surface') + '"]')) {
+      document.querySelectorAll('.canvas-modes [data-bg]').forEach((b) => b.classList.remove('active'));
+      const targetBg = document.querySelector('.canvas-modes [data-bg="' + params.get('surface') + '"]');
+      if (targetBg) {
+        targetBg.classList.add('active');
+        stage.classList.remove('stage-dark', 'stage-dim', 'stage-light', 'stage-black', 'stage-brand', 'stage-glass', 'stage-neon', 'stage-grid');
+        stage.classList.add('stage-' + params.get('surface'));
+      }
+    }
   }
 } catch (e) {}
 
@@ -1683,6 +1911,21 @@ document.querySelectorAll('.card').forEach((card) => {
       }, 1200);
     });
   }
+
+  // Quick color swatch dots on card
+  card.querySelectorAll('.quick-dot').forEach((dot) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.querySelectorAll('.quick-dot').forEach((d) => d.classList.remove('active'));
+      dot.classList.add('active');
+      const dotColor = dot.dataset.color;
+      const loaderEl = card.querySelector('.wavelo');
+      if (loaderEl) {
+        loaderEl.style.setProperty('--wavelo-color', dotColor);
+        loaderEl.style.setProperty('color', dotColor);
+      }
+    });
+  });
 });
 
 // Copy Stage Design ID in Studio
@@ -1864,6 +2107,23 @@ function openApiModal(id) {
   if (STATEFUL_DESIGNS.has(id)) content += '<span class="modal-pill" style="color:var(--accent)">Morphing States</span>';
   content += '</div>';
 
+  content += '<div class="modal-snippet-section">';
+  content += '<div class="modal-snippet-header">';
+  content += '<h4 style="margin:0;font-size:0.86rem;font-weight:700;color:var(--text-main)">Ready-to-Paste Code Snippet</h4>';
+  content += '<button type="button" class="btn-copy-modal-snippet" id="btn-copy-modal-code"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Code</button>';
+  content += '</div>';
+  content += '<div class="modal-fw-tabs" role="tablist" aria-label="Framework code formats">';
+  content += '<button type="button" class="modal-fw-tab active" data-mfw="react">React</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="vue">Vue</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="svelte">Svelte</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="angular">Angular</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="vanilla">Vanilla</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="web-components">Web Comp</button>';
+  content += '<button type="button" class="modal-fw-tab" data-mfw="html">HTML &amp; CSS</button>';
+  content += '</div>';
+  content += '<pre class="modal-code-sample" id="modal-code-display">' + generateCodeSnippet(id, 'react', read()).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+  content += '</div>';
+
   if (id === 'constellation') {
     content += '<div class="modal-doc-box">';
     content += '<div class="modal-doc-title"><span>🌌 Astronomical Formations (5 Celestial Patterns)</span><span class="badge badge-feat">Click to Test in Studio</span></div>';
@@ -1913,6 +2173,38 @@ function openApiModal(id) {
   content += '<div><h3 style="margin:1rem 0 .4rem;font-size:.92rem;font-weight:700">Accessibility & ARIA Contract</h3><p style="color:var(--text-muted);margin:0;line-height:1.6">When given a <code>label</code> or <code>labelledBy</code>, renders <code>role="' + (info.supportsProgress ? 'progressbar' : 'status') + '"</code>. Unlabelled instances render <code>aria-hidden="true"</code> to keep assistive technology quiet. Reduced motion preferences are automatically honoured without layout shifts.</p></div>';
 
   modalContent.innerHTML = content;
+
+  // Framework tabs inside API modal
+  let activeModalFw = 'react';
+  const modalCodeDisplay = modalContent.querySelector('#modal-code-display');
+  const modalCodeBtn = modalContent.querySelector('#btn-copy-modal-code');
+
+  modalContent.querySelectorAll('.modal-fw-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      modalContent.querySelectorAll('.modal-fw-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeModalFw = tab.dataset.mfw;
+      if (modalCodeDisplay) {
+        modalCodeDisplay.textContent = generateCodeSnippet(id, activeModalFw, read());
+      }
+    });
+  });
+
+  if (modalCodeBtn) {
+    modalCodeBtn.addEventListener('click', async () => {
+      const snippet = generateCodeSnippet(id, activeModalFw, read());
+      try {
+        await navigator.clipboard.writeText(snippet);
+      } catch (err) {}
+      modalCodeBtn.classList.add('copied');
+      modalCodeBtn.textContent = '✓ Copied!';
+      showToast('Copied ' + activeModalFw.toUpperCase() + ' snippet to clipboard!');
+      setTimeout(() => {
+        modalCodeBtn.classList.remove('copied');
+        modalCodeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Code';
+      }, 1400);
+    });
+  }
 
   // Bind copy design ID button in modal
   const modalCopyId = modalContent.querySelector('.btn-copy-modal-id');

@@ -5,7 +5,7 @@ import { orbitCss } from '../css/kinds/orbit.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "magnetic-field", name: "Magnetic field", category: "creative", dimension: "3d", kind: "orbit", description: "Toroidal dipole magnetic field lines arching between North and South poles in 3D space with particle flux flow", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "magnetic-field" };
+const definition: LoaderDefinition = { id: "magnetic-field", name: "Magnetic field", category: "creative", dimension: "3d", kind: "orbit", description: "Six spatial field loops arching between two pulsing magnetic poles, rotating around their shared axis", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "magnetic-field" };
 const styles = `${baseCss}${orbitCss}`;
 
 export const magneticField = (config: Omit<LoaderConfig, 'type'> = {}) =>

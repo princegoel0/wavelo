@@ -4,7 +4,9 @@ import { chromium } from 'playwright';
 import { loaderRegistry, renderLoader } from '../packages/core/dist/index.js';
 import { allStyles } from '../packages/core/dist/css/index.js';
 
-const artifactDir = 'C:/Users/princ/.gemini/antigravity/brain/f399e054-8521-418d-a0a0-598e2836cf53';
+// A scratch harness, so its screenshots and results go to the ignored audit
+// directory rather than a machine-specific path nobody else can write to.
+const artifactDir = resolve('release-audit', 'deep-design-audit');
 await mkdir(artifactDir, { recursive: true });
 
 const categories = ['spinner', 'dots', 'bars', 'progress', 'creative', 'ai', 'skeleton', 'application'];

@@ -1,4 +1,5 @@
 import { escapeHtml, normalizeConfig } from './validation.js';
+import { brandMarkup } from './brand.js';
 import { defaultConstellation, isConstellationPattern } from './constellations.js';
 import type { LoaderConfig, LoaderDefinition, NormalizedLoaderConfig, RenderKind, RenderResult, ResolutionSource } from './types.js';
 
@@ -12,12 +13,18 @@ export function styleKey(css: string): string {
   return hash.toString(16).padStart(8, '0');
 }
 
-/** The one design that renders real SVG rather than CSS boxes. */
+/** SVG star geometry. */
 const SVG_STAR =
   '<svg class="wavelo__part" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.36 1.4 6.66L12 16.9 6.05 20l1.4-6.66L2.5 8.98l6.6-.72z"/></svg>';
 
 /** Part count for designs whose name promises a specific number of elements. */
 const PART_COUNTS: Record<string, number> = {
+  'lotus-bloom': 5,
+  'signal-beacon': 3,
+  'conveyor-belt': 3,
+  'zipper-flow': 8,
+  'book-pages': 3,
+  'pixel-weave': 9,
   snake: 5,
   'three-dots': 3,
   'four-dots': 4,
@@ -31,7 +38,6 @@ const PART_COUNTS: Record<string, number> = {
   cube: 3,
   'folding-squares': 4,
   gyroscope: 3,
-  tesseract: 2,
   'sphere-lattice': 3,
   'prism-refraction': 3,
   'atom-orbital': 3,
@@ -39,7 +45,6 @@ const PART_COUNTS: Record<string, number> = {
   'hologram-pyramid': 4,
   'black-hole-accretion': 3,
   'crystal-cluster': 3,
-  'mobius-band': 3,
   'vortex-tunnel': 5,
   'isometric-deck': 4,
   'voxel-cluster': 4,
@@ -48,7 +53,7 @@ const PART_COUNTS: Record<string, number> = {
   'liquid-mercury': 3,
   'dna-decode': 6,
   'quantum-superposition': 6,
-  'magnetic-field': 4,
+  'magnetic-field': 8,
   'aurora-borealis': 3,
   triangles: 3,
   'ripple-circles': 3,
@@ -94,7 +99,16 @@ const PART_COUNTS: Record<string, number> = {
   'crt-scanline': 1,
   'gooey-metaballs': 2,
   'camera-iris': 6,
-  'newton-cradle': 3
+  'newton-cradle': 3,
+  'ai-tool-handoff': 3,
+  'ai-image-develop': 9,
+  'document-extract': 4,
+  'skeleton-video-player': 4,
+  'media-transcode': 3,
+  'skeleton-document-viewer': 4,
+  'eclipse-corona': 3,
+  'spiral-galaxy': 4,
+  'nebula-drift': 3
 };
 
 /**
@@ -126,7 +140,11 @@ const SKELETON_TRACKS: Record<string, number> = {
   'skeleton-feed': 5,
   'skeleton-filter-panel': 5,
   'skeleton-map': 4,
-  'page-skeleton': 5
+  'page-skeleton': 5,
+  'ai-image-develop': 9,
+  'document-extract': 4,
+  'skeleton-video-player': 4,
+  'skeleton-document-viewer': 4
 };
 
 const KIND_COUNTS: Partial<Record<RenderKind, number>> = { bars: 5, wave: 5, dots: 5, orbit: 5, pulse: 3 };
@@ -167,6 +185,7 @@ function progressParts(type: string, config: NormalizedLoaderConfig): string {
 const COUNTABLE = new Set(['three-dots', 'equalizer']);
 
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
+  if (type === 'brand-loader') return brandMarkup(config);
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
@@ -179,6 +198,11 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   }
   if (kind === 'progress') return progressParts(type, config);
   if (type === 'svg-star') return SVG_STAR;
+  if (type === 'tesseract') return '<svg class="wavelo__part" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M10 30 L65 30 L65 85 L10 85 Z M35 10 L90 10 L90 65 L35 65 Z M10 30 L35 10 M65 30 L90 10 M65 85 L90 65 M10 85 L35 65"/><path class="inner" d="M32 43 L58 43 L58 69 L32 69 Z M44 33 L70 33 L70 59 L44 59 Z M32 43 L44 33 M58 43 L70 33 M58 69 L70 59 M32 69 L44 59"/><path class="links" d="M10 30 L32 43 M65 30 L58 43 M65 85 L58 69 M10 85 L32 69 M35 10 L44 33 M90 10 L70 33 M90 65 L70 59 M35 65 L44 59"/></svg>';
+  if (type === 'voxel-cluster') return ('<span class="wavelo__part" aria-hidden="true">' + '<i class="wavelo__face"></i>'.repeat(6) + '</span>').repeat(4);
+  // Each strip is tangent to the circle and twists half as fast as it travels.
+  // The final strip meets the first with the radial edges exchanged: a half twist.
+  if (type === 'mobius-band') return Array.from({ length: 48 }, (_, i) => '<span class="wavelo__part" aria-hidden="true" style="--segment-angle:' + i * 7.5 + 'deg;--segment-twist:' + i * 3.75 + 'deg"></span>').join('');
   if (COUNTABLE.has(type)) return many(config.count ?? PART_COUNTS[type] ?? KIND_COUNTS[kind] ?? 1);
   if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
   return many(KIND_COUNTS[kind] ?? 1);
@@ -193,6 +217,7 @@ function attributes(config: Attributes): string {
 
 export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact', requestedType = input.type): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
+  if (definition.id === 'brand-loader' && !config.label && !config.labelledBy) config.label = `${config.brand?.text?.trim() || 'Wavelo'} loading`;
   // A loader that is not loading costs nothing: no markup, and no stylesheet slice
   // to inject, so a page full of `loading={false}` adds no bytes to the document.
   if (!config.loading) return { html: '', css: '', styleKey: styleKey(''), config, definition, resolution, fallback: resolution === 'default' };

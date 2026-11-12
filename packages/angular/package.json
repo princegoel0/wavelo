@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/angular",
-  "version": "0.4.0",
-  "description": "Angular component integration for Wavelo",
+  "version": "0.5.0",
+  "description": "An Angular standalone component for CSS loading spinners, skeletons and progress, library-compiled so AOT builds accept it",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -22,10 +22,16 @@
     "accessible",
     "css",
     "reduced-motion",
-    "angular-spinner"
+    "angular-spinner",
+    "loading-indicator",
+    "skeleton",
+    "progress",
+    "standalone-component",
+    "aot",
+    "typescript"
   ],
   "dependencies": {
-    "@wavelo/core": "0.4.0"
+    "@wavelo/core": "0.5.0"
   },
   "peerDependencies": {
     "@angular/core": ">=14.0.0"

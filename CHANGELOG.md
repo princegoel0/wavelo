@@ -1,5 +1,112 @@
 # Changelog
 
+## 0.5.0
+
+- Corrected Tesseract, Mobius Band, Torus Ring and Magnetic Field after review of
+  their full animation cycles. Kept projected geometry away from edge-on collapse,
+  strengthened small wireframe strokes, closed the torus surface, and rebuilt the
+  magnetic field with six coordinated loops and two anchored poles.
+
+- Added `brand-loader` with custom text, captions, seven text animations, optional
+  ring/bar/dot indicators, typography and timing controls, and determinate progress.
+  The typed `brand` configuration works across every adapter and merges with app
+  defaults. The gallery includes a live brand editor and framework examples.
+  The catalog now has 181 public IDs, no deprecated aliases, and 28 configuration keys.
+
+- Added Lotus Bloom, Signal Beacon, Conveyor Belt, Zipper Flow, Book Pages and
+  Pixel Weave, bringing the catalog to 180 public IDs with no deprecated aliases.
+  Each ships as a modular import and works through all seven framework packages.
+
+- Fixed all 18 findings from the design audit: default loading animations, pause and
+  reduced-motion handling (including pseudo-elements and delays), 3D flattening,
+  inherited ring/orbit decoration, dark-theme ring contrast, aurora and metaball motion.
+- Rebuilt tesseract, voxel and Möbius geometry; restored the monochrome half disc,
+  code line numbers and map route; removed chat overlap. Corrected the AI shimmer
+  and glyph matrix descriptions to match their rendered designs.
+- Added catalog-wide animation-control regressions and targeted geometry checks.
+- Moved the restored Media Transcode scan to transform animation to avoid layout
+  on every frame; expanded customization measurement to include SVG strokes.
+
+- **Fix — `className` now accepts the way consumers actually style things.** The validator
+  allowed letters, digits, space, dash and underscore, so every Tailwind variant
+  (`dark:text-indigo-400`, `md:size-6`, `group-hover:opacity-50`) and every arbitrary value
+  (`[--wavelo-size:24px]`, `bg-red-500/50`, `data-[state=open]:opacity-50`) threw
+  `LoaderConfigurationError: className contains unsupported characters.` The accepted set now
+  covers the characters class attributes contain, to 256 of them, and the error names the value
+  it rejected. Arbitrary *selector* variants (`[&>*]:mt-2`) stay refused: `&` and `>` have no
+  business in an attribute value, and a wrapper element carries those rules. Strictly more
+  permissive than 0.4.0, so nothing that used to work stops working.
+- **Documented, and measured:** `docs/RECIPES.md` now states the precedence a Tailwind user
+  needs — a consumer class on the loader wins over the sheet's own size rule, while a parent's
+  `text-*` does not reach the colour because the sheet declares an explicit default, so
+  `color="currentColor"` or `[--wavelo-color:var(--color-…)]` is the way to ask for it.
+- **`@wavelo/react` now ships its own Server Component boundary.** The package was one module
+  with no directive: `<Loader>` uses an effect, so a Next.js App Router page had to declare a
+  client boundary itself, which is what `docs/RECIPES.md` told every React user to write. The
+  surface is split three ways — `dist/client.js` declares `'use client'` and holds the provider,
+  the components and the hooks, `dist/server.js` declares none and holds `renderReactLoader`, and
+  the package entry re-exports both, so `<Loader>` works from a Server Component and
+  `@wavelo/react/server` stays on the server. New `./client` and `./server` export conditions;
+  `@wavelo/react` keeps every name it exported before. `npm run verify:react` reads the built
+  files and fails if a boundary moves, if the server entry reaches a module that declares one, or
+  if the entry loses an export; `npm run pack:verify` resolves the three specifiers out of the
+  installed tarball and renders through the server entry with no DOM.
+- **npm metadata:** all seven packages were listed on the registry with a one-line
+  internal description (`React component integration for Wavelo`) and about nine keywords,
+  which is invisible in a search for `loading spinner react` or `skeleton loader`. Each now
+  carries a description that says what the package renders and how, and fourteen or fifteen
+  keywords including the terms a searcher actually types (`loading-indicator`, `preloader`,
+  `skeleton-loader`, `react-spinner`, `nextjs`, `aot`). Metadata only — no code changed, and
+  `npm run packages:check` still validates every description against the pattern the search
+  page accepts.
+- **Repository hygiene:** `.github/` gained a security policy that names the real surface
+  (a configuration value reaching markup or a stylesheet) and the guard for it, a
+  contributing guide that maps the repository and says which gate applies to which change,
+  issue forms and a pull-request checklist built from the actual commands, and a dependabot
+  configuration that watches npm and Actions weekly without grouping framework majors —
+  those are pinned because the compatibility claims are measured against them. Claiming no
+  install-time scripts is now enforced: `packages:check` refuses a manifest that declares one.
+
+- **README:** version, downloads, licence, size and typed badges, a one-line index of the
+  nine documents the repository keeps, and the install line for all seven packages — the
+  first twenty seconds a stranger spends on a project are spent here, and it had no image,
+  no badge and no map. `npm run docs:check` now resolves every relative link in the
+  maintained documents, which is how the PRD's link to
+  `COMPREHENSIVE_DESIGN_AUDIT_REPORT.md` was found: the file has always lived in `docs/`,
+  and the link has never pointed there.
+- **Angular floor, stated exactly:** three documents said the built package's "declarations
+  carry `minVersion: "14.0.0"`". Only the component declaration does — the metadata and
+  factory declarations around it say 12.0.0, and the floor is the newest of the three because
+  a linking application must satisfy every one of them. `PRD.md`,
+  [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) and
+  [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md) now say that, and `npm run docs:check` compares
+  every `minVersion` a maintained document quotes against the built artifact, so the sentence
+  cannot fall behind the emit again.
+
+- **Repository tidy:** the tracked tree carried 35 markdown files, ten of them at the root —
+  `WAVELO_COMPONENT_INVENTORY.md`, `WAVELO_FINDINGS_REGISTER.md`, `RELEASE_CHECKLIST.md`,
+  `RELEASE_READINESS_AUDIT.md` and six more — alongside seven audit reports in `docs/` and a
+  folder of review screenshots. None of it is documentation a consumer needs, and all of it
+  stood in front of the eight documents in `docs/` that are. Those fourteen files and the
+  evidence directory now live in the ignored `release-audit/`, and the scripts that
+  regenerate them write there too, so the tidy holds. `PRD.md` pointed at two of them; those
+  sentences now say what the repository actually enforces instead.
+
+- **`examples/`:** five runnable projects — Vite + React, Next.js App Router, Nuxt,
+  SvelteKit and a standalone Angular app — each showing the same four patterns a loader is
+  actually bought for: a spinner inside a button that does not resize it, one route progress
+  bar for the app, a skeleton that holds the shape of the content, and a loader sitting on
+  the text line. They are ordinary npm projects, not workspace members, so `npm install &&
+  npm run dev` in any of them is what a consumer would type. `npm run verify:examples`
+  compiles every source against the built packages: the Svelte components for both the client
+  and the server build, the Vue single-file components with `@vue/compiler-sfc`, the Angular
+  application with the Angular compiler and `strictTemplates`, the React application with
+  `tsc`, and every `@wavelo/*` import against the shipped declarations and the project's own
+  dependencies — which is what checks the Next.js and Nuxt sources, whose frameworks are not
+  installed here. Verified by breaking it: an invented binding, an undeclared subpath, an
+  unclosed tag and a missing dependency each fail the check. The Next.js project pins
+  `@wavelo/react@0.5.0`, the release that carries the Server Component boundary.
+
 ## 0.4.0
 
 - **12 New Modern Micro-Interaction Loaders:** Expanded the catalog to 165 public IDs across 4 new modern interaction categories:
@@ -15,7 +122,7 @@
 - **`cube` is a closed cube:** it shipped three quads, so for half its turn every face was turned away and the loader read as an open shell — measured at 12 of 24 sampled phases with no face toward the camera. Each face now carries its opposite, turned outward, and exactly three faces face the camera at every phase.
 - The Chromium suite's part-stacking check compares transforms as well as bounding boxes. Two ellipses authored at 60° and 120° fill the same axis-aligned box while being plainly different drawings; the check still fires when two parts collapse onto the same transform, which is the bug it exists for.
 - **Studio & DX Upgrades:** Added high-contrast canvas background modes (Pure Black `#000` and Brand gradient) and standalone accessible HTML & CSS exporter tab with `currentColor` inheritance and `@media (prefers-reduced-motion: reduce)`.
-- **Catalog Totals:** 165 public IDs, 165 active designs, no deprecated aliases, 255 named presets, 90 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
+- **Catalog Totals:** 174 public IDs, 174 active designs, no deprecated aliases, 288 named presets, 114 pattern presets, 12 stylesheet slices, 26 verified 3D spatial designs.
 
 ## 0.3.0
 
@@ -29,7 +136,7 @@ Published 2026-11-02. It carries the widened adapter peer ranges and the fix tha
   - `@wavelo/vue`: from `>=3.5.44 <4` to `>=3.0.0 <4.0.0` — Composition API only.
   - `@wavelo/svelte`: from `>=5.57.3 <6` to `>=5.0.0 <6.0.0` — the floor is where runes landed.
   - `@wavelo/angular`: from `>=22.2.3 <23` to `>=14.0.0`, which the built artifact now proves:
-    its partial declarations carry `minVersion: "14.0.0"`.
+    its partial component declaration carries `minVersion: "14.0.0"` (the metadata and factory declarations say 12.0.0; the newest is the floor).
 - **Fix — `@wavelo/angular` is now a library an application can use:** it was compiled by `tsc`
   alone, so its component carried no Ivy definition and an AOT `ng build` rejected it with
   `NG2012` while every JIT test passed. `packages/angular` builds with `ngc` in
@@ -74,7 +181,8 @@ list of things that were decided, and after 0.1.0 the same changes need a major.
   `waveform`, `audio-waveform`, `gradient-bars`, `signal-bars`, `spectrum`,
   `expanding-circles`, `progress-gradient-ring`, `progress-timer`), and seven keyframe
   modules with them. Five of the twenty-two are reachable by configuration; the rest are
-  recorded as capability decisions in `docs/VISUAL_DEDUPLICATION_REPORT.md`.
+  recorded as capability decisions in the deduplication audit, an internal review artifact
+  that is not shipped with the package.
 - No `variant` configuration key. It was removed before release: it duplicated `type` and
   the theme, and a key that no design honours is worse than no key.
 - `LoaderDefinition` carries `dimension: '2d' | '3d'`, and five designs are `3d` because

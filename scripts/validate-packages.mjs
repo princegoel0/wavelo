@@ -41,6 +41,10 @@ for (const dir of packageDirs) {
     check(manifest.keywords.includes(keyword), `${name} is missing the "${keyword}" keyword`);
   }
   check(manifest.files?.includes('dist'), `${name} must ship dist`);
+  // .github/SECURITY.md tells a reporter that installing a package runs no code. That is a
+  // property of these manifests, so it is checked rather than remembered.
+  const lifecycle = ['preinstall', 'install', 'postinstall', 'prepare'].filter((hook) => manifest.scripts?.[hook]);
+  check(lifecycle.length === 0, `${name} declares install-time script(s) ${lifecycle.join(', ')}, which the security policy says it does not`);
   for (const file of ['README.md', 'LICENSE']) {
     await access(resolve(root, path, file)).then(
       () => undefined,

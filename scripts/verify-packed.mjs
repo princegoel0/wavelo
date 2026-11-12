@@ -127,6 +127,19 @@ assert.equal(bar.element, null, 'the route bar created an element on a server');
 assert.doesNotThrow(() => { bar.start(); bar.set(40); bar.done(); bar.destroy(); });
 await import('@wavelo/web-components');
 
+// The React package is split by boundary: the entry that renders on a server must
+// declare no client boundary, and the one that injects styles must. Read the
+// installed files, because this is the contract a Next.js build sees.
+const directive = (specifier) => {
+  const source = readFileSync(fileURLToPath(import.meta.resolve(specifier)), 'utf8');
+  return /^['"]use client['"];?/m.test(source.replace(/^(?:\\s|\\/\\/[^\\n]*\\n|\\/\\*[\\s\\S]*?\\*\\/)+/, ''));
+};
+assert.ok(directive('@wavelo/react/client'), 'the installed @wavelo/react client entry lost its boundary');
+assert.ok(!directive('@wavelo/react'), 'the installed @wavelo/react entry declares a boundary, so a Server Component cannot render');
+assert.ok(!directive('@wavelo/react/server'), 'the installed @wavelo/react/server entry declares a boundary');
+const { renderReactLoader } = await import('@wavelo/react/server');
+assert.match(renderReactLoader({ type: 'ring', label: 'Loading' }).html, /class="wavelo wavelo--ring/, 'the installed server entry rendered the wrong markup');
+
 // The Svelte component ships as source, so the package must carry the file its
 // exports map names.
 const svelteEntry = fileURLToPath(import.meta.resolve('@wavelo/svelte'));
@@ -138,6 +151,8 @@ writeFileSync(
   resolve(consumer, 'check.ts'),
   `import { renderLoader, type LoaderConfig, type WaveloTokens } from '@wavelo/core';
 import { Loader as ReactLoader, WaveloProvider, loaderFor as reactLoaderFor, type WaveloProps } from '@wavelo/react';
+import { Loader as ReactClientLoader } from '@wavelo/react/client';
+import { renderReactLoader } from '@wavelo/react/server';
 import { Loader as VueLoader, provideWaveloDefaults, loaderFor as vueLoaderFor } from '@wavelo/vue';
 import { renderSvelteLoader } from '@wavelo/svelte';
 import { LoaderComponent, WAVELO_DEFAULTS } from '@wavelo/angular';
@@ -153,7 +168,7 @@ const VueButton = vueLoaderFor('ring', { size: 16 });
 const wavelo = createWavelo({ type: 'ring' });
 const bar = createRouteProgress({ color: '#6366f1' }, { trickle: 200, ceiling: 90, hold: 200 });
 
-export const used = [html, ReactLoader, WaveloProvider, ButtonSpinner, VueLoader, VueButton, renderSvelteLoader, LoaderComponent, WAVELO_DEFAULTS, provideWaveloDefaults, mountLoader, wavelo, bar] as const;
+export const used = [html, ReactLoader, ReactClientLoader, renderReactLoader, WaveloProvider, ButtonSpinner, VueLoader, VueButton, renderSvelteLoader, LoaderComponent, WAVELO_DEFAULTS, provideWaveloDefaults, mountLoader, wavelo, bar] as const;
 `
 );
 
@@ -169,7 +184,7 @@ const check = (label, action) => {
   }
 };
 
-check('the packed core, vanilla and web-components render and stay inert without a DOM', () => node(['check.mjs'], consumer));
+check('the packed core, vanilla, web-components and React entries render and stay inert without a DOM', () => node(['check.mjs'], consumer));
 check('a strict consumer type checks against the packed declarations', () =>
   node(
     ['node_modules/typescript/bin/tsc', '--noEmit', '--strict', '--target', 'ES2022', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', 'check.ts'],

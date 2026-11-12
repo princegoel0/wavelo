@@ -18,18 +18,17 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**163 of the 165 designs cost no layout per frame.** Two do, each for a reason a
+**180 of the 181 designs cost no layout per frame.** One does, for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
 | --- | --- | --- |
 | `progress-scroll` | 120-122 | the fill *is* the reading position, and a `scaleX` would squash the leading dot that marks it with the bar |
-| `multi-wave` | 74-90 | the same two frames, in opposite phase |
 
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 163.
+frame for a design that animates a box property, and zero for the other 180.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -59,8 +58,7 @@ largest channel difference is 84 on an antialiased edge, and the bars are moving
 The same conversion was then tried on waveform and **rejected by the geometry
 check**: its `translateY` is a percentage of a height that is itself animating, so the
 arc the bars draw came out 30 px off. It kept animating `height`, and the frame it used
-still does — `multi-wave` runs it on two layers in opposite phase, and it is one of the
-two exemptions above. waveform itself has since been consolidated into `equalizer`.
+was later replaced by transforms in `multi-wave`, which now costs no layout per frame. It was previously a layout exemption. waveform itself has since been consolidated into `equalizer`.
 
 The pass also found a dead keyframe: `wavelo-bars` was imported by the bars slice and
 referenced by the kind's default rule, which every design in that family overrides,
@@ -73,16 +71,16 @@ Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,782 | `progress` | 4,662 |
-| `scroll` | 2,005 | `skeleton` | 4,966 |
-| `pulse` | 2,883 | `orbit` | 4,974 |
-| `bars` | 2,891 | `wave` | 5,553 |
-| `rings` | 4,378 | `dots` | 7,151 |
-| `ring` | 4,618 | `shape` | 8,491 |
+| `overlay` | 1,942 | `orbit` | 5,951 |
+| `scroll` | 2,162 | `progress` | 5,969 |
+| `pulse` | 3,613 | `wave` | 6,141 |
+| `bars` | 4,599 | `skeleton` | 6,894 |
+| `rings` | 4,616 | `dots` | 7,312 |
+| `ring` | 4,747 | `shape` | 8,924 |
 
-The shared base — layout shell, reduced-motion and theme rules, and the four keyframe
-blocks more than one kind animates with — is 1,360 bytes of every row above. The whole
-catalog sheet is 36,193 bytes gzipped, loaded once, for all 165 designs. Read down the
+The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
+blocks more than one kind animates with — is 1,516 bytes of every row above. The whole
+catalog sheet is 42,596 bytes gzipped, loaded once, for all 181 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every

@@ -16,7 +16,7 @@ import { LoaderComponent } from '@wavelo/angular';
 export class Screen {}
 ```
 
-Inputs cover all 27 configuration keys. Two names need care: `style` binds as
+Inputs cover all 28 configuration keys. Two names need care: `style` binds as
 `waveloStyle`, because Angular already owns `[style]`, and `data-*` attributes on
 the host are read into the configuration. `paused`, `loading`, `inline` and
 `decorative` take a boolean binding, and a bare attribute (`paused`, `loading`) is

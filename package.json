@@ -1,6 +1,6 @@
 {
   "name": "wavelo",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Universal loading and motion library",
   "license": "MIT",
@@ -13,9 +13,11 @@
     "build": "npm run build:core && node scripts/generate-catalog.mjs && npm run build:all",
     "build:core": "npm run build --workspace @wavelo/core",
     "build:all": "npm run build --workspaces --if-present",
-    "check": "npm run build && npm run typecheck && npm test && npm run verify:angular && npm run catalog && npm run packages:check && npm run docs:check && npm run measure",
+    "check": "npm run build && npm run typecheck && npm test && npm run verify:angular && npm run verify:react && npm run verify:examples && npm run catalog && npm run packages:check && npm run docs:check && npm run measure",
     "packages:check": "node scripts/validate-packages.mjs",
     "verify:angular": "node scripts/verify-angular-package.mjs",
+    "verify:react": "node scripts/verify-react-entries.mjs",
+    "verify:examples": "node scripts/verify-examples.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test --test-concurrency=1 tests/core.test.mjs tests/framework.test.mjs tests/angular.test.mjs tests/angular-ssr.test.mjs",
     "catalog": "node scripts/validate-catalog.mjs",
@@ -33,7 +35,9 @@
     "pack:verify": "node scripts/verify-packed.mjs",
     "test:browser": "node tests/browser.test.mjs",
     "test:browser:firefox": "node tests/browser-firefox.test.mjs",
-    "test:browser:webkit": "node tests/browser-webkit.test.mjs"
+    "test:browser:webkit": "node tests/browser-webkit.test.mjs",
+    "test:visual": "node scripts/visual-regression.mjs",
+    "test:visual:update": "node scripts/visual-regression.mjs --update-baselines"
   },
   "devDependencies": {
     "@angular/common": "^22.2.4",

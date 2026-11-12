@@ -1,16 +1,42 @@
 # Wavelo
 
+[![npm version](https://img.shields.io/npm/v/@wavelo/core)](https://www.npmjs.com/package/@wavelo/core)
+[![monthly downloads](https://img.shields.io/npm/dm/@wavelo/core)](https://www.npmjs.com/package/@wavelo/core)
+[![MIT license](https://img.shields.io/npm/l/@wavelo/core)](LICENSE)
+[![package size](https://img.shields.io/bundlephobia/minzip/@wavelo/core)](https://bundlephobia.com/package/@wavelo/core)
+[![typed](https://img.shields.io/npm/types/@wavelo/core)](docs/COMPATIBILITY.md)
+
+[Gallery](https://princegoel0.github.io/wavelo/) ·
+[Examples](examples/README.md) ·
+[Framework guides](docs/FRAMEWORKS.md) ·
+[Recipes](docs/RECIPES.md) ·
+[Compatibility](docs/COMPATIBILITY.md) ·
+[Per-design options](docs/COMPONENT_CUSTOMIZATION_API.md) ·
+[Bundle size](docs/BUNDLE_SIZE.md) ·
+[Changelog](CHANGELOG.md)
+
+Install: `npm i @wavelo/core` · `@wavelo/react` · `@wavelo/vue` · `@wavelo/svelte` ·
+`@wavelo/angular` · `@wavelo/vanilla` · `@wavelo/web-components`
+
+Five runnable projects — Vite + React, Next.js App Router, Nuxt, SvelteKit and Angular —
+are in [examples/](examples/README.md). Each shows the same four patterns: a spinner in a
+button, a route bar, a skeleton and a loader inline in text.
+
 Wavelo is a dependency-light, framework-independent loading and motion library.
 The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 165 designs, each visually distinct, built from 12
+The catalog holds 181 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
-27 configuration keys.
+28 configuration keys.
 
-Nine of them are the streaming lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
-`token-stream`, `ai-shimmer`, `neural-grid`, plus the composite `skeleton-chat`,
+For custom wordmarks, use [`brand-loader`](docs/BRAND_LOADER.md): custom brand text,
+seven text animations, optional spinner/progress indicators, fonts, colors, spacing,
+and timing controls, with the same API in every framework.
+
+Twelve of them are the streaming and AI workflow lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
+`token-stream`, `ai-shimmer`, `neural-grid`, `ai-tool-handoff`, `ai-image-develop`, `document-extract`, plus the composite `skeleton-chat`,
 `skeleton-code` and `skeleton-inbox` layouts): what an assistant shows while it is
 composing an answer, which no loading library has as a category. Thirteen more are the
 progress family that real products report with a number — a battery, a half-ring gauge,
@@ -268,6 +294,11 @@ import { renderStylesheets } from '@wavelo/core/styles';
 renderStylesheets(results.map((result) => result.css));
 ```
 
+In a React Server Component tree the same split is packaged rather than left to you:
+`@wavelo/react` declares the client boundary inside the package, so `<Loader>` renders
+from a Server Component with no wrapper file, and `@wavelo/react/server` is the half
+that stays on the server and sends no JavaScript.
+
 Every adapter package documents the same rule. See
 [docs/FRAMEWORKS.md](docs/FRAMEWORKS.md), and for a page under a `style-src` policy
 without `'unsafe-inline'`, declare the nonce once and every injected slice carries it:
@@ -285,12 +316,13 @@ own CSS would.
 
 ## What the configuration does
 
-These 27 keys are the whole surface, and a test asserts each one reaches the
+These 28 keys are the whole surface, and a test asserts each one reaches the
 rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
 `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
 `paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`,
 `max`, `labelledBy`, `describedBy`, `valueText`, `decorative`, `loading`, `count`,
-`inline`, plus arbitrary `data-*` attributes.
+`inline`, `brand`, plus arbitrary `data-*` attributes. `brand` is the typed nested
+configuration for [custom wordmark loaders](docs/BRAND_LOADER.md).
 
 `loading` decides whether there is a loader at all. `count` sets the number of
 tracks in the designs that are built from repeating tracks — a stack of skeleton

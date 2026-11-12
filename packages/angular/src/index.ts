@@ -34,6 +34,7 @@ export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAUL
   template: '',
   styles: [':host{display:contents}'],
   inputs: [
+    'brand',
     'type', 'size', 'width', 'height', 'color', 'secondaryColor', 'backgroundColor',
     'speed', 'duration', 'strokeWidth', 'theme', 'direction', 'paused', 'label',
     'className', 'waveloStyle: style', 'reducedMotion', 'data-testid', 'value', 'max',
@@ -42,6 +43,7 @@ export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAUL
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderComponent implements OnChanges, OnDestroy {
+  brand?: LoaderConfig['brand'];
   type?: string;
   size?: number | string;
   width?: number | string;
@@ -76,6 +78,7 @@ export class LoaderComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(_changes: SimpleChanges): void {
     const config: LoaderConfig = {
+      brand: this.brand,
       type: this.type,
       size: this.size,
       width: this.width,

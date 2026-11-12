@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "mobius-band", name: "Mobius band", category: "creative", dimension: "3d", kind: "rings", description: "Topological single-sided Mobius strip twisting 180 degrees through 3D space with a continuous light pulse traversing both faces", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "mobius-band" };
+const definition: LoaderDefinition = { id: "mobius-band", name: "Mobius band", category: "creative", dimension: "3d", kind: "rings", description: "Continuous ribbon with a half twist rotating through 3D space", options: ["className","color","data-testid","decorative","describedBy","direction","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "mobius-band" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const mobiusBand = (config: Omit<LoaderConfig, 'type'> = {}) =>

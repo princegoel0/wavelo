@@ -5,7 +5,7 @@ import { ringsCss } from '../css/kinds/rings.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "gyroscope", name: "Gyroscope", category: "creative", dimension: "3d", kind: "rings", description: "Triple concentric gimbal rings rotating along three orthogonal axes with gyroscopic precession", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "gyroscope" };
+const definition: LoaderDefinition = { id: "gyroscope", name: "Gyroscope", category: "creative", dimension: "3d", kind: "rings", description: "Triple concentric gimbal rings rotating along three orthogonal axes with gyroscopic precession", options: ["backgroundColor","className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "gyroscope" };
 const styles = `${baseCss}${ringsCss}`;
 
 export const gyroscope = (config: Omit<LoaderConfig, 'type'> = {}) =>

@@ -12,6 +12,15 @@ import { Loader as VueLoader, loaderFor as vueLoaderFor } from '../packages/vue/
 import { LoaderComponent } from '../packages/angular/dist/index.js';
 import { compile } from 'svelte/compiler';
 
+test('React and Vue render the same nested brand configuration as core', async () => {
+  const config = { type: 'brand-loader', brand: { text: 'ACME', caption: 'Starting', animation: 'shimmer', fontFamily: 'Georgia, serif', indicator: 'bar', showValue: true }, value: 60 };
+  const core = renderLoader(config).html;
+  assert.ok(renderToStaticMarkup(createElement(ReactLoader, config)).includes(core));
+  assert.ok((await renderToString(createSSRApp(VueLoader, config))).includes(core));
+  assert.equal(VueLoader.props.brand, Object);
+  assert.ok(Object.keys(LoaderComponent.ɵcmp.declaredInputs).includes('brand'));
+});
+
 const fullConfig = {
   type: 'progress-bar',
   size: 48,
@@ -80,6 +89,22 @@ test('React server helper returns the design slice for head injection', () => {
   assert.equal(result.css, renderLoader({ type: 'ring', label: 'Loading' }).css);
   assert.match(result.css, /:where\(\.wavelo\)\{/);
   assert.doesNotMatch(result.css, /\.wavelo--skeleton-card/);
+});
+
+test('the React client and server entries are halves of one surface', async () => {
+  const client = await import('../packages/react/dist/client.js');
+  const server = await import('../packages/react/dist/server.js');
+  // The split is packaging, not a second implementation: both entries hand back the
+  // same functions the package entry does.
+  assert.equal(client.Loader, ReactLoader);
+  assert.equal(client.loaderFor, reactLoaderFor);
+  assert.equal(server.renderReactLoader, renderReactLoader);
+  const html = renderToStaticMarkup(createElement(client.Loader, { type: 'ring', label: 'Loading' }));
+  assert.match(html, /class="wavelo-host"><span class="wavelo wavelo--ring/);
+  assert.doesNotMatch(html, /<style/);
+  for (const name of ['useWaveloState', 'useWaveloProgress']) {
+    assert.equal(typeof client[name], 'function', `@wavelo/react/client lost ${name}`);
+  }
 });
 
 test('a loader that is not loading renders nothing through the components', async () => {
@@ -183,6 +208,9 @@ test('Svelte component server-renders a loader with no DOM to leak into', async 
   assert.match(body, /--wavelo-size:48px/);
   assert.match(body, /aria-label="Loading data" role="status"/);
   assert.equal(head, '', 'the component styles itself on the client, so a server render must emit nothing into <head>');
+  const branded = render(WaveloLoader, { props: { type: 'brand-loader', brand: { text: 'ACME', animation: 'none', showValue: true }, value: 50 } });
+  assert.match(branded.body, /aria-label="ACME loading"/);
+  assert.match(branded.body, />50%<\/span>/);
 });
 
 test('registered defaults apply underneath a loader and lose to its own options', async () => {
@@ -221,4 +249,120 @@ test('registered defaults apply underneath a loader and lose to its own options'
 test('the custom element observes every configuration attribute', async () => {
   const { WaveloLoaderElement } = await import('../packages/web-components/dist/index.js');
   assert.deepEqual([...WaveloLoaderElement.observedAttributes].sort(), [...loaderAttributes].sort());
+});
+
+test('universal Wavelo component and element aliases are exported across frameworks', async () => {
+  const { Wavelo: ReactWavelo, Loader: ReactLoaderComponent } = await import('../packages/react/dist/index.js');
+  assert.equal(ReactWavelo, ReactLoaderComponent);
+
+  const { Wavelo: VueWavelo, Loader: VueLoaderComponent } = await import('../packages/vue/dist/index.js');
+  assert.equal(VueWavelo, VueLoaderComponent);
+
+  const { createWaveloElement, createLoaderElement, mountWavelo, mountLoader } = await import('../packages/vanilla/dist/index.js');
+  assert.equal(createWaveloElement, createLoaderElement);
+  assert.equal(mountWavelo, mountLoader);
+
+  const { WaveloElement, WaveloLoaderElement } = await import('../packages/web-components/dist/index.js');
+  assert.equal(WaveloElement, WaveloLoaderElement);
+});
+
+test('React useWaveloState and useWaveloProgress hooks provide state orchestration and progress tracking', async () => {
+  const { useWaveloState, useWaveloProgress } = await import('../packages/react/dist/index.js');
+  assert.equal(typeof useWaveloState, 'function');
+  assert.equal(typeof useWaveloProgress, 'function');
+
+  let hookResult;
+  function TestStateComponent() {
+    hookResult = useWaveloState({ initial: 'idle' });
+    return createElement('div', null, hookResult.state);
+  }
+
+  const html = renderToStaticMarkup(createElement(TestStateComponent));
+  assert.equal(html, '<div>idle</div>');
+  assert.equal(hookResult.state, 'idle');
+  assert.equal(hookResult.stateProps.loading, false);
+  assert.equal(hookResult.stateProps['data-wavelo-state'], 'idle');
+
+  let progressResult;
+  function TestProgressComponent() {
+    progressResult = useWaveloProgress({ initial: 25 });
+    return createElement('div', null, progressResult.percent);
+  }
+
+  const progHtml = renderToStaticMarkup(createElement(TestProgressComponent));
+  assert.equal(progHtml, '<div>25%</div>');
+  assert.equal(progressResult.progress, 25);
+  assert.equal(progressResult.percent, '25%');
+  assert.equal(progressResult.isComplete, false);
+});
+
+test('Vue useWaveloState and useWaveloProgress composables provide reactive state and progress simulation', async () => {
+  const { useWaveloState, useWaveloProgress } = await import('../packages/vue/dist/index.js');
+  assert.equal(typeof useWaveloState, 'function');
+  assert.equal(typeof useWaveloProgress, 'function');
+
+  // Test state composable
+  const stateMgr = useWaveloState({ initial: 'idle' });
+  assert.equal(stateMgr.state.value, 'idle');
+  assert.equal(stateMgr.stateProps.value.loading, false);
+  assert.equal(stateMgr.stateProps.value['data-wavelo-state'], 'idle');
+
+  stateMgr.startLoading();
+  assert.equal(stateMgr.state.value, 'loading');
+  assert.equal(stateMgr.stateProps.value.loading, true);
+  assert.equal(stateMgr.stateProps.value['data-wavelo-state'], 'loading');
+
+  stateMgr.setSuccess(0);
+  assert.equal(stateMgr.state.value, 'success');
+  assert.equal(stateMgr.stateProps.value.loading, false);
+
+  stateMgr.setError(0);
+  assert.equal(stateMgr.state.value, 'error');
+
+  stateMgr.reset();
+  assert.equal(stateMgr.state.value, 'idle');
+
+  // Test wrapAsync on resolved promise
+  let called = false;
+  const res = await stateMgr.wrapAsync(async () => {
+    called = true;
+    return 'ok';
+  });
+  assert.equal(res, 'ok');
+  assert.equal(called, true);
+  assert.equal(stateMgr.state.value, 'success');
+
+  // Test wrapAsync on rejected promise
+  await assert.rejects(async () => {
+    await stateMgr.wrapAsync(async () => {
+      throw new Error('fail');
+    });
+  });
+  assert.equal(stateMgr.state.value, 'error');
+
+  // Test progress composable
+  let completed = false;
+  const progressMgr = useWaveloProgress({
+    initial: 20,
+    onComplete: () => {
+      completed = true;
+    }
+  });
+  assert.equal(progressMgr.progress.value, 20);
+  assert.equal(progressMgr.percent.value, '20%');
+  assert.equal(progressMgr.isComplete.value, false);
+
+  progressMgr.setProgress(75);
+  assert.equal(progressMgr.progress.value, 75);
+  assert.equal(progressMgr.percent.value, '75%');
+
+  progressMgr.finish();
+  assert.equal(progressMgr.progress.value, 100);
+  assert.equal(progressMgr.percent.value, '100%');
+  assert.equal(progressMgr.isComplete.value, true);
+  assert.equal(completed, true);
+
+  progressMgr.reset(10);
+  assert.equal(progressMgr.progress.value, 10);
+  assert.equal(progressMgr.percent.value, '10%');
 });

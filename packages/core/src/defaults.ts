@@ -18,7 +18,11 @@ function provided<T extends object>(input: T): Partial<T> {
  */
 export function mergeWaveloConfig(defaults: WaveloDefaults | null | undefined, config: LoaderConfig = {}): LoaderConfig {
   if (!defaults) return config;
-  return { ...provided(defaults), ...provided(config) } as LoaderConfig;
+  const merged = { ...provided(defaults), ...provided(config) } as LoaderConfig;
+  if (defaults.brand && config.brand && typeof config.brand === 'object' && !Array.isArray(config.brand)) {
+    merged.brand = { ...provided(defaults.brand), ...provided(config.brand) };
+  }
+  return merged;
 }
 
 /**

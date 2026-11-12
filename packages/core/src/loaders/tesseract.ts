@@ -5,7 +5,7 @@ import { shapeCss } from '../css/kinds/shape.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "tesseract", name: "Tesseract", category: "creative", dimension: "3d", kind: "shape", description: "Four-dimensional hypercube isometric wireframe rotating and inverting through 3D perspective", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "tesseract" };
+const definition: LoaderDefinition = { id: "tesseract", name: "Tesseract", category: "creative", dimension: "3d", kind: "shape", description: "Projected hypercube wireframe with nested cubes and eight connecting edges turning in space", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","secondaryColor","size","speed","strokeWidth","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "tesseract" };
 const styles = `${baseCss}${shapeCss}`;
 
 export const tesseract = (config: Omit<LoaderConfig, 'type'> = {}) =>

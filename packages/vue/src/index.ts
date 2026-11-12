@@ -29,6 +29,7 @@ const props = Object.fromEntries(
     if (numericKeys.has(key)) return [key, Number as PropType<number>];
     if (lengthKeys.has(key)) return [key, [String, Number] as PropType<string | number>];
     if (key === 'style') return [key, Object as PropType<Record<string, string | number>>];
+    if (key === 'brand') return [key, Object as PropType<LoaderConfig['brand']>];
     return [key, String as PropType<string>];
   })
 );
@@ -70,6 +71,9 @@ function defineLoader(name: string, bound: LoaderConfig) {
  */
 export const Loader = defineLoader('WaveloLoader', {});
 
+/** `Wavelo` is the universal component alias for `<Loader>`. */
+export const Wavelo = Loader;
+
 /**
  * A component bound to one design and the options it always uses:
  * `const ButtonSpinner = loaderFor('ring', { size: 16, color: '#fff' })`, then
@@ -83,3 +87,5 @@ export function loaderFor(type: string, defaults: WaveloDefaults = {}): DefineCo
 export function renderVueLoader(props: WaveloProps = {}, defaults?: WaveloDefaults): RenderResult {
   return renderLoader(mergeWaveloConfig(defaults, props));
 }
+
+export * from './composables.js';

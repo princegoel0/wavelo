@@ -4,6 +4,8 @@
 // updating the document — `npm run docs:check` fails otherwise.
 import { gzipSync } from 'node:zlib';
 import { bundleSize, entries } from './bundle-entries.mjs';
+import { existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { loaderConfigKeys } from '../packages/core/dist/config.js';
 import { loaderRegistry, presetRegistry } from '../packages/core/dist/registry.js';
@@ -103,7 +105,45 @@ for (const file of currentCatalogDocs) {
   }
 }
 
-const files = new Set(required.map(([file]) => file));for (const [file, strings] of required) {
+const files = new Set(required.map(([file]) => file));
+// A relative link in a document is a promise that a file is where the sentence says it
+// is. The README's own index once grew an entry for a document that was never written,
+// and nothing reads a 404 faster than a stranger deciding whether to trust the package.
+let linkedCount = 0;
+// The Angular floor is a number the documents quote by name. verify:angular compares it
+// with the peer range; this compares it with the sentences, because a doc that quotes an
+// older `minVersion` than the artifact emits describes a floor nobody promised.
+const angularArtifact = await readFile('packages/angular/dist/index.js', 'utf8').catch(() => '');
+const emitted = [...angularArtifact.matchAll(/minVersion: "(\d+\.\d+\.\d+)"/g)].map((match) => match[1]);
+const newestMinVersion = emitted.reduce((newest, candidate) => {
+  const left = candidate.split('.').map(Number);
+  const right = newest.split('.').map(Number);
+  return left[0] > right[0] || (left[0] === right[0] && left[1] > right[1]) ||
+    (left[0] === right[0] && left[1] === right[1] && left[2] > right[2])
+    ? candidate
+    : newest;
+}, emitted[0]);
+// The changelog and the repository files in .github/ are scanned for links too, even
+// though the changelog is exempt from the count checks: a history entry may quote an old
+// number, but it may not point at a file that was never there.
+const linkCheckedDocs = [
+  ...currentCatalogDocs, 'CHANGELOG.md', '.github/CONTRIBUTING.md', '.github/SECURITY.md', '.github/PULL_REQUEST_TEMPLATE.md'
+];
+for (const file of linkCheckedDocs) {
+  const body = (await readFile(file, 'utf8').catch(() => '')).replace(/```[\s\S]*?```/g, '');
+  const links = [...body.matchAll(/\]\((?!https?:|mailto:|#)([^)\s]+)\)/g)];
+  linkedCount += links.length;
+  for (const [, target] of links) {
+    const path = resolve(dirname(file), target.split('#')[0]);
+    if (!existsSync(path)) failures.push(`${file} links to ${target}, which is not in the repository`);
+  }
+  for (const [, quoted] of body.matchAll(/minVersion: "(\d+\.\d+\.\d+)"/g)) {
+    if (newestMinVersion && quoted !== newestMinVersion) {
+      failures.push(`${file} quotes minVersion "${quoted}"; the built @wavelo/angular emits "${newestMinVersion}" as its newest`);
+    }
+  }
+}
+for (const [file, strings] of required) {
   const text = await readFile(file, 'utf8').catch(() => undefined);
   if (text === undefined) {
     failures.push(`${file} is missing`);
@@ -150,18 +190,17 @@ for (const token of tokensDeclared) {
 // document that reports the current state has to be the built count.
 const { patternPresets } = await import('../packages/core/dist/catalog.js');
 const countDocuments = [
-  // CHANGELOG.md and RELEASE_CHECKLIST.md are deliberately absent: each entry records what
-  // was true when it was written, so "Catalog Totals (v0.2.0): 153 public IDs" is a fact about
-  // a past release, not a claim about this build. The current release is still checked, through
-  // `required` below, which demands the built total appear in the changelog.
-  'README.md', 'PRD.md', 'RELEASE_READINESS_AUDIT.md', 'packages/core/README.md',
-  'docs/COMPATIBILITY.md', 'docs/FINAL_DELIVERY_REPORT.md', 'docs/MIGRATION.md',
-  'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
-  // These three restate catalog totals and were never compared to anything, so each one
-  // drifted: the master audit claimed 133 shipped in its scope line and 155 in every
-  // section header, and the progress tracker carried two builds of stale figures.
-  'docs/LOADER_AUDIT.md', 'docs/VISUAL_DEDUPLICATION_REPORT.md', 'docs/COMPONENT_CUSTOMIZATION_API.md',
-  'docs/wavelo-analysis.md'
+  // CHANGELOG.md is deliberately absent: each entry records what was true when it was
+  // written, so "Catalog Totals (v0.2.0): 153 public IDs" is a fact about a past release,
+  // not a claim about this build. The current release is still checked, through `required`
+  // below, which demands the built total appear in the changelog. Review artifacts live in
+  // the ignored release-audit/ and are not guarded: nobody installs them, and a number in
+  // a dated audit is a measurement of the day it was taken.
+  'README.md', 'PRD.md', 'packages/core/README.md',
+  'docs/COMPATIBILITY.md', 'docs/MIGRATION.md', 'docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md',
+  // This one restates catalog totals and was never compared to anything, so it drifted: the
+  // progress tracker carried two builds of stale figures.
+  'docs/COMPONENT_CUSTOMIZATION_API.md'
 ];
 for (const file of countDocuments) {
   const text = (await readFile(file, 'utf8').catch(() => '')).replace(/\s+/g, ' ');
@@ -210,7 +249,10 @@ for (const [kind, slice] of Object.entries(kindStyles)) {
   if (!performanceDoc.includes(stated)) failures.push(`docs/PERFORMANCE.md does not state the ${kind} slice cost (${stated} B gzipped with the base)`);
 }
 const sheetGzipped = gzipSync(Buffer.from(stylesheet)).length.toLocaleString('en-US');
-for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md']) {
+// Every document that quotes the sheet size is checked against the built artifact, including
+// docs/RELEASE.md: it carried "34,699 B" through two releases precisely because it was the one
+// release-facing document nobody measured.
+for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md', 'docs/RELEASE.md']) {
   if (!(await readFile(file, 'utf8')).replace(/\s+/g, ' ').includes(sheetGzipped)) {
     failures.push(`${file} does not state the whole-catalog sheet size (${sheetGzipped} B gzipped)`);
   }
@@ -270,7 +312,7 @@ for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md']) {
   const rangeOf = (peer) => new RegExp('(?<![\\w@/-])' + escapeRe(peer) + '\\s*:?\\s*"?(\\s*' + term + '(?:\\s+' + term + '){0,2})', 'g');
   const files = [
     'packages/react/README.md', 'packages/vue/README.md', 'packages/svelte/README.md', 'packages/angular/README.md',
-    'docs/COMPATIBILITY.md', 'docs/FRAMEWORKS.md', 'docs/wavelo-analysis.md', 'PRD.md'
+    'docs/COMPATIBILITY.md', 'docs/FRAMEWORKS.md', 'PRD.md'
   ];
   for (const file of files) {
     const text = await readFile(file, 'utf8');
@@ -299,4 +341,4 @@ if (failures.length) {
   for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
-console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, ${tokensRead.size} custom properties, single loader ${singleLoaderKb} KB gzipped.`);
+console.log(`Documentation matches the code: ${ids} designs (${active} active, ${aliases} aliases), ${slices} slices, ${options} configuration keys, ${tokensRead.size} custom properties, single loader ${singleLoaderKb} KB gzipped, ${linkedCount} relative links resolve.`);

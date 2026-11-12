@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    url: https://github.com/princegoel0/wavelo/discussions
+    about: How do I do X with Wavelo, feature discussion, anything that is not a defect
+  - name: Gallery and playground
+    url: https://princegoel0.github.io/wavelo/
+    about: Every design, every option it was measured to honour, and a standalone HTML export
+  - name: Documentation
+    url: https://github.com/princegoel0/wavelo/tree/main/docs
+    about: Framework guides, recipes, compatibility, customization, bundle size, performance
+  - name: Security report
+    url: https://github.com/princegoel0/wavelo/security/advisories/new
+    about: Private report — read SECURITY.md first

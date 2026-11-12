@@ -1,6 +1,26 @@
-import type { LoaderId } from './ids.js';
+import { loaderIds, type LoaderId } from './ids.js';
 
+export { loaderIds };
 export type { LoaderId };
+
+/**
+ * Autocomplete constants for all supported loader IDs.
+ */
+export const WaveloTypes = loaderIds;
+
+/**
+ * All official categorization tags for Wavelo loader designs.
+ */
+export const WaveloCategories = [
+  'spinner',
+  'dots',
+  'bars',
+  'creative',
+  'skeleton',
+  'progress',
+  'application',
+  'ai'
+] as const;
 
 /**
  * The CSS custom properties Wavelo's stylesheets read. Setting one in `style`, on
@@ -59,15 +79,7 @@ export type LoaderStyle = WaveloTokens & Record<string, string | number>;
  */
 export type WaveloDefaults = LoaderConfig;
 
-export type LoaderCategory =
-  | 'spinner'
-  | 'dots'
-  | 'bars'
-  | 'creative'
-  | 'skeleton'
-  | 'progress'
-  | 'application'
-  | 'ai';
+export type LoaderCategory = (typeof WaveloCategories)[number];
 
 export type LoaderDimension = '2d' | '3d';
 
@@ -80,7 +92,42 @@ export type ReducedMotion = 'auto' | 'always' | 'never';
  */
 export type DataAttribute = `data-${string}`;
 
+export const brandAnimations = ['wave', 'bounce', 'pulse', 'flip', 'shimmer', 'typewriter', 'none'] as const;
+export interface BrandConfig {
+  /** Plain text, never HTML. Up to 80 Unicode characters. */
+  text?: string;
+  caption?: string;
+  animation?: (typeof brandAnimations)[number];
+  indicator?: 'ring' | 'bar' | 'dots' | 'none';
+  layout?: 'stacked' | 'inline';
+  indicatorPosition?: 'before' | 'after';
+  align?: 'start' | 'center' | 'end';
+  fontFamily?: string;
+  fontSize?: number | string;
+  fontWeight?: number | 'normal' | 'bold';
+  fontStyle?: 'normal' | 'italic' | 'oblique';
+  letterSpacing?: number | string;
+  lineHeight?: number;
+  textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  textColor?: string;
+  trackColor?: string;
+  captionColor?: string;
+  captionSize?: number | string;
+  indicatorSize?: number | string;
+  gap?: number | string;
+  radius?: number | string;
+  /** Seconds between letters and before the first cycle. */
+  stagger?: number;
+  delay?: number;
+  /** Text travel distance in pixels. */
+  amplitude?: number;
+  easing?: string;
+  showValue?: boolean;
+}
+
 export interface LoaderConfig {
+  /** Configuration for the brand-loader design. */
+  brand?: BrandConfig;
   /** A catalog ID. Unknown values render the default design and set `fallback`. */
   type?: LoaderId | (string & {});
   size?: number | string;

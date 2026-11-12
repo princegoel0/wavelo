@@ -63,9 +63,9 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 165 public IDs, each with its own implementation, built from
+The catalog holds 181 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
-same 27 configuration keys — `type`, `size`, `width`, `height`, `color`,
+same 28 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
 `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
@@ -79,7 +79,7 @@ one reaches the element, so a bridge that falls behind the core fails the build.
 | `@wavelo/core/loaders/<id>` | one design, config minus `type`; ships only that design's slice |
 | `@wavelo/react` | the whole props object is passed to the core |
 | `@wavelo/vue` | declared props for every key except `data-*`, which arrive as fallthrough attributes and are merged into the config. The boolean keys are declared without a type: Vue casts an absent `Boolean` prop to `false`, which would override a registered default and hide a loader nobody asked to hide |
-| `@wavelo/angular` | 27 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
+| `@wavelo/angular` | 28 inputs; `style` binds as `waveloStyle` because Angular reserves `[style]`; host `data-*` attributes are merged into the config |
 | `@wavelo/svelte` | `$props()` is forwarded to the core whole, so any key reaches it |
 | `@wavelo/web-components` | one attribute per key in kebab case (`stroke-width`, `secondary-color`, `reduced-motion`), plus any `data-*` |
 | `@wavelo/vanilla` | re-exports `mountLoader`, `createLoaderElement`, `createWavelo` and the style helpers |
@@ -189,11 +189,13 @@ installs. `npm run docs:check` compares every range stated in this repository wi
 that declares it, so a README cannot fall behind a widened peer.
 
 - **React (`@wavelo/react`):** `react >=16.8.0` and `react-dom >=16.8.0`, the latter declared
-  optional in `peerDependenciesMeta`. The adapter imports `createContext`, `useContext`,
-  `useEffect`, `createElement`, `FC` and `ReactNode` and nothing else, all of them React 16.8
-  API, and no module imports `react-dom` — which is what lets a server-components-only
-  application install it. CI exercises React 19.3.1; the older majors are supported on the
-  strength of those imports, not of a test.
+  optional in `peerDependenciesMeta`. Read off the built files: the runtime imports are
+  `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef` and
+  `useState` — all React 16.8 API — and no module imports `react-dom`, which is what lets a
+  server-components-only application install it. `dist/server.js` imports no React at all; that
+  is the entry a Server Component renders markup through, and `npm run verify:react` fails if a
+  client boundary ever moves into it. CI exercises React 19.3.1; the older majors are supported
+  on the strength of those imports, not of a test.
 - **Vue (`@wavelo/vue`):** `vue >=3.0.0 <4.0.0`. `defineComponent`, `computed`, `watchEffect`,
   `h`, `provide`, `inject` and `useAttrs` are each present since 3.0. Vue 2 is EOL and out of
   scope; a Vue 2 page can still take `@wavelo/web-components`. CI exercises Vue 3.5.44.
@@ -202,10 +204,12 @@ that declares it, so a README cannot fall behind a widened peer.
   CI exercises Svelte 5.57.3, compiles the component for client and server, and server-renders
   it through `render()` from `svelte/server`.
 - **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0`. This floor is not read off the
-  imports: the package is built with `ngc` in `compilationMode: "partial"`, and its emitted
-  declarations carry `minVersion: "14.0.0"` — the oldest application that can link them.
+  imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component
+  declaration carries `minVersion: "14.0.0"` — the metadata and factory declarations around it
+  say 12.0.0, and the floor is the newest of the three, because a linking application has to
+  satisfy every declaration in the artifact.
   `npm run verify:angular` fails if the artifact stops being library-compiled, if the peer floor
-  drops below that `minVersion`, or if a standalone component written the way
+  drops below that newest `minVersion`, or if a standalone component written the way
   [FRAMEWORKS.md](FRAMEWORKS.md) describes cannot be compiled by the Angular compiler. CI
   exercises Angular 22.2.4. A component that ships as plain `tsc` output has no Ivy definition
   at all, so an AOT application rejects it with `NG2012` while every JIT test passes — that was
@@ -238,7 +242,7 @@ ESM and CSS.
   in CI. Neither check needs a browser or a runtime compiler.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 165
+  `theme`, style-slice injection counts, per-design slice isolation for all 181
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —
@@ -285,7 +289,7 @@ render identically, and every design must paint something visible.
 | `'default'` | an ID that matches nothing, rendering `inline` | `true` |
 
 `fallback` therefore means exactly "your request was not understood", and a preset
-hit is never reported as one. All 90 pattern presets resolve to the design they
+hit is never reported as one. All 114 pattern presets resolve to the design they
 declare; a unit test walks the whole table.
 
 

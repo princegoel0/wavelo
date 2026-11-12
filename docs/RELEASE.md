@@ -12,20 +12,33 @@ Publishing is intentionally not automated from this repository checkout and must
 not happen without explicit approval.
 
 ```powershell
-npm install
-npm run build          # builds the core, regenerates catalog entry points, builds adapters
-npm run check          # typecheck, 53 unit tests, verify:angular, catalog drift, docs sync, bundle budgets
-npm run test:browser   # Chromium: computed styles, style injection, slice isolation, axe
+npm ci
+npm run build                  # core, generated catalog entry points, every adapter
+npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
+npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
+npm run test:browser:firefox   # Gecko smoke suite
+npm run test:browser:webkit    # WebKit smoke suite
+npm run audit:customization    # the measured option table, re-measured against a real render
+npm run audit:layout           # which designs cost a layout per frame, and why
+npm run audit:visual:correctness
 npm run docs:build
-npm run measure
-npm pack --workspace @wavelo/core
+npm run pack:check             # all seven tarballs, dry run
+npm run pack:verify            # the seven installed into a clean consumer project and compiled
+npm run release:validate       # one version across the seven, and not already on npm
 ```
+
+This is the sequence `ci.yml` runs on every push and pull request, and the sequence the
+`Validate release` job runs on `main` before it will pack anything. Nothing in it publishes:
+the publish job needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm`
+environment deployment. `npm run measure` is inside `npm run check`; it is listed nowhere
+separately because a document that quotes a size is compared against it.
 
 `npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
 against `packages/core/src/catalog.ts`; after changing the catalog run
 `npm run catalog:generate` and commit the regenerated files. `npm run docs:check`
-reads the counts and bundle figures from the build, so a stale document fails
-rather than drifting silently.
+reads the counts and bundle figures from the build and resolves every relative link in
+the maintained documents, so a stale document or a 404 in a README fails rather than
+drifting silently.
 
 Install the generated tarball in a clean temporary project, resolve every public
 subpath — `@wavelo/core/loaders/<id>`, `@wavelo/core/css`, `@wavelo/core/styles`,
@@ -43,6 +56,14 @@ shipped artifact is library-compiled, that its Angular peer floor is not older t
 the `minVersion` it emits, and that a consumer component written the way
 [FRAMEWORKS.md](FRAMEWORKS.md) describes compiles against it.
 
+`@wavelo/react` splits its surface by React Server Component boundary: the module
+that defines `Loader` declares `'use client'`, `dist/server.js` declares none and
+reaches none, and the package entry re-exports both. A package that declares nothing
+pushes that work onto every App Router consumer, which is what the old recipe told
+them to write. `npm run verify:react` reads the built files and fails if a boundary
+moves, if the server entry reaches a module that declares one, or if the package
+entry loses an export.
+
 Consumers need to know one thing this repository cannot verify for them: no
 adapter inlines CSS, so a server-rendered page must include
 `@wavelo/core/styles.css` (or the slices it rendered) in its document head.
@@ -59,7 +80,7 @@ workspace, not a restructure. `npm install @wavelo/core` and
 - every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
   `"access": "public"` under one `@wavelo` scope;
 - each package ships its own stylesheet — a consumer that never imports the new family
-  never downloads its rules, and the loaders' 34,699 B gzipped catalog sheet does not grow;
+  never downloads its rules, and the loaders' 42,596 B gzipped catalog sheet does not grow;
 - framework packages declare their framework as a peer and bundle none of it, and the
   core has no runtime dependency, so a second family cannot drag a first one's weight in;
 - design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.
@@ -102,18 +123,64 @@ the owner's to set:
   publishes when this equals exactly `true` and the ref is `main`. The `npm`
   environment additionally requires an approval from `princegoel0`. Set it back to
   `false` after a release, so the next merge cannot queue a publish attempt.
-- `GALLERY_ENABLED` (unset) — `pages.yml` builds and deploys the documentation
+- `GALLERY_ENABLED` (default unset) — `pages.yml` builds and deploys the documentation
   gallery to GitHub Pages only when this equals `true`. It stays skipped while
   unset, so merging the workflow cannot fail a run on `main` or publish a site
-  before Pages is pointed at "GitHub Actions" in the repository settings.
+  before Pages is pointed at "GitHub Actions" in the repository settings. It is
+  currently set to `true`, so every push to `main` deploys the gallery.
 
-Neither gate publishes anything to npm, and no other workflow may be given
-`pages: write` or `id-token: write`.
+### Permissions, per workflow
+
+| Workflow | Permissions it holds | Why |
+|---|---|---|
+| `ci.yml` | `contents: read` | it builds and tests; it writes nothing |
+| `release.yml` → `Validate release` | `contents: read` | packs tarballs into the job workspace and uploads them as a build artifact |
+| `release.yml` → `Publish npm packages` | `contents: read`, `id-token: write` | `id-token` is what OIDC needs once npm trusted publishing is configured per package; until then the job authenticates with `NPM_TOKEN` via `NODE_AUTH_TOKEN` and the scope goes unused |
+| `pages.yml` | `contents: read`, `pages: write`, `id-token: write` | deploying to GitHub Pages requires both write scopes |
+
+No other workflow receives `pages: write`, `id-token: write` or a registry credential, and only
+the publish job may see `NPM_TOKEN`.
+
+Neither variable publishes anything on its own: `RELEASE_ENABLED` decides whether a publish is
+attempted, and the `npm` environment approval decides whether it happens.
 
 `main` requires a pull request with the `verify` and `verify-browser` checks green and the
 branch up to date with `main`, so merging `main` back into `dev` before opening a PR is
 normal, not noise. Never publish an unreviewed pull request, and record the exact
 validation environment in release notes.
+
+## If the publish loop stops halfway
+
+`Publish npm packages` runs `set -euo pipefail` over a fixed order — core, vanilla,
+web-components, react, vue, svelte, angular — after dry-running all seven. So a failure
+leaves a *prefix* of the release live at the new version and the rest absent. Every one
+of those numbers is permanent, and npm will not accept a version that already exists,
+which means the loop cannot simply be re-run: it would fail at the first package and
+publish nothing after it. Finish the set rather than redo it.
+
+1. **Read the registry, not the log.** For each of the seven, ask for that exact version
+   (`npm view @wavelo/<name>@<version> version`). A publish that timed out after the
+   registry accepted it is a published package, and one that reported success on a
+   network hiccup may not be.
+2. **Take the tarballs from the build artifact**, `wavelo-<version>-tarballs`, uploaded
+   by `Validate release`. Those are the bytes the dry-run checked. Re-packing from a
+   working tree that has moved on publishes something nobody validated.
+3. **Publish only the missing ones**, one command per package, with the same
+   `--access public` and the same provenance flag the loop would have used. Core is
+   first in the order, so a missing core means nothing was published and the whole
+   release is still ahead of you.
+4. **Re-read every `dist-tags/latest`** afterwards. Adapters pin `@wavelo/core` to the
+   exact version, so a set where four packages point at the new release and three point
+   at the old one is installable and wrong at the same time.
+5. **Say what happened** in `CHANGELOG.md` and the release notes. If one of the packages
+   that did publish must be pulled back, deprecate it (Part 2) — an unpublish would
+   break the pins of the adapters that already point at it.
+
+Then decide which of the two endings applies: complete this version by hand, as above, or
+let it stand as released and move the whole workspace to the next one. The second path
+re-runs `npm run release:validate`, which is what refuses a set of manifests that no
+longer agree — and it is also what refuses a version the registry already holds, so while
+a partial release is still unresolved that check fails by design.
 
 ## The order of operations, in one line each
 

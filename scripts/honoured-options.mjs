@@ -32,6 +32,7 @@ const CONTROL_KEYS = ['paused', 'direction'];
 const STRUCTURAL = ['label', 'className', 'style', 'data-testid', 'reducedMotion', 'loading'];
 
 const PROBES = {
+  brand: { brand: { text: 'ACME', animation: 'bounce', indicator: 'bar', fontSize: 40, showValue: true } },
   size: { size: 300 },
   width: { width: 300 },
   height: { height: 60 },
@@ -56,6 +57,7 @@ const PROBES = {
 
 const PROPS = [
   'width', 'height', 'display', 'position', 'gap', 'gridTemplateColumns', 'flexDirection', 'alignItems', 'justifyContent',
+  'strokeWidth', 'stroke',
   'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderTopStyle', 'borderTopColor',
   'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderImageSource', 'borderRadius', 'backgroundImage',
   'backgroundColor', 'color', 'fill', 'opacity', 'transform', 'inset', 'clipPath', 'boxShadow', 'content',
@@ -208,7 +210,7 @@ async function fingerprintPage(browser, overrides) {
       const cells = {};
       for (const wrap of document.querySelectorAll('[data-id]')) {
         const root = wrap.querySelector('.wavelo');
-        const parts = [...root.querySelectorAll('.wavelo__part')];
+        const parts = [...root.querySelectorAll('*')];
         const elements = [[root, null], [root, '::before'], [root, '::after']];
         for (const part of parts) elements.push([part, null], [part, '::before'], [part, '::after']);
         const own = document.getAnimations().filter((animation) => {

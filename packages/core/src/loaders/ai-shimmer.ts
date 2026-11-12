@@ -5,7 +5,7 @@ import { skeletonCss } from '../css/kinds/skeleton.js';
 import { renderLoaderWithDefinition } from '../render.js';
 import type { LoaderConfig, LoaderDefinition } from '../types.js';
 
-const definition: LoaderDefinition = { id: "ai-shimmer", name: "AI response shimmer", category: "ai", dimension: "2d", kind: "skeleton", description: "A tall rounded panel swept by one bright band", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-shimmer" };
+const definition: LoaderDefinition = { id: "ai-shimmer", name: "AI response shimmer", category: "ai", dimension: "2d", kind: "skeleton", description: "A wide rounded panel swept by one bright band", options: ["className","color","data-testid","decorative","describedBy","direction","duration","height","inline","label","labelledBy","loading","paused","reducedMotion","size","speed","style","theme","width"], supportsProgress: false, stability: "stable", visualSignature: "ai-shimmer" };
 const styles = `${baseCss}${skeletonCss}`;
 
 export const aiShimmer = (config: Omit<LoaderConfig, 'type'> = {}) =>
