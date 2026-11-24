@@ -2231,3 +2231,31 @@ implementation ambiguities discovered during technical review:
 - Framework compatibility claims must name tested versions. A successful
   monorepo build alone does not establish framework, SSR, hydration or clean
   installation support.
+
+# 10. Versioned Release Plan
+
+The ordering rule: anything that touches the public API surface ships before
+`1.0.0`; catalog volume is additive and may continue after it.
+
+## 0.6.0 — API parity and the adoption surface
+
+- Svelte store helpers (`waveloProgress`, `waveloState`), completing the hook
+  and composable parity the React and Vue adapters already carry.
+- Named presets for `brand-loader`, so a brand treatment is one word instead
+  of a configuration object.
+- The README hero visual: a static strip rendered from the real sheet. A GIF
+  variant waits on local encoding tooling.
+
+## 0.7.0 — reach
+
+- One-click playgrounds seeded from `examples/` for all five stacks.
+- Additive catalog growth: further determinate and scroll-driven designs and a
+  `brand-loader` variant family.
+
+## 1.0.0 — the freeze
+
+- The public surface is declared complete and the breaking-change policy
+  applies in full.
+- The component families (charts, modals, buttons) arrive afterwards as new
+  packages under the family-first naming rule, without restructuring the
+  existing seven.
