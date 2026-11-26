@@ -1,7 +1,7 @@
 {
   "name": "@wavelo/svelte",
   "version": "0.5.0",
-  "description": "Svelte 5 components for CSS loading spinners, skeletons and progress, built with runes and a context for shared defaults",
+  "description": "Svelte 5 components and stores for CSS loading spinners, skeletons and progress, built with runes and a context for shared defaults",
   "type": "module",
   "license": "MIT",
   "repository": {

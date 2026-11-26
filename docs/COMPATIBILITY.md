@@ -198,10 +198,10 @@ that declares it, so a README cannot fall behind a widened peer.
   on the strength of those imports, not of a test.
 - **Vue (`@wavelo/vue`):** `vue >=3.0.0 <4.0.0`. `defineComponent`, `computed`, `watchEffect`,
   `h`, `provide`, `inject` and `useAttrs` are each present since 3.0. Vue 2 is EOL and out of
-  scope; a Vue 2 page can still take `@wavelo/web-components`. CI exercises Vue 3.5.44.
+  scope; a Vue 2 page can still take `@wavelo/web-components`. CI exercises Vue 3.5.46.
 - **Svelte (`@wavelo/svelte`):** `svelte >=5.0.0 <6.0.0`. The shipped component is runes —
   `$props()`, `$derived()`, `$effect()` — so 5.0 is the floor and the 6.x cap is deliberate.
-  CI exercises Svelte 5.57.3, compiles the component for client and server, and server-renders
+  CI exercises Svelte 5.59.2, compiles the component for client and server, and server-renders
   it through `render()` from `svelte/server`.
 - **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0`. This floor is not read off the
   imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component
@@ -211,7 +211,7 @@ that declares it, so a README cannot fall behind a widened peer.
   `npm run verify:angular` fails if the artifact stops being library-compiled, if the peer floor
   drops below that newest `minVersion`, or if a standalone component written the way
   [FRAMEWORKS.md](FRAMEWORKS.md) describes cannot be compiled by the Angular compiler. CI
-  exercises Angular 22.2.6. A component that ships as plain `tsc` output has no Ivy definition
+  exercises Angular 22.3.0. A component that ships as plain `tsc` output has no Ivy definition
   at all, so an AOT application rejects it with `NG2012` while every JIT test passes — that was
   the state of this package through 0.2.0.
 - **Web Components (`@wavelo/web-components`):** Custom Elements v1 in light DOM — `innerHTML`
@@ -289,7 +289,7 @@ render identically, and every design must paint something visible.
 | `'default'` | an ID that matches nothing, rendering `inline` | `true` |
 
 `fallback` therefore means exactly "your request was not understood", and a preset
-hit is never reported as one. All 114 pattern presets resolve to the design they
+hit is never reported as one. All 120 pattern presets resolve to the design they
 declare; a unit test walks the whole table.
 
 

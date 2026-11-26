@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
-import { configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, renderStylesheets, LoaderConfigurationError } from '../packages/core/dist/index.js';
+import { brandPresetIds, brandPresets, configFromAttributes, getCanonicalLoaderDefinition, loaderAttributes, loaderConfigKeys, loaderRegistry, presetRegistry, renderLoader, renderStylesheets, LoaderConfigurationError } from '../packages/core/dist/index.js';
 
 test('brand text is escaped, segmented and labelled consistently', () => {
   const text = 'A👩‍💻e\u0301 & <x>';
@@ -30,6 +30,32 @@ test('brand validation rejects invalid configuration and preserves attribute obj
   assert.deepEqual(mergeWaveloConfig({ brand: { text: 'ACME', fontWeight: 700 } }, { brand: { animation: 'pulse', text: undefined } }).brand, { text: 'ACME', fontWeight: 700, animation: 'pulse' });
   const joined = renderLoader({ type: 'brand-loader', brand: { text: 'مرحبا', animation: 'shimmer' } });
   assert.match(joined.html, />مرحبا<\/span>/);
+});
+
+test('named brand presets resolve as one-word types and explicit brand options win', () => {
+  assert.deepEqual(brandPresetIds, ['brand-minimal', 'brand-wave', 'brand-pulse', 'brand-shimmer', 'brand-typewriter', 'brand-progress']);
+  assert.equal(Object.isFrozen(brandPresets), true);
+  assert.ok(brandPresetIds.every((id) => Object.isFrozen(brandPresets[id])));
+  for (const id of brandPresetIds) {
+    const result = renderLoader({ type: id, brand: { text: 'ACME' } });
+    assert.equal(result.definition.id, 'brand-loader', `${id} must render the brand loader`);
+    assert.equal(result.resolution, 'preset', `${id} must resolve as a preset`);
+    assert.equal(result.fallback, false);
+    assert.match(result.html, /aria-label="ACME loading"/);
+  }
+
+  const minimal = renderLoader({ type: 'brand-minimal' });
+  assert.match(minimal.html, /data-animation="none"/);
+  assert.doesNotMatch(minimal.html, /wavelo__brand-indicator/);
+
+  const overridden = renderLoader({ type: 'brand-wave', brand: { text: 'ACME', animation: 'pulse', indicator: 'none', fontWeight: 500 } });
+  assert.match(overridden.html, /data-animation="pulse"/);
+  assert.doesNotMatch(overridden.html, /wavelo__brand-indicator/);
+  assert.match(overridden.html, /font-weight:500/);
+
+  const progress = renderLoader({ type: 'brand-progress', value: 25, max: 100 });
+  assert.match(progress.html, /role="progressbar"/);
+  assert.match(progress.html, />25%<\/span>/);
 });
 
 test('catalog has distinct metadata and required categories', () => {

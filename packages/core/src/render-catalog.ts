@@ -1,4 +1,5 @@
 import { designStyles } from './css/index.js';
+import { applyBrandPreset } from './brand.js';
 import { renderLoaderWithDefinition } from './render.js';
 import { resolveCatalogEntry } from './registry.js';
 import type { LoaderConfig, RenderResult } from './types.js';
@@ -13,7 +14,7 @@ import type { LoaderConfig, RenderResult } from './types.js';
 export function renderLoader(input: LoaderConfig = {}): RenderResult {
   const resolution = resolveCatalogEntry(input.type);
   return renderLoaderWithDefinition(
-    { ...input, type: resolution.id },
+    { ...input, type: resolution.id, brand: applyBrandPreset(input.type, input.brand) },
     resolution.definition,
     designStyles(resolution.definition.kind),
     resolution.source,

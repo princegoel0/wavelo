@@ -40,7 +40,7 @@ The following baseline parameters apply universally or across all standard loadi
 
 | Property | TypeScript Type | Default Value | Target DOM / CSS | What it Controls |
 |---|---|---|---|---|
-| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 181 active designs or 295 presets. |
+| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 181 active designs or 301 presets. |
 | `color` | `string` | `'#6366f1'` (currentColor) | `--wavelo-color` | Primary foreground accent, stroke, or fill color. |
 | `backgroundColor` | `string` | `'transparent'` | `--wavelo-background` | Outer container background fill, track surface, or modal scrim. |
 | `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | `data-wavelo-theme` | Page color palette: light shimmer, dark surface (`#374151`), or OS dark mode. |

@@ -296,6 +296,56 @@ test('React useWaveloState and useWaveloProgress hooks provide state orchestrati
   assert.equal(progressResult.isComplete, false);
 });
 
+test('Svelte waveloState and waveloProgress stores provide lifecycle and progress orchestration', async () => {
+  const { waveloState, waveloProgress } = await import('../packages/svelte/dist/index.js');
+  const valueOf = (store) => {
+    let value;
+    const unsubscribe = store.subscribe((next) => { value = next; });
+    unsubscribe();
+    return value;
+  };
+
+  const state = waveloState({ initial: 'idle' });
+  assert.equal(valueOf(state), 'idle');
+  assert.deepEqual(valueOf(state.stateProps), { loading: false, 'data-wavelo-state': 'idle' });
+  state.startLoading();
+  assert.equal(valueOf(state), 'loading');
+  assert.equal(valueOf(state.stateProps).loading, true);
+  state.setSuccess(0);
+  assert.equal(valueOf(state), 'success');
+  state.setError(0);
+  assert.equal(valueOf(state), 'error');
+  state.reset();
+  assert.equal(valueOf(state), 'idle');
+  assert.equal(await state.wrapAsync(async () => 'ok'), 'ok');
+  assert.equal(valueOf(state), 'success');
+  await assert.rejects(state.wrapAsync(async () => { throw new Error('fail'); }), /fail/);
+  assert.equal(valueOf(state), 'error');
+  state.destroy();
+
+  let completed = 0;
+  const progress = waveloProgress({ initial: 20, onComplete: () => { completed++; } });
+  assert.equal(valueOf(progress), 20);
+  assert.equal(valueOf(progress.percent), '20%');
+  assert.equal(valueOf(progress.isComplete), false);
+  progress.setProgress((previous) => previous + 30);
+  assert.equal(valueOf(progress), 50);
+  progress.finish();
+  assert.equal(valueOf(progress), 100);
+  assert.equal(valueOf(progress.percent), '100%');
+  assert.equal(valueOf(progress.isComplete), true);
+  assert.equal(completed, 1);
+  progress.reset(10);
+  assert.equal(valueOf(progress), 10);
+  progress.destroy();
+
+  const linear = waveloProgress({ mode: 'linear', duration: 100 });
+  linear.start();
+  await new Promise((resolve) => setTimeout(resolve, 180));
+  assert.equal(valueOf(linear), 100);
+  linear.destroy();
+});
+
 test('Vue useWaveloState and useWaveloProgress composables provide reactive state and progress simulation', async () => {
   const { useWaveloState, useWaveloProgress } = await import('../packages/vue/dist/index.js');
   assert.equal(typeof useWaveloState, 'function');

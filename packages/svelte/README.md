@@ -32,6 +32,30 @@ The component ships as Svelte source, so the consumer's build needs
 `vitePreprocess` (or run it through `svelte-package`). `renderSvelteLoader(props)`
 returns `{ html, css, styleKey }` without a component tree.
 
+`waveloState` and `waveloProgress` provide the same lifecycle and progress controls
+as the React hooks and Vue composables, using Svelte stores:
+
+```svelte
+<script>
+  import { onDestroy } from 'svelte';
+  import { waveloProgress, waveloState } from '@wavelo/svelte';
+  import WaveloLoader from '@wavelo/svelte/WaveloLoader.svelte';
+
+  const status = waveloState();
+  const progress = waveloProgress({ mode: 'linear', duration: 4000 });
+  onDestroy(() => {
+    status.destroy();
+    progress.destroy();
+  });
+</script>
+
+<WaveloLoader type="progress-bar" value={$progress} loading={$status === 'loading'} />
+```
+
+Call `start()`, `pause()`, `finish()`, `reset()` and `setProgress()` on the progress
+store; use `startLoading()`, `setSuccess()`, `setError()`, `reset()` and `wrapAsync()`
+on the state store.
+
 Supported peer range: `svelte >=5.0.0 <6.0.0` (supporting all Svelte 5.x releases).
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
