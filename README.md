@@ -6,6 +6,8 @@
 [![package size](https://img.shields.io/bundlephobia/minzip/@wavelo/core)](https://bundlephobia.com/package/@wavelo/core)
 [![typed](https://img.shields.io/npm/types/@wavelo/core)](docs/COMPATIBILITY.md)
 
+![Wavelo — an animated brand wordmark beside twelve of the catalog's loading designs](.github/assets/readme-hero.png)
+
 [Gallery](https://princegoel0.github.io/wavelo/) ·
 [Examples](examples/README.md) ·
 [Framework guides](docs/FRAMEWORKS.md) ·

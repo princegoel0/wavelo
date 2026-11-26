@@ -211,7 +211,7 @@ that declares it, so a README cannot fall behind a widened peer.
   `npm run verify:angular` fails if the artifact stops being library-compiled, if the peer floor
   drops below that newest `minVersion`, or if a standalone component written the way
   [FRAMEWORKS.md](FRAMEWORKS.md) describes cannot be compiled by the Angular compiler. CI
-  exercises Angular 22.2.4. A component that ships as plain `tsc` output has no Ivy definition
+  exercises Angular 22.2.6. A component that ships as plain `tsc` output has no Ivy definition
   at all, so an AOT application rejects it with `NG2012` while every JIT test passes — that was
   the state of this package through 0.2.0.
 - **Web Components (`@wavelo/web-components`):** Custom Elements v1 in light DOM — `innerHTML`
