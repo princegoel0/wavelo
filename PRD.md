@@ -228,7 +228,7 @@ The release target is:
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
 - Dedicated AI/streaming loading lane (Shipped: 12 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **301 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Current tree: **301 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -2164,7 +2164,7 @@ A release is complete only when all mandatory release gates pass.
 The stable release must satisfy all mandatory criteria:
 
 - At least 60 distinct animation designs (Shipped: 181 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 301 named presets).
+- At least 100 total named presets and loading patterns (Current tree: 301 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.

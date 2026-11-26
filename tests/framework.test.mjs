@@ -340,8 +340,21 @@ test('Svelte waveloState and waveloProgress stores provide lifecycle and progres
   progress.destroy();
 
   const linear = waveloProgress({ mode: 'linear', duration: 100 });
-  linear.start();
-  await new Promise((resolve) => setTimeout(resolve, 180));
+  await new Promise((resolve, reject) => {
+    let unsubscribe = () => {};
+    const timeout = setTimeout(() => {
+      unsubscribe();
+      reject(new Error('linear progress did not complete'));
+    }, 5000);
+    unsubscribe = linear.subscribe((value) => {
+      if (value === 100) {
+        clearTimeout(timeout);
+        unsubscribe();
+        resolve();
+      }
+    });
+    linear.start();
+  });
   assert.equal(valueOf(linear), 100);
   linear.destroy();
 });
