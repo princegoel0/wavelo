@@ -1,5 +1,6 @@
 import type { LoaderCategory, LoaderDimension, RenderKind } from './types.js';
 import { constellationPatterns } from './constellations.js';
+import { brandPresets } from './brand.js';
 
 /**
  * The one authored description of every design in the library. `registry.ts`
@@ -261,6 +262,7 @@ export const patternPresets: readonly [id: string, type: string][] = [
   ['solar-eclipse', 'eclipse-corona'], ['lunar-transit', 'eclipse-corona'], ['totality', 'eclipse-corona'],
   ['andromeda', 'spiral-galaxy'], ['milky-way', 'spiral-galaxy'], ['cosmic-spiral', 'spiral-galaxy'],
   ['cosmic-nebula', 'nebula-drift'], ['stellar-drift', 'nebula-drift'], ['orion-nebula', 'nebula-drift'],
+  ...Object.keys(brandPresets).map((id) => [id, 'brand-loader'] as [string, string]),
   ...constellationPatterns.map((pattern) => [`constellation-${pattern}`, 'constellation'] as [string, string])
 ];
 

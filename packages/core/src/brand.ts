@@ -1,6 +1,30 @@
 import { brandAnimations, LoaderConfigurationError } from './types.js';
 import type { BrandConfig, NormalizedLoaderConfig } from './types.js';
 
+const presetDefinitions = {
+  'brand-minimal': { animation: 'none', indicator: 'none', layout: 'inline', fontWeight: 800, letterSpacing: 2 },
+  'brand-wave': { animation: 'wave', indicator: 'ring', layout: 'stacked', stagger: 0.08, amplitude: 6 },
+  'brand-pulse': { animation: 'pulse', indicator: 'dots', layout: 'inline', indicatorPosition: 'after' },
+  'brand-shimmer': { animation: 'shimmer', indicator: 'ring', layout: 'stacked', fontWeight: 700 },
+  'brand-typewriter': { animation: 'typewriter', indicator: 'bar', layout: 'stacked', indicatorSize: 180, stagger: 0.06 },
+  'brand-progress': { animation: 'none', indicator: 'bar', layout: 'stacked', indicatorSize: 180, showValue: true }
+} as const satisfies Record<string, BrandConfig>;
+
+export type BrandPresetId = keyof typeof presetDefinitions;
+export const brandPresets: Readonly<Record<BrandPresetId, Readonly<BrandConfig>>> = Object.freeze(
+  Object.fromEntries(Object.entries(presetDefinitions).map(([id, config]) => [id, Object.freeze({ ...config })]))
+) as Readonly<Record<BrandPresetId, Readonly<BrandConfig>>>;
+export const brandPresetIds: readonly BrandPresetId[] = Object.freeze(Object.keys(brandPresets) as BrandPresetId[]);
+
+export function applyBrandPreset(type: string | undefined, brand: BrandConfig | undefined): BrandConfig | undefined {
+  const preset = type === undefined ? undefined : brandPresets[type as BrandPresetId];
+  if (!preset) return brand;
+  if (brand === undefined) return { ...preset };
+  if (!brand || typeof brand !== 'object' || Array.isArray(brand)) return brand;
+  const overrides = Object.fromEntries(Object.entries(brand).filter(([, value]) => value !== undefined));
+  return { ...preset, ...overrides } as BrandConfig;
+}
+
 const choices: Record<string, readonly string[]> = {
   animation: brandAnimations, indicator: ['ring', 'bar', 'dots', 'none'],
   layout: ['stacked', 'inline'], indicatorPosition: ['before', 'after'],

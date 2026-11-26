@@ -10,3 +10,5 @@ export { createLoaderElement, mountLoader } from './dom.js';
 export { createRouteProgress } from './route-progress.js';
 export type { RouteProgress, RouteProgressOptions } from './route-progress.js';
 export { createWavelo, mergeWaveloConfig } from './defaults.js';
+export { applyBrandPreset, brandPresetIds, brandPresets } from './brand.js';
+export type { BrandPresetId } from './brand.js';

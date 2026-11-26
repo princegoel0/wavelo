@@ -4,6 +4,29 @@
 ring, bar or three-dot indicator. Omit `value` for indefinite loading; provide
 `value` and `max` for real progress. The same typed configuration works in every adapter.
 
+## Named presets
+
+A brand treatment can be selected with one `type` word. Each preset resolves to
+`brand-loader` and supplies defaults for the nested `brand` object; explicit brand
+options still win.
+
+| Type | Treatment |
+| --- | --- |
+| `brand-minimal` | Static inline wordmark, no indicator |
+| `brand-wave` | Wave text with a ring |
+| `brand-pulse` | Whole-text pulse with trailing dots |
+| `brand-shimmer` | Shimmer text with a ring |
+| `brand-typewriter` | Typewriter text with a wide bar |
+| `brand-progress` | Static wordmark with a value-bearing bar |
+
+```tsx
+<Loader type="brand-wave" brand={{ text: 'ACME', animation: 'pulse' }} />
+<Loader type="brand-progress" brand={{ text: 'ACME' }} value={loaded} max={total} />
+```
+
+`brandPresetIds` and `brandPresets` are exported from `@wavelo/core` for discovery
+and typed reuse. Unknown types keep the normal fallback behavior.
+
 ```tsx
 import { Loader } from '@wavelo/react';
 import '@wavelo/core/styles.css';

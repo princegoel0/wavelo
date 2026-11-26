@@ -228,7 +228,7 @@ The release target is:
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
 - Dedicated AI/streaming loading lane (Shipped: 12 AI designs).
 - Dual classification: Functional UX category and Spatial Dimensionality (`2d` vs `3d`).
-- At least 100 named, documented presets and loading patterns overall (Shipped: **295 named presets**).
+- At least 100 named, documented presets and loading patterns overall (Current tree: **301 named presets**).
 
 Categories may overlap where a design legitimately belongs to more than one category. The final catalog count must be calculated from a central registry using unique identifiers, not by counting aliases or cosmetic variations as new designs.
 
@@ -1344,9 +1344,9 @@ Before public release, define, verify, and maintain in CI:
 | Package | Floor | Declared `peerDependencies` | What the floor rests on | Exercised in CI against |
 | :--- | :--- | :--- | :--- | :--- |
 | `@wavelo/react` | React 16.8.0 | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Read off the built files: the runtime imports are `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef`, `useState` — all React 16.8 API. `react-dom` is optional because no module imports it, which is what lets a server-components-only app install. | React 19.3.1 |
-| `@wavelo/vue` | Vue 3.0.0 | `vue: ">=3.0.0 <4.0.0"` | `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs` — every one present since 3.0. Vue 2 is EOL and out of scope; a Vue 2 page can still consume `@wavelo/web-components`. | Vue 3.5.44 |
-| `@wavelo/svelte` | Svelte 5.0.0 | `svelte: ">=5.0.0 <6.0.0"` | The shipped component uses runes (`$props()`, `$derived()`, `$effect()`), so 5.0 is the real floor and the 6.x cap is deliberate. | Svelte 5.57.3 |
-| `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component declaration carries `minVersion: "14.0.0"` (the metadata and factory declarations around it say 12.0.0; the floor is the newest of the three, since a linking application must satisfy every declaration). `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that newest `minVersion`. | Angular 22.2.6, plus an AOT consumer fixture compiled with the Angular compiler |
+| `@wavelo/vue` | Vue 3.0.0 | `vue: ">=3.0.0 <4.0.0"` | `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs` — every one present since 3.0. Vue 2 is EOL and out of scope; a Vue 2 page can still consume `@wavelo/web-components`. | Vue 3.5.46 |
+| `@wavelo/svelte` | Svelte 5.0.0 | `svelte: ">=5.0.0 <6.0.0"` | The shipped component uses runes (`$props()`, `$derived()`, `$effect()`), so 5.0 is the real floor and the 6.x cap is deliberate. | Svelte 5.59.2 |
+| `@wavelo/angular` | Angular 14.0.0 | `@angular/core: ">=14.0.0"` | Not read off the imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component declaration carries `minVersion: "14.0.0"` (the metadata and factory declarations around it say 12.0.0; the floor is the newest of the three, since a linking application must satisfy every declaration). `npm run verify:angular` fails if the artifact stops being library-compiled or if the peer floor drops below that newest `minVersion`. | Angular 22.3.0, plus an AOT consumer fixture compiled with the Angular compiler |
 | `@wavelo/web-components` | Browser baseline | *None (zero runtime dependencies)* | Native Custom Elements v1 in light DOM — `this.innerHTML`, no `attachShadow`; SSR-safe guards. | Chromium, Firefox, WebKit suites |
 | `@wavelo/vanilla` / `@wavelo/core` | Browser baseline | *None (zero runtime dependencies)* | Pure CSS and DOM; framework-independent. | Chromium, Firefox, WebKit suites |
 
@@ -1537,7 +1537,7 @@ Documentation must never drift from the underlying codebase. The following autom
 
 1. **Continuous Documentation Drift Guard (`npm run docs:check`):**
    - The `scripts/validate-docs.mjs` script runs in CI on every push and pull request.
-   - Enforces exact matches across code and docs for catalog counts (181 active designs, 295 named presets, 114 pattern presets), token counts (23 custom properties), configuration keys (28 keys), and measured bundle sizes. Any drift fails the build.
+   - Enforces exact matches across code and docs for catalog counts (181 active designs, 301 named presets, 120 pattern presets), token counts (23 custom properties), configuration keys (28 keys), and measured bundle sizes. Any drift fails the build.
 2. **Accessibility & Gallery Verification (`npm run docs:verify`):**
    - Validates that all 181 preview cards render without markup errors and asserts zero accessibility violations using `axe-core`.
 3. **Automated Continuous Deployment (`.github/workflows/pages.yml`):**
@@ -2164,7 +2164,7 @@ A release is complete only when all mandatory release gates pass.
 The stable release must satisfy all mandatory criteria:
 
 - At least 60 distinct animation designs (Shipped: 181 active designs).
-- At least 100 total named presets and loading patterns (Shipped: 295 named presets).
+- At least 100 total named presets and loading patterns (Current tree: 301 named presets).
 - Dual classification: Every loader categorized by UX function and Spatial Dimensionality (`2d` vs `3d`).
 - Compositor-only performance: Zero layout recalculations per frame across the catalog (with documented exceptions).
 - All common spinner, dot, bar, skeleton, progress and overlay categories represented.
@@ -2243,8 +2243,8 @@ The ordering rule: anything that touches the public API surface ships before
   and composable parity the React and Vue adapters already carry.
 - Named presets for `brand-loader`, so a brand treatment is one word instead
   of a configuration object.
-- The README hero visual: a static strip rendered from the real sheet. A GIF
-  variant waits on local encoding tooling.
+- The README hero visual shipped on `main` after 0.5.0: a static strip rendered
+  from the real sheet. A GIF variant waits on local encoding tooling.
 
 ## 0.7.0 — reach
 

@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { build } from 'esbuild';
 import { chromium } from 'playwright';
 import { allStyles } from '../packages/core/dist/css/index.js';
-import { loaderRegistry, renderLoader } from '../packages/core/dist/index.js';
+import { brandPresetIds, loaderRegistry, renderLoader } from '../packages/core/dist/index.js';
 
 const entry = `
 import * as core from '@wavelo/core';
@@ -61,6 +61,33 @@ test('brand animations, typography and all indicator combinations work with moti
     }
     if (motion === 'reduced') assert.ok((await page.locator('.wavelo__brand-char').evaluateAll(chars => chars.map(c=>getComputedStyle(c).opacity))).every(o=>o==='1'));
   }
+});
+
+test('named brand presets paint their promised treatment and explicit options win', async () => {
+  const expected = {
+    'brand-minimal': ['none', 'none', 'inline'],
+    'brand-wave': ['wave', 'ring', 'stacked'],
+    'brand-pulse': ['pulse', 'dots', 'inline'],
+    'brand-shimmer': ['shimmer', 'ring', 'stacked'],
+    'brand-typewriter': ['typewriter', 'bar', 'stacked'],
+    'brand-progress': ['none', 'bar', 'stacked']
+  };
+  await setContentPage(brandPresetIds.map((id) => renderLoader({ type: id, brand: { text: 'ACME' }, ...(id === 'brand-progress' ? { value: 40, max: 100 } : {}) }).html).join(''));
+  const results = await page.locator('.wavelo').evaluateAll((roots) => roots.map((root) => ({
+    animation: root.querySelector('.wavelo__brand').dataset.animation,
+    indicator: root.querySelector('.wavelo__brand-indicator')?.dataset.indicator ?? 'none',
+    layout: root.querySelector('.wavelo__brand').dataset.layout,
+    value: root.querySelector('.wavelo__brand-value')?.textContent ?? null
+  })));
+  for (const [index, id] of brandPresetIds.entries()) {
+    const result = results[index];
+    assert.deepEqual([result.animation, result.indicator, result.layout], expected[id], id);
+  }
+  assert.equal(results[brandPresetIds.indexOf('brand-progress')].value, '40%');
+
+  await setContentPage(renderLoader({ type: 'brand-wave', brand: { text: 'ACME', animation: 'pulse', indicator: 'none' } }).html);
+  assert.equal(await page.locator('.wavelo__brand').getAttribute('data-animation'), 'pulse');
+  assert.equal(await page.locator('.wavelo__brand-indicator').count(), 0);
 });
 
 test('brand progress handles zero, completion, updates and safe text in custom elements', async () => {

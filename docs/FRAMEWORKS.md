@@ -162,6 +162,30 @@ ships as source, so the consumer's build needs `vitePreprocess`. In SSR, add
 <WaveloLoader type="ring" loading={busy} />
 ```
 
+`waveloState` and `waveloProgress` are Svelte stores with the same lifecycle and
+progress controls as the React hooks and Vue composables. Auto-subscription keeps
+templates concise; call `destroy()` from `onDestroy` when a store is created in a
+component.
+
+```svelte
+<script>
+  import { onDestroy } from 'svelte';
+  import { waveloProgress, waveloState } from '@wavelo/svelte';
+  import WaveloLoader from '@wavelo/svelte/WaveloLoader.svelte';
+
+  const status = waveloState();
+  const progress = waveloProgress({ mode: 'linear', duration: 4000 });
+  onDestroy(() => {
+    status.destroy();
+    progress.destroy();
+  });
+</script>
+
+<button onclick={() => status.wrapAsync(() => save())}>Save</button>
+<WaveloLoader type="progress-bar" value={$progress} loading={$status === 'loading'} />
+<span>{$progress}%</span>
+```
+
 ## Web Components
 
 ```html
@@ -297,9 +321,9 @@ is the short form, and `npm run docs:check` keeps every range here equal to the 
 | Package | Declared `peerDependencies` | Floor rests on | Installed in CI |
 | :--- | :--- | :--- | :--- |
 | `@wavelo/react` | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Only 16.8 API is imported — context, effects, `createElement`; nothing imports `react-dom`. | React 19.3.1 |
-| `@wavelo/vue` | `vue: ">=3.0.0 <4.0.0"` | Composition API only: `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs`. | Vue 3.5.44 |
-| `@wavelo/svelte` | `svelte: ">=5.0.0 <6.0.0"` | The shipped component is runes — `$props()`, `$derived()`, `$effect()`. | Svelte 5.57.3 |
-| `@wavelo/angular` | `@angular/core: ">=14.0.0"` | The package is built with `ngc` in partial mode, and its component declaration carries `minVersion: "14.0.0"`: the metadata and factory declarations around it say 12.0.0, and the floor is the newest of the three, because a linking application must satisfy every declaration. | Angular 22.2.6 |
+| `@wavelo/vue` | `vue: ">=3.0.0 <4.0.0"` | Composition API only: `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs`. | Vue 3.5.46 |
+| `@wavelo/svelte` | `svelte: ">=5.0.0 <6.0.0"` | The shipped component is runes — `$props()`, `$derived()`, `$effect()`. | Svelte 5.59.2 |
+| `@wavelo/angular` | `@angular/core: ">=14.0.0"` | The package is built with `ngc` in partial mode, and its component declaration carries `minVersion: "14.0.0"`: the metadata and factory declarations around it say 12.0.0, and the floor is the newest of the three, because a linking application must satisfy every declaration. | Angular 22.3.0 |
 | `@wavelo/web-components` | *None (zero runtime dependencies)* | Custom Elements v1 in light DOM, no `attachShadow`. | Chromium, Firefox, WebKit |
 
 `@wavelo/angular` is the only one of these that a test could not infer from its imports. A

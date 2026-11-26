@@ -4,6 +4,8 @@ import type { LoaderConfig, RenderResult, WaveloDefaults } from '@wavelo/core';
 
 export type WaveloProps = LoaderConfig;
 
+export * from './stores.js';
+
 /** Context key `WaveloLoader.svelte` reads. The component inlines the same string. */
 export const WAVELO_DEFAULTS_KEY = 'wavelo:defaults';
 

@@ -11,18 +11,18 @@ now measures the current workspace core; its earlier figure used a stale local d
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 37,671 | 11.1 KB (11,391 B) | 12,800 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 66,629 | 15.5 KB (15,858 B) | 17,920 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 77,397 | 16.6 KB (16,968 B) | 19,456 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 326,907 | 57.7 KB (59,036 B) | 67,584 |
-| `@wavelo/core` + registry walk over all 181 designs | 326,910 | 57.7 KB (59,043 B) | 67,584 |
-| `@wavelo/react` | 327,868 | 58.2 KB (59,552 B) | 67,584 |
-| `@wavelo/vue` | 328,884 | 58.6 KB (60,040 B) | 67,584 |
-| `@wavelo/angular` | 330,466 | 59.1 KB (60,500 B) | 68,096 |
-| `@wavelo/svelte` | 327,228 | 57.8 KB (59,210 B) | 67,584 |
-| `@wavelo/web-components` | 329,328 | 58.7 KB (60,139 B) | 67,584 |
-| `@wavelo/vanilla` | 327,429 | 57.9 KB (59,316 B) | 67,584 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 277,390 raw | 42,596 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 38,387 | 11.3 KB (11,577 B) | 12,800 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 67,345 | 15.7 KB (16,047 B) | 17,920 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 78,113 | 16.7 KB (17,143 B) | 19,456 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 327,925 | 58.3 KB (59,684 B) | 67,584 |
+| `@wavelo/core` + registry walk over all 181 designs | 327,928 | 58.3 KB (59,689 B) | 67,584 |
+| `@wavelo/react` | 328,883 | 58.8 KB (60,200 B) | 67,584 |
+| `@wavelo/vue` | 329,899 | 59.3 KB (60,686 B) | 67,584 |
+| `@wavelo/angular` | 331,480 | 59.7 KB (61,151 B) | 68,096 |
+| `@wavelo/svelte` | 328,244 | 58.4 KB (59,849 B) | 67,584 |
+| `@wavelo/web-components` | 330,343 | 59.3 KB (60,726 B) | 67,584 |
+| `@wavelo/vanilla` | 328,446 | 58.6 KB (59,969 B) | 67,584 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 277,358 raw | 42,596 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
