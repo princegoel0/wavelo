@@ -7,15 +7,17 @@ inside the `animation` shorthand), CSS keyframe animations, `color-mix()`,
 and CSS grid or flex for the composite skeleton designs. `color-mix()` sets the
 floor: Chrome and Edge 111, Safari 16.2, Firefox 113.
 
-One design goes further and uses scroll-driven animations: `progress-scroll` binds
-its fill to `animation-timeline: scroll(root block)`. That is a progressive
-enhancement, not part of the floor — inside `@supports (animation-timeline:
-scroll())`, with the same keyframes running on the document clock as a repeating
-sweep where it is unsupported.
+Four designs go further and use scroll-driven animations: `progress-scroll` binds
+its fill to `animation-timeline: scroll(root block)`, `progress-view` uses a view
+timeline, `scroll-horizontal` uses `scroll(root inline)`, and `scroll-chapters`
+fills three stages from the document timeline. That is a progressive enhancement,
+not part of the floor — inside `@supports (animation-timeline: scroll())`, with the
+same keyframes running on the document clock as a repeating sweep where unsupported.
 
-The library does not render SVG, does not use JavaScript animation, and does not
-depend on the Web Animations API at runtime — the custom element and DOM helpers
-only read `document.head` and create elements.
+The library renders SVG only for static geometry such as `svg-star` and
+`progress-path`; it does not use JavaScript animation and does not depend on the
+Web Animations API at runtime — the custom element and DOM helpers only read
+`document.head` and create elements.
 
 **Verified engines:** Chromium is exercised fully — computed styles, injection,
 accessibility, every design — by `npm run test:browser` and in CI. Firefox is
@@ -27,8 +29,8 @@ that the timeline designs run on the document clock there. Measured on Firefox 1
 fallback is what that engine actually gets. WebKit is exercised by the same shape of
 smoke suite (`npm run test:browser:webkit`, also in CI) and stands in for Safari: the
 same engine, Playwright's own build, version 27.2 measured here. Measured on it:
-`scroll()` and `view()` **are** supported, so those two designs run on a real
-`ScrollTimeline` and `ViewTimeline` rather than the fallback — which is how both paths
+`scroll()` and `view()` **are** supported, so those four designs run on real
+`ScrollTimeline` and `ViewTimeline` instances rather than the fallback — which is how both paths
 came to be measured on a browser rather than reasoned about. A conic gradient carved by
 a mask and a registered `<integer>` interpolated into a CSS counter also carry there.
 This is not a Safari test: no Apple-shipped browser was run, and the versions above
@@ -63,7 +65,7 @@ neither is a mistake.
 
 ## Configuration surface
 
-The catalog holds 181 public IDs, each with its own implementation, built from
+The catalog holds 188 public IDs, each with its own implementation, built from
 12 render kinds and 12 stylesheet slices. Every adapter accepts the
 same 28 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
@@ -242,7 +244,7 @@ ESM and CSS.
   in CI. Neither check needs a browser or a runtime compiler.
 - Computed styles in Chromium for `paused`, `direction` and all three
   `reducedMotion` values against both OS settings, the skeleton palette for each
-  `theme`, style-slice injection counts, per-design slice isolation for all 181
+  `theme`, style-slice injection counts, per-design slice isolation for all 188
   IDs, the scroll-driven fill measured against the document's scroll position and
   its clock-driven fallback, custom-element attribute re-rendering, the element's
   behaviour on an invalid attribute value, and axe over the whole gallery —

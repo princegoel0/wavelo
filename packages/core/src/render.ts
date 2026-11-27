@@ -108,7 +108,8 @@ const PART_COUNTS: Record<string, number> = {
   'skeleton-document-viewer': 4,
   'eclipse-corona': 3,
   'spiral-galaxy': 4,
-  'nebula-drift': 3
+  'nebula-drift': 3,
+  'scroll-chapters': 3
 };
 
 /**
@@ -160,6 +161,19 @@ const DEFAULT_STEPS: Record<string, number> = { 'progress-orbit-fill': 6 };
  */
 function progressParts(type: string, config: NormalizedLoaderConfig): string {
   const part = (extra: string) => `<span class="wavelo__part" aria-hidden="true"${extra}></span>`;
+  if (type === 'progress-signal') {
+    const bars = 5;
+    const filled = ((config.value ?? 35) / config.max) * bars;
+    return Array.from({ length: bars }, (_, index) => {
+      const level = Math.round(Math.max(0, Math.min(1, filled - index)) * 100);
+      return part(` style="--wavelo-progress:${level}%"`);
+    }).join('');
+  }
+  if (type === 'progress-path') {
+    const path = 'M8 46 C24 8 42 8 50 30 S76 62 92 18';
+    const dashOffset = 100 - Math.round((config.value ?? 35) / config.max * 100);
+    return `<svg class="wavelo__path" viewBox="0 0 100 70" aria-hidden="true" focusable="false"><path class="wavelo__track" d="${path}" pathLength="100"/><path class="wavelo__part" d="${path}" pathLength="100" style="stroke-dashoffset:${dashOffset}"/></svg>`;
+  }
   if (type === 'progress-upload-multi') {
     const files = config.count ?? 3;
     const filled = ((config.value ?? 35) / config.max) * files;
@@ -185,7 +199,7 @@ function progressParts(type: string, config: NormalizedLoaderConfig): string {
 const COUNTABLE = new Set(['three-dots', 'equalizer']);
 
 function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): string {
-  if (type === 'brand-loader') return brandMarkup(config);
+  if (type.startsWith('brand-')) return brandMarkup(config);
   const part = '<span class="wavelo__part" aria-hidden="true"></span>';
   const many = (count: number) => part.repeat(count);
   if (kind === 'skeleton') {
@@ -203,6 +217,7 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   // Each strip is tangent to the circle and twists half as fast as it travels.
   // The final strip meets the first with the radial edges exchanged: a half twist.
   if (type === 'mobius-band') return Array.from({ length: 48 }, (_, i) => '<span class="wavelo__part" aria-hidden="true" style="--segment-angle:' + i * 7.5 + 'deg;--segment-twist:' + i * 3.75 + 'deg"></span>').join('');
+  if (type === 'scroll-chapters') return '<span class="wavelo__part" aria-hidden="true"><i></i></span>'.repeat(3);
   if (COUNTABLE.has(type)) return many(config.count ?? PART_COUNTS[type] ?? KIND_COUNTS[kind] ?? 1);
   if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
   return many(KIND_COUNTS[kind] ?? 1);
@@ -217,7 +232,7 @@ function attributes(config: Attributes): string {
 
 export function renderLoaderWithDefinition(input: LoaderConfig, definition: LoaderDefinition, css: string, resolution: ResolutionSource = 'exact', requestedType = input.type): RenderResult {
   const config = normalizeConfig({ ...input, type: definition.id });
-  if (definition.id === 'brand-loader' && !config.label && !config.labelledBy) config.label = `${config.brand?.text?.trim() || 'Wavelo'} loading`;
+  if (definition.id.startsWith('brand-') && !config.label && !config.labelledBy) config.label = `${config.brand?.text?.trim() || 'Wavelo'} loading`;
   // A loader that is not loading costs nothing: no markup, and no stylesheet slice
   // to inject, so a page full of `loading={false}` adds no bytes to the document.
   if (!config.loading) return { html: '', css: '', styleKey: styleKey(''), config, definition, resolution, fallback: resolution === 'default' };

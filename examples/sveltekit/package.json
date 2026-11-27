@@ -10,8 +10,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-    "@wavelo/core": "0.6.0",
-    "@wavelo/svelte": "0.6.0"
+    "@wavelo/core": "0.7.0",
+    "@wavelo/svelte": "0.7.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^4.0.0",

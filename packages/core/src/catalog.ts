@@ -18,6 +18,9 @@ export type CatalogEntry = [
 
 export const catalogEntries: readonly CatalogEntry[] = [
   ['brand-loader', 'Brand text loader', 'application', 'progress', 'Custom brand lettering with selectable text motion and an optional spinner or progress indicator', '2d'],
+  ['brand-orbit', 'Brand orbit', 'application', 'progress', 'Brand wordmark encircled by an orbiting accent bead', '2d'],
+  ['brand-scan', 'Brand scan', 'application', 'progress', 'Brand wordmark crossed by a moving scan highlight', '2d'],
+  ['brand-aurora', 'Brand aurora', 'application', 'progress', 'Brand wordmark painted with a flowing aurora gradient', '2d'],
   ['circular', 'Circular border', 'spinner', 'ring', 'Closed circular border with a sweeping accent arc', '2d'],
   ['ring', 'Ring', 'spinner', 'ring', 'Open ring spinner', '2d'],
   ['dual-ring', 'Dual ring', 'spinner', 'rings', 'Nested dual-ring rotation', '2d'],
@@ -127,6 +130,8 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['progress-upload', 'Upload progress', 'progress', 'progress', 'Upload progress', '2d'],
   ['progress-scroll', 'Scroll progress', 'progress', 'scroll', 'Reading progress driven by the document scroll position', '2d'],
   ['progress-view', 'In-view progress', 'progress', 'scroll', 'Progress driven by the view timeline of the element it sits in', '2d'],
+  ['scroll-horizontal', 'Horizontal reading progress', 'progress', 'scroll', 'Horizontal reading progress driven by document scroll', '2d'],
+  ['scroll-chapters', 'Chapter progress', 'progress', 'scroll', 'Three chapter markers filling in sequence as the page is read', '2d'],
   ['progress-battery', 'Battery level', 'progress', 'progress', 'A charge shell filling to the value, terminal and all', '2d'],
   ['progress-half-ring', 'Half-ring gauge', 'progress', 'progress', 'A 180 degree gauge arc drawn from the value', '2d'],
   ['progress-wave-fill', 'Wave fill', 'progress', 'progress', 'A liquid level whose crest rolls while the value holds', '2d'],
@@ -138,6 +143,8 @@ export const catalogEntries: readonly CatalogEntry[] = [
   ['progress-ai-generate', 'Generating', 'progress', 'wave', 'A bright band travelling an empty track, with no percentage to report', '2d'],
   ['progress-skill', 'Skill bar', 'progress', 'progress', 'A level that overshoots and settles', '2d'],
   ['progress-orbit-fill', 'Orbit level', 'progress', 'progress', 'Six stations around a ring, filled one by one', '2d'],
+  ['progress-signal', 'Signal level', 'progress', 'progress', 'Five signal bars filling in sequence as progress rises', '2d'],
+  ['progress-path', 'Route progress', 'progress', 'progress', 'A rounded route filling from start to finish with determinate progress', '2d'],
   ['inline', 'Inline loading', 'application', 'pulse', 'Inline application loading', '2d'],
   ['button', 'Button loading', 'application', 'pulse', 'Button loading state', '2d'],
   ['overlay', 'Section overlay', 'application', 'overlay', 'Section loading overlay', '2d'],

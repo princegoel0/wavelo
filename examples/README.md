@@ -11,6 +11,16 @@ lockfile, so `npm install && npm run dev` inside any folder is the real thing a
 consumer would type. The `@wavelo/*` versions they declare are the releases that
 carry the API each one uses.
 
+## One-click playgrounds
+
+The gallery links directly to StackBlitz projects rooted at each example:
+
+- [Next.js App Router](https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/next-app-router)
+- [React + Vite](https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/react-vite)
+- [Nuxt](https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/nuxt)
+- [SvelteKit](https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/sveltekit)
+- [Angular standalone](https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/angular-standalone)
+
 `npm run verify:examples` from the repository root checks these files against the
 built packages — it compiles the Svelte and Vue sources, type checks the React and
 Angular ones, and refuses any `@wavelo/*` import the shipped declarations do not

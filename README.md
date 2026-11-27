@@ -29,18 +29,19 @@ The repository contains a typed core, a generated modular catalog, DOM and Web
 Component support, framework configuration bridges, and a registry-driven
 documentation gallery.
 
-The catalog holds 181 designs, each visually distinct, built from 12
+The catalog holds 188 designs, each visually distinct, built from 12
 render kinds and 12 stylesheet slices, and every adapter accepts the same
 28 configuration keys.
 
 For custom wordmarks, use [`brand-loader`](docs/BRAND_LOADER.md): custom brand text,
 seven text animations, optional spinner/progress indicators, fonts, colors, spacing,
-and timing controls, with the same API in every framework.
+and timing controls, with the same API in every framework. The `brand-orbit`,
+`brand-scan`, and `brand-aurora` catalog IDs add canonical variant treatments.
 
 Twelve of them are the streaming and AI workflow lane (`typing-dots`, `thinking-glow`, `stream-cursor`,
 `token-stream`, `ai-shimmer`, `neural-grid`, `ai-tool-handoff`, `ai-image-develop`, `document-extract`, plus the composite `skeleton-chat`,
 `skeleton-code` and `skeleton-inbox` layouts): what an assistant shows while it is
-composing an answer, which no loading library has as a category. Thirteen more are the
+composing an answer, which no loading library has as a category. Fifteen more are the
 progress family that real products report with a number — a battery, a half-ring gauge,
 a counting bar whose percentage animates itself in CSS, a queue of files, steps that
 number themselves, a countdown and a wave-filled level.
@@ -60,6 +61,13 @@ npm run docs:verify    # the built gallery holds every design and embeds its sty
 
 The package is not published by these commands. See [docs/RELEASE.md](docs/RELEASE.md)
 before any release action.
+
+## One-click playgrounds
+
+The gallery links to StackBlitz projects rooted at each maintained example:
+Next.js App Router, React + Vite, Nuxt, SvelteKit, and Angular standalone. They are
+independent consumer projects, not workspace links, so the installed packages and
+build commands match what a developer runs outside this repository.
 
 ## Core usage
 
@@ -95,14 +103,20 @@ const loading = orbitingDots({ label: 'Loading data' });
 browser maps the document's scroll position onto the fill, with no scroll
 listener, no state and no re-render. `progress-view` is the same idea on a view
 timeline: the bar fills as the element it sits in travels through the viewport,
-which is what a per-section or scroll-reveal indicator needs.
+which is what a per-section or scroll-reveal indicator needs. `scroll-horizontal`
+tracks horizontal document scrolling, and `scroll-chapters` fills three reading
+stages in sequence.
 
 ```ts
 import { progressScroll } from '@wavelo/core/loaders/progress-scroll';
 import { progressView } from '@wavelo/core/loaders/progress-view';
+import { scrollHorizontal } from '@wavelo/core/loaders/scroll-horizontal';
+import { scrollChapters } from '@wavelo/core/loaders/scroll-chapters';
 
 const page = progressScroll({ label: 'Reading progress' });
 const section = progressView({ label: 'Section progress' });
+const horizontal = scrollHorizontal({ label: 'Horizontal reading progress' });
+const chapters = scrollChapters({ label: 'Chapter progress' });
 ```
 
 Neither takes a `value`, because the percentage belongs to the page and the markup

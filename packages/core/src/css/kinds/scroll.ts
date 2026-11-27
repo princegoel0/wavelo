@@ -1,10 +1,13 @@
 import { css as scrollFillFrames } from '../keyframes/scroll-fill.js';
 import { css as viewFillFrames } from '../keyframes/view-fill.js';
+import { css as chapterFillFrames } from '../keyframes/chapter-fill.js';
 
 /**
  * Reading progress with no JavaScript: the fill is a scroll-driven animation, so
- * the browser maps a scroll or view position onto the bar. Two designs live here -
- * `progress-scroll` follows the document, `progress-view` follows the element.
+ * the browser maps a scroll or view position onto the bar. Four designs live here -
+ * `progress-scroll` follows the document, `progress-view` follows the element,
+ * `scroll-horizontal` follows horizontal document scroll, and `scroll-chapters`
+ * fills three reading stages in sequence.
  *
  * The timeline is `scroll(root block)`, not `scroll(nearest block)`. A `nearest`
  * timeline binds to the closest ancestor scroll container, and `overflow:hidden`
@@ -37,4 +40,18 @@ export const scrollCss = `
 @supports (animation-timeline:view()){
 .wavelo--progress-view .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:var(--wavelo-timeline,view(block))}
 }
-${scrollFillFrames}${viewFillFrames}`;
+.wavelo--scroll-horizontal .wavelo__part{width:100%;transform-origin:left;animation:wavelo-view-fill var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+@supports (animation-timeline:scroll()){
+.wavelo--scroll-horizontal .wavelo__part{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:scroll(root inline)}
+}
+.wavelo--scroll-chapters{display:block;white-space:nowrap;background:transparent;border-radius:0}
+.wavelo--scroll-chapters .wavelo__part{position:relative;display:inline-block;vertical-align:top;width:calc((100% - var(--wavelo-gap,6px) * 2) / 3);height:100%;margin-right:var(--wavelo-gap,6px);overflow:hidden;border-radius:var(--wavelo-radius,2px);background:color-mix(in srgb,currentColor 16%,transparent);animation:none}
+.wavelo--scroll-chapters .wavelo__part:nth-child(3){margin-right:0}
+.wavelo--scroll-chapters .wavelo__part i{position:absolute;inset:0;background:currentColor;opacity:0;animation:wavelo-chapter-fill var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+@supports (animation-timeline:scroll()){
+.wavelo--scroll-chapters .wavelo__part i{animation-iteration-count:1;animation-fill-mode:both;animation-timeline:scroll(root block)}
+.wavelo--scroll-chapters .wavelo__part:nth-child(1) i{animation-range:0% 33.333%}
+.wavelo--scroll-chapters .wavelo__part:nth-child(2) i{animation-range:33.333% 66.666%}
+.wavelo--scroll-chapters .wavelo__part:nth-child(3) i{animation-range:66.666% 100%}
+}
+${scrollFillFrames}${viewFillFrames}${chapterFillFrames}`;

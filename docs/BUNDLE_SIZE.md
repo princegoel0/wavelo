@@ -11,18 +11,18 @@ now measures the current workspace core; its earlier figure used a stale local d
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 38,387 | 11.3 KB (11,577 B) | 12,800 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 67,345 | 15.7 KB (16,047 B) | 17,920 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 78,113 | 16.7 KB (17,143 B) | 19,456 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 327,925 | 58.3 KB (59,684 B) | 67,584 |
-| `@wavelo/core` + registry walk over all 181 designs | 327,928 | 58.3 KB (59,689 B) | 67,584 |
-| `@wavelo/react` | 328,883 | 58.8 KB (60,200 B) | 67,584 |
-| `@wavelo/vue` | 329,899 | 59.3 KB (60,686 B) | 67,584 |
-| `@wavelo/angular` | 331,480 | 59.7 KB (61,151 B) | 68,096 |
-| `@wavelo/svelte` | 328,244 | 58.4 KB (59,849 B) | 67,584 |
-| `@wavelo/web-components` | 330,343 | 59.3 KB (60,726 B) | 67,584 |
-| `@wavelo/vanilla` | 328,446 | 58.6 KB (59,969 B) | 67,584 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 277,358 raw | 42,596 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 39,487 | 11.6 KB (11,828 B) | 12,800 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 68,445 | 15.9 KB (16,295 B) | 17,920 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 79,213 | 17.0 KB (17,410 B) | 19,456 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 334,656 | 59.4 KB (60,793 B) | 67,584 |
+| `@wavelo/core` + registry walk over all 188 designs | 334,659 | 59.4 KB (60,799 B) | 67,584 |
+| `@wavelo/react` | 335,614 | 59.9 KB (61,310 B) | 67,584 |
+| `@wavelo/vue` | 336,630 | 60.3 KB (61,790 B) | 67,584 |
+| `@wavelo/angular` | 338,211 | 60.8 KB (62,252 B) | 68,096 |
+| `@wavelo/svelte` | 334,975 | 59.5 KB (60,967 B) | 67,584 |
+| `@wavelo/web-components` | 337,074 | 60.4 KB (61,847 B) | 67,584 |
+| `@wavelo/vanilla` | 335,177 | 59.7 KB (61,079 B) | 67,584 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 281,933 raw | 43,179 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -69,7 +69,7 @@ once instead of per loader:
   `npm run audit:customization`) rather than a hand-written kind guess.
 - The colour and dimension grammar got wider.
 
-Runtime bundles additionally carry the registry and the 153-entry bitset those lists
+Runtime bundles additionally carry the registry and the 188-entry bitset those lists
 are decoded from, which is why their budget is 50 KiB (51 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow with
 the catalog, but the marginal design is not one fixed number: it is its slice delta plus
@@ -137,7 +137,7 @@ animates with a frame nobody imports, or re-imports one the base already ships.
 
 - Importing one design costs its slice: the `ring` entry point ships its ring rules
   (4.3 KB gzipped together with the base) rather than the 199,247-byte sheet for
-  all 153 designs.
+  all 188 designs.
 - Importing `renderLoader` costs the whole set of slices, because a runtime
   `type` could select any kind. This is the price of a single component that can
   render every design; it is paid once per page, not once per loader.

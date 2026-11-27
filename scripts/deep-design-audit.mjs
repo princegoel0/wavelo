@@ -225,7 +225,7 @@ try {
     JSON.stringify(auditResults, null, 2),
     'utf8'
   );
-  console.log(`Deep audit finished: 153 designs audited. Captured screenshots in ${artifactDir}`);
+  console.log(`Deep audit finished: ${auditResults.length} designs audited. Captured screenshots in ${artifactDir}`);
 } finally {
   await browser.close();
 }

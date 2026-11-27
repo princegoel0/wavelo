@@ -21,10 +21,10 @@ const staticTypes = new Set([
   'segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top',
   'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline',
   'progress-multi-step', 'progress-upload-multi', 'progress-skill',
-  'progress-orbit-fill'
+  'progress-orbit-fill', 'progress-signal', 'progress-path'
 ]);
 /** Designs whose fill comes from a timeline the browser drives, not the clock. */
-const timelineTypes = new Map([['progress-scroll', 'ScrollTimeline'], ['progress-view', 'ViewTimeline']]);
+const timelineTypes = new Map([['progress-scroll', 'ScrollTimeline'], ['progress-view', 'ViewTimeline'], ['scroll-horizontal', 'ScrollTimeline'], ['scroll-chapters', 'ScrollTimeline']]);
 
 function expectedBehavior(loader) {
   const descriptions = {
@@ -248,7 +248,7 @@ ${rows}
 
 The sampled play-state evidence proves each animating design advances in Chromium
 with the default configuration, the static designs bind their fill to the
-configured value instead, and the two timeline-driven designs report a ScrollTimeline
+configured value instead, and the four timeline-driven designs report a ScrollTimeline
 and a ViewTimeline rather than the document clock. It does not prove subjective quality, nor does it cover
 \`paused\`, \`direction\` and \`reducedMotion\` behaviour — those have their own
 computed-style assertions in \`tests/browser.test.mjs\`, which runs in CI.

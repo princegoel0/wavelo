@@ -96,11 +96,11 @@ test('a page can set the tokens and Gecko inherits them', async () => {
 });
 
 test('the timeline designs animate in Gecko one way or the other, never not at all', async () => {
-  for (const type of ['progress-scroll', 'progress-view']) {
+  for (const type of ['progress-scroll', 'progress-view', 'scroll-horizontal', 'scroll-chapters']) {
     await setContentPage(`<div id="case">${renderLoader({ type, label: 'Loading' }).html}</div>`);
     const read = await page.evaluate(() => {
       const root = document.querySelector('#case .wavelo');
-      const animated = [root, ...root.querySelectorAll('.wavelo__part')].find((element) => getComputedStyle(element).animationName !== 'none');
+      const animated = [root, ...root.querySelectorAll('*')].find((element) => getComputedStyle(element).animationName !== 'none');
       const animations = document.getAnimations().filter((animation) => animation.effect?.target === animated);
       return {
         name: animated ? getComputedStyle(animated).animationName : 'none',

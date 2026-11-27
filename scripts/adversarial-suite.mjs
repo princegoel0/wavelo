@@ -331,7 +331,7 @@ const page = await browser.newPage();
     return document.getAnimations().length;
   });
 
-  recordTest('ADV-PERF-01', '153 concurrent active loaders on single DOM', 'performance', 'All 153 loaders instantiate without crashing browser', `Total active running animations: ${activeAnimations}`, 'PASS', `Active animations: ${activeAnimations}`);
+  recordTest('ADV-PERF-01', `${loaderRegistry.length} concurrent active loaders on single DOM`, 'performance', `All ${loaderRegistry.length} loaders instantiate without crashing browser`, `Total active running animations: ${activeAnimations}`, 'PASS', `Active animations: ${activeAnimations}`);
 }
 
 // ==========================================
@@ -432,7 +432,7 @@ try {
 }
 
 // Take visual evidence screenshot
-await page.screenshot({ path: resolve(evidenceDir, 'adversarial-153-density.png') });
+await page.screenshot({ path: resolve(evidenceDir, `adversarial-${loaderRegistry.length}-density.png`) });
 
 // 2.6 Viewport & Responsive Overflow Testing
 const viewports = [

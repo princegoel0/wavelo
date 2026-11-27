@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.7.0
+
+- Added five one-click StackBlitz playgrounds seeded from the maintained Next.js,
+  React + Vite, Nuxt, SvelteKit, and Angular examples. The gallery exposes them
+  directly and verifies every link.
+
+- Added seven catalog designs: `brand-orbit`, `brand-scan`, `brand-aurora`,
+  `progress-signal`, `progress-path`, `scroll-horizontal`, and `scroll-chapters`.
+  The catalog now has **188 public IDs**, 308 named presets, and 120 pattern presets.
+
+- Added a canonical brand-loader variant family with shared nested configuration,
+  family-wide accessible naming, determinate support, forced-colors handling, and
+  live gallery editing.
+
+- Added signal-bar and SVG-route determinate progress, horizontal document-scroll
+  progress, and three-stage chapter progress. The chapter fill uses an opacity
+  reveal so it stays compositor-friendly rather than dirtying layout.
+
+- Regenerated honored-option metadata and all 188 visual baselines; added core,
+  Chromium, Firefox, WebKit, gallery, and style-fidelity coverage for the new IDs.
+
 ## 0.6.0
 
 - Added Svelte 5 `waveloState` and `waveloProgress` stores, completing the

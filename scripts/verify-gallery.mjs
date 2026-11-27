@@ -15,6 +15,15 @@ if (/<link[^>]+stylesheet/.test(html)) throw new Error('gallery links an externa
 const cards = html.split('class="card').length - 1;
 if (cards < loaderRegistry.length) throw new Error(`gallery rendered ${cards} cards for ${loaderRegistry.length} designs`);
 
+const playgroundExamples = ['next-app-router', 'react-vite', 'nuxt', 'sveltekit', 'angular-standalone'];
+const playgroundLinks = html.split('data-playground=').length - 1;
+if (playgroundLinks !== playgroundExamples.length) throw new Error(`gallery rendered ${playgroundLinks} playground links; expected ${playgroundExamples.length}`);
+for (const example of playgroundExamples) {
+  if (!html.includes(`data-playground="${example}"`) || !html.includes(`/examples/${example}"`)) {
+    throw new Error(`gallery is missing the ${example} playground link`);
+  }
+}
+
 const rootPkg = JSON.parse(await readFile('package.json', 'utf8'));
 if (!html.includes(`badge-version">v${rootPkg.version}</span>`)) {
   throw new Error(`gallery badge version does not match package.json version ${rootPkg.version}`);

@@ -1,13 +1,13 @@
 import { buildSync } from 'esbuild';
 // The documentation generator runs in Node; the library's TS config stays DOM-only.
 declare const process: { cwd(): string };
-import { loaderRegistry, renderLoader } from '@wavelo/core';
+import { brandVariantDefaults, loaderRegistry, renderLoader } from '@wavelo/core';
 import { allStyles } from '@wavelo/core/css';
 import { stylesheetMarkup } from '@wavelo/core/styles';
 
-const brandPreviewScript = buildSync({ stdin: { contents: "import { brandLoader } from '@wavelo/core/loaders/brand-loader'; window.waveloBrand = brandLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
+const brandPreviewScript = buildSync({ stdin: { contents: "import { renderLoader } from '@wavelo/core'; window.waveloBrand = renderLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
 
-const version = '0.6.0';
+const version = '0.7.0';
 
 const totalCount = loaderRegistry.length;
 const categoryCounts = loaderRegistry.reduce((acc, l) => {
@@ -16,6 +16,13 @@ const categoryCounts = loaderRegistry.reduce((acc, l) => {
 }, {} as Record<string, number>);
 
 const designs = loaderRegistry.map((loader) => `<option value="${loader.id}">${loader.name}</option>`).join('');
+const playgrounds = [
+  { name: 'Next.js', example: 'next-app-router' },
+  { name: 'React + Vite', example: 'react-vite' },
+  { name: 'Nuxt', example: 'nuxt' },
+  { name: 'SvelteKit', example: 'sveltekit' },
+  { name: 'Angular', example: 'angular-standalone' }
+];
 
 const cards = loaderRegistry.map((loader) => `
 <article class="card${loader.deprecated ? ' deprecated' : ''}" data-category="${loader.category}" data-dimension="${loader.dimension}" data-id="${loader.id}" data-name="${loader.name.toLowerCase()}" data-deprecated="${loader.deprecated ? 'true' : 'false'}" data-options="${loader.options.join(',')}">
@@ -152,6 +159,11 @@ body { margin: 0; font-family: var(--font-sans); color: var(--text-main); backgr
 .terminal-cmd { font-family: var(--font-mono); font-size: 0.88rem; color: #c7d2fe; word-break: break-all; }
 .btn-copy-install { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.85rem; font-size: 0.78rem; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid #334155; background: #1e293b; color: #f8fafc; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
 .btn-copy-install:hover { background: #4f46e5; color: #ffffff; border-color: #4f46e5; }
+.playground-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.playground-label { width: 100%; color: var(--text-dim); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.playground-link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.75rem; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-muted); font-size: 0.78rem; font-weight: 600; text-decoration: none; transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+.playground-link:hover { color: var(--text-main); border-color: var(--accent); background: var(--bg-card-hover); }
+.playground-link::after { content: "↗"; color: var(--text-dim); }
 
 /* Interactive Studio / Workbench */
 .studio-section { margin-bottom: 4rem; scroll-margin-top: 5rem; }
@@ -680,6 +692,10 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
         </button>
       </div>
     </div>
+    <div class="playground-links" aria-label="Open example playgrounds">
+      <span class="playground-label">Open a one-click playground</span>
+      ${playgrounds.map((playground) => `<a class="playground-link" data-playground="${playground.example}" href="https://stackblitz.com/github/princegoel0/wavelo/tree/main/examples/${playground.example}" target="_blank" rel="noopener noreferrer">${playground.name}</a>`).join('')}
+    </div>
   </section>
 
   <!-- Interactive Studio / Playground -->
@@ -1040,6 +1056,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
 
 <script>
 ${brandPreviewScript}
+const BRAND_VARIANT_DEFAULTS = ${JSON.stringify(brandVariantDefaults)};
 const stage = document.querySelector('#stage');
 const code = document.querySelector('#code');
 const design = document.querySelector('#design');
@@ -1116,21 +1133,21 @@ function showToast(msg) {
 }
 
 
-function brandConfig(values) {
+function brandConfig(values, type = 'brand-loader') {
   const brand = {};
   document.querySelectorAll('[data-brand-key]').forEach(input => { brand[input.dataset.brandKey] = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value; });
-  return { type: 'brand-loader', brand, color: values.color, secondaryColor: values['secondary-color'], strokeWidth: Number(values.stroke), duration: values.duration + 's', paused: values.paused, direction: values.reverse ? 'reverse' : 'normal', theme: values.dark ? 'dark' : 'light', reducedMotion: document.querySelector('#brand-reduced').checked ? 'always' : 'auto', ...(document.querySelector('#brand-determinate').checked ? {value: Number(values.progress)} : {}) };
+  return { type, brand, color: values.color, secondaryColor: values['secondary-color'], strokeWidth: Number(values.stroke), duration: values.duration + 's', paused: values.paused, direction: values.reverse ? 'reverse' : 'normal', theme: values.dark ? 'dark' : 'light', reducedMotion: document.querySelector('#brand-reduced').checked ? 'always' : 'auto', ...(document.querySelector('#brand-determinate').checked ? {value: Number(values.progress)} : {}) };
 }
 function brandSnippet(fw, config) {
   const json = JSON.stringify(config, null, 2).replaceAll('<', String.fromCharCode(92) + 'u003c');
   if (fw === 'react') return "import { Loader } from '@wavelo/react';\\nimport '@wavelo/core/styles.css';\\n\\nconst config = " + json + " as const;\\n<Loader {...config} />";
   if (fw === 'vue') return '<scr' + 'ipt setup>\\nimport { Loader } from "@wavelo/vue";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<template><Loader v-bind="config" /></template>';
   if (fw === 'svelte') return '<scr' + 'ipt>\\nimport Loader from "@wavelo/svelte/WaveloLoader.svelte";\\nimport "@wavelo/core/styles.css";\\nconst config = ' + json + ';\\n</scr' + 'ipt>\\n<Loader {...config} />';
-  if (fw === 'angular') return '// Import LoaderConfig from @wavelo/core. Component field:\\nconfig: LoaderConfig = ' + json + ';\\n\\n// Template (import LoaderComponent):\\n<wavelo-loader type="brand-loader" [brand]="config.brand" [color]="config.color" [secondaryColor]="config.secondaryColor" [duration]="config.duration" [strokeWidth]="config.strokeWidth" [paused]="config.paused" [direction]="config.direction" [theme]="config.theme" [reducedMotion]="config.reducedMotion" [value]="config.value" />';
+  if (fw === 'angular') return '// Import LoaderConfig from @wavelo/core. Component field:\\nconfig: LoaderConfig = ' + json + ';\\n\\n// Template (import LoaderComponent):\\n<wavelo-loader type="' + config.type + '" [brand]="config.brand" [color]="config.color" [secondaryColor]="config.secondaryColor" [duration]="config.duration" [strokeWidth]="config.strokeWidth" [paused]="config.paused" [direction]="config.direction" [theme]="config.theme" [reducedMotion]="config.reducedMotion" [value]="config.value" />';
   if (fw === 'web-components') return "import { defineWaveloElements } from '@wavelo/web-components';\\ndefineWaveloElements();\\nconst config = " + json + ";\\nconst loader = document.createElement('wavelo-loader');\\nfor (const [key, value] of Object.entries(config)) loader.setAttribute(key.replace(/[A-Z]/g, c => '-' + c.toLowerCase()), typeof value === 'object' ? JSON.stringify(value) : String(value));\\ndocument.querySelector('#slot').append(loader);";
   if (fw === 'html') return window.waveloBrand(config).html + '\\n<style>' + window.waveloBrand(config).css + '</style>';
   if (fw === 'vanilla') return "import { mountLoader } from '@wavelo/vanilla';\\nmountLoader(document.querySelector('#slot'), " + json + ');';
-  return "import { brandLoader } from '@wavelo/core/loaders/brand-loader';\\nconst { html, css } = brandLoader(" + json + ');';
+  return "import { renderLoader } from '@wavelo/core';\\nconst { html, css } = renderLoader(" + json + ');';
 }
 
 function read() {
@@ -1166,7 +1183,7 @@ function getContrastRatio(colorHex, bgHex) {
 
 function generateCodeSnippet(id, fw, values) {
   if (!values) values = read();
-  if (id === 'brand-loader') return brandSnippet(fw, brandConfig(values));
+  if (id.startsWith('brand-')) return brandSnippet(fw, brandConfig(values, id));
   const info = loaderData.find((l) => l.id === id) || {
     name: id,
     dimension: '2d',
@@ -1344,8 +1361,18 @@ function generateCodeSnippet(id, fw, values) {
 
 function paint() {
   const id = design.value;
+  if (id.startsWith('brand-') && id !== 'brand-loader') {
+    const defaults = BRAND_VARIANT_DEFAULTS[id] || {};
+    document.querySelectorAll('[data-brand-key]').forEach(input => {
+      const key = input.dataset.brandKey;
+      if (defaults[key] !== undefined) {
+        if (input.type === 'checkbox') input.checked = Boolean(defaults[key]);
+        else input.value = String(defaults[key]);
+      }
+    });
+  }
   const values = read();
-  document.querySelector('#brand-controls').hidden = id !== 'brand-loader';
+  document.querySelector('#brand-controls').hidden = !id.startsWith('brand-');
   const info = loaderData.find((l) => l.id === id) || { name: id, dimension: '2d', category: 'general', honoursStroke: true, honoursDuration: true, honoursPaused: true, honoursReverse: true, honoursSize: true, honoursValue: false, honoursCount: false, honoursSecondaryColor: false, honoursRadius: false };
   
   const rowVariant = document.querySelector('#row-variant');
@@ -1426,7 +1453,7 @@ function paint() {
     grid: '#0b0f19'
   };
   const stageBg = bgColors[activeBgMode] || (values.dark ? '#030712' : '#ffffff');
-  const brandColors = id === 'brand-loader' ? [document.querySelector('#brand-textColor').value, document.querySelector('#brand-captionColor').value, ...(document.querySelector('#brand-animation').value === 'shimmer' ? [values['secondary-color']] : [])] : [values.color];
+  const brandColors = id.startsWith('brand-') ? [document.querySelector('#brand-textColor').value, document.querySelector('#brand-captionColor').value, ...(document.querySelector('#brand-animation').value === 'shimmer' ? [values['secondary-color']] : [])] : [values.color];
   const contrastRatio = Math.min(...brandColors.map(color => getContrastRatio(color, stageBg)));
   const contrastLabel = contrastRatio >= 7.0 ? 'AAA' : contrastRatio >= 4.5 ? 'AA' : 'Low';
   const contrastBadge = document.querySelector('#contrast-badge');
@@ -1443,12 +1470,15 @@ function paint() {
   const source = document.querySelector('.card[data-id="' + id + '"] .wavelo');
   if (!source) return;
   let rendered = source.cloneNode(true);
-  if (id === 'brand-loader') {
+  if (id.startsWith('brand-') || id === 'progress-signal' || id === 'progress-path') {
     try {
+      const config = id.startsWith('brand-')
+        ? brandConfig(values, id)
+        : { type: id, size: Number(values.size), color: values.color, secondaryColor: values['secondary-color'], strokeWidth: Number(values.stroke), duration: values.duration + 's', paused: values.paused, direction: values.reverse ? 'reverse' : 'normal', theme: values.dark ? 'dark' : 'light', value: Number(values.progress), max: 100 };
       const template = document.createElement('template');
-      template.innerHTML = window.waveloBrand(brandConfig(values)).html;
+      template.innerHTML = window.waveloBrand(config).html;
       rendered = template.content.firstElementChild;
-      document.querySelector('#brand-error').textContent = '';
+      if (id.startsWith('brand-')) document.querySelector('#brand-error').textContent = '';
     } catch (error) { document.querySelector('#brand-error').textContent = error.message; return; }
   }
   rendered.setAttribute('data-wavelo-theme', values.dark ? 'dark' : 'light');

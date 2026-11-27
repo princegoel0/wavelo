@@ -1,8 +1,8 @@
 # Wavelo — Component Customization API Specification
 
-> **Scope:** Architectural audit and complete customization API reference for all **181 active loading designs** across **8 functional categories** in `@wavelo/core`.
+> **Scope:** Architectural audit and complete customization API reference for all **188 active loading designs** across **8 functional categories** in `@wavelo/core`.
 > **Status:** Authoritative reference for developer customization, framework adapter props, and design system governance.
-> **Version Alignment:** Wavelo 0.6.0 on branch `dev` (181 designs including brand-loader; zero-layout compositor performance verified).
+> **Version Alignment:** Wavelo 0.7.0 on branch `dev` (188 designs including the brand-loader family; zero-layout compositor performance verified).
 
 ---
 
@@ -16,7 +16,7 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 ┌────────────────────────────────────────────────────────────────────────┐
 │                   CONFIGURATION ARCHITECTURE HIERARCHY                 │
 ├────────────────────────────────────────────────────────────────────────┤
-│ TIER 1: GLOBAL BASELINE SETTINGS (accepted by all 153)                 │
+│ TIER 1: GLOBAL BASELINE SETTINGS (accepted by all 188)                 │
 │ Universal structural, accessibility, lifecycle, and core tokens.       │
 │ Every design accepts them; what each visibly reads is measured.        │
 ├────────────────────────────────────────────────────────────────────────┤
@@ -36,11 +36,11 @@ To avoid a "one-size-fits-all" trap while maintaining extreme consistency, confi
 
 The following baseline parameters apply universally or across all standard loading components.
 
-### Tier 1: Universal Structural & Accessibility Settings (181 / 181 Loaders)
+### Tier 1: Universal Structural & Accessibility Settings (188 / 188 Loaders)
 
 | Property | TypeScript Type | Default Value | Target DOM / CSS | What it Controls |
 |---|---|---|---|---|
-| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 181 active designs or 301 presets. |
+| `type` | `LoaderId \| string` | `'inline'` | Registry resolution | Selects the loader design from the 188 active designs or 308 presets. |
 | `color` | `string` | `'#6366f1'` (currentColor) | `--wavelo-color` | Primary foreground accent, stroke, or fill color. |
 | `backgroundColor` | `string` | `'transparent'` | `--wavelo-background` | Outer container background fill, track surface, or modal scrim. |
 | `theme` | `'light' \| 'dark' \| 'system'` | `'light'` | `data-wavelo-theme` | Page color palette: light shimmer, dark surface (`#374151`), or OS dark mode. |
@@ -894,7 +894,7 @@ Contextual viewports, modals, and reactive state machines.
 - **Unique & Design-Specific Options:**
   - `secondaryColor` (`string`): Opposite pole magnetic stream tone.
 
-#### 153. `aurora-borealis` — Atmospheric Plasma Curtains
+#### 188. `aurora-borealis` — Atmospheric Plasma Curtains
 - **DOM Structure:** Dual undulating sheets of geomagnetic plasma shimmering across the upper atmosphere.
 - **Unique & Design-Specific Options:** None (inherits universal size, duration, speed, and directional options).
 
@@ -902,17 +902,17 @@ Contextual viewports, modals, and reactive state machines.
 
 ## 4. Complete Configuration Matrix Summary
 
-The following index summarizes the primary bespoke parameter availability across all 153 designs:
+The following index summarizes the primary bespoke parameter availability across all 188 designs:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │               COMPONENT-SPECIFIC PARAMETER DISTRIBUTION                │
 ├────────────────────────────────────────────────────────────────────────┤
-│ • strokeWidth (35 designs): All spinners, rings, loops, ECG, radar     │
-│ • value & max (19 designs): All progress indicators & toast timer      │
-│ • count (26 designs): Skeletons, three-dots, equalizer, upload queues  │
-│ • secondaryColor (60+ target designs): Two-tone spinners, tracks, dots │
-│ • backgroundColor (153 target designs): Universal container/scrim fill │
+│ • strokeWidth (59 designs): All spinners, rings, loops, ECG, radar     │
+│ • value & max (25 designs): All progress indicators & toast timer      │
+│ • count (27 designs): Skeletons, three-dots, equalizer, upload queues  │
+│ • secondaryColor (85 designs): Two-tone spinners, tracks, dots         │
+│ • backgroundColor (67 designs): Measured per-design surfaces/scrims   │
 │ • radius (Skeletons, shapes, bars, dropzone, toast, buttons)           │
 │ • gap (Dot rows, matrix, equalizer, upload queues, skeleton lists)     │
 │ • data-wavelo-state (6 designs): Stateful micro-interaction morphs     │
@@ -951,6 +951,47 @@ and `secondaryColor` colors the pages.
 Nine square tiles shrink and turn in a diagonal wave. `color` and
 `secondaryColor` set the checkerboard colors.
 
-These six designs support the shared `paused`, `reducedMotion`, `duration`,
-`direction`, theme, sizing and accessibility options. They are indeterminate
-animations, so `value` does not represent their progress.
+### `brand-orbit`
+
+A brand wordmark with a ring indicator and an orbiting accent bead. The nested
+`brand` options override the pulse/inline defaults; `value` makes the ring
+determinate without changing the accessible name.
+
+### `brand-scan`
+
+A brand wordmark crossed by a moving scan highlight above a bar indicator.
+`animation: 'none'` stops text motion while the scan and indicator remain
+controllable through the shared motion options.
+
+### `brand-aurora`
+
+A brand wordmark painted with a flowing aurora gradient and a dots indicator.
+The gradient uses the variant palette; forced-colors mode falls back to system
+text colors.
+
+### `progress-signal`
+
+Five signal bars fill from the bottom in sequence. `value` and `max` set each
+bar's level; `color`, `secondaryColor`, `gap`, `radius`, and box dimensions remain
+available.
+
+### `progress-path`
+
+A rounded SVG route fills from start to finish. `value` and `max` set the dash
+offset, while `strokeWidth`, `color`, `secondaryColor`, and box dimensions control
+the track and route geometry.
+
+### `scroll-horizontal`
+
+A transform-driven reading bar bound to `scroll(root inline)`. It takes no
+`value`; unsupported browsers get the same fill keyframes on the document clock.
+
+### `scroll-chapters`
+
+Three chapter tracks fill in sequence from `scroll(root block)`. Each stage uses
+its own animation range and an opacity reveal, so the design costs no layout per
+frame.
+
+These designs support the shared `paused`, `reducedMotion`, `direction`, theme,
+sizing and accessibility options. The determinate designs bind `value` to their
+visual level; the scroll-driven designs deliberately do not invent a percentage.

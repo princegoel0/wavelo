@@ -155,6 +155,9 @@ test('designs whose names promise a count render that many parts', () => {
     'progress-dots-fill': 5,
     'progress-multi-step': 5,
     'progress-orbit-fill': 6,
+    'progress-signal': 5,
+    'progress-path': 1,
+    'scroll-chapters': 3,
     'progress-upload-multi': 3,
     'progress-ai-generate': 1,
     pendulum: 1,
@@ -578,6 +581,12 @@ test('the advertised options are what the design actually reads', () => {
   assert.ok(options('skeleton-card').includes('theme'));
   assert.ok(options('progress-scroll').includes('paused'), 'paused must still freeze a scroll-driven fill');
   assert.ok(options('progress-scroll').includes('direction'), 'reverse must still invert a scroll-driven fill');
+  for (const id of ['scroll-horizontal', 'scroll-chapters']) {
+    assert.ok(!options(id).includes('duration'), `${id} is timeline-driven, not clock-driven`);
+    assert.ok(!options(id).includes('speed'));
+    assert.ok(options(id).includes('paused'), `${id} must still freeze when paused`);
+    assert.ok(options(id).includes('direction'), `${id} must still reverse`);
+  }
   for (const loader of loaderRegistry) {
     for (const key of loader.options) assert.ok(loaderConfigKeys.includes(key), `${loader.id} advertises unknown key ${key}`);
     assert.ok(loader.options.includes('label') && loader.options.includes('style'), `${loader.id} lost a structural key`);
@@ -766,8 +775,8 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloCategories.includes(cat));
   }
   assert.ok(Array.isArray(WaveloTypes));
-  assert.equal(WaveloTypes.length, 181);
-  for (const id of ['lotus-bloom', 'signal-beacon', 'conveyor-belt', 'zipper-flow', 'book-pages', 'pixel-weave']) {
+  assert.equal(WaveloTypes.length, 188);
+  for (const id of ['lotus-bloom', 'signal-beacon', 'conveyor-belt', 'zipper-flow', 'book-pages', 'pixel-weave', 'brand-orbit', 'brand-scan', 'brand-aurora', 'progress-signal', 'progress-path', 'scroll-horizontal', 'scroll-chapters']) {
     assert.ok(WaveloTypes.includes(id));
   }
   assert.equal(WaveloTypes, loaderIds);
