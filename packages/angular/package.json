@@ -34,7 +34,7 @@
     "@wavelo/core": "0.7.0"
   },
   "peerDependencies": {
-    "@angular/core": ">=14.0.0"
+    "@angular/core": ">=14.0.0 <23.0.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

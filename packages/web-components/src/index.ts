@@ -37,7 +37,7 @@ export class WaveloLoaderElement extends HTMLElementBase {
     const values: Record<string, string | undefined> = {};
     for (const attribute of observedAttributes) values[attribute] = this.getAttribute(attribute) ?? undefined;
     for (const attribute of this.attributes) {
-      if (attribute.name.startsWith('data-')) values[attribute.name] = attribute.value;
+      if (attribute.name.startsWith('data-') && attribute.name !== 'data-wavelo-error') values[attribute.name] = attribute.value;
     }
     try {
       const result = renderLoader(configFromAttributes(values));

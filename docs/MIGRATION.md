@@ -5,6 +5,20 @@ design ids below all exist in the catalog — browse all 188 designs with their 
 in the gallery (`npm run docs:build`, then open `apps/docs/dist/index.html`) before
 choosing.
 
+## Unreleased API hardening
+
+- Unknown root keys now throw `LoaderConfigurationError`; remove misspellings such
+  as `colour` instead of relying on them being ignored.
+- Internal `data-wavelo-*` names are reserved. Use `data-wavelo-state` and
+  `data-wavelo-constellation` for built-in behavior, or ordinary names such as
+  `data-analytics` for application metadata.
+- `createRouteProgress` config accepts presentation options only. The controller
+  always owns `type`, `value`, `max`, and `loading`.
+- React peers are capped below 20 and Angular peers below 23 until those majors are
+  tested; the documented floors remain React 16.8 and Angular 14.
+- Vue `useWaveloProgress({ autoStart: true })` starts on mount in a component or
+  immediately in a browser-only call, and stays inert during SSR.
+
 ## react-spinners
 
 ```diff

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- Reject unknown root configuration keys instead of silently ignoring them, and
+  reserve internal `data-wavelo-*` attributes while keeping `data-wavelo-state`
+  and `data-wavelo-constellation` as the documented built-in controls.
+- Prevent route-progress config from overriding controller-owned `type`, `value`,
+  `max`, or `loading`.
+- Publish strict cross-version Vue component types and defer Vue progress
+  autostart to mount/browser execution so SSR creates no timer.
+- Add generated `PresetId`/`presetIds` exports and a 1.0 alias/preset freeze policy.
+- Prove React 16.8, Vue 3.0, Svelte 5.0, and Angular 14 floors; cap React at `<20`
+  and Angular at `<23` until newer majors are tested.
+- Resolve every packed core subpath and all 188 loader modules in consumer tests.
+
 ## 0.7.0
 
 - Added five one-click StackBlitz playgrounds seeded from the maintained Next.js,

@@ -38,7 +38,7 @@ export const ${camel(definition.id)} = ${target};
 }
 
 /** Map of packages/core-relative path to the content that path must contain. */
-export function catalogArtifacts(loaderRegistry) {
+export function catalogArtifacts(loaderRegistry, presetRegistry) {
   const files = new Map();
   for (const definition of loaderRegistry) {
     files.set(`src/loaders/${definition.id}.ts`, definition.aliasOf ? aliasModule(definition) : canonicalModule(definition));
@@ -62,6 +62,18 @@ export function catalogArtifacts(loaderRegistry) {
     ''
   ].join('\n');
   files.set('src/ids.ts', idsFile);
+
+  const presetIdsFile = [
+    HEADER,
+    '/** Every public preset ID, including canonical design IDs and usage-shaped presets. */',
+    'export const presetIds = [',
+    ...presetRegistry.map((preset) => `  ${JSON.stringify(preset.id)},`),
+    '] as const;',
+    '',
+    'export type PresetId = (typeof presetIds)[number];',
+    ''
+  ].join('\n');
+  files.set('src/preset-ids.ts', presetIdsFile);
   return files;
 }
 

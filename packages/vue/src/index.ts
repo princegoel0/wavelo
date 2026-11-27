@@ -1,8 +1,9 @@
-import { computed, defineComponent, h, inject, provide, useAttrs, watchEffect, type DefineComponent, type InjectionKey, type PropType } from 'vue';
+import { computed, defineComponent, h, inject, provide, useAttrs, watchEffect, type ComponentOptionsMixin, type DefineComponent, type InjectionKey, type PropType } from 'vue';
 import { ensureStyles, loaderConfigKeys, mergeWaveloConfig, renderLoader } from '@wavelo/core';
 import type { LoaderConfig, RenderResult, WaveloDefaults } from '@wavelo/core';
 
 export type WaveloProps = LoaderConfig;
+export type WaveloComponent = DefineComponent<WaveloProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, unknown, WaveloProps>;
 
 /** Injection key for the defaults every `<Loader>` in this subtree inherits. */
 export const waveloDefaultsKey: InjectionKey<WaveloDefaults> = Symbol('wavelo-defaults');
@@ -42,7 +43,7 @@ const componentName = (type: string) => `Wavelo${type.split(/[-_]/).map((word) =
  * into the component itself; they beat the injected defaults and lose to the props
  * written at the call site.
  */
-function defineLoader(name: string, bound: LoaderConfig) {
+function defineLoader(name: string, bound: LoaderConfig): WaveloComponent {
   return defineComponent({
     name,
     props,
@@ -62,7 +63,7 @@ function defineLoader(name: string, bound: LoaderConfig) {
       // `loading={false}` renders nothing at all rather than an empty element.
       return () => (result.value.html ? h('span', { class: 'wavelo-host', innerHTML: result.value.html }) : null);
     }
-  });
+  }) as unknown as WaveloComponent;
 }
 
 /**
@@ -79,8 +80,8 @@ export const Wavelo = Loader;
  * `const ButtonSpinner = loaderFor('ring', { size: 16, color: '#fff' })`, then
  * `<ButtonSpinner :loading="busy" />`.
  */
-export function loaderFor(type: string, defaults: WaveloDefaults = {}): DefineComponent {
-  return defineLoader(componentName(type), { ...defaults, type }) as unknown as DefineComponent;
+export function loaderFor(type: string, defaults: WaveloDefaults = {}): WaveloComponent {
+  return defineLoader(componentName(type), { ...defaults, type });
 }
 
 /** The render result without Vue, for server rendering and tests. */

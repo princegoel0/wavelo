@@ -1619,7 +1619,17 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
     const role = announced.getAttribute('role');
     const valueAnnounced = announced.getAttribute('aria-valuenow');
     named.destroy();
-    return { start, creeping, pinned, filled, stillUp, after, role, valueAnnounced };
+
+    const hostile = createRouteProgress({ type: 'ring', value: 50, max: 10, loading: false }, {});
+    hostile.start();
+    const hostileRoot = hostile.element.querySelector('.wavelo');
+    const owned = {
+      design: hostileRoot.className,
+      percent: Number.parseFloat((hostileRoot.getAttribute('style') ?? '').match(/--wavelo-progress:([\d.]+)%/)?.[1] ?? -1),
+      visible: hostile.visible
+    };
+    hostile.destroy();
+    return { start, creeping, pinned, filled, stillUp, after, role, valueAnnounced, owned };
   });
   assert.equal(read.start.connected, true, 'start() puts the bar on the page');
   assert.match(read.start.design, /wavelo--progress-top/, 'the route bar is the top-of-page design');
@@ -1635,6 +1645,9 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   assert.equal(read.after.sheets, 1, 'finishing does not add a second stylesheet');
   assert.equal(read.role, 'progressbar', 'a labelled bar with a value is a progressbar');
   assert.equal(read.valueAnnounced, '0', 'and it reports the real percentage, not a guess');
+  assert.match(read.owned.design, /wavelo--progress-top/, 'route config cannot replace the controller design');
+  assert.equal(read.owned.percent, 0, 'route config cannot pin the controller value');
+  assert.equal(read.owned.visible, true, 'route config cannot hide the controller bar');
 });
 
 test('a container-query size resolves against the loader’s own container', async () => {

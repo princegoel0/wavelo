@@ -16,6 +16,10 @@ import { loaderRegistry } from '../packages/core/dist/registry.js';
 const root = resolve(import.meta.dirname, '..');
 const tarballDirectory = resolve(root, 'release-tarballs');
 const consumer = resolve(root, 'release-consumer');
+const vueFloorConsumer = resolve(root, 'release-vue-floor');
+const reactFloorConsumer = resolve(root, 'release-react-floor');
+const svelteFloorConsumer = resolve(root, 'release-svelte-floor');
+const angularFloorConsumer = resolve(root, 'release-angular-floor');
 const version = JSON.parse(readFileSync(resolve(root, 'packages/core/package.json'), 'utf8')).version;
 const isWindows = process.platform === 'win32';
 // Node refuses to spawn a `.cmd` shim directly, so npm runs through the shell the
@@ -109,6 +113,22 @@ assert.equal(typeof modular.ring, 'function');
 assert.ok(!modular.ring({}).css.includes('.wavelo--equalizer'), 'the modular entry carried another design');
 assert.ok(modular.ring({}).css.includes('.wavelo--ring'), 'the modular entry lost its own rules');
 
+await import('@wavelo/core/registry');
+await import('@wavelo/core/dom');
+await import('@wavelo/core/styles');
+await import('@wavelo/core/css');
+await import('@wavelo/core/css/base');
+const loaders = await import('@wavelo/core/loaders');
+for (const loader of loaderRegistry) {
+  const entry = await import('@wavelo/core/loaders/' + loader.id);
+  const render = Object.values(entry).find((value) => typeof value === 'function');
+  assert.equal(typeof render, 'function', 'missing renderer export for ' + loader.id);
+  const result = render({});
+  assert.ok(result.html.includes('wavelo--' + loader.id), 'wrong design from ' + loader.id);
+  assert.ok(result.css.length > 0, 'missing stylesheet from ' + loader.id);
+}
+assert.ok(Object.keys(loaders).length >= loaderRegistry.length, 'the loader barrel is incomplete');
+
 const sheet = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/styles.css'), 'utf8');
 assert.ok(sheet.includes('.wavelo--ring') && sheet.includes('.wavelo--skeleton-card'), 'the shipped sheet is missing designs');
 assert.ok(sheet.includes('prefers-reduced-motion'), 'the shipped sheet lost the reduced-motion rules');
@@ -178,7 +198,7 @@ const check = (label, action) => {
     action();
     console.log(`  ok    ${label}`);
   } catch (error) {
-    const detail = [error instanceof Error ? error.message : String(error), error?.stderr].filter(Boolean).join(' | ');
+    const detail = [error instanceof Error ? error.message : String(error), error?.stdout?.toString(), error?.stderr?.toString()].filter(Boolean).join(' | ');
     failures.push(`${label}: ${detail.split('\n').slice(0, 8).join(' | ')}`);
     console.log(`  FAIL  ${label}`);
   }
@@ -219,7 +239,197 @@ check('each adapter declares its framework as a peer and bundles none of it', ()
   }
 });
 
+check('the declared Vue 3.0 floor type-checks the packed declarations', () => {
+  rmSync(vueFloorConsumer, { recursive: true, force: true });
+  mkdirSync(vueFloorConsumer, { recursive: true });
+  writeFileSync(
+    resolve(vueFloorConsumer, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'wavelo-vue-floor-consumer',
+        private: true,
+        version: '1.0.0',
+        type: 'module',
+        overrides: { '@wavelo/core': coreSpec },
+        dependencies: {
+          '@wavelo/core': coreSpec,
+          '@wavelo/vue': tarball('vue'),
+          vue: '3.0.0',
+          'vue-tsc': '3.3.14',
+          typescript: '6.0.3'
+        }
+      },
+      null,
+      2
+    )
+  );
+  writeFileSync(
+    resolve(vueFloorConsumer, 'tsconfig.json'),
+    JSON.stringify({ compilerOptions: { strict: true, noEmit: true, target: 'ES2022', module: 'ESNext', moduleResolution: 'Bundler', skipLibCheck: true }, include: ['check.ts'] }, null, 2)
+  );
+  writeFileSync(
+    resolve(vueFloorConsumer, 'check.ts'),
+    `import { Loader } from '@wavelo/vue';
+const valid: InstanceType<typeof Loader>['$props'] = { type: 'ring', size: 32, 'data-analytics': 'catalog' };
+// @ts-expect-error Known Wavelo props must reject the wrong value type.
+const invalid: InstanceType<typeof Loader>['$props'] = { size: true };
+`
+  );
+  run(['install', '--no-audit', '--no-fund', '--ignore-scripts'], vueFloorConsumer);
+  node(['node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit', '-p', 'tsconfig.json'], vueFloorConsumer);
+});
+
+check('the declared React 16.8 floor renders and type-checks the packed package', () => {
+  rmSync(reactFloorConsumer, { recursive: true, force: true });
+  mkdirSync(reactFloorConsumer, { recursive: true });
+  writeFileSync(
+    resolve(reactFloorConsumer, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'wavelo-react-floor-consumer',
+        private: true,
+        version: '1.0.0',
+        type: 'module',
+        overrides: { '@wavelo/core': coreSpec },
+        dependencies: {
+          '@wavelo/core': coreSpec,
+          '@wavelo/react': tarball('react'),
+          react: '16.8.0',
+          'react-dom': '16.8.0',
+          '@types/react': '16.8.19',
+          '@types/react-dom': '16.8.4',
+          typescript: '5.7.3',
+          esbuild: '0.28.2'
+        }
+      },
+      null,
+      2
+    )
+  );
+  writeFileSync(
+    resolve(reactFloorConsumer, 'check.ts'),
+    `import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Loader, type WaveloProps } from '@wavelo/react';
+const config: WaveloProps = { type: 'ring', size: 32, label: 'Loading' };
+export const html = renderToStaticMarkup(createElement(Loader, config));
+`
+  );
+  writeFileSync(
+    resolve(reactFloorConsumer, 'tsconfig.json'),
+    JSON.stringify({ compilerOptions: { strict: true, noEmit: true, target: 'ES2020', module: 'ESNext', moduleResolution: 'Bundler', jsx: 'react-jsx', skipLibCheck: true, esModuleInterop: true }, include: ['check.ts'] }, null, 2)
+  );
+  writeFileSync(
+    resolve(reactFloorConsumer, 'check.mjs'),
+    `import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Loader } from '@wavelo/react';
+const html = renderToStaticMarkup(createElement(Loader, { type: 'ring', size: 32, label: 'Loading' }));
+if (!html.includes('wavelo--ring')) throw new Error('React 16.8 floor lost the loader');
+`
+  );
+  run(['install', '--no-audit', '--no-fund', '--ignore-scripts'], reactFloorConsumer);
+  node(['node_modules/typescript/bin/tsc', '--noEmit', '-p', 'tsconfig.json'], reactFloorConsumer);
+  node(['node_modules/esbuild/bin/esbuild', 'check.mjs', '--bundle', '--platform=node', '--format=cjs', '--outfile=dist/check.cjs'], reactFloorConsumer);
+  node(['dist/check.cjs'], reactFloorConsumer);
+});
+
+check('the declared Svelte 5.0 floor compiles the packed component', () => {
+  rmSync(svelteFloorConsumer, { recursive: true, force: true });
+  mkdirSync(svelteFloorConsumer, { recursive: true });
+  writeFileSync(
+    resolve(svelteFloorConsumer, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'wavelo-svelte-floor-consumer',
+        private: true,
+        version: '1.0.0',
+        type: 'module',
+        overrides: { '@wavelo/core': coreSpec },
+        dependencies: {
+          '@wavelo/core': coreSpec,
+          '@wavelo/svelte': tarball('svelte'),
+          svelte: '5.0.0',
+          typescript: '5.7.3'
+        }
+      },
+      null,
+      2
+    )
+  );
+  writeFileSync(
+    resolve(svelteFloorConsumer, 'check.mjs'),
+    `import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { compile } from 'svelte/compiler';
+import ts from 'typescript';
+const source = await readFile(fileURLToPath(import.meta.resolve('@wavelo/svelte/WaveloLoader.svelte')), 'utf8');
+const match = source.match(/<script lang="ts">([\\s\\S]*?)<\\/script>/);
+if (!match) throw new Error('The packed component lost its TypeScript script');
+const script = ts.transpileModule(match[1], { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext } }).outputText;
+const prepared = source.replace(match[0], '<script>' + script + '</script>');
+for (const generate of ['client', 'server']) {
+  const result = compile(prepared, { generate, filename: 'WaveloLoader.svelte' });
+  if (result.warnings.length) throw new Error(generate + ': ' + result.warnings.join(', '));
+}
+`
+  );
+  run(['install', '--no-audit', '--no-fund', '--ignore-scripts'], svelteFloorConsumer);
+  node(['check.mjs'], svelteFloorConsumer);
+});
+
+check('the declared Angular 14 floor compiles a packed consumer', () => {
+  rmSync(angularFloorConsumer, { recursive: true, force: true });
+  mkdirSync(angularFloorConsumer, { recursive: true });
+  writeFileSync(
+    resolve(angularFloorConsumer, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'wavelo-angular-floor-consumer',
+        private: true,
+        version: '1.0.0',
+        type: 'module',
+        overrides: { '@wavelo/core': coreSpec },
+        dependencies: {
+          '@wavelo/core': coreSpec,
+          '@wavelo/angular': tarball('angular'),
+          '@angular/common': '14.3.0',
+          '@angular/compiler': '14.3.0',
+          '@angular/compiler-cli': '14.3.0',
+          '@angular/core': '14.3.0',
+          '@angular/platform-browser': '14.3.0',
+          '@angular/platform-browser-dynamic': '14.3.0',
+          '@angular/platform-server': '14.3.0',
+          rxjs: '7.8.2',
+          'zone.js': '0.11.8',
+          typescript: '4.8.4'
+        }
+      },
+      null,
+      2
+    )
+  );
+  writeFileSync(
+    resolve(angularFloorConsumer, 'app.ts'),
+    `import { Component } from '@angular/core';
+import { LoaderComponent } from '@wavelo/angular';
+@Component({ standalone: true, imports: [LoaderComponent], template: '<wavelo-loader type="ring" label="Loading"></wavelo-loader>' })
+export class AppComponent {}
+`
+  );
+  writeFileSync(
+    resolve(angularFloorConsumer, 'tsconfig.json'),
+    JSON.stringify({ compilerOptions: { target: 'ES2020', module: 'ES2020', moduleResolution: 'node', experimentalDecorators: true, skipLibCheck: true, outDir: 'dist', lib: ['ES2020', 'DOM'] }, angularCompilerOptions: { compilationMode: 'partial' }, files: ['app.ts'] }, null, 2)
+  );
+  run(['install', '--no-audit', '--no-fund', '--ignore-scripts'], angularFloorConsumer);
+  node(['node_modules/@angular/compiler-cli/bundles/src/bin/ngc.js', '-p', 'tsconfig.json'], angularFloorConsumer);
+});
+
 rmSync(consumer, { recursive: true, force: true });
+rmSync(vueFloorConsumer, { recursive: true, force: true });
+rmSync(reactFloorConsumer, { recursive: true, force: true });
+rmSync(svelteFloorConsumer, { recursive: true, force: true });
+rmSync(angularFloorConsumer, { recursive: true, force: true });
 rmSync(tarballDirectory, { recursive: true, force: true });
 
 if (failures.length) {

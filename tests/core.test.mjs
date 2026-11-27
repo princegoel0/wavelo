@@ -233,6 +233,17 @@ test('unsafe configuration is rejected', () => {
   assert.throws(() => renderLoader({ type: 'inline', ['data-on click']: 'x' }), LoaderConfigurationError);
 });
 
+test('unknown options and renderer-owned data attributes are rejected', () => {
+  for (const config of [{ colour: '#fff' }, { variant: 'ring' }, { typo: true }]) {
+    assert.throws(() => renderLoader({ type: 'inline', ...config }), LoaderConfigurationError);
+  }
+  for (const key of ['data-wavelo-motion', 'data-wavelo-theme', 'data-wavelo-fallback', 'data-wavelo-value-text', 'data-wavelo-error', 'data-wavelo-style', 'data-wavelo-route-progress', 'data-wavelo-step']) {
+    assert.throws(() => renderLoader({ type: 'inline', [key]: 'spoofed' }), LoaderConfigurationError, key);
+  }
+  assert.match(renderLoader({ type: 'success-ring', 'data-wavelo-state': 'success' }).html, /data-wavelo-state="success"/);
+  assert.match(renderLoader({ type: 'constellation', 'data-wavelo-constellation': 'orion' }).html, /data-wavelo-constellation="orion"/);
+});
+
 test('configuration values cannot break out of an attribute', () => {
   const result = renderLoader({ type: 'inline', label: '"><script>alert(1)</script>', 'data-note': '"a\'b"' });
   assert.doesNotMatch(result.html, /<script/);
@@ -768,7 +779,7 @@ test('micro-interactions pass through data-wavelo-state', () => {
 });
 
 test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
-  const { WaveloCategories, WaveloTypes, loaderIds } = await import('../packages/core/dist/index.js');
+  const { WaveloCategories, WaveloTypes, loaderIds, presetIds } = await import('../packages/core/dist/index.js');
   assert.ok(Array.isArray(WaveloCategories));
   assert.equal(WaveloCategories.length, 8);
   for (const cat of ['spinner', 'dots', 'bars', 'creative', 'skeleton', 'progress', 'application', 'ai']) {
@@ -780,6 +791,8 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloTypes.includes(id));
   }
   assert.equal(WaveloTypes, loaderIds);
+  assert.deepEqual(presetIds, presetRegistry.map((preset) => preset.id));
+  assert.equal(new Set(presetIds).size, presetIds.length);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));
   assert.ok(WaveloTypes.includes('ai-tool-handoff'));

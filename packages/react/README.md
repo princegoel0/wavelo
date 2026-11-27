@@ -64,7 +64,7 @@ export default function Page() {
 `@wavelo/react/client` is the same surface named directly, for a file that wants to
 declare the boundary itself.
 
-Supported peer range: `react >=16.8.0` and optional `react-dom >=16.8.0`.
+Supported peer range: `react >=16.8.0 <20.0.0` and optional `react-dom >=16.8.0 <20.0.0`.
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 

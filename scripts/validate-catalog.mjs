@@ -48,7 +48,7 @@ for (const loader of loaderRegistry) {
 
 // The generated entry points must match the catalog, with no stale modules left
 // in source or in build output.
-const artifacts = catalogArtifacts(loaderRegistry);
+const artifacts = catalogArtifacts(loaderRegistry, presetRegistry);
 // Compare ignoring line endings: a Windows checkout can rewrite these files,
 // and that is not drift from the catalog.
 const normalize = (text) => text.replace(/\r\n/g, '\n');

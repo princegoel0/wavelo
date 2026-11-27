@@ -1,6 +1,7 @@
 export * from './types.js';
 export * from './config.js';
 export * from './registry.js';
+export * from './preset-ids.js';
 export * from './validation.js';
 export { renderLoaderWithDefinition, styleKey } from './render.js';
 export { renderLoader } from './render-catalog.js';

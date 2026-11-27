@@ -333,7 +333,7 @@ own CSS would.
 ## What the configuration does
 
 These 28 keys are the whole surface, and a test asserts each one reaches the
-rendered element: `size`, `width`, `height`, `color`, `secondaryColor`,
+rendered element: `type`, `size`, `width`, `height`, `color`, `secondaryColor`,
 `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`, `direction`,
 `paused`, `label`, `className`, `style`, `reducedMotion`, `data-testid`, `value`,
 `max`, `labelledBy`, `describedBy`, `valueText`, `decorative`, `loading`, `count`,

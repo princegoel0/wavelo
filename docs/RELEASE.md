@@ -116,6 +116,22 @@ reported, never silently ignored. From `1.0.0` the rules above apply in full, an
 options each design honours, and the Chromium, Gecko and WebKit suites re-render every
 design in the catalog.
 
+### The 1.0 freeze contract
+
+`LoaderId`, `PresetId`, exported entry points, configuration keys, and documented
+peer ranges are public API. From 1.0.0:
+
+- canonical design IDs and preset-to-design mappings are immutable; new IDs are
+  additive and never reuse a retired name;
+- a deprecated alias stays available for at least two minor releases and is removed
+  only in a major release;
+- `WaveloLoader.svelte` is the canonical Svelte component and `Wavelo.svelte` is its
+  supported compatibility alias; neither path is removed in a minor;
+- configuration keys and prop types change only in a major release, while new
+  optional keys and presets may arrive in a minor;
+- the generated `presetIds` union is checked against `presetRegistry` in CI so a
+  public preset cannot drift from its documented mapping.
+
 Two repository variables decide what a workflow is allowed to do, and both are
 the owner's to set:
 

@@ -71,7 +71,9 @@ same 28 configuration keys — `type`, `size`, `width`, `height`, `color`,
 `secondaryColor`, `backgroundColor`, `speed`, `duration`, `strokeWidth`, `theme`,
 `direction`, `paused`, `label`, `className`, `style`, `reducedMotion`,
 `data-testid`, `value`, `max`, `labelledBy`, `describedBy`, `valueText`,
-`decorative`, `loading`, `count`, `inline` — plus arbitrary `data-*` values.
+`decorative`, `loading`, `count`, `inline`, `brand` — plus arbitrary `data-*` values.
+Internal `data-wavelo-*` names are reserved; `data-wavelo-state` and
+`data-wavelo-constellation` are the documented built-in controls.
 `tests/framework.test.mjs` renders every key through every adapter and asserts each
 one reaches the element, so a bridge that falls behind the core fails the build.
 
@@ -121,19 +123,18 @@ not the mechanism.
 
 ## Determinate progress
 
-Seven designs render a value: `progress-bar`, `progress-ring`, `progress-steps`,
-`progress-top`, `progress-upload`, `segmented-bar` and `page-transition`. They
-are the designs whose render kind is `progress`, which is also what decides their
-accessibility contract — a labelled render exposes `role="progressbar"` with
-`aria-valuemin`, `aria-valuemax` and `aria-valuenow`, and `value` is clamped to
-`[0, max]` by validation. A design of any other kind ignores `value` for
-semantics even if one is passed.
+Twenty-five designs render a value: every registry entry whose render kind is
+`progress`, including the brand-loader family, `progress-signal`, and
+`progress-path`. That registry property also decides their accessibility contract —
+a labelled render exposes `role="progressbar"` with `aria-valuemin`, `aria-valuemax`,
+and `aria-valuenow`, and `value` is clamped to `[0, max]` by validation. A design of
+any other kind ignores `value` for semantics even if one is passed.
 
 `progress-top` is `position: fixed` by design, because it is a page-edge
 indicator; contain it in a preview or card the way the documentation gallery
 does. `progress-steps` fills whole steps: `ceil(value / max * 5)` of five.
 
-`progress-scroll` is deliberately not one of the seven. Its fill comes from the
+`progress-scroll` is deliberately not one of them. Its fill comes from the
 document's scroll position, so there is no value for JavaScript to report: a
 labelled render exposes `role="status"` with no `aria-valuenow`, and passing
 `value` changes nothing. It is the `scroll` render kind, which is why the
@@ -190,7 +191,7 @@ what a consumer relies on. Each floor below says what it rests on, and which ver
 installs. `npm run docs:check` compares every range stated in this repository with the manifest
 that declares it, so a README cannot fall behind a widened peer.
 
-- **React (`@wavelo/react`):** `react >=16.8.0` and `react-dom >=16.8.0`, the latter declared
+- **React (`@wavelo/react`):** `react >=16.8.0 <20.0.0` and `react-dom >=16.8.0 <20.0.0`, the latter declared
   optional in `peerDependenciesMeta`. Read off the built files: the runtime imports are
   `createContext`, `createElement`, `useContext`, `useEffect`, `useCallback`, `useRef` and
   `useState` — all React 16.8 API — and no module imports `react-dom`, which is what lets a
@@ -205,7 +206,7 @@ that declares it, so a README cannot fall behind a widened peer.
   `$props()`, `$derived()`, `$effect()` — so 5.0 is the floor and the 6.x cap is deliberate.
   CI exercises Svelte 5.59.2, compiles the component for client and server, and server-renders
   it through `render()` from `svelte/server`.
-- **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0`. This floor is not read off the
+- **Angular (`@wavelo/angular`):** `@angular/core >=14.0.0 <23.0.0`. This floor is not read off the
   imports: the package is built with `ngc` in `compilationMode: "partial"`, and its component
   declaration carries `minVersion: "14.0.0"` — the metadata and factory declarations around it
   say 12.0.0, and the floor is the newest of the three, because a linking application has to
