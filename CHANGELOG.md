@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.6.0
+
+- Added Svelte 5 `waveloState` and `waveloProgress` stores, completing the
+  lifecycle and progress-control parity offered by the React hooks and Vue
+  composables. Both include explicit cleanup for component teardown.
+
+- Added six one-word `brand-loader` presets: `brand-minimal`, `brand-wave`,
+  `brand-pulse`, `brand-shimmer`, `brand-typewriter`, and `brand-progress`.
+  Preset values act as defaults, so explicit `brand` options still win.
+
+- Added the README hero rendered from the shipped stylesheet, giving the front
+  page a real preview of the brand loader and twelve catalog designs.
+
+- Updated the measured toolchain to Angular 22.3.0, Vue 3.5.46, Svelte 5.59.2,
+  and axe-core 4.14.1. TypeScript stays exactly on 6.0.3 because Angular 22.3
+  compiler-cli still calls an API removed in TypeScript 7; Dependabot ignores
+  only TypeScript 7+ until that pair is re-measured.
+
+- Catalog totals are now 181 designs, 301 named presets, and 120 pattern presets.
+  Added core, framework, and Chromium regressions for the new public APIs.
+
 ## 0.5.0
 
 - Corrected Tesseract, Mobius Band, Torus Ring and Magnetic Field after review of
