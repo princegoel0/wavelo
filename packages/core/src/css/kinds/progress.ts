@@ -92,7 +92,7 @@ export const progressCss = `
 .wavelo--crt-scanline .wavelo__part{height:100%;width:var(--wavelo-progress,35%);background:linear-gradient(90deg,currentColor,color-mix(in srgb,#fff 40%,currentColor));box-shadow:0 0 10px currentColor,0 0 18px color-mix(in srgb,currentColor 50%,transparent);border-radius:1px;transition:width .2s steps(10)}
 .wavelo--crt-scanline:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.35) 2px 4px);pointer-events:none;z-index:5}
 ${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}${scanlineFrames}
-.wavelo--brand-loader{width:var(--wavelo-width,auto);height:var(--wavelo-height,auto);max-width:100%;background:var(--wavelo-background,transparent);border-radius:var(--wavelo-radius,0);overflow:visible;justify-content:center;font-size:var(--wavelo-size,2rem);line-height:1.3}
+.wavelo--brand-loader,.wavelo--brand-orbit,.wavelo--brand-scan,.wavelo--brand-aurora{width:var(--wavelo-width,auto);height:var(--wavelo-height,auto);max-width:100%;background:var(--wavelo-background,transparent);border-radius:var(--wavelo-radius,0);overflow:visible;justify-content:center;font-size:var(--wavelo-size,2rem);line-height:1.3}
 .wavelo__brand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--brand-gap,.6em);max-width:100%;font-family:inherit;font-weight:700;line-height:inherit;text-align:center}
 .wavelo__brand[data-layout="inline"]{flex-direction:row}
 .wavelo__brand[data-layout="inline"]{flex-wrap:wrap}
@@ -124,5 +124,20 @@ ${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}${scanlineFrame
 .wavelo__brand[data-progress="true"] .wavelo__brand-indicator[data-indicator="dots"] i:nth-child(2):before{transform:scale(clamp(0,calc(var(--brand-progress,0) * 3 - 1),1))}.wavelo__brand[data-progress="true"] .wavelo__brand-indicator[data-indicator="dots"] i:nth-child(3):before{transform:scale(clamp(0,calc(var(--brand-progress,0) * 3 - 2),1))}
 @media(prefers-reduced-motion:reduce){.wavelo:not([data-wavelo-motion="never"]) .wavelo__brand-char{opacity:1!important;transform:none!important}}.wavelo[data-wavelo-motion="always"] .wavelo__brand-char{opacity:1!important;transform:none!important}
 @media(forced-colors:active){.wavelo__brand[data-animation="shimmer"] .wavelo__brand-text{background:none;color:CanvasText;-webkit-text-fill-color:CanvasText}.wavelo__brand-indicator{forced-color-adjust:none;color:CanvasText;--brand-track:GrayText}}
+.wavelo--progress-signal{display:flex;align-items:flex-end;gap:var(--wavelo-gap,4px);width:var(--wavelo-width,var(--wavelo-size,6rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));overflow:visible;border-radius:0;background:transparent}
+.wavelo--progress-signal .wavelo__part{position:relative;flex:1 1 0;width:auto;height:100%;overflow:hidden;border-radius:var(--wavelo-radius,2px);background:color-mix(in srgb,currentColor 16%,transparent)}
+.wavelo--progress-signal .wavelo__part:after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--wavelo-progress,35%);background:currentColor;transition:height .2s ease}
+.wavelo--progress-path{width:var(--wavelo-width,var(--wavelo-size,6rem));height:var(--wavelo-height,var(--wavelo-size,4rem));overflow:visible;border-radius:0;background:transparent}
+.wavelo__path{display:block;width:100%;height:100%;overflow:visible}
+.wavelo__path .wavelo__track,.wavelo__path .wavelo__part{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:var(--wavelo-stroke,6);vector-effect:non-scaling-stroke}
+.wavelo__path .wavelo__track{stroke:color-mix(in srgb,currentColor 18%,transparent)}
+.wavelo__path .wavelo__part{stroke:currentColor;stroke-dasharray:100;transition:stroke-dashoffset .2s ease}
+.wavelo--brand-orbit .wavelo__brand{position:relative;padding:.45em .65em}
+.wavelo__brand-orbit{position:absolute;inset:0;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:999px;animation:wavelo-spin var(--wavelo-duration,2.4s) var(--brand-ease,var(--wavelo-ease,linear)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo__brand-orbit i{position:absolute;top:-.28em;left:50%;width:.56em;height:.56em;border-radius:50%;background:var(--wavelo-secondary-color,currentColor);box-shadow:0 0 .5em currentColor;transform:translateX(-50%)}
+.wavelo--brand-scan .wavelo__brand{position:relative;overflow:hidden}
+.wavelo__brand-scan{position:absolute;top:0;bottom:0;width:35%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--wavelo-secondary-color,#38bdf8) 75%,transparent),transparent);animation:wavelo-brand-scan var(--wavelo-duration,2s) var(--brand-ease,var(--wavelo-ease,ease-in-out)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);pointer-events:none}
+.wavelo--brand-aurora .wavelo__brand-text{color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(90deg,#22d3ee,#818cf8,#e879f9,#22d3ee);background-size:200% 100%;background-clip:text;-webkit-background-clip:text;animation:wavelo-brand-shimmer var(--wavelo-duration,2.4s) var(--brand-ease,var(--wavelo-ease,linear)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+@media(forced-colors:active){.wavelo--brand-aurora .wavelo__brand-text{background:none;color:CanvasText;-webkit-text-fill-color:CanvasText}}
 ${brandFrames}
 `;

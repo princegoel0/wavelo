@@ -18,7 +18,7 @@ does not. `scripts/layout-cost.mjs` loads 150 copies of each design, reads
 Chromium's layout and style-recalculation counters across two seconds, and fails when
 a design costs a layout with no recorded reason.
 
-**180 of the 181 designs cost no layout per frame.** One does, for a reason a
+**187 of the 188 designs cost no layout per frame.** One does, for a reason a
 transform would take away:
 
 | Design | Layouts per 2 s | Why it stays as it is |
@@ -28,7 +28,7 @@ transform would take away:
 The counts are ranges because repeated runs of the same build produce them: the audit
 reads Chromium's own counters, and how many frames land in a two-second window varies
 with what else the machine is doing. What does not vary is the shape — one layout per
-frame for a design that animates a box property, and zero for the other 180.
+frame for a design that animates a box property, and zero for the other 187.
 
 Each of those is one element inside a box the size of a line of text, and a page
 carries one reading bar rather than 150 — the cost is recorded, not hidden. The
@@ -72,15 +72,15 @@ Gzipped together, as shipped — every slice, cheapest first:
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
 | `overlay` | 1,942 | `orbit` | 5,951 |
-| `scroll` | 2,162 | `progress` | 5,969 |
-| `pulse` | 3,613 | `wave` | 6,141 |
+| `scroll` | 2,407 | `wave` | 6,141 |
+| `pulse` | 3,613 | `progress` | 6,380 |
 | `bars` | 4,599 | `skeleton` | 6,894 |
 | `rings` | 4,616 | `dots` | 7,312 |
 | `ring` | 4,747 | `shape` | 8,924 |
 
 The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,516 bytes of every row above. The whole
-catalog sheet is 42,596 bytes gzipped, loaded once, for all 181 designs. Read down the
+catalog sheet is 43,179 bytes gzipped, loaded once, for all 188 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
@@ -88,7 +88,7 @@ design in that kind, and it moves in both directions. Since the 129-design check
 `dots` has gone from 3,454 to 5,920 bytes as the motion tranche, a countable dot row and
 a bubble column joined it, while `ring` went from 4,110 to 3,923 when its duplicates were
 consolidated away and back to 4,414 with the 3D work — and `progress`, the largest slice
-at 3,866 back then, is now only sixth of twelve. That re-ordering is
+at 3,866 back then, is now fourth of twelve. That re-ordering is
 exactly why `busiest-loader`
 in `npm run measure` samples a shape design today: a probe pinned to whatever kind held the
 record when it was written stops measuring the worst case the moment another kind

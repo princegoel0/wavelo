@@ -63,7 +63,7 @@ for (const section of uiSections) {
 
 console.log('UI Screen Audit complete. Found:', screenResults.length, 'sections.');
 
-// 2. Audit all 153 Loader Components across the 3 Visual Axes
+// 2. Audit every registry loader across the 3 Visual Axes
 const loaders = await page.evaluate(() => {
   const cards = Array.from(document.querySelectorAll('.card'));
   return cards.map((card) => {

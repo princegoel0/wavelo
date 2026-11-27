@@ -75,8 +75,15 @@ export function normalizeBrand(input: BrandConfig | undefined): BrandConfig | un
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const length = (v: string | number) => typeof v === 'number' ? `${v}px` : v;
 
+export const brandVariantDefaults: Readonly<Record<string, Readonly<BrandConfig>>> = Object.freeze({
+  'brand-orbit': { animation: 'pulse', indicator: 'ring', layout: 'inline' },
+  'brand-scan': { animation: 'none', indicator: 'bar', layout: 'inline' },
+  'brand-aurora': { animation: 'none', indicator: 'dots', layout: 'stacked' }
+});
+
 export function brandMarkup(config: NormalizedLoaderConfig): string {
-  const b = config.brand ?? {}, text = b.text?.trim() || 'Wavelo';
+  const b = { ...brandVariantDefaults[config.type], ...config.brand } as BrandConfig;
+  const text = b.text?.trim() || 'Wavelo';
   const animation = b.animation ?? 'wave', indicator = b.indicator ?? 'ring';
   const styles: string[] = [];
   if (config.value !== undefined) styles.push(`--brand-progress:${config.value / config.max}`);
@@ -99,5 +106,7 @@ export function brandMarkup(config: NormalizedLoaderConfig): string {
   const value = b.showValue && progress ? `<span class="wavelo__brand-value">${Math.round(config.value! / config.max * 100)}%</span>` : '';
   const meter = indicator === 'none' ? '' : `<span class="wavelo__brand-indicator" data-indicator="${indicator}"><i></i><i></i><i></i></span>`;
   const label = `<span class="wavelo__brand-copy"><span class="wavelo__brand-text">${chars}</span>${caption}${value}</span>`;
-  return `<span class="wavelo__brand" aria-hidden="true" data-animation="${animation}" data-layout="${b.layout ?? 'stacked'}" data-align="${b.align ?? 'center'}" data-progress="${progress}" style="${esc(styles.join(';'))}">${b.indicatorPosition === 'after' ? label + meter : meter + label}</span>`;
+  const orbit = config.type === 'brand-orbit' ? '<span class="wavelo__brand-orbit" aria-hidden="true"><i></i></span>' : '';
+  const scan = config.type === 'brand-scan' ? '<span class="wavelo__brand-scan" aria-hidden="true"></span>' : '';
+  return `<span class="wavelo__brand" aria-hidden="true" data-animation="${animation}" data-layout="${b.layout ?? 'stacked'}" data-align="${b.align ?? 'center'}" data-progress="${progress}" style="${esc(styles.join(';'))}">${scan}${b.indicatorPosition === 'after' ? label + meter : meter + label}${orbit}</span>`;
 }

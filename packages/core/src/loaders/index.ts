@@ -2,6 +2,9 @@
 // Do not edit: `npm run catalog` fails when these files drift from the catalog.
 
 export { brandLoader } from './brand-loader.js';
+export { brandOrbit } from './brand-orbit.js';
+export { brandScan } from './brand-scan.js';
+export { brandAurora } from './brand-aurora.js';
 export { circular } from './circular.js';
 export { ring } from './ring.js';
 export { dualRing } from './dual-ring.js';
@@ -109,6 +112,8 @@ export { progressTop } from './progress-top.js';
 export { progressUpload } from './progress-upload.js';
 export { progressScroll } from './progress-scroll.js';
 export { progressView } from './progress-view.js';
+export { scrollHorizontal } from './scroll-horizontal.js';
+export { scrollChapters } from './scroll-chapters.js';
 export { progressBattery } from './progress-battery.js';
 export { progressHalfRing } from './progress-half-ring.js';
 export { progressWaveFill } from './progress-wave-fill.js';
@@ -120,6 +125,8 @@ export { progressUploadMulti } from './progress-upload-multi.js';
 export { progressAiGenerate } from './progress-ai-generate.js';
 export { progressSkill } from './progress-skill.js';
 export { progressOrbitFill } from './progress-orbit-fill.js';
+export { progressSignal } from './progress-signal.js';
+export { progressPath } from './progress-path.js';
 export { inline } from './inline.js';
 export { button } from './button.js';
 export { overlay } from './overlay.js';

@@ -4,6 +4,9 @@
 /** Every public catalog ID. */
 export const loaderIds = [
   "brand-loader",
+  "brand-orbit",
+  "brand-scan",
+  "brand-aurora",
   "circular",
   "ring",
   "dual-ring",
@@ -111,6 +114,8 @@ export const loaderIds = [
   "progress-upload",
   "progress-scroll",
   "progress-view",
+  "scroll-horizontal",
+  "scroll-chapters",
   "progress-battery",
   "progress-half-ring",
   "progress-wave-fill",
@@ -122,6 +127,8 @@ export const loaderIds = [
   "progress-ai-generate",
   "progress-skill",
   "progress-orbit-fill",
+  "progress-signal",
+  "progress-path",
   "inline",
   "button",
   "overlay",

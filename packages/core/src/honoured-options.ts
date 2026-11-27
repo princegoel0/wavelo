@@ -11,6 +11,9 @@ export const honouredKeyNames: readonly string[] = ["backgroundColor","brand","c
 /** Bitset per catalog id; `registry.ts` decodes it into `LoaderDefinition.options`. */
 export const honouredOptions: Readonly<Record<string, string>> = {
    "brand-loader": "7ffffef",
+   "brand-orbit": "7ffffef",
+   "brand-scan": "7ffffef",
+   "brand-aurora": "7dfffef",
    "circular": "4ff7fed",
    "ring": "4fb7fed",
    "dual-ring": "4ff7fed",
@@ -118,6 +121,8 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "progress-upload": "7dfffec",
    "progress-scroll": "4c37dec",
    "progress-view": "4c37dec",
+   "scroll-horizontal": "4c37dec",
+   "scroll-chapters": "4c37dec",
    "progress-battery": "7eefcec",
    "progress-half-ring": "7eefcec",
    "progress-wave-fill": "7ffffec",
@@ -129,6 +134,8 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "progress-ai-generate": "4df7fec",
    "progress-skill": "7cefcec",
    "progress-orbit-fill": "7cafcfc",
+   "progress-signal": "7cafcec",
+   "progress-path": "7eafcec",
    "inline": "4db7fed",
    "button": "4db7fed",
    "overlay": "4fb7fed",

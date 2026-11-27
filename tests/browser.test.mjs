@@ -90,6 +90,30 @@ test('named brand presets paint their promised treatment and explicit options wi
   assert.equal(await page.locator('.wavelo__brand-indicator').count(), 0);
 });
 
+test('0.7.0 brand variants, determinate tracks and scroll designs render their contracts', async () => {
+  const ids = ['brand-orbit', 'brand-scan', 'brand-aurora', 'progress-signal', 'progress-path', 'scroll-horizontal', 'scroll-chapters'];
+  await setContentPage(ids.map((id) => renderLoader({ type: id, brand: { text: 'ACME' }, value: 50, max: 100 }).html).join(''));
+  assert.equal(await page.locator('.wavelo--brand-orbit .wavelo__brand-orbit').count(), 1);
+  assert.equal(await page.locator('.wavelo--brand-scan .wavelo__brand-scan').count(), 1);
+  const aurora = await page.locator('.wavelo--brand-aurora .wavelo__brand-text').evaluate(element => ({ background: getComputedStyle(element).backgroundImage, animation: getComputedStyle(element).animationName }));
+  assert.match(aurora.background, /linear-gradient/);
+  assert.equal(aurora.animation, 'wavelo-brand-shimmer');
+  assert.equal(await page.locator('.wavelo--progress-signal .wavelo__part').count(), 5);
+  assert.equal(await page.locator('.wavelo--progress-path .wavelo__part').count(), 1);
+  assert.equal(await page.locator('.wavelo--scroll-chapters .wavelo__part').count(), 3);
+
+  for (const value of [0, 50, 100]) {
+    await setContentPage(renderLoader({ type: 'progress-signal', value, max: 100 }).html + renderLoader({ type: 'progress-path', value, max: 100 }).html);
+    const levels = await page.locator('.wavelo--progress-signal .wavelo__part').evaluateAll(parts => parts.map(part => Number.parseFloat(part.style.getPropertyValue('--wavelo-progress'))));
+    assert.deepEqual(levels, Array.from({ length: 5 }, (_, index) => Math.max(0, Math.min(100, (value / 100 * 5 - index) * 100))));
+    assert.equal(await page.locator('.wavelo--progress-path .wavelo__part').evaluate(part => part.style.strokeDashoffset), String(100 - value));
+  }
+
+  await setContentPage(renderLoader({ type: 'scroll-horizontal' }).html + renderLoader({ type: 'scroll-chapters' }).html);
+  const timelines = await page.locator('.wavelo').evaluateAll(roots => roots.map(root => root.getAnimations({ subtree: true }).map(animation => animation.timeline?.constructor?.name)));
+  assert.ok(timelines.every(names => names.includes('ScrollTimeline')), JSON.stringify(timelines));
+});
+
 test('brand progress handles zero, completion, updates and safe text in custom elements', async () => {
   await page.goto('about:blank');
   await setContentPage('<wavelo-loader type="brand-loader"></wavelo-loader>');
@@ -140,7 +164,7 @@ test('spatial loaders retain readable silhouettes throughout their animation cyc
 });
 
 test('audit regression: every indeterminate default animates, including newly added stateful designs', async () => {
-  const determinate = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top', 'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline', 'progress-multi-step', 'progress-upload-multi', 'progress-skill', 'progress-orbit-fill']);
+  const determinate = new Set(['segmented-bar', 'progress-bar', 'progress-ring', 'progress-steps', 'progress-top', 'progress-battery', 'progress-half-ring', 'progress-count', 'progress-dots-fill', 'progress-label-inline', 'progress-multi-step', 'progress-upload-multi', 'progress-skill', 'progress-orbit-fill', 'progress-signal', 'progress-path']);
   await setContentPage(loaderRegistry.map(l => `<div data-design="${l.id}">${renderLoader({ type: l.id }).html}</div>`).join(''));
   const missing = await page.evaluate(() => [...document.querySelectorAll('[data-design]')].filter(w => !w.firstElementChild.getAnimations({ subtree: true }).some(a => a instanceof CSSAnimation)).map(w => w.dataset.design));
   assert.deepEqual(missing.filter(id => !determinate.has(id)), []);
@@ -411,7 +435,7 @@ test('a design renders the same with only the stylesheet slice its entry point s
   // one. What this test claims is that the shipped slice carries the same rules, so
   // the properties a timeline drives are left out for those designs while the
   // bindings that produce them - including which timeline is named - are compared.
-  const positionDriven = { 'progress-scroll': ['width'], 'progress-view': ['width', 'transform'] };
+  const positionDriven = { 'progress-scroll': ['width'], 'progress-view': ['width', 'transform'], 'scroll-horizontal': ['transform'], 'scroll-chapters': ['transform'] };
   const script = `(() => {
     // A scroll-driven animation reads its progress from its timeline, and
     // assigning it a numeric currentTime throws; pausing holds it where it is.
@@ -671,7 +695,9 @@ test('the scroll-driven bar follows the document scroll position without JavaScr
 test('where scroll and view timelines are unsupported the same keyframes sweep on the clock', async () => {
   const cases = [
     { type: 'progress-scroll', selector: '#bar .wavelo__part', frame: 'wavelo-scroll-fill' },
-    { type: 'progress-view', selector: '#bar .wavelo__part', frame: 'wavelo-view-fill' }
+    { type: 'progress-view', selector: '#bar .wavelo__part', frame: 'wavelo-view-fill' },
+    { type: 'scroll-horizontal', selector: '#bar .wavelo__part', frame: 'wavelo-view-fill' },
+    { type: 'scroll-chapters', selector: '#bar .wavelo__part i', frame: 'wavelo-chapter-fill' }
   ];
   for (const testCase of cases) {
     const result = renderLoader({ type: testCase.type, label: 'Reading progress' });
@@ -1141,13 +1167,13 @@ test('no two designs in the catalog render identically', async () => {
     };
     return [...document.querySelectorAll('[data-case]')].map((wrap) => {
       const root = wrap.querySelector('.wavelo');
-      const parts = [...root.querySelectorAll('.wavelo__part')];
+      const descendants = [...root.querySelectorAll('*')];
       return {
         id: wrap.dataset.case,
         signature: [
           describe(root),
-          parts.length,
-          parts.map((part) => `${describe(part)}@${part.tagName}`).join(','),
+          descendants.length,
+          descendants.map((element) => `${describe(element)}@${element.tagName}`).join(','),
           describe(root, '::before'),
           describe(root, '::after')
         ].join('##')
@@ -1239,6 +1265,21 @@ test('documentation gallery renders and has no axe violations', async () => {
     assert.match(await galleryPage.locator('#brand-error').textContent(), /fontSize/);
     await galleryPage.locator('#brand-fontSize').fill('36');
     assert.equal(await galleryPage.locator('#brand-error').textContent(), '');
+
+    await galleryPage.selectOption('#design', 'brand-orbit');
+    assert.equal(await galleryPage.locator('#stage .wavelo--brand-orbit .wavelo__brand-orbit').count(), 1);
+    assert.match(await galleryPage.locator('#code').textContent(), /"type": "brand-orbit"/);
+
+    await galleryPage.selectOption('#design', 'progress-signal');
+    await galleryPage.locator('#progress').evaluate((element) => {
+      element.value = '80';
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const signalLevels = await galleryPage.locator('#stage .wavelo--progress-signal .wavelo__part').evaluateAll(parts => parts.map(part => part.style.getPropertyValue('--wavelo-progress')));
+    assert.deepEqual(signalLevels, ['100%', '100%', '100%', '100%', '0%']);
+
+    await galleryPage.selectOption('#design', 'progress-path');
+    assert.equal(await galleryPage.locator('#stage .wavelo--progress-path .wavelo__part').evaluate(part => part.style.strokeDashoffset), '20');
     assert.deepEqual(consoleErrors, []);
     assert.deepEqual(pageErrors, []);
   } finally {

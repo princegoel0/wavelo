@@ -110,19 +110,19 @@ test('mask, conic-gradient and @property carry into WebKit', async () => {
 });
 
 // Measured on WebKit 27.2: `animation-timeline: scroll()` and `view()` are both
-// supported, so these two designs take the enhancement here rather than the document-clock
+// supported, so these four designs take the enhancement here rather than the document-clock
 // fallback that Firefox 157 takes. Both paths are now measured on a real engine; if a
 // future WebKit drops the support, this fails and the claim in COMPATIBILITY.md has to be
 // re-read rather than quietly left true.
 test('the timeline designs run on a ScrollTimeline and a ViewTimeline in WebKit', async () => {
-  const expected = { 'progress-scroll': 'ScrollTimeline', 'progress-view': 'ViewTimeline' };
+  const expected = { 'progress-scroll': 'ScrollTimeline', 'progress-view': 'ViewTimeline', 'scroll-horizontal': 'ScrollTimeline', 'scroll-chapters': 'ScrollTimeline' };
   for (const [type, timeline] of Object.entries(expected)) {
     await page.setContent(`<!doctype html><html><head><style>${allStyles}</style></head><body><div id="case">${renderLoader({ type, label: 'Loading' }).html}</div><div style="height:400vh"></div></body></html>`);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
     await page.evaluate(() => new Promise((settle) => requestAnimationFrame(() => requestAnimationFrame(settle))));
     const read = await page.evaluate(() => {
       const root = document.querySelector('#case .wavelo');
-      const animated = [root, ...root.querySelectorAll('.wavelo__part')].find((element) => getComputedStyle(element).animationName !== 'none');
+      const animated = [root, ...root.querySelectorAll('*')].find((element) => getComputedStyle(element).animationName !== 'none');
       const animation = document.getAnimations().find((entry) => entry.effect?.target === animated);
       return {
         name: animated ? getComputedStyle(animated).animationName : 'none',

@@ -36,7 +36,9 @@ const VARS = ['--wavelo-size', '--wavelo-duration', '--wavelo-stroke', '--wavelo
  */
 const timelineDriven = new Map([
   ['progress-scroll', ['width', 'transform-origin', '--wavelo-progress']],
-  ['progress-view', ['width', 'transform-origin', '--wavelo-progress', 'transform']]
+  ['progress-view', ['width', 'transform-origin', '--wavelo-progress', 'transform']],
+  ['scroll-horizontal', ['width', 'transform-origin', '--wavelo-progress', 'transform']],
+  ['scroll-chapters', ['width', 'transform-origin', '--wavelo-progress', 'opacity']]
 ]);
 
 const [command, file] = process.argv.slice(2);

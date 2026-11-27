@@ -3,6 +3,8 @@
 `brand-loader` combines your brand text with seven text animations and an optional
 ring, bar or three-dot indicator. Omit `value` for indefinite loading; provide
 `value` and `max` for real progress. The same typed configuration works in every adapter.
+Three canonical variant IDs — `brand-orbit`, `brand-scan`, and `brand-aurora` —
+provide distinct treatments while keeping the same nested `brand` API.
 
 ## Named presets
 
@@ -26,6 +28,24 @@ options still win.
 
 `brandPresetIds` and `brandPresets` are exported from `@wavelo/core` for discovery
 and typed reuse. Unknown types keep the normal fallback behavior.
+
+## Canonical variants
+
+Unlike the named presets above, these are public catalog IDs with their own
+implementation and stylesheet identity. Each supplies variant defaults; explicit
+`brand` fields still override them.
+
+| Type | Default treatment |
+| --- | --- |
+| `brand-orbit` | Pulse text, ring indicator, inline layout, and an orbiting accent bead around the wordmark |
+| `brand-scan` | Static text, bar indicator, inline layout, and a moving scan highlight |
+| `brand-aurora` | Static text, dots indicator, stacked layout, and a flowing aurora gradient |
+
+```tsx
+<Loader type="brand-orbit" brand={{ text: 'ACME' }} />
+<Loader type="brand-scan" brand={{ text: 'ACME', indicator: 'none' }} />
+<Loader type="brand-aurora" brand={{ text: 'ACME', caption: 'Loading' }} />
+```
 
 ```tsx
 import { Loader } from '@wavelo/react';
@@ -125,7 +145,11 @@ CSS refinements can be supplied with `className`, inherited CSS, or `style`.
 ```ts
 // Core: stylesheet and escaped markup for SSR or your own integration.
 import { brandLoader } from '@wavelo/core/loaders/brand-loader';
+import { brandOrbit } from '@wavelo/core/loaders/brand-orbit';
+import { brandScan } from '@wavelo/core/loaders/brand-scan';
+import { brandAurora } from '@wavelo/core/loaders/brand-aurora';
 const { html, css } = brandLoader({ brand: { text: 'ACME', animation: 'shimmer' } });
+const orbit = brandOrbit({ brand: { text: 'ACME' } });
 
 // Vanilla: mounts the loader and injects its stylesheet slice.
 import { mountLoader } from '@wavelo/vanilla';
@@ -162,17 +186,20 @@ defaults. Explicit fields override them. Empty `caption` removes a default capti
 
 ## Styling and accessibility
 
-Stable selectors are `.wavelo--brand-loader`, `.wavelo__brand`,
-`.wavelo__brand-text`, `.wavelo__brand-char`, `.wavelo__brand-caption`,
-`.wavelo__brand-value` and `.wavelo__brand-indicator`. Indicators carry
+Stable selectors are `.wavelo--brand-loader`, `.wavelo--brand-orbit`,
+`.wavelo--brand-scan`, `.wavelo--brand-aurora`, `.wavelo__brand`,
+`.wavelo__brand-orbit`, `.wavelo__brand-scan`, `.wavelo__brand-text`,
+`.wavelo__brand-char`, `.wavelo__brand-caption`, `.wavelo__brand-value` and
+`.wavelo__brand-indicator`. Indicators carry
 `data-indicator="ring|bar|dots"`. Style those selectors from your own class when you
 need controls beyond the typed options. Custom animations must preserve the shared
 pause and reduced-motion behavior themselves.
 
-The default accessible name is “your brand loading”. Override it with `label` or
-`labelledBy`, and use `describedBy` or `valueText` for more context. Individual
-letters, captions and indicators are hidden from assistive technology to avoid
-duplicate announcements. A supplied `value` changes the root to `role="progressbar"`
+The default accessible name is “your brand loading” across the whole family.
+Override it with `label` or `labelledBy`, and use `describedBy` or `valueText` for
+more context. Individual letters, captions, scan/orbit decoration and indicators
+are hidden from assistive technology to avoid duplicate announcements. A supplied
+`value` changes the root to `role="progressbar"`
 with `aria-valuemin`, `aria-valuemax` and `aria-valuenow`; otherwise it uses `status`.
 Use `decorative` when nearby content already announces the operation.
 
