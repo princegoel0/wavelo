@@ -90,7 +90,7 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
       - name: Download validated release tarballs
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: wavelo-${{ needs.validate.outputs.version }}-tarballs
           path: release-tarballs
