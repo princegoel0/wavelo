@@ -2,7 +2,7 @@
 
 > **Scope:** Architectural audit and complete customization API reference for all **181 active loading designs** across **8 functional categories** in `@wavelo/core`.
 > **Status:** Authoritative reference for developer customization, framework adapter props, and design system governance.
-> **Version Alignment:** Wavelo 0.5.0 on branch `dev` (181 designs including brand-loader; zero-layout compositor performance verified).
+> **Version Alignment:** Wavelo 0.6.0 on branch `dev` (181 designs including brand-loader; zero-layout compositor performance verified).
 
 ---
 
