@@ -829,8 +829,8 @@
     "id": "progress-label-inline",
     "category": "progress",
     "dimension": "2d",
-    "size": 7446,
-    "hash": "061c79efc2ee513d43a76b9cd87bc8a0ff596fb60f9bd1f1d58c9ce8eabcf760"
+    "size": 8624,
+    "hash": "a6e49143e3b59ba6e32d7812c81b04516635586b662b7dcfc10c4e139f959ef3"
   },
   "progress-multi-step": {
     "id": "progress-multi-step",

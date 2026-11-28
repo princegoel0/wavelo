@@ -322,7 +322,12 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     resolution === 'default' && typeof requestedType === 'string' && requestedType ? { 'data-wavelo-fallback': requestedType } : {};
   // `attr()` is how a value description reaches a pseudo-element's content, so the
   // label a design prints is the same string the assistive technology is told.
-  const valueLabel: Attributes = config.valueText ? { 'data-wavelo-value-text': config.valueText } : {};
+  const defaultValueLabel =
+    definition.id === 'progress-label-inline'
+      ? `${config.value !== undefined ? Math.round((config.value / config.max) * 100) : 35}%`
+      : undefined;
+  const resolvedValueLabel = config.valueText ?? defaultValueLabel;
+  const valueLabel: Attributes = resolvedValueLabel ? { 'data-wavelo-value-text': resolvedValueLabel } : {};
   const html =
     `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +

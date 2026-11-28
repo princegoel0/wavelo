@@ -11,17 +11,17 @@ now measures the current workspace core; its earlier figure used a stale local d
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 40,293 | 11.8 KB (12,044 B) | 12,800 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 69,251 | 16.1 KB (16,499 B) | 17,920 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 80,020 | 17.2 KB (17,653 B) | 19,456 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 335,462 | 59.6 KB (61,063 B) | 67,584 |
-| `@wavelo/core` + registry walk over all 188 designs | 335,465 | 59.6 KB (61,069 B) | 67,584 |
-| `@wavelo/react` | 336,420 | 60.1 KB (61,575 B) | 67,584 |
-| `@wavelo/vue` | 337,051 | 60.5 KB (61,907 B) | 67,584 |
-| `@wavelo/angular` | 339,018 | 61.0 KB (62,515 B) | 68,096 |
-| `@wavelo/svelte` | 335,781 | 59.8 KB (61,236 B) | 67,584 |
-| `@wavelo/web-components` | 337,525 | 60.5 KB (61,971 B) | 67,584 |
-| `@wavelo/vanilla` | 335,983 | 59.9 KB (61,343 B) | 67,584 |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 40,389 | 11.8 KB (12,078 B) | 12,800 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 69,346 | 16.1 KB (16,533 B) | 17,920 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 80,116 | 17.3 KB (17,687 B) | 19,456 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 335,557 | 59.7 KB (61,095 B) | 67,584 |
+| `@wavelo/core` + registry walk over all 188 designs | 335,560 | 59.7 KB (61,098 B) | 67,584 |
+| `@wavelo/react` | 336,515 | 60.2 KB (61,602 B) | 67,584 |
+| `@wavelo/vue` | 337,146 | 60.5 KB (61,933 B) | 67,584 |
+| `@wavelo/angular` | 339,503 | 61.2 KB (62,681 B) | 68,096 |
+| `@wavelo/svelte` | 335,876 | 59.8 KB (61,263 B) | 67,584 |
+| `@wavelo/web-components` | 337,616 | 60.5 KB (61,998 B) | 67,584 |
+| `@wavelo/vanilla` | 336,078 | 59.9 KB (61,374 B) | 67,584 |
 | `@wavelo/core/styles.css` (all designs, loaded once) | 281,933 raw | 43,179 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design

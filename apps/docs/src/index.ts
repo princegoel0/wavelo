@@ -25,7 +25,7 @@ const playgrounds = [
 ];
 
 const cards = loaderRegistry.map((loader) => `
-<article class="card${loader.deprecated ? ' deprecated' : ''}" data-category="${loader.category}" data-dimension="${loader.dimension}" data-id="${loader.id}" data-name="${loader.name.toLowerCase()}" data-deprecated="${loader.deprecated ? 'true' : 'false'}" data-options="${loader.options.join(',')}">
+<article class="card${loader.deprecated ? ' deprecated' : ''}" data-category="${loader.category}" data-dimension="${loader.dimension}" data-kind="${loader.kind}" data-id="${loader.id}" data-name="${loader.name.toLowerCase()}" data-description="${loader.description.replace(/"/g, '&quot;').toLowerCase()}" data-deprecated="${loader.deprecated ? 'true' : 'false'}" data-options="${loader.options.join(',')}">
   <div class="preview">${renderLoader({ type: loader.id }).html}</div>
   <div class="meta-wrap">
     <div class="meta-head">
@@ -63,6 +63,17 @@ const cards = loaderRegistry.map((loader) => `
 const html = `<!doctype html>
 <html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wavelo — Motion made simple</title>
+<meta name="description" content="Zero-dependency CSS loading spinners, skeletons, AI streaming indicators, and determinate progress bars for React, Vue, Svelte, Angular, Web Components, and Vanilla JS.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wavelo — 188 CSS Loaders, Skeletons & Progress Indicators">
+<meta property="og:description" content="Zero-dependency, SSR-safe, accessible loading states with one shared stylesheet and identical APIs across React, Vue, Svelte, Angular, and Web Components.">
+<meta property="og:url" content="https://princegoel0.github.io/wavelo/">
+<meta property="og:image" content="https://raw.githubusercontent.com/princegoel0/wavelo/main/.github/assets/readme-hero.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wavelo — Motion made simple">
+<meta name="twitter:description" content="188 CSS-first loading spinners, skeletons, AI streaming loaders, and progress bars with zero runtime dependencies.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/princegoel0/wavelo/main/.github/assets/readme-hero.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%234f46e5'/%3E%3Cstop offset='100%25' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M7 13c3-4 6 4 9 0s6 4 9 0M7 20c3-4 6 4 9 0s6 4 9 0' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root, [data-theme="dark"] {
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -682,6 +693,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
           <button type="button" class="t-tab" data-pkg="pnpm">pnpm</button>
           <button type="button" class="t-tab" data-pkg="yarn">yarn</button>
           <button type="button" class="t-tab" data-pkg="bun">bun</button>
+          <button type="button" class="t-tab" data-pkg="cdn">cdn</button>
         </div>
       </div>
       <div class="terminal-body">
@@ -1788,7 +1800,8 @@ const installTemplates = {
   npm: 'npm i @wavelo/react',
   pnpm: 'pnpm add @wavelo/react',
   yarn: 'yarn add @wavelo/react',
-  bun: 'bun add @wavelo/react'
+  bun: 'bun add @wavelo/react',
+  cdn: '<script type="module" src="https://esm.sh/@wavelo/web-components/register"><\\/script>'
 };
 
 pkgTabs.forEach((tab) => {
@@ -2291,7 +2304,7 @@ function filter() {
   let visible = 0;
 
   document.querySelectorAll('.card').forEach((c) => {
-    const matchesQuery = !q || c.dataset.name.includes(q) || c.dataset.id.includes(q) || c.dataset.category.includes(q);
+    const matchesQuery = !q || c.dataset.name.includes(q) || c.dataset.id.includes(q) || c.dataset.category.includes(q) || (c.dataset.kind || '').includes(q) || (c.dataset.description || '').includes(q);
     const matchesCat = !catVal || c.dataset.category === catVal;
     const matchesDim = !dimVal || c.dataset.dimension === dimVal;
     const show = matchesQuery && matchesCat && matchesDim;
