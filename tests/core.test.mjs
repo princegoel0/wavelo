@@ -815,7 +815,7 @@ test('createStyleCollector deduplicates rendered slices for SSR head injection',
   const { createStyleCollector, renderLoader } = await import('../packages/core/dist/index.js');
   const collector = createStyleCollector({ nonce: 'ssr-nonce' });
   collector.add(renderLoader({ type: 'ring' }));
-  collector.add(renderLoader({ type: 'dual-ring' }));
+  collector.add(renderLoader({ type: 'circular' }));
   collector.add(renderLoader({ type: 'skeleton-card' }));
   assert.equal(collector.styles().length, 2);
   const head = collector.markup();
