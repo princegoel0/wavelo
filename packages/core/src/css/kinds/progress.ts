@@ -132,9 +132,9 @@ ${uploadFrames}${transitionFrames}${waveRollFrames}${drainFrames}${scanlineFrame
 .wavelo__path .wavelo__track,.wavelo__path .wavelo__part{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:var(--wavelo-stroke,6);vector-effect:non-scaling-stroke}
 .wavelo__path .wavelo__track{stroke:color-mix(in srgb,currentColor 18%,transparent)}
 .wavelo__path .wavelo__part{stroke:currentColor;stroke-dasharray:100;transition:stroke-dashoffset .2s ease}
-.wavelo--brand-orbit .wavelo__brand{position:relative;padding:.45em .65em}
-.wavelo__brand-orbit{position:absolute;inset:0;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:999px;animation:wavelo-spin var(--wavelo-duration,2.4s) var(--brand-ease,var(--wavelo-ease,linear)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo__brand-orbit i{position:absolute;top:-.28em;left:50%;width:.56em;height:.56em;border-radius:50%;background:var(--wavelo-secondary-color,currentColor);box-shadow:0 0 .5em currentColor;transform:translateX(-50%)}
+.wavelo--brand-orbit .wavelo__brand{position:relative;padding:.35em .85em}
+.wavelo__brand-orbit{position:absolute;inset:0;border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:999px;pointer-events:none}
+.wavelo__brand-orbit i{position:absolute;top:0;left:0;width:.45em;height:.45em;border-radius:50%;background:var(--wavelo-secondary-color,currentColor);box-shadow:0 0 .5em currentColor;offset-path:inset(0 round 999px);offset-anchor:center;animation:wavelo-brand-orbit var(--wavelo-duration,2.4s) var(--brand-ease,var(--wavelo-ease,linear)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--brand-scan .wavelo__brand{position:relative;overflow:hidden}
 .wavelo__brand-scan{position:absolute;top:0;bottom:0;width:35%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--wavelo-secondary-color,#38bdf8) 75%,transparent),transparent);animation:wavelo-brand-scan var(--wavelo-duration,2s) var(--brand-ease,var(--wavelo-ease,ease-in-out)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);pointer-events:none}
 .wavelo--brand-aurora .wavelo__brand-text{color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(90deg,#22d3ee,#818cf8,#e879f9,#22d3ee);background-size:200% 100%;background-clip:text;-webkit-background-clip:text;animation:wavelo-brand-shimmer var(--wavelo-duration,2.4s) var(--brand-ease,var(--wavelo-ease,linear)) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
