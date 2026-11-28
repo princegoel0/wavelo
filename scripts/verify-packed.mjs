@@ -8,6 +8,7 @@
 //
 // It installs peers from the registry, so it is a release gate rather than part of
 // `npm run check`.
+import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -209,6 +210,15 @@ const check = (label, action) => {
 };
 
 check('the packed core, vanilla, web-components and React entries render and stay inert without a DOM', () => node(['check.mjs'], consumer));
+check('the packed web-components registration entry survives tree shaking', () => {
+  writeFileSync(resolve(consumer, 'register-consumer.js'), `import '@wavelo/web-components/register'; console.log('consumer');`);
+  node(
+    [resolve(root, 'node_modules/esbuild/bin/esbuild'), 'register-consumer.js', '--bundle', '--platform=browser', '--format=esm', '--outfile=dist/register-consumer.js'],
+    consumer
+  );
+  const output = readFileSync(resolve(consumer, 'dist/register-consumer.js'), 'utf8');
+  assert.ok(output.includes('customElements') && output.includes('wavelo-loader'), 'bundling removed the custom-element registration');
+});
 check('a strict consumer type checks against the packed declarations', () =>
   node(
     ['node_modules/typescript/bin/tsc', '--noEmit', '--strict', '--target', 'ES2022', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', 'check.ts'],

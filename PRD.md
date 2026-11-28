@@ -1616,9 +1616,10 @@ Initial proposed targets:
 
 These are initial targets, not guaranteed measurements.
 
-> **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 10,240 B for a
-> single design chosen at build time (measured 9,073 B gzipped) and 51,200 B for the runtime
-> renderer (measured 44,372 B). The 5 KB loader target is met at the small end of the catalog
+> **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 12,800 B for a
+> single design chosen at build time (measured 12,090 B gzipped), 17,920 B for the busiest
+> kind, and 67,584 B for the runtime renderer (measured 61,146 B; Angular's ceiling is
+> 68,096 B). The 5 KB loader target is met at the small end of the catalog
 > and missed by designs that share a crowded render kind, because a design imports its whole
 > kind's rules; the 10 KB core target is missed by design — a runtime-selected renderer has to
 > carry all twelve slices. The gap is recorded rather than closed quietly:
@@ -2195,13 +2196,13 @@ The product succeeds when developers can solve common loading problems quickly, 
 
 **The defining principle is simple: maximum useful variety, minimum developer friction.**
 
-**End of PRD — Wavelo Version 2.0**
+**End of PRD — Wavelo Version 1.0.0**
 
 ---
 
 # 22. Implementation Clarifications
 
-The following clarifications are part of the v2 specification and resolve
+The following clarifications are part of the v1 specification and resolve
 implementation ambiguities discovered during technical review:
 
 - The framework-independent core exposes a serializable rendering contract. DOM

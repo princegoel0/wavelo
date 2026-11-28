@@ -93,7 +93,7 @@ exactly why `busiest-loader`
 in `npm run measure` samples a shape design today: a probe pinned to whatever kind held the
 record when it was written stops measuring the worst case the moment another kind
 overtakes it, and the budget still passes — which is what happened here, with the ceiling
-at 11,264 bytes while a shape design already cost 12,145. Redrawing a design moves its kind
+at 11,264 bytes while a shape design already cost 12,145 at that checkpoint. Redrawing a design moves its kind
 too, and not in proportion to the design's own size: `infinity` is one loader's worth of
 markup and what it ships is a sixteen-stop lemniscate inside the 4,378-byte `rings` slice,
 while `helix` needs eighteen parts in six rows inside the 5,382-byte `wave` slice. A design
@@ -101,16 +101,14 @@ in a crowded kind costs more than a design in a quiet one, whatever its own rule
 change to the renderer, which every design imports, costs all of them: the determinate fill
 path added 227 bytes to every single-design bundle.
 
-Importing one design's entry point costs the renderer, validation and that slice, and
-the six samples below are strictly ordered by the slice they pay for: `progress-battery`
-(`progress`) 8,986 bytes, `ring` 9,065, `skeleton-card` (`skeleton`) 9,526, `helix`
-(`wave`) 10,186, `bubble-rise` (`dots`) 10,618 and `voxel-cluster` (`shape`) 12,145
-— the largest, because `shape` is now the most crowded slice. `npm run measure` enforces
-both ends of that range: 10,240 bytes for the sampled `ring` and 13,824 for the busiest
-kind, so a new shape design cannot grow that slice without a number moving. Importing
-`renderLoader`, which chooses by string at runtime, costs 43.3 KB (44,372 bytes) because
-it must be able to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry
-point.
+Importing one design's entry point costs the renderer, validation and that slice. Six
+current samples show the spread: `ring` 12,082 B, `helix` (`wave`) 13,673 B,
+`progress-battery` (`progress`) 13,717 B, `skeleton-card` (`skeleton`) 14,285 B,
+`bubble-rise` (`dots`) 14,833 B and `voxel-cluster` (`shape`) 16,545 B — the largest,
+because `shape` is the most crowded slice. `npm run measure` enforces 12,800 bytes for
+the sampled `ring` and 17,920 for the busiest kind. Importing `renderLoader`, which chooses
+by string at runtime, costs 59.7 KB (61,146 bytes) because it must be able to draw anything.
+See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader
 

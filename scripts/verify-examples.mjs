@@ -16,6 +16,7 @@ import { dirname, join, resolve } from 'node:path';
  */
 const root = resolve(import.meta.dirname, '..');
 const examples = resolve(root, 'examples');
+const { version } = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
 const failures = [];
 const compiled = [];
 const check = (condition, message) => {
@@ -102,7 +103,7 @@ for (const file of sources) {
       failures.push(`examples/${project} imports '${specifier}', which @wavelo/${name}'s exports map does not declare`);
       continue;
     }
-    check(dependencies[`@wavelo/${name}`] !== undefined, `examples/${project} imports '${specifier}' but does not depend on @wavelo/${name}`);
+    check(dependencies[`@wavelo/${name}`] === version, `examples/${project} depends on @wavelo/${name}@${dependencies[`@wavelo/${name}`] ?? 'missing'}, expected ${version}`);
     if (kind === 'default') continue;
     const declaration = declarationOf(target);
     if (!declaration?.endsWith('.d.ts')) continue;
@@ -133,7 +134,18 @@ for (const file of sources.filter((path) => path.endsWith('.vue'))) {
   const source = await readFile(file, 'utf8');
   const { descriptor, errors } = sfc.parse(source, { filename: file });
   if (errors.length) failures.push(`examples/${file.slice(examples.length + 1)} is not a valid single-file component: ${errors[0].message}`);
-  else if (descriptor.scriptSetup) sfc.compileScript(descriptor, { id: file });
+  else {
+    const script = descriptor.scriptSetup ? sfc.compileScript(descriptor, { id: file }) : undefined;
+    if (descriptor.template) {
+      const template = sfc.compileTemplate({
+        source: descriptor.template.content,
+        filename: file,
+        id: file,
+        compilerOptions: { bindingMetadata: script?.bindings }
+      });
+      if (template.errors.length) failures.push(`examples/${file.slice(examples.length + 1)} has an invalid template: ${template.errors[0]}`);
+    }
+  }
 }
 
 // ngc resolves a `templateUrl` relative to the file that declares it, which needs the
@@ -155,6 +167,6 @@ const projects = new Set(sources.map(projectOf));
 console.log(
   `Examples verified: ${sources.length} sources in ${projects.size} projects, every @wavelo import resolved against the built ` +
     `declarations and declared as a dependency, ${sources.filter((file) => file.endsWith('.svelte')).length} Svelte components ` +
-    `compiled for client and server, ${sources.filter((file) => file.endsWith('.vue')).length} single-file components compiled, ` +
-    `and the Angular and React applications ${compiled.length === 2 ? 'both' : ''} built.`
+    `compiled for client and server, ${sources.filter((file) => file.endsWith('.vue')).length} single-file components compiled with their templates, ` +
+    `and the Angular compiler and React type check ${compiled.length === 2 ? 'both' : ''} passed.`
 );

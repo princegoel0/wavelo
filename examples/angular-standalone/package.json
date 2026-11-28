@@ -13,8 +13,8 @@
     "@angular/core": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@angular/platform-browser-dynamic": "^22.0.0",
-    "@wavelo/angular": "0.7.0",
-    "@wavelo/core": "0.7.0",
+    "@wavelo/angular": "1.0.0",
+    "@wavelo/core": "1.0.0",
     "rxjs": "^7.8.0",
     "zone.js": "^0.15.0"
   },
@@ -22,6 +22,6 @@
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
-    "typescript": "^6.0.0"
+    "typescript": "~6.0.0"
   }
 }

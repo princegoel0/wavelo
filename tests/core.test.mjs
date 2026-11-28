@@ -421,6 +421,8 @@ test('a counted bar prints the percentage and a label prints its own text', () =
   assert.match(labelled.html, /data-wavelo-value-text="70% uploaded"/);
   assert.match(renderLoader({ type: 'progress-label-inline', value: 65, max: 100 }).html, /data-wavelo-value-text="65%"/);
   assert.match(renderLoader({ type: 'progress-label-inline' }).html, /data-wavelo-value-text="35%"/);
+  assert.doesNotMatch(renderLoader({ type: 'progress-label-inline', value: 65, valueText: '' }).html, /data-wavelo-value-text|aria-valuetext/);
+  assert.doesNotMatch(renderLoader({ type: 'progress-label-inline', value: 65, valueText: '   ' }).html, /data-wavelo-value-text|aria-valuetext/);
   // An indeterminate design is not handed a number it cannot draw, and a design that
   // never prints the text pays nothing for the attribute.
   assert.doesNotMatch(renderLoader({ type: 'progress-ai-generate', value: 70, max: 100, label: 'Working' }).html, /--wavelo-count:/);

@@ -32,6 +32,27 @@ for (const pkg of packages) {
   }
 }
 
+const rootManifest = JSON.parse(readFileSync('package.json', 'utf8'));
+const docsManifest = JSON.parse(readFileSync('apps/docs/package.json', 'utf8'));
+const lockfile = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+const workspaceManifests = [
+  { path: '', manifest: rootManifest },
+  { path: 'apps/docs', manifest: docsManifest },
+  ...packageFiles.map((file) => ({ path: file.replace('/package.json', ''), manifest: JSON.parse(readFileSync(file, 'utf8')) }))
+];
+if (lockfile.version !== version) throw new Error(`package-lock.json records ${lockfile.version}, expected ${version}`);
+for (const { path, manifest } of workspaceManifests) {
+  const locked = lockfile.packages[path];
+  if (locked?.name !== manifest.name || locked?.version !== version) {
+    throw new Error(`package-lock.json has a stale ${path || 'root'} workspace entry; expected ${manifest.name}@${version}`);
+  }
+  for (const [dependency, dependencyVersion] of Object.entries(locked?.dependencies ?? {})) {
+    if (dependency.startsWith('@wavelo/') && dependencyVersion !== version) {
+      throw new Error(`package-lock.json records ${manifest.name} -> ${dependency}@${dependencyVersion}, expected ${version}`);
+    }
+  }
+}
+
 const published = [];
 for (const pkg of packages) {
   try {
@@ -55,4 +76,4 @@ if (published.length > 0) {
   throw new Error(`These exact package versions are already published: ${published.join(', ')}`);
 }
 
-console.log(`Release version ${version} is aligned across ${packages.length} packages and is not published.`);
+console.log(`Release version ${version} is aligned across ${packages.length} packages and the lockfile, and is not published.`);

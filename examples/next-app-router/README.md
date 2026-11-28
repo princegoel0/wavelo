@@ -1,7 +1,7 @@
 # Next.js App Router
 
-Requires `@wavelo/react@0.7.0`, the release that carries the Server Component boundary.
-With 0.4.0 installed, `Loader` has no declared boundary and each file that renders it needs
+Requires `@wavelo/react@1.0.0` and `@wavelo/core@1.0.0`, the release that carries the Server Component boundary.
+Earlier 0.x releases did not all declare that boundary, so each file rendering `Loader` needed
 its own `'use client'` line.
 
 ```sh

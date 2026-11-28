@@ -4,6 +4,9 @@
 
 - Patch `createRouteProgress` CSS progress tokens and `aria-valuenow` in place on
   updates so transitions interpolate smoothly instead of replacing DOM nodes.
+- Keep the `brand-orbit` bead on its stationary pill track, default
+  `progress-label-inline` to percentage text, and preserve `valueText: ''` as an
+  explicit request to suppress that generated label.
 - Add `@wavelo/core/styles.layer.css` (`@layer wavelo`) for Tailwind v4 / Cascade
   Layers consumers, `createStyleCollector` for request-scoped SSR slice collection,
   `@wavelo/web-components/register` auto-registration, `HTMLElementTagNameMap`

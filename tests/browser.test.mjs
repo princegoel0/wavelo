@@ -94,6 +94,36 @@ test('0.7.0 brand variants, determinate tracks and scroll designs render their c
   const ids = ['brand-orbit', 'brand-scan', 'brand-aurora', 'progress-signal', 'progress-path', 'scroll-horizontal', 'scroll-chapters'];
   await setContentPage(ids.map((id) => renderLoader({ type: id, brand: { text: 'ACME' }, value: 50, max: 100 }).html).join(''));
   assert.equal(await page.locator('.wavelo--brand-orbit .wavelo__brand-orbit').count(), 1);
+  const orbit = await page.locator('.wavelo--brand-orbit').evaluate(root => {
+    const track = root.querySelector('.wavelo__brand-orbit');
+    const bead = track.querySelector('i');
+    const animation = bead.getAnimations()[0];
+    const sample = time => {
+      animation.currentTime = time;
+      const beadRect = bead.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      return {
+        x: beadRect.left + beadRect.width / 2 - trackRect.left,
+        y: beadRect.top + beadRect.height / 2 - trackRect.top,
+        contained: beadRect.left + beadRect.width / 2 >= trackRect.left - 1 && beadRect.left + beadRect.width / 2 <= trackRect.right + 1 && beadRect.top + beadRect.height / 2 >= trackRect.top - 1 && beadRect.top + beadRect.height / 2 <= trackRect.bottom + 1
+      };
+    };
+    const duration = animation.effect.getComputedTiming().duration;
+    return {
+      trackAnimation: getComputedStyle(track).animationName,
+      trackOverflow: getComputedStyle(track).overflow,
+      beadAnimation: getComputedStyle(bead).animationName,
+      offsetPath: getComputedStyle(bead).offsetPath,
+      start: sample(0),
+      middle: sample(duration / 2)
+    };
+  });
+  assert.equal(orbit.trackAnimation, 'none');
+  assert.equal(orbit.trackOverflow, 'visible');
+  assert.equal(orbit.beadAnimation, 'wavelo-brand-orbit');
+  assert.match(orbit.offsetPath, /inset\(/);
+  assert.ok(orbit.start.contained && orbit.middle.contained, 'the orbiting bead center leaves its stationary track');
+  assert.notEqual(orbit.start.x, orbit.middle.x);
   assert.equal(await page.locator('.wavelo--brand-scan .wavelo__brand-scan').count(), 1);
   const aurora = await page.locator('.wavelo--brand-aurora .wavelo__brand-text').evaluate(element => ({ background: getComputedStyle(element).backgroundImage, animation: getComputedStyle(element).animationName }));
   assert.match(aurora.background, /linear-gradient/);

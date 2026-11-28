@@ -315,24 +315,63 @@ const headMarkup = styles.markup(); // deduplicated <style> tags for the slices 
 
 ### Next.js App Router (`createRouteProgress`)
 
+Mount the provider once around the client navigation UI. It owns the controller and
+destroys it on unmount; `navigate` starts the bar before the router transition and
+finishes it when that transition settles, without flashing a completed bar on mount.
+
 ```tsx
 'use client';
-import { useEffect, useRef } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import {
+  createContext, useCallback, useContext, useEffect, useRef, useTransition,
+  type ReactNode
+} from 'react';
+import { useRouter } from 'next/navigation';
 import { createRouteProgress } from '@wavelo/core';
 
-export function RouteProgressBar() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const bar = useRef(createRouteProgress({ color: '#6366f1' }));
+const RouteProgressContext = createContext<((href: string) => void) | null>(null);
+
+export function RouteProgressProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const bar = useRef<ReturnType<typeof createRouteProgress> | null>(null);
+  const wasPending = useRef(false);
+
+  const ensureBar = useCallback(() => {
+    if (!bar.current) bar.current = createRouteProgress({ color: '#6366f1' });
+    return bar.current;
+  }, []);
 
   useEffect(() => {
-    bar.current.done();
-    return () => bar.current.start();
-  }, [pathname, searchParams]);
+    const progress = ensureBar();
+    return () => {
+      progress.destroy();
+      if (bar.current === progress) bar.current = null;
+      wasPending.current = false;
+    };
+  }, [ensureBar]);
 
-  return null;
+  useEffect(() => {
+    if (wasPending.current && !isPending) bar.current?.done();
+    wasPending.current = isPending;
+  }, [isPending]);
+
+  const navigate = useCallback((href: string) => {
+    ensureBar().start();
+    startTransition(() => router.push(href));
+  }, [ensureBar, router]);
+
+  return <RouteProgressContext.Provider value={navigate}>{children}</RouteProgressContext.Provider>;
 }
+
+export function useRouteProgress() {
+  const navigate = useContext(RouteProgressContext);
+  if (!navigate) throw new Error('useRouteProgress must be used inside RouteProgressProvider');
+  return navigate;
+}
+
+// In a client component:
+const navigate = useRouteProgress();
+<button onClick={() => navigate('/dashboard')}>Dashboard</button>
 ```
 
 ### Vue Router / SvelteKit / Angular Router
@@ -368,6 +407,5 @@ return (
   </div>
 );
 ```
-
 
 

@@ -233,7 +233,8 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
     label: textValue(input.label, 'label', 200),
     labelledBy: identifierList(input.labelledBy, 'labelledBy'),
     describedBy: identifierList(input.describedBy, 'describedBy'),
-    valueText: textValue(input.valueText, 'valueText', 200),
+    // An explicit empty valueText suppresses a design's generated label.
+    valueText: input.valueText === undefined ? undefined : textValue(input.valueText, 'valueText', 200) ?? '',
     max,
     value,
     style: safeStyle(input.style),

@@ -14,7 +14,7 @@ not happen without explicit approval.
 ```powershell
 npm ci
 npm run build                  # core, generated catalog entry points, every adapter
-npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
+npm run check                  # typecheck · 69 unit and adapter tests · verify:angular · verify:react · verify:vue · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
 npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
 npm run test:browser:firefox   # Gecko smoke suite
 npm run test:browser:webkit    # WebKit smoke suite
@@ -22,16 +22,19 @@ npm run audit:customization    # the measured option table, re-measured against 
 npm run audit:layout           # which designs cost a layout per frame, and why
 npm run audit:visual:correctness
 npm run docs:build
-npm run pack:check             # all seven tarballs, dry run
+npm run pack:check             # seven publishable packages plus private docs, dry run
 npm run pack:verify            # the seven installed into a clean consumer project and compiled
 npm run release:validate       # one version across the seven, and not already on npm
 ```
 
-This is the sequence `ci.yml` runs on every push and pull request, and the sequence the
-`Validate release` job runs on `main` before it will pack anything. Nothing in it publishes:
-the publish job needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm`
-environment deployment. `npm run measure` is inside `npm run check`; it is listed nowhere
-separately because a document that quotes a size is compared against it.
+The `verify` CI job runs `npm run check`; `verify-browser` runs the Chromium,
+Firefox and WebKit suites plus customization and layout audits. The `Validate release`
+job repeats the broader sequence above, including documentation, visual-correctness,
+tarball and packed-consumer checks. `release:validate` runs there only when
+`RELEASE_ENABLED` is true. Nothing in CI publishes from a pull request: the publish job
+needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm` environment
+deployment. `npm run measure` is inside `npm run check`; it is listed nowhere separately
+because a document that quotes a size is compared against it.
 
 `npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
 against `packages/core/src/catalog.ts`; after changing the catalog run
