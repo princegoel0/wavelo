@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
 /**
@@ -16,6 +17,8 @@ import { dirname, join, resolve } from 'node:path';
  */
 const root = resolve(import.meta.dirname, '..');
 const examples = resolve(root, 'examples');
+const ignoredExamplePaths = /(^|[\\/])(node_modules|dist|\.next|\.nuxt|\.svelte-kit|\.output|\.angular)([\\/]|$)/;
+const { version } = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
 const failures = [];
 const compiled = [];
 const check = (condition, message) => {
@@ -32,6 +35,22 @@ const run = (label, args) => {
     failures.push(`${label}:\n${detail.split('\n').slice(0, 10).join('\n')}`);
   }
 };
+const npmCli = process.env.npm_execpath?.endsWith('.js')
+  ? process.env.npm_execpath
+  : resolve(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
+if (!existsSync(npmCli)) throw new Error('Unable to locate npm-cli.js; run this verifier through npm.');
+const runNpm = (args, cwd) => execFileSync(
+  process.execPath,
+  [npmCli, ...args],
+  {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 15 * 60 * 1000,
+    maxBuffer: 10 * 1024 * 1024,
+    env: { ...process.env, CI: '1', NEXT_TELEMETRY_DISABLED: '1', NG_CLI_ANALYTICS: 'false' }
+  }
+);
 
 const manifests = new Map();
 const manifestFor = async (name) => {
@@ -86,7 +105,7 @@ const collectExports = async (file, seen = new Set()) => {
 };
 
 const sources = (await readdir(examples, { recursive: true }))
-  .filter((path) => /\.(ts|tsx|svelte|vue)$/.test(path) && !/(\.config\.|\.d\.)/.test(path))
+  .filter((path) => !ignoredExamplePaths.test(path) && /\.(ts|tsx|svelte|vue)$/.test(path) && !/(\.config\.|\.d\.)/.test(path))
   .map((path) => join(examples, path));
 
 for (const file of sources) {
@@ -102,7 +121,7 @@ for (const file of sources) {
       failures.push(`examples/${project} imports '${specifier}', which @wavelo/${name}'s exports map does not declare`);
       continue;
     }
-    check(dependencies[`@wavelo/${name}`] !== undefined, `examples/${project} imports '${specifier}' but does not depend on @wavelo/${name}`);
+    check(dependencies[`@wavelo/${name}`] === version, `examples/${project} depends on @wavelo/${name}@${dependencies[`@wavelo/${name}`] ?? 'missing'}, expected ${version}`);
     if (kind === 'default') continue;
     const declaration = declarationOf(target);
     if (!declaration?.endsWith('.d.ts')) continue;
@@ -133,7 +152,18 @@ for (const file of sources.filter((path) => path.endsWith('.vue'))) {
   const source = await readFile(file, 'utf8');
   const { descriptor, errors } = sfc.parse(source, { filename: file });
   if (errors.length) failures.push(`examples/${file.slice(examples.length + 1)} is not a valid single-file component: ${errors[0].message}`);
-  else if (descriptor.scriptSetup) sfc.compileScript(descriptor, { id: file });
+  else {
+    const script = descriptor.scriptSetup ? sfc.compileScript(descriptor, { id: file }) : undefined;
+    if (descriptor.template) {
+      const template = sfc.compileTemplate({
+        source: descriptor.template.content,
+        filename: file,
+        id: file,
+        compilerOptions: { bindingMetadata: script?.bindings }
+      });
+      if (template.errors.length) failures.push(`examples/${file.slice(examples.length + 1)} has an invalid template: ${template.errors[0]}`);
+    }
+  }
 }
 
 // ngc resolves a `templateUrl` relative to the file that declares it, which needs the
@@ -155,6 +185,48 @@ const projects = new Set(sources.map(projectOf));
 console.log(
   `Examples verified: ${sources.length} sources in ${projects.size} projects, every @wavelo import resolved against the built ` +
     `declarations and declared as a dependency, ${sources.filter((file) => file.endsWith('.svelte')).length} Svelte components ` +
-    `compiled for client and server, ${sources.filter((file) => file.endsWith('.vue')).length} single-file components compiled, ` +
-    `and the Angular and React applications ${compiled.length === 2 ? 'both' : ''} built.`
+    `compiled for client and server, ${sources.filter((file) => file.endsWith('.vue')).length} single-file components compiled with their templates, ` +
+    `and the Angular compiler and React type check ${compiled.length === 2 ? 'both' : ''} passed.`
 );
+
+if (process.argv.includes('--build')) {
+  if (!existsSync(resolve(root, 'packages/core/dist/index.js'))) {
+    throw new Error('packages/core/dist is missing; run npm run build before verifying production example builds.');
+  }
+  const workspace = mkdtempSync(resolve(tmpdir(), 'wavelo-example-builds-'));
+  const tarballDirectory = resolve(workspace, 'tarballs');
+  mkdirSync(tarballDirectory, { recursive: true });
+  try {
+    runNpm(['pack', '--workspaces', '--pack-destination', tarballDirectory], root);
+    const tarball = (name) => {
+      const file = resolve(tarballDirectory, `wavelo-${name}-${version}.tgz`);
+      if (!existsSync(file)) throw new Error(`Missing packed @wavelo/${name}@${version} tarball.`);
+      return `file:${file.replace(/\\/g, '/')}`;
+    };
+    for (const project of projects) {
+      const directory = resolve(workspace, project);
+      cpSync(resolve(examples, project), directory, {
+        recursive: true,
+        filter: (source) => !ignoredExamplePaths.test(source)
+      });
+      const manifestPath = resolve(directory, 'package.json');
+      const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+      for (const dependency of Object.keys(manifest.dependencies ?? {})) {
+        if (dependency.startsWith('@wavelo/')) manifest.dependencies[dependency] = tarball(dependency.slice('@wavelo/'.length));
+      }
+      manifest.overrides = { ...manifest.overrides, '@wavelo/core': tarball('core') };
+      writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+      try {
+        runNpm(['install', '--no-audit', '--no-fund'], directory);
+        runNpm(['run', 'build'], directory);
+        console.log(`  ok    ${project} production build`);
+      } catch (error) {
+        const detail = [error?.stdout, error?.stderr].filter(Boolean).join('\n').trim();
+        throw new Error(`${project} production build failed:\n${detail.split('\n').slice(-40).join('\n')}`);
+      }
+    }
+    console.log(`Production example builds passed: ${[...projects].join(', ')}.`);
+  } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
+}

@@ -26,8 +26,13 @@ built packages — it compiles the Svelte and Vue sources, type checks the React
 Angular ones, and refuses any `@wavelo/*` import the shipped declarations do not
 export. Run it after changing the library surface; an example that no longer
 compiles is a bug in the library or in the example, never a documentation detail.
+`npm run verify:examples:build` additionally packs the local 1.0.0 tarballs, installs
+each project in a temporary directory, and runs its real production build.
 
-## The four patterns every example shows
+## The four patterns the examples cover
+
+The five projects demonstrate these patterns across the framework ecosystem; not
+every project includes every pattern.
 
 | Pattern | Why it is the one worth copying |
 | --- | --- |

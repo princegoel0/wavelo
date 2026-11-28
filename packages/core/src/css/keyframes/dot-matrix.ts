@@ -1,0 +1,1 @@
+export const css = `@keyframes wavelo-dot-node{0%,100%{transform:scale(.72);opacity:.4}32%{transform:scale(1.12);opacity:1}70%{transform:scale(.9);opacity:.7}}@keyframes wavelo-dot-ripple{0%{transform:scale(.3);opacity:.7}100%{transform:scale(2.8);opacity:0}}`;

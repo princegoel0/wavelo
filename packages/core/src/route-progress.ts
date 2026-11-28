@@ -1,6 +1,8 @@
 import { mountLoader } from './dom.js';
 import type { LoaderConfig } from './types.js';
 
+export type RouteProgressConfig = Omit<LoaderConfig, 'type' | 'value' | 'max' | 'loading'>;
+
 export interface RouteProgressOptions {
   /** How often the bar creeps toward its ceiling, in milliseconds. */
   trickle?: number;
@@ -38,7 +40,7 @@ export interface RouteProgress {
  *
  * Nothing is scheduled and nothing is appended during server rendering.
  */
-export function createRouteProgress(config: LoaderConfig = {}, options: RouteProgressOptions = {}): RouteProgress {
+export function createRouteProgress(config: RouteProgressConfig = {}, options: RouteProgressOptions = {}): RouteProgress {
   const trickle = options.trickle ?? 300;
   const ceiling = Math.min(99, Math.max(1, options.ceiling ?? 90));
   const hold = options.hold ?? 250;
@@ -56,7 +58,15 @@ export function createRouteProgress(config: LoaderConfig = {}, options: RoutePro
   let finishing: ReturnType<typeof setTimeout> | undefined;
 
   const render = (loading: boolean) => {
-    mountLoader(element, { type: 'progress-top', value, max: 100, loading, ...config });
+    const root = element.firstElementChild as HTMLElement | null;
+    if (loading && root?.classList.contains('wavelo--progress-top')) {
+      const clamped = Math.max(0, Math.min(100, value));
+      root.style.setProperty('--wavelo-progress', `${clamped}%`);
+      root.style.setProperty('--wavelo-count', String(Math.round(clamped)));
+      if (root.hasAttribute('aria-valuenow')) root.setAttribute('aria-valuenow', String(clamped));
+      return;
+    }
+    mountLoader(element, { ...config, type: 'progress-top', value, max: 100, loading });
   };
   const stop = () => {
     if (creeping !== undefined) clearInterval(creeping);

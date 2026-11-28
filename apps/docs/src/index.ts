@@ -7,7 +7,7 @@ import { stylesheetMarkup } from '@wavelo/core/styles';
 
 const brandPreviewScript = buildSync({ stdin: { contents: "import { renderLoader } from '@wavelo/core'; window.waveloBrand = renderLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
 
-const version = '0.7.0';
+const version = '1.0.0';
 
 const totalCount = loaderRegistry.length;
 const categoryCounts = loaderRegistry.reduce((acc, l) => {
@@ -25,7 +25,7 @@ const playgrounds = [
 ];
 
 const cards = loaderRegistry.map((loader) => `
-<article class="card${loader.deprecated ? ' deprecated' : ''}" data-category="${loader.category}" data-dimension="${loader.dimension}" data-id="${loader.id}" data-name="${loader.name.toLowerCase()}" data-deprecated="${loader.deprecated ? 'true' : 'false'}" data-options="${loader.options.join(',')}">
+<article class="card${loader.deprecated ? ' deprecated' : ''}" data-category="${loader.category}" data-dimension="${loader.dimension}" data-kind="${loader.kind}" data-id="${loader.id}" data-name="${loader.name.toLowerCase()}" data-description="${loader.description.replace(/"/g, '&quot;').toLowerCase()}" data-deprecated="${loader.deprecated ? 'true' : 'false'}" data-options="${loader.options.join(',')}">
   <div class="preview">${renderLoader({ type: loader.id }).html}</div>
   <div class="meta-wrap">
     <div class="meta-head">
@@ -63,6 +63,17 @@ const cards = loaderRegistry.map((loader) => `
 const html = `<!doctype html>
 <html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wavelo — Motion made simple</title>
+<meta name="description" content="Zero-dependency CSS loading spinners, skeletons, AI streaming indicators, and determinate progress bars for React, Vue, Svelte, Angular, Web Components, and Vanilla JS.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wavelo — 188 CSS Loaders, Skeletons & Progress Indicators">
+<meta property="og:description" content="Zero-dependency, SSR-safe, accessible loading states with one shared stylesheet and identical APIs across React, Vue, Svelte, Angular, and Web Components.">
+<meta property="og:url" content="https://princegoel0.github.io/wavelo/">
+<meta property="og:image" content="https://raw.githubusercontent.com/princegoel0/wavelo/main/.github/assets/readme-hero.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wavelo — Motion made simple">
+<meta name="twitter:description" content="188 CSS-first loading spinners, skeletons, AI streaming loaders, and progress bars with zero runtime dependencies.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/princegoel0/wavelo/main/.github/assets/readme-hero.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%234f46e5'/%3E%3Cstop offset='100%25' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M7 13c3-4 6 4 9 0s6 4 9 0M7 20c3-4 6 4 9 0s6 4 9 0' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root, [data-theme="dark"] {
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -682,6 +693,7 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
           <button type="button" class="t-tab" data-pkg="pnpm">pnpm</button>
           <button type="button" class="t-tab" data-pkg="yarn">yarn</button>
           <button type="button" class="t-tab" data-pkg="bun">bun</button>
+          <button type="button" class="t-tab" data-pkg="cdn">cdn</button>
         </div>
       </div>
       <div class="terminal-body">
@@ -902,6 +914,11 @@ input#search { padding: 0.55rem 0.75rem 0.55rem 2.2rem; border-radius: var(--rad
             <span class="switch-toggle"></span>
             <span>dark surface</span>
           </label>
+          <label class="switch-label">
+            <input id="reduced-motion" type="checkbox" aria-label="Simulate prefers-reduced-motion">
+            <span class="switch-toggle"></span>
+            <span>reduced motion</span>
+          </label>
         </div>
 
 <fieldset id="brand-controls" hidden><legend>Brand customization</legend><div class="ctrl-row"><label for="brand-text">Brand text</label><input id="brand-text" data-brand-key="text" type="text" value="ACME"  maxlength="80"></div><div class="ctrl-row"><label for="brand-caption">Caption</label><input id="brand-caption" data-brand-key="caption" type="text" value="Preparing your workspace"  maxlength="160"></div><div class="ctrl-row"><label for="brand-animation">Text animation</label><select id="brand-animation" data-brand-key="animation"><option selected>wave</option><option>bounce</option><option>pulse</option><option>flip</option><option>shimmer</option><option>typewriter</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-indicator">Indicator</label><select id="brand-indicator" data-brand-key="indicator"><option selected>ring</option><option>bar</option><option>dots</option><option>none</option></select></div><div class="ctrl-row"><label for="brand-layout">Layout</label><select id="brand-layout" data-brand-key="layout"><option selected>stacked</option><option>inline</option></select></div><div class="ctrl-row"><label for="brand-indicatorPosition">Indicator position</label><select id="brand-indicatorPosition" data-brand-key="indicatorPosition"><option selected>before</option><option>after</option></select></div><div class="ctrl-row"><label for="brand-align">Alignment</label><select id="brand-align" data-brand-key="align"><option>start</option><option selected>center</option><option>end</option></select></div><div class="ctrl-row"><label for="brand-fontFamily">Font family</label><input id="brand-fontFamily" data-brand-key="fontFamily" type="text" value="system-ui, sans-serif"  ></div><div class="ctrl-row"><label for="brand-fontSize">Font size (px)</label><input id="brand-fontSize" data-brand-key="fontSize" type="number" value="32" step="any" ></div><div class="ctrl-row"><label for="brand-fontWeight">Font weight</label><input id="brand-fontWeight" data-brand-key="fontWeight" type="number" value="700" step="any" ></div><div class="ctrl-row"><label for="brand-fontStyle">Font style</label><select id="brand-fontStyle" data-brand-key="fontStyle"><option selected>normal</option><option>italic</option><option>oblique</option></select></div><div class="ctrl-row"><label for="brand-letterSpacing">Letter spacing (px)</label><input id="brand-letterSpacing" data-brand-key="letterSpacing" type="number" value="1" step="any" ></div><div class="ctrl-row"><label for="brand-lineHeight">Line height</label><input id="brand-lineHeight" data-brand-key="lineHeight" type="number" value="1.3" step="any" ></div><div class="ctrl-row"><label for="brand-textTransform">Letter case</label><select id="brand-textTransform" data-brand-key="textTransform"><option selected>none</option><option>uppercase</option><option>lowercase</option><option>capitalize</option></select></div><div class="ctrl-row"><label for="brand-textColor">Text color</label><input id="brand-textColor" data-brand-key="textColor" type="color" value="#6366f1"  ></div><div class="ctrl-row"><label for="brand-trackColor">Track color</label><input id="brand-trackColor" data-brand-key="trackColor" type="color" value="#cbd5e1"  ></div><div class="ctrl-row"><label for="brand-captionColor">Caption color</label><input id="brand-captionColor" data-brand-key="captionColor" type="color" value="#818cf8"  ></div><div class="ctrl-row"><label for="brand-captionSize">Caption size (px)</label><input id="brand-captionSize" data-brand-key="captionSize" type="number" value="13" step="any" ></div><div class="ctrl-row"><label for="brand-indicatorSize">Indicator size (px)</label><input id="brand-indicatorSize" data-brand-key="indicatorSize" type="number" value="40" step="any" ></div><div class="ctrl-row"><label for="brand-gap">Gap (px)</label><input id="brand-gap" data-brand-key="gap" type="number" value="12" step="any" ></div><div class="ctrl-row"><label for="brand-radius">Bar radius (px)</label><input id="brand-radius" data-brand-key="radius" type="number" value="4" step="any" ></div><div class="ctrl-row"><label for="brand-stagger">Letter stagger (seconds)</label><input id="brand-stagger" data-brand-key="stagger" type="number" value="0.08" step="any" ></div><div class="ctrl-row"><label for="brand-delay">Text delay (seconds)</label><input id="brand-delay" data-brand-key="delay" type="number" value="0" step="any" ></div><div class="ctrl-row"><label for="brand-amplitude">Text movement (px)</label><input id="brand-amplitude" data-brand-key="amplitude" type="number" value="6" step="any" ></div><div class="ctrl-row"><label for="brand-easing">Easing</label><select id="brand-easing" data-brand-key="easing"><option>linear</option><option>ease</option><option>ease-in</option><option>ease-out</option><option selected>ease-in-out</option></select></div><div class="ctrl-row"><label for="brand-showValue">Show percentage</label><input id="brand-showValue" data-brand-key="showValue" type="checkbox" checked  ></div><label><input id="brand-determinate" type="checkbox"> Use real progress</label><label><input id="brand-reduced" type="checkbox"> Reduce motion</label><p id="brand-error" role="alert"></p></fieldset>
@@ -1066,7 +1083,7 @@ const stageSpecBadge = document.querySelector('#stage-spec-badge');
 const codeFrameworkLabel = document.querySelector('#code-framework-label');
 
 const fields = ['size', 'stroke', 'duration', 'progress', 'color', 'radius', 'count', 'secondary-color'];
-const checks = ['paused', 'reverse', 'dark'];
+const checks = ['paused', 'reverse', 'dark', 'reduced-motion'];
 const STATEFUL_DESIGNS = new Set(['save-indicator', 'success-ring', 'error-shake', 'offline-dot', 'button-confirm']);
 const determinate = new Set(${JSON.stringify(loaderRegistry.filter((loader) => loader.supportsProgress).map((loader) => loader.id))});
 const loaderData = ${JSON.stringify(loaderRegistry.map((l) => ({
@@ -1351,7 +1368,9 @@ function generateCodeSnippet(id, fw, values) {
   } else if (fw === 'vanilla') {
     snippet = "import { mountWavelo } from '@wavelo/vanilla';\\n\\nconst detach = mountWavelo(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
   } else {
-    snippet = "renderLoader(" + JSON.stringify(config, null, 2) + ")";
+    const camelId = id.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    const { type: _omitType, ...modularConfig } = config;
+    snippet = "// Runtime (any design by string ID):\\nimport { renderLoader } from '@wavelo/core';\\nrenderLoader(" + JSON.stringify(config, null, 2) + ")\\n\\n// Tree-shaken modular import (single stylesheet slice):\\nimport { " + camelId + " } from '@wavelo/core/loaders/" + id + "';\\n" + camelId + "(" + JSON.stringify(modularConfig, null, 2) + ")";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
       snippet += "\\n\\n// Or using the named preset shortcut:\\nrenderLoader({\\n  type: 'constellation-" + vSelect.value + "',\\n  size: " + values.size + ",\\n  color: '" + values.color + "'\\n})";
     }
@@ -1482,6 +1501,7 @@ function paint() {
     } catch (error) { document.querySelector('#brand-error').textContent = error.message; return; }
   }
   rendered.setAttribute('data-wavelo-theme', values.dark ? 'dark' : 'light');
+  rendered.setAttribute('data-wavelo-motion', values['reduced-motion'] ? 'always' : 'auto');
 
   if (id === 'constellation' && variantSelect) {
     rendered.setAttribute('data-wavelo-constellation', variantSelect.value);
@@ -1780,7 +1800,8 @@ const installTemplates = {
   npm: 'npm i @wavelo/react',
   pnpm: 'pnpm add @wavelo/react',
   yarn: 'yarn add @wavelo/react',
-  bun: 'bun add @wavelo/react'
+  bun: 'bun add @wavelo/react',
+  cdn: '<script type="module" src="https://esm.sh/@wavelo/web-components/register"><\\/script>'
 };
 
 pkgTabs.forEach((tab) => {
@@ -2283,7 +2304,7 @@ function filter() {
   let visible = 0;
 
   document.querySelectorAll('.card').forEach((c) => {
-    const matchesQuery = !q || c.dataset.name.includes(q) || c.dataset.id.includes(q) || c.dataset.category.includes(q);
+    const matchesQuery = !q || c.dataset.name.includes(q) || c.dataset.id.includes(q) || c.dataset.category.includes(q) || (c.dataset.kind || '').includes(q) || (c.dataset.description || '').includes(q);
     const matchesCat = !catVal || c.dataset.category === catVal;
     const matchesDim = !dimVal || c.dataset.dimension === dimVal;
     const show = matchesQuery && matchesCat && matchesDim;

@@ -275,3 +275,137 @@ seven stars stacked at the box origin, so an unknown name renders `ursa-major`. 
 is the same whichever pattern is asked for — the patterns are rules in one slice, so a
 page mixing constellations injects the dots slice once.
 
+## Cascade Layers (`@wavelo/core/styles.layer.css`)
+
+For Tailwind CSS v4 or applications using CSS Cascade Layers, import the layered catalog stylesheet so unlayered consumer utilities always win regardless of import order:
+
+```css
+@layer theme, base, wavelo, components, utilities;
+@import '@wavelo/core/styles.layer.css';
+```
+
+## Accessible loading overlay container
+
+To cover a table, form, or card while refreshing without layout shift, mark the container `aria-busy` and render `overlay` inside a `position: relative` wrapper:
+
+```tsx
+<section aria-busy={busy} style={{ position: 'relative' }}>
+  <div inert={busy ? true : undefined}>
+    {/* table, card, or form content */}
+  </div>
+  <Loader type="overlay" loading={busy} label="Refreshing results" />
+</section>
+```
+
+## Request-scoped SSR slice collector (`createStyleCollector`)
+
+Instead of shipping the entire catalog stylesheet, collect only the slices rendered during a request:
+
+```ts
+import { createStyleCollector, renderLoader } from '@wavelo/core';
+
+const styles = createStyleCollector({ nonce });
+const spinner = renderLoader({ type: 'ring', label: 'Loading' });
+styles.add(spinner);
+
+const headMarkup = styles.markup(); // deduplicated <style> tags for the slices rendered
+```
+
+## Router & data-fetching recipes
+
+### Next.js App Router (`createRouteProgress`)
+
+Mount the provider once around the client navigation UI. It owns the controller and
+destroys it on unmount; `navigate` starts the bar before the router transition and
+finishes it when that transition settles, without flashing a completed bar on mount.
+
+```tsx
+'use client';
+import {
+  createContext, useCallback, useContext, useEffect, useRef, useTransition,
+  type ReactNode
+} from 'react';
+import { useRouter } from 'next/navigation';
+import { createRouteProgress } from '@wavelo/core';
+
+const RouteProgressContext = createContext<((href: string) => void) | null>(null);
+
+export function RouteProgressProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const bar = useRef<ReturnType<typeof createRouteProgress> | null>(null);
+  const wasPending = useRef(false);
+
+  const ensureBar = useCallback(() => {
+    if (!bar.current) bar.current = createRouteProgress({ color: '#6366f1' });
+    return bar.current;
+  }, []);
+
+  useEffect(() => {
+    const progress = ensureBar();
+    return () => {
+      progress.destroy();
+      if (bar.current === progress) bar.current = null;
+      wasPending.current = false;
+    };
+  }, [ensureBar]);
+
+  useEffect(() => {
+    if (wasPending.current && !isPending) bar.current?.done();
+    wasPending.current = isPending;
+  }, [isPending]);
+
+  const navigate = useCallback((href: string) => {
+    ensureBar().start();
+    startTransition(() => router.push(href));
+  }, [ensureBar, router]);
+
+  return <RouteProgressContext.Provider value={navigate}>{children}</RouteProgressContext.Provider>;
+}
+
+export function useRouteProgress() {
+  const navigate = useContext(RouteProgressContext);
+  if (!navigate) throw new Error('useRouteProgress must be used inside RouteProgressProvider');
+  return navigate;
+}
+
+// In a client component:
+const navigate = useRouteProgress();
+<button onClick={() => navigate('/dashboard')}>Dashboard</button>
+```
+
+### Vue Router / SvelteKit / Angular Router
+
+```ts
+// Vue Router
+const bar = createRouteProgress();
+router.beforeEach(() => bar.start());
+router.afterEach(() => bar.done());
+```
+
+```ts
+// Angular Router
+router.events.subscribe((event) => {
+  if (event instanceof NavigationStart) bar.start();
+  if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) bar.done();
+});
+```
+
+### React `<Suspense>` & TanStack Query
+
+```tsx
+<Suspense fallback={<Loader type="skeleton-card" count={3} />}>
+  <Dashboard />
+</Suspense>
+
+// TanStack Query: skeleton on first load, overlay scrim on background refetch
+if (isPending) return <Loader type="skeleton-table" count={5} />;
+return (
+  <div aria-busy={isFetching} style={{ position: 'relative' }}>
+    <DataTable data={data} />
+    <Loader type="overlay" loading={isFetching} label="Updating rows" />
+  </div>
+);
+```
+
+

@@ -14,7 +14,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -23,10 +23,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: npm run verify:examples:build
       - run: npm run typecheck
       - run: npm test
       - run: npm run verify:angular
       - run: npm run verify:react
+      - run: npm run verify:vue
       - run: npm run verify:examples
       - run: npm run catalog
       - run: npm run packages:check

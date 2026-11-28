@@ -1,5 +1,6 @@
 import { LoaderConfigurationError, LoaderConfig, NormalizedLoaderConfig, Theme } from './types.js';
 import { normalizeBrand } from './brand.js';
+import { loaderConfigKeys } from './config.js';
 
 /**
  * Anything that could end a declaration, open a block, load a URL or break out of
@@ -68,6 +69,9 @@ function textValue(value: string | undefined, label: string, limit: number): str
  * library removes rather than repeats.
  */
 const OWN_ACCESSIBILITY_KEYS = new Set(['label', 'labelledBy', 'describedBy', 'valueText', 'decorative']);
+const PUBLIC_CONFIG_KEYS = new Set(loaderConfigKeys);
+const PUBLIC_DATA_ATTRIBUTES = new Set(['data-wavelo-state', 'data-wavelo-constellation']);
+
 function rejectForeignAccessibility(input: LoaderConfig): void {
   for (const key of Object.keys(input)) {
     if (OWN_ACCESSIBILITY_KEYS.has(key)) continue;
@@ -76,6 +80,13 @@ function rejectForeignAccessibility(input: LoaderConfig): void {
         `${key} is not a Wavelo option. Use label, labelledBy, describedBy, valueText or decorative; the renderer owns role and aria-*.`
       );
     }
+  }
+}
+
+function rejectUnknownOptions(input: LoaderConfig): void {
+  for (const key of Object.keys(input)) {
+    if (PUBLIC_CONFIG_KEYS.has(key) || key.startsWith('data-')) continue;
+    throw new LoaderConfigurationError(`${key} is not a Wavelo option. See the configuration reference for supported keys.`);
   }
 }
 
@@ -140,6 +151,9 @@ function safeDataAttributes(input: LoaderConfig): Record<string, string> {
   for (const [key, value] of Object.entries(input)) {
     if (!key.startsWith('data-') || value === undefined) continue;
     if (!SAFE_DATA_NAME.test(key)) throw new LoaderConfigurationError(`Invalid data attribute name: ${key}`);
+    if (key.startsWith('data-wavelo-') && !PUBLIC_DATA_ATTRIBUTES.has(key)) {
+      throw new LoaderConfigurationError(`${key} is reserved by Wavelo. Use data-wavelo-state or data-wavelo-constellation for built-in behavior.`);
+    }
     const stringValue = String(value);
     if (/[\u0000-\u001f]/.test(stringValue)) throw new LoaderConfigurationError(`Invalid data attribute value for ${key}`);
     result[key] = stringValue;
@@ -188,6 +202,7 @@ function trackCount(value: number | undefined): number | undefined {
 
 export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
   rejectForeignAccessibility(input);
+  rejectUnknownOptions(input);
   guarded(input.className ?? '', 256, SAFE_CLASS, 'className', CLASS_HINT);
   const speed = number(input.speed, [0, 20], 'speed', true) ?? 1;
   const max = number(input.max, [0, Number.MAX_SAFE_INTEGER], 'max', true) ?? 100;
@@ -218,7 +233,8 @@ export function normalizeConfig(input: LoaderConfig): NormalizedLoaderConfig {
     label: textValue(input.label, 'label', 200),
     labelledBy: identifierList(input.labelledBy, 'labelledBy'),
     describedBy: identifierList(input.describedBy, 'describedBy'),
-    valueText: textValue(input.valueText, 'valueText', 200),
+    // An explicit empty valueText suppresses a design's generated label.
+    valueText: input.valueText === undefined ? undefined : textValue(input.valueText, 'valueText', 200) ?? '',
     max,
     value,
     style: safeStyle(input.style),

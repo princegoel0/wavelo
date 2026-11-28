@@ -94,6 +94,36 @@ test('0.7.0 brand variants, determinate tracks and scroll designs render their c
   const ids = ['brand-orbit', 'brand-scan', 'brand-aurora', 'progress-signal', 'progress-path', 'scroll-horizontal', 'scroll-chapters'];
   await setContentPage(ids.map((id) => renderLoader({ type: id, brand: { text: 'ACME' }, value: 50, max: 100 }).html).join(''));
   assert.equal(await page.locator('.wavelo--brand-orbit .wavelo__brand-orbit').count(), 1);
+  const orbit = await page.locator('.wavelo--brand-orbit').evaluate(root => {
+    const track = root.querySelector('.wavelo__brand-orbit');
+    const bead = track.querySelector('i');
+    const animation = bead.getAnimations()[0];
+    const sample = time => {
+      animation.currentTime = time;
+      const beadRect = bead.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      return {
+        x: beadRect.left + beadRect.width / 2 - trackRect.left,
+        y: beadRect.top + beadRect.height / 2 - trackRect.top,
+        contained: beadRect.left + beadRect.width / 2 >= trackRect.left - 1 && beadRect.left + beadRect.width / 2 <= trackRect.right + 1 && beadRect.top + beadRect.height / 2 >= trackRect.top - 1 && beadRect.top + beadRect.height / 2 <= trackRect.bottom + 1
+      };
+    };
+    const duration = animation.effect.getComputedTiming().duration;
+    return {
+      trackAnimation: getComputedStyle(track).animationName,
+      trackOverflow: getComputedStyle(track).overflow,
+      beadAnimation: getComputedStyle(bead).animationName,
+      offsetPath: getComputedStyle(bead).offsetPath,
+      start: sample(0),
+      middle: sample(duration / 2)
+    };
+  });
+  assert.equal(orbit.trackAnimation, 'none');
+  assert.equal(orbit.trackOverflow, 'visible');
+  assert.equal(orbit.beadAnimation, 'wavelo-brand-orbit');
+  assert.match(orbit.offsetPath, /inset\(/);
+  assert.ok(orbit.start.contained && orbit.middle.contained, 'the orbiting bead center leaves its stationary track');
+  assert.notEqual(orbit.start.x, orbit.middle.x);
   assert.equal(await page.locator('.wavelo--brand-scan .wavelo__brand-scan').count(), 1);
   const aurora = await page.locator('.wavelo--brand-aurora .wavelo__brand-text').evaluate(element => ({ background: getComputedStyle(element).backgroundImage, animation: getComputedStyle(element).animationName }));
   assert.match(aurora.background, /linear-gradient/);
@@ -892,7 +922,7 @@ function paintReport() {
 test('each design renders what its name says', async () => {
   const body = [
     'ring', 'circular', 'segmented-ring', 'monochrome', 'gradient-ring', 'multi-arc', 'dual-ring', 'ripple-dot', 'three-dots',
-    'dot-matrix', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation',
+    'dot-matrix', 'alternating-dots', 'grid-pulse', 'expanding-dot', 'pulsing-dots', 'background-operation',
     'equalizer', 'rotating-square', 'morphing-shapes', 'svg-star',
     'typing-dots', 'neural-grid', 'thinking-glow', 'stream-cursor', 'token-stream', 'ai-shimmer',
     'skeleton-inbox', 'skeleton-chat', 'skeleton-code', 'skeleton-metric',
@@ -900,7 +930,7 @@ test('each design renders what its name says', async () => {
     'progress-battery', 'progress-half-ring', 'progress-wave-fill', 'progress-count', 'progress-dots-fill',
     'progress-multi-step', 'progress-upload-multi', 'progress-ai-generate',
     'progress-skill', 'progress-orbit-fill',
-    'rubber-band', 'snake', 'clock-spinner', 'sand-timer', 'eye-blink', 'metronome',
+    'rubber-band', 'snake', 'clock-spinner', 'radar', 'sand-timer', 'eye-blink', 'metronome',
     'magnetic-dots', 'pendulum', 'constellation', 'bubble-rise', 'fireflies', 'solar-system',
     'orbiting-dots',
     'piano-keys', 'fire-rise', 'heartbeat', 'breathing',
@@ -934,6 +964,9 @@ test('each design renders what its name says', async () => {
         id: wrap.dataset.case,
         parts: parts.length,
         svg: root.querySelectorAll('svg').length,
+        synapses: root.querySelectorAll('.wavelo__synapse').length,
+        planeTransform: root.querySelector('.wavelo__plane') ? getComputedStyle(root.querySelector('.wavelo__plane')).transform : '-',
+        perspective: style.perspective,
         sides: sides.length,
         sideNames: sides.join(''),
         borderWidth: style.borderTopWidth,
@@ -954,6 +987,7 @@ test('each design renders what its name says', async () => {
         counterReset: style.counterReset,
         partCounter: partStyle ? partStyle.counterIncrement : '-',
         partAfterContent: partStyle ? getComputedStyle(parts[0], '::after').content : '-',
+        partAfterAnimation: partStyle ? getComputedStyle(parts[0], '::after').animationName : '-',
         partTransforms: parts.map((part) => getComputedStyle(part).transform),
         partDurations: parts.map((part) => getComputedStyle(part).animationDuration),
         partHeights: parts.map((part) => getComputedStyle(part).height),
@@ -995,6 +1029,10 @@ test('each design renders what its name says', async () => {
   // Counts promised by the names.
   assert.equal(at('three-dots').parts, 3);
   assert.equal(at('dot-matrix').parts, 9);
+  assert.deepEqual(at('dot-matrix').partAnimations, ['wavelo-dot-node']);
+  assert.equal(at('dot-matrix').partAfterAnimation, 'wavelo-dot-ripple');
+  assert.equal(at('alternating-dots').parts, 5);
+  assert.equal(new Set(at('alternating-dots').partAnimations).size, 2, 'odd and even groups move in counter-phase');
   assert.equal(at('grid-pulse').parts, 4);
   assert.equal(at('expanding-dot').parts, 1);
 
@@ -1024,6 +1062,8 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('typing-dots').partAnimations, ['wavelo-typing-dot']);
   assert.equal(new Set(at('typing-dots').partDelays).size, 3, 'typing-dots must lift them in sequence');
   assert.equal(at('neural-grid').parts, 9, 'a neural grid is nine nodes');
+  assert.equal(at('neural-grid').svg, 1, 'neural synapses are SVG paths');
+  assert.equal(at('neural-grid').synapses, 12, 'a three-by-three grid has twelve orthogonal links');
   assert.equal(at('neural-grid').gridColumns.split(' ').length, 3, 'neural-grid must be three columns');
   assert.equal(at('thinking-glow').parts, 1, 'thinking-glow is one orb');
   assert.equal(at('thinking-glow').before.animation, 'wavelo-think-halo', 'the halo leaves the orb');
@@ -1033,9 +1073,10 @@ test('each design renders what its name says', async () => {
   assert.equal(at('token-stream').parts, 5);
   assert.deepEqual(at('token-stream').partAnimations, ['wavelo-token']);
   assert.equal(new Set(at('token-stream').partDelays).size, 5, 'tokens must arrive one after another');
-  assert.equal(at('ai-shimmer').parts, 0, 'the response block paints itself');
-  assert.equal(at('ai-shimmer').animation, 'wavelo-response-shimmer');
-  assert.match(at('ai-shimmer').backgroundImage, /linear-gradient/);
+  assert.equal(at('ai-shimmer').parts, 3, 'the response card has three text lines');
+  assert.equal(at('ai-shimmer').animation, 'none', 'the card surface stays still');
+  assert.deepEqual(at('ai-shimmer').partAnimations, ['wavelo-response-shimmer']);
+  assert.equal(new Set(at('ai-shimmer').partDelays).size, 3, 'response lines shimmer in sequence');
   assert.equal(at('skeleton-inbox').parts, 6, 'three inbox rows of avatar and subject');
   assert.equal(at('skeleton-inbox').gridColumns.split(' ').length, 2, 'an inbox row is avatar plus text');
   assert.equal(at('skeleton-inbox').partRadius, '50%', 'the first track of a row is an avatar');
@@ -1106,6 +1147,7 @@ test('each design renders what its name says', async () => {
   assert.ok(Number.parseFloat(at('sand-timer').backgroundColor.match(/[\d.]+\)$/)[0]) < 1, 'the empty glass must be translucent, or it reads as a solid silhouette rather than as glass');
   assert.equal(at('sand-timer').before.animation, 'wavelo-sand-top', 'the upper chamber drains');
   assert.equal(at('sand-timer').after.animation, 'wavelo-sand-bottom', 'the lower chamber fills');
+  assert.deepEqual(at('sand-timer').partAnimations, ['wavelo-sand-stream'], 'the visible stream is animated');
   assert.match(at('sand-timer').before.clip, /polygon/, 'the upper sand is clipped to its own chamber');
   assert.notEqual(at('sand-timer').before.clip, at('sand-timer').after.clip, 'one chamber, drawn twice, is not an hourglass');
   assert.match(at('eye-blink').clipPath, /polygon/, 'the opening is an almond, not an ellipse');
@@ -1129,6 +1171,8 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('fireflies').partAnimations, ['wavelo-firefly']);
   assert.equal(new Set(at('fireflies').partDelays).size, 10, 'ten motes on different paths');
   assert.equal(at('solar-system').parts, 5);
+  assert.equal(at('solar-system').perspective, '500px', 'the orbital plane has perspective');
+  assert.notEqual(at('solar-system').planeTransform, 'none', 'the orbital plane is tilted in 3D');
   assert.ok(at('solar-system').before, 'a solar system needs its sun');
   assert.deepEqual(at('solar-system').partAnimations, ['wavelo-orbit-ring']);
   assert.equal(new Set(at('solar-system').partDurations).size, 5, 'five planetary orbits must take five different periods');
@@ -1139,6 +1183,12 @@ test('each design renders what its name says', async () => {
   assert.deepEqual(at('piano-keys').partAnimations, ['wavelo-piano']);
   assert.equal(new Set(at('piano-keys').partDelays).size, 5, 'keys land at different points in the cycle');
   assert.deepEqual(at('fire-rise').partAnimations, ['wavelo-fire']);
+  assert.match(at('fire-rise').partBackground, /rgb\(194, 65, 12\)/, 'flames start from deep orange rather than red');
+  assert.equal(at('radar').parts, 3, 'radar carries multiple pings');
+  assert.equal(at('radar').animation, 'none', 'the dial and ping bearings stay still');
+  assert.equal(at('radar').after.animation, 'wavelo-radar', 'the phosphor sweep rotates');
+  assert.match(at('radar').after.background, /conic-gradient/, 'radar paints a directional afterglow');
+  assert.equal(new Set(at('radar').partDelays).size, 3, 'pings are staggered');
   assert.ok(at('heartbeat').before, 'the trace is drawn by the element itself');
   assert.match(at('heartbeat').before.clip, /polygon/, 'an ECG trace is a clipped polyline');
   assert.equal(at('heartbeat').before.animation, 'wavelo-heart');
@@ -1148,6 +1198,102 @@ test('each design renders what its name says', async () => {
   assert.equal(at('dot-wave').partRadius, '50%', 'dot-wave renders circular dots');
   assert.deepEqual(at('dot-wave').partAnimations, ['wavelo-dot-wave']);
   assert.equal(new Set(at('dot-wave').partDelays).size, 5, 'five dots staggered along the wave');
+});
+
+test('PRD must-fix designs implement their named motion', async () => {
+  const ids = ['radar', 'dot-matrix', 'alternating-dots', 'solar-system', 'fire-rise', 'sand-timer', 'ai-shimmer', 'neural-grid'];
+  await setContentPage(ids.map(id => `<div data-case="${id}">${renderLoader({ type: id, label: id }).html}</div>`).join(''));
+  const result = await page.evaluate(() => {
+    const root = id => document.querySelector(`[data-case="${id}"] .wavelo`);
+    const seek = (element, fraction) => {
+      const animation = element.getAnimations()[0];
+      if (!animation) return 0;
+      const duration = animation.effect.getComputedTiming().duration;
+      animation.currentTime = duration * fraction;
+      return duration;
+    };
+    const matrixDot = root('dot-matrix').querySelector('.wavelo__part:nth-child(5)');
+    const rippleAnimation = document.getAnimations().find(animation => animation.animationName === 'wavelo-dot-ripple' && animation.effect.target === matrixDot);
+    const rippleDuration = rippleAnimation.effect.getComputedTiming().duration;
+    rippleAnimation.currentTime = 0;
+    const rippleStart = getComputedStyle(matrixDot, '::after').transform;
+    const rippleOpacityStart = getComputedStyle(matrixDot, '::after').opacity;
+    rippleAnimation.currentTime = rippleDuration * .5;
+    const rippleEnd = getComputedStyle(matrixDot, '::after').transform;
+    const rippleOpacityEnd = getComputedStyle(matrixDot, '::after').opacity;
+
+    const alternating = [...root('alternating-dots').querySelectorAll('.wavelo__part')];
+    const separation = fraction => {
+      for (const dot of alternating) seek(dot, fraction);
+      const centers = alternating.map(dot => dot.getBoundingClientRect().x + dot.getBoundingClientRect().width / 2);
+      const odd = centers.filter((_, index) => index % 2 === 0).reduce((sum, value) => sum + value, 0) / 3;
+      const even = centers.filter((_, index) => index % 2 === 1).reduce((sum, value) => sum + value, 0) / 2;
+      return even - odd;
+    };
+
+    const ping = root('radar').querySelector('.wavelo__part');
+    seek(ping, .12);
+    const pingPeak = getComputedStyle(ping).opacity;
+    seek(ping, .55);
+    const pingDecay = getComputedStyle(ping).opacity;
+
+    const stream = root('sand-timer').querySelector('.wavelo__part');
+    seek(stream, 0);
+    const streamStart = getComputedStyle(stream).transform;
+    seek(stream, .5);
+    const streamEnd = getComputedStyle(stream).transform;
+
+    const synapse = root('neural-grid').querySelector('.wavelo__synapse');
+    seek(synapse, 0);
+    const synapseStart = getComputedStyle(synapse).strokeDashoffset;
+    seek(synapse, .2);
+    const synapseEnd = getComputedStyle(synapse).strokeDashoffset;
+
+    return {
+      rippleStart,
+      rippleEnd,
+      rippleOpacityStart,
+      rippleOpacityEnd,
+      matrixDelays: [...root('dot-matrix').querySelectorAll('.wavelo__part')].map(dot => Number(Number.parseFloat(getComputedStyle(dot).animationDelay).toFixed(3))),
+      matrixRippleDelays: [...root('dot-matrix').querySelectorAll('.wavelo__part')].map(dot => Number(Number.parseFloat(getComputedStyle(dot, '::after').animationDelay).toFixed(3))),
+      separationRest: separation(0),
+      separationPeak: separation(.25),
+      pingPeak,
+      pingDecay,
+      streamStart,
+      streamEnd,
+      streamWidth: getComputedStyle(stream).width,
+      synapseStart,
+      synapseEnd,
+      synapseCount: root('neural-grid').querySelectorAll('.wavelo__synapse').length,
+      aiDelays: [...root('ai-shimmer').querySelectorAll('.wavelo__part')].map(line => Number.parseFloat(getComputedStyle(line).animationDelay)),
+      aiRootAnimation: getComputedStyle(root('ai-shimmer')).animationName,
+      solarPerspective: getComputedStyle(root('solar-system')).perspective,
+      solarPlane: getComputedStyle(root('solar-system').querySelector('.wavelo__plane')).transform,
+      solarDurations: [...root('solar-system').querySelectorAll('.wavelo__part')].map(planet => Number.parseFloat(getComputedStyle(planet).animationDuration)),
+      fireGradient: getComputedStyle(root('fire-rise').querySelector('.wavelo__part')).backgroundImage,
+      fireOrigin: getComputedStyle(root('fire-rise').querySelector('.wavelo__part')).transformOrigin,
+      fireHeight: Number.parseFloat(getComputedStyle(root('fire-rise').querySelector('.wavelo__part')).height)
+    };
+  });
+  assert.notEqual(result.rippleStart, result.rippleEnd, 'dot-matrix rings expand');
+  assert.ok(Number(result.rippleOpacityEnd) < Number(result.rippleOpacityStart), 'dot-matrix rings fade as they expand');
+  assert.deepEqual(result.matrixDelays, [.288, .144, .288, .144, 0, .144, .288, .144, .288], 'node pulses follow the radial phase');
+  assert.deepEqual(result.matrixRippleDelays, result.matrixDelays, 'node and ripple phases stay aligned');
+  assert.ok(result.separationPeak > result.separationRest, 'alternating dot groups move apart');
+  assert.ok(Number(result.pingPeak) > Number(result.pingDecay), 'radar pings decay after the sweep');
+  assert.notEqual(result.streamStart, result.streamEnd, 'sand stream changes scale');
+  assert.equal(result.streamWidth, '2px');
+  assert.notEqual(result.synapseStart, result.synapseEnd, 'neural synapses draw and fade');
+  assert.equal(result.synapseCount, 12);
+  assert.deepEqual(result.aiDelays, [...result.aiDelays].sort((a, b) => a - b));
+  assert.equal(new Set(result.aiDelays).size, 3);
+  assert.equal(result.aiRootAnimation, 'none');
+  assert.equal(result.solarPerspective, '500px');
+  assert.match(result.solarPlane, /matrix3d/);
+  assert.deepEqual(result.solarDurations, [...result.solarDurations].sort((a, b) => a - b));
+  assert.match(result.fireGradient, /rgb\(194, 65, 12\)/);
+  assert.ok(Math.abs(Number.parseFloat(result.fireOrigin.split(' ').at(-1)) - result.fireHeight) <= 1, 'flames grow from their base');
 });
 
 test('no two designs in the catalog render identically', async () => {
@@ -1591,21 +1737,23 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   const read = await page.evaluate(async () => {
     const { createRouteProgress } = window.Wavelo;
     const bar = createRouteProgress({}, { trickle: 20, ceiling: 90, hold: 60 });
-    const percent = () => Number.parseFloat((bar.element.querySelector('.wavelo').getAttribute('style') ?? '').match(/--wavelo-progress:([\d.]+)%/)?.[1] ?? -1);
+    const percent = () => Number.parseFloat((bar.element.querySelector('.wavelo').getAttribute('style') ?? '').match(/--wavelo-progress:\s*([\d.]+)%/)?.[1] ?? -1);
     const sheets = () => document.querySelectorAll('style[data-wavelo-style]').length;
 
     bar.start();
+    const initialNode = bar.element.querySelector('.wavelo');
     const start = {
       connected: bar.visible,
-      design: bar.element.querySelector('.wavelo').className,
+      design: initialNode.className,
       percent: percent(),
-      announced: bar.element.querySelector('.wavelo').getAttribute('aria-hidden'),
+      announced: initialNode.getAttribute('aria-hidden'),
       sheets: sheets()
     };
     await new Promise((resolveWait) => setTimeout(resolveWait, 150));
     const creeping = percent();
     bar.set(42);
     const pinned = percent();
+    const sameNode = bar.element.querySelector('.wavelo') === initialNode;
     bar.done();
     const filled = percent();
     const stillUp = bar.visible;
@@ -1619,7 +1767,17 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
     const role = announced.getAttribute('role');
     const valueAnnounced = announced.getAttribute('aria-valuenow');
     named.destroy();
-    return { start, creeping, pinned, filled, stillUp, after, role, valueAnnounced };
+
+    const hostile = createRouteProgress({ type: 'ring', value: 50, max: 10, loading: false }, {});
+    hostile.start();
+    const hostileRoot = hostile.element.querySelector('.wavelo');
+    const owned = {
+      design: hostileRoot.className,
+      percent: Number.parseFloat((hostileRoot.getAttribute('style') ?? '').match(/--wavelo-progress:([\d.]+)%/)?.[1] ?? -1),
+      visible: hostile.visible
+    };
+    hostile.destroy();
+    return { start, creeping, pinned, sameNode, filled, stillUp, after, role, valueAnnounced, owned };
   });
   assert.equal(read.start.connected, true, 'start() puts the bar on the page');
   assert.match(read.start.design, /wavelo--progress-top/, 'the route bar is the top-of-page design');
@@ -1628,6 +1786,7 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   assert.equal(read.start.sheets, 1, 'one slice, however many renders the bar makes');
   assert.ok(read.creeping > 0 && read.creeping < 90, `the bar should creep toward the ceiling, saw ${read.creeping}`);
   assert.equal(read.pinned, 42, 'a router that reports progress is believed');
+  assert.equal(read.sameNode, true, 'updating progress patches the mounted node in place so CSS transitions run');
   assert.equal(read.filled, 100);
   assert.equal(read.stillUp, true, 'the completed bar holds briefly');
   assert.equal(read.after.visible, false, 'then it is gone');
@@ -1635,6 +1794,9 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   assert.equal(read.after.sheets, 1, 'finishing does not add a second stylesheet');
   assert.equal(read.role, 'progressbar', 'a labelled bar with a value is a progressbar');
   assert.equal(read.valueAnnounced, '0', 'and it reports the real percentage, not a guess');
+  assert.match(read.owned.design, /wavelo--progress-top/, 'route config cannot replace the controller design');
+  assert.equal(read.owned.percent, 0, 'route config cannot pin the controller value');
+  assert.equal(read.owned.visible, true, 'route config cannot hide the controller bar');
 });
 
 test('a container-query size resolves against the loader’s own container', async () => {

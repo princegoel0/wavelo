@@ -10,8 +10,8 @@
     "id": "brand-orbit",
     "category": "application",
     "dimension": "2d",
-    "size": 18999,
-    "hash": "5b259c87bbb873c24530d9b5f35c1d6f0f8d409e671db48d5033229f52c307e2"
+    "size": 16296,
+    "hash": "cdcd54e7f99f77bc44bcc7aa06ed12f9fcd30e4053a71b5d06845d0226863d2d"
   },
   "brand-scan": {
     "id": "brand-scan",
@@ -185,8 +185,8 @@
     "id": "dot-matrix",
     "category": "dots",
     "dimension": "2d",
-    "size": 9403,
-    "hash": "fa3707e1c035f3d80a0c65eb328ab9fe2931e7a69163e162f5913d8f51cd186d"
+    "size": 9847,
+    "hash": "534454c73266873bb1c2b29a21a965617dd4c9a328b4c6f29cb5d2aa6aa283f1"
   },
   "grid-pulse": {
     "id": "grid-pulse",
@@ -199,8 +199,8 @@
     "id": "alternating-dots",
     "category": "dots",
     "dimension": "2d",
-    "size": 7494,
-    "hash": "bce229ba8127c1d035f0526739f8fab284abd9007fec78511c08011c55ab2a5f"
+    "size": 7301,
+    "hash": "bb9db6d4d8146a0f5004de88fc8e12560933897b9c67036dc4119e7ab2ca5199"
   },
   "expanding-dot": {
     "id": "expanding-dot",
@@ -261,9 +261,9 @@
   "solar-system": {
     "id": "solar-system",
     "category": "dots",
-    "dimension": "2d",
-    "size": 11374,
-    "hash": "0ab1a484703a669109435896edff10e7676f39e3d67d3e9e7aa2132bf6be8c9e"
+    "dimension": "3d",
+    "size": 9917,
+    "hash": "f89da01afd0927ab0b0b22b7387061dd44404a109e3dba30dc979f6e70d74912"
   },
   "equalizer": {
     "id": "equalizer",
@@ -311,8 +311,8 @@
     "id": "fire-rise",
     "category": "bars",
     "dimension": "2d",
-    "size": 14437,
-    "hash": "b3e335966e24bb983c1bcc00c65e84a18d992a5ebf0433de4d7d2fa2fe724cd0"
+    "size": 14439,
+    "hash": "fd77cdac6d806798f9868b67344ca969be1f0d790145913a5a76c6859502a2b4"
   },
   "heartbeat": {
     "id": "heartbeat",
@@ -451,8 +451,8 @@
     "id": "sand-timer",
     "category": "creative",
     "dimension": "2d",
-    "size": 8465,
-    "hash": "5a6f5435073ea9a87871a5f99a5aeecbced9611ec1426396f2ad44913c82da9f"
+    "size": 8351,
+    "hash": "670beafe61b6249a8170e9cb5cdc99bf79bbccee34b2880198202394e2595f12"
   },
   "eye-blink": {
     "id": "eye-blink",
@@ -479,8 +479,8 @@
     "id": "radar",
     "category": "creative",
     "dimension": "2d",
-    "size": 11981,
-    "hash": "ce8bc4aa651dcd1223da40c7fd987ba2bb0315569f21d84e0993ead2cccf946d"
+    "size": 11986,
+    "hash": "6f42cc795fdd1c5b8991759475d701337d467a618f935f575e1d6a810da28d99"
   },
   "particle-orbit": {
     "id": "particle-orbit",
@@ -521,15 +521,15 @@
     "id": "ai-shimmer",
     "category": "ai",
     "dimension": "2d",
-    "size": 8398,
-    "hash": "ed86639f17bd822cae37ec599e73b1c9ca5dc780be22e7e081cce7960f26fe7f"
+    "size": 8993,
+    "hash": "5c31c3e986c3ef6ce350ef5040574c1e41e008ae33c0f2b533a9b4d8cbb8dc29"
   },
   "neural-grid": {
     "id": "neural-grid",
     "category": "ai",
     "dimension": "2d",
-    "size": 12969,
-    "hash": "168aefaed6a7b81b7324459dd9d1b886885a270a68923a4a0b02603ac0b1e934"
+    "size": 14219,
+    "hash": "d71cbbc50feaddbe373b14bd6efb0a0624c410988f22ac39a4a4bcfac12c4398"
   },
   "skeleton-line": {
     "id": "skeleton-line",
@@ -829,8 +829,8 @@
     "id": "progress-label-inline",
     "category": "progress",
     "dimension": "2d",
-    "size": 7446,
-    "hash": "061c79efc2ee513d43a76b9cd87bc8a0ff596fb60f9bd1f1d58c9ce8eabcf760"
+    "size": 8624,
+    "hash": "a6e49143e3b59ba6e32d7812c81b04516635586b662b7dcfc10c4e139f959ef3"
   },
   "progress-multi-step": {
     "id": "progress-multi-step",

@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/core",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "CSS loading spinners, skeletons and progress indicators that render as markup plus one shared stylesheet, with no runtime dependencies",
   "type": "module",
   "license": "MIT",
@@ -75,6 +75,7 @@
       "import": "./dist/loaders/*.js"
     },
     "./styles.css": "./dist/wavelo.css",
+    "./styles.layer.css": "./dist/wavelo.layer.css",
     "./tokens.css": "./dist/tokens.css",
     "./package.json": "./package.json"
   },

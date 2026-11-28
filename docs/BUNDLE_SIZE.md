@@ -11,18 +11,18 @@ now measures the current workspace core; its earlier figure used a stale local d
 
 | Entry point | Minified | Gzipped | Budget |
 | --- | --- | --- | --- |
-| `@wavelo/core/loaders/ring` — one design, chosen at build time | 39,487 | 11.6 KB (11,828 B) | 12,800 |
-| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 68,445 | 15.9 KB (16,295 B) | 17,920 |
-| Two designs from different kinds (`ring` + `skeleton-card`) | 79,213 | 17.0 KB (17,410 B) | 19,456 |
-| `@wavelo/core` — `renderLoader`, design chosen at runtime | 334,656 | 59.4 KB (60,793 B) | 67,584 |
-| `@wavelo/core` + registry walk over all 188 designs | 334,659 | 59.4 KB (60,799 B) | 67,584 |
-| `@wavelo/react` | 335,614 | 59.9 KB (61,310 B) | 67,584 |
-| `@wavelo/vue` | 336,630 | 60.3 KB (61,790 B) | 67,584 |
-| `@wavelo/angular` | 338,211 | 60.8 KB (62,252 B) | 68,096 |
-| `@wavelo/svelte` | 334,975 | 59.5 KB (60,967 B) | 67,584 |
-| `@wavelo/web-components` | 337,074 | 60.4 KB (61,847 B) | 67,584 |
-| `@wavelo/vanilla` | 335,177 | 59.7 KB (61,079 B) | 67,584 |
-| `@wavelo/core/styles.css` (all designs, loaded once) | 281,933 raw | 43,179 | — |
+| `@wavelo/core/loaders/ring` — one design, chosen at build time | 41,276 | 12.0 KB (12,310 B) | 12,800 |
+| `@wavelo/core/loaders/voxel-cluster` — the busiest kind | 69,856 | 16.3 KB (16,678 B) | 17,920 |
+| Two designs from different kinds (`ring` + `skeleton-card`) | 81,515 | 17.6 KB (17,982 B) | 19,456 |
+| `@wavelo/core` — `renderLoader`, design chosen at runtime | 339,532 | 60.4 KB (61,871 B) | 67,584 |
+| `@wavelo/core` + registry walk over all 188 designs | 339,535 | 60.4 KB (61,873 B) | 67,584 |
+| `@wavelo/react` | 340,490 | 60.9 KB (62,375 B) | 67,584 |
+| `@wavelo/vue` | 341,121 | 61.2 KB (62,715 B) | 67,584 |
+| `@wavelo/angular` | 343,478 | 62.0 KB (63,471 B) | 68,096 |
+| `@wavelo/svelte` | 339,851 | 60.6 KB (62,037 B) | 67,584 |
+| `@wavelo/web-components` | 341,591 | 61.3 KB (62,803 B) | 67,584 |
+| `@wavelo/vanilla` | 340,053 | 60.7 KB (62,143 B) | 67,584 |
+| `@wavelo/core/styles.css` (all designs, loaded once) | 285,203 raw | 43,693 | — |
 
 The budget that backs the "modular catalog" claim is `individual-loader`: a design
 chosen at build time ships its own kind's rules and no other kind's. It is not
@@ -46,7 +46,8 @@ the measurement, because a ceiling left above the number it is meant to guard st
 guarding: the consolidation of 22 duplicate designs took `core-renderer` from 32,907 B to
 32,084 B, and the runtime budget came down from 38,912 to 37,888 with it. It has moved up
 since — to 39,424 when the token and 3D work pushed the heaviest adapter past that band,
-and to 51,200 (52,224 for Angular) with the 3D suite — because the catalog grew rules
+and to 51,200 (52,224 for Angular) with the 3D suite, and finally to 67,584
+(68,096 for Angular) for 1.0.0 — because the catalog grew rules
 rather than designs: counted rows, the redrawn `infinity` and `helix`, twenty new
 compositions and the `--wavelo-parts` grammar put `web-components` at 45,356 B.
 Each ceiling is a clean KiB number sitting about 12% above the heaviest of the entries
@@ -55,8 +56,8 @@ runtime-shaped entries share one number and the heaviest of them is an adapter. 
 matters more than the number: a ceiling set 0.5% above the measurement is not a budget but
 a rerun, because the next design added to any slice fails CI for adding bytes. `busiest-loader`
 has always moved with the slice it samples — 10,752 → 11,264 when `three-dots` and
-`equalizer` learned to divide their row by a `count`, and 13,824 now that it samples the
-shape slice. Three earlier changes
+`equalizer` learned to divide their row by a `count`, then 13,824 when the probe moved to
+the shape slice, and 17,920 for the current 1.0.0 catalog. Three earlier changes
 moved the same number, all of them the same trade — configuration that a page can set
 once instead of per loader:
 
@@ -70,7 +71,7 @@ once instead of per loader:
 - The colour and dimension grammar got wider.
 
 Runtime bundles additionally carry the registry and the 188-entry bitset those lists
-are decoded from, which is why their budget is 50 KiB (51 for Angular). Adapters
+are decoded from, which is why their budget is 66 KiB (66.5 for Angular). Adapters
 and `renderLoader` choose by string at runtime, so they carry every slice and grow with
 the catalog, but the marginal design is not one fixed number: it is its slice delta plus
 a registry entry plus a row in the option table, and it is largest when the design
@@ -82,11 +83,10 @@ consolidating 22 duplicate designs away took it to 32,084 B, and giving `three-d
 `equalizer` a working `count` brought it back to 32,613 B. Redesigning designs already in
 the catalog moves it without adding either — the lemniscate `infinity` traces and the
 eighteen-part `helix` are new rules in two slices, and every runtime bundle carries every
-slice. The chain to where this build measures 44,372 B is: 32,613 B at the counted rows,
-34,259 B once the token-consensus fix and the first five 3D labels landed in 0.1.0, and
-44,372 B now — twenty new compositions, twenty new `@keyframes` modules nobody had
-imported, and eleven redrawn designs, each of which is a new rule in a slice every runtime
-bundle carries. Earlier moves on the same number: the
+slice. The chain to where this 1.0.0 build measures 61,871 B is: 32,613 B at the counted rows,
+34,259 B once the token-consensus fix and the first five 3D labels landed in 0.1.0,
+44,372 B after the 0.2.0 composition/3D tranche, and 61,871 B now after later progress,
+brand, state and distribution work. Earlier moves on the same number: the
 motion tranche's 18 designs took `core-renderer` from 19,011 B to 22,797 B, putting the
 base defaults at zero specificity added 221 B more, and the five designs redrawn during
 the visual review a further 1,564 B, to 24,582 B. Budgets sit about 12% above the
@@ -105,8 +105,9 @@ determinate per-part fill added with the progress tranche cost every single-desi
 bundle about 227 B, `ring` included.
 
 `createRouteProgress` is not in any of the rows above, because nothing imports it
-unless a page asks for it: adding it to a runtime bundle costs 695 B gzipped, and a
-page that renders loaders without a route bar pays nothing.
+unless a page asks for it: in a focused `ring` probe, adding it increased the gzipped
+bundle from 61,867 B to 62,679 B (812 B), and a page that renders loaders without a
+route bar pays nothing.
 
 ## The targets the brief set
 
@@ -115,10 +116,11 @@ The brief asked for 5 KB or less per loader and 10 KB or less for the shared cor
 - **5 KB per loader is met at the quiet end of the catalog and missed at the crowded one.**
   A design imports its kind's whole slice, so an `overlay` design pays 1.7 KB of rules and a
   `shape` design pays 7.1 KB before the renderer is counted. The cheapest designs clear 5 KB;
-  `voxel-cluster` pays 12,145 B for the largest slice.
-- **10 KB for the core is missed by design.** A renderer that chooses the design at runtime
-  must be able to draw all twelve slices, which is 44,372 B gzipped. The target holds only for
-  the build-time entry point, where tree-shaking leaves one slice in the bundle.
+  `voxel-cluster` pays 16,678 B for the largest slice.
+- **10 KB for the core is missed by both runtime selection and the sampled build-time loader.**
+  A runtime renderer must carry all twelve slices and measures 61,871 B gzipped. Tree shaking
+  removes other kinds from a modular loader, but the shared renderer plus one kind's rules
+  still puts `ring` at 12,310 B.
 
 Both gaps are recorded here rather than quietly dropped, and the enforced numbers are the ones
 in the table above.

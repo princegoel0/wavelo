@@ -85,7 +85,7 @@ export const honouredOptions: Readonly<Record<string, string>> = {
    "stream-cursor": "4db7fed",
    "token-stream": "4ff7fed",
    "ai-shimmer": "4db7fec",
-   "neural-grid": "4db7fec",
+   "neural-grid": "4df7fec",
    "skeleton-line": "4db7ffc",
    "skeleton-card": "4db7ffd",
    "skeleton-avatar": "4db7fec",

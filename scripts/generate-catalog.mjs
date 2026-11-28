@@ -1,11 +1,11 @@
 import { catalogArtifacts } from './catalog-artifacts.mjs';
-import { loaderRegistry } from '../packages/core/dist/registry.js';
+import { loaderRegistry, presetRegistry } from '../packages/core/dist/registry.js';
 import { readdir, mkdir, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const root = resolve('packages/core');
-const artifacts = catalogArtifacts(loaderRegistry);
+const artifacts = catalogArtifacts(loaderRegistry, presetRegistry);
 
 if (!existsSync(`${root}/src/loaders`)) await mkdir(`${root}/src/loaders`, { recursive: true });
 
@@ -20,4 +20,4 @@ for (const [relative, content] of artifacts) {
   await writeFile(`${root}/${relative}`, content);
 }
 
-console.log(`Generated ${loaderRegistry.length} loader entry points, the loaders barrel and src/ids.ts (${stale.length} stale file(s) removed).`);
+console.log(`Generated ${loaderRegistry.length} loader entry points, the loaders barrel, src/ids.ts and src/preset-ids.ts (${stale.length} stale file(s) removed).`);

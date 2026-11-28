@@ -95,10 +95,11 @@ test('every design is labelled with the dimension its own motion runs in', async
   }
   for (const loader of loaderRegistry) {
     assert.ok(['2d', '3d'].includes(loader.dimension), `${loader.id} has invalid dimension: ${loader.dimension}`);
-    // The design's own rules name the frames it animates with; a label is only worth
-    // having if it follows from them. A design that reaches 3D through a parent's
-    // transform-style would need a different rule, and none does today.
-    const rules = [...sheet.matchAll(new RegExp(`\\.wavelo--${loader.id}(?::[a-z-]+)?[^{]*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]).join(';');
+    // Animated depth frames and static perspective/axis transforms both describe a 3D
+    // render, so descendant rules count as well as the root's own animation names.
+    const rules = [...sheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter(([, selector]) => selector.includes(`.wavelo--${loader.id}`))
+      .map(([, , body]) => body).join(';');
     const animated = [...rules.matchAll(/animation(?:-name)?:\s*(?:var\([^)]*\)\s*,\s*)?([a-z][a-z0-9-]*)/g)]
       .map(([, name]) => name)
       .filter((name) => name.startsWith('wavelo-'));
@@ -106,7 +107,7 @@ test('every design is labelled with the dimension its own motion runs in', async
     assert.equal(loader.dimension, deep ? '3d' : '2d', `${loader.id} animates ${animated.join(', ')} → ${deep ? '3d' : '2d'}, labelled ${loader.dimension}`);
   }
   const labelled = loaderRegistry.filter((loader) => loader.dimension === '3d').map((loader) => loader.id).sort();
-  assert.deepEqual(labelled, ['atom-orbital', 'aurora-borealis', 'black-hole-accretion', 'coin-flip', 'crystal-cluster', 'cube', 'cylindrical-wave', 'dna-decode', 'dna-double-helix', 'ellipse', 'folding-squares', 'gyroscope', 'helix', 'hologram-pyramid', 'isometric-deck', 'liquid-mercury', 'magnetic-field', 'mobius-band', 'prism-refraction', 'quantum-superposition', 'rotating-square', 'sphere-lattice', 'tesseract', 'torus-ring', 'vortex-tunnel', 'voxel-cluster'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
+  assert.deepEqual(labelled, ['atom-orbital', 'aurora-borealis', 'black-hole-accretion', 'coin-flip', 'crystal-cluster', 'cube', 'cylindrical-wave', 'dna-decode', 'dna-double-helix', 'ellipse', 'folding-squares', 'gyroscope', 'helix', 'hologram-pyramid', 'isometric-deck', 'liquid-mercury', 'magnetic-field', 'mobius-band', 'prism-refraction', 'quantum-superposition', 'rotating-square', 'solar-system', 'sphere-lattice', 'tesseract', 'torus-ring', 'vortex-tunnel', 'voxel-cluster'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
 });
 
 test('the generated ID list matches the catalog', async () => {
@@ -149,7 +150,8 @@ test('designs whose names promise a count render that many parts', () => {
     'thinking-glow': 1,
     'stream-cursor': 1,
     'comet-orbit': 1,
-    'ai-shimmer': 0,
+    'ai-shimmer': 3,
+    radar: 3,
     'skeleton-chat': 3,
     'skeleton-metric': 3,
     'progress-dots-fill': 5,
@@ -231,6 +233,17 @@ test('unsafe configuration is rejected', () => {
   assert.throws(() => renderLoader({ type: 'inline', max: 0 }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'inline', theme: 'sepia' }), LoaderConfigurationError);
   assert.throws(() => renderLoader({ type: 'inline', ['data-on click']: 'x' }), LoaderConfigurationError);
+});
+
+test('unknown options and renderer-owned data attributes are rejected', () => {
+  for (const config of [{ colour: '#fff' }, { variant: 'ring' }, { typo: true }]) {
+    assert.throws(() => renderLoader({ type: 'inline', ...config }), LoaderConfigurationError);
+  }
+  for (const key of ['data-wavelo-motion', 'data-wavelo-theme', 'data-wavelo-fallback', 'data-wavelo-value-text', 'data-wavelo-error', 'data-wavelo-style', 'data-wavelo-route-progress', 'data-wavelo-step']) {
+    assert.throws(() => renderLoader({ type: 'inline', [key]: 'spoofed' }), LoaderConfigurationError, key);
+  }
+  assert.match(renderLoader({ type: 'success-ring', 'data-wavelo-state': 'success' }).html, /data-wavelo-state="success"/);
+  assert.match(renderLoader({ type: 'constellation', 'data-wavelo-constellation': 'orion' }).html, /data-wavelo-constellation="orion"/);
 });
 
 test('configuration values cannot break out of an attribute', () => {
@@ -408,6 +421,10 @@ test('a counted bar prints the percentage and a label prints its own text', () =
   assert.match(counted.css, /@property --wavelo-count\{syntax:"<integer>"/);
   const labelled = renderLoader({ type: 'progress-label-inline', value: 70, max: 100, label: 'Working', valueText: '70% uploaded' });
   assert.match(labelled.html, /data-wavelo-value-text="70% uploaded"/);
+  assert.match(renderLoader({ type: 'progress-label-inline', value: 65, max: 100 }).html, /data-wavelo-value-text="65%"/);
+  assert.match(renderLoader({ type: 'progress-label-inline' }).html, /data-wavelo-value-text="35%"/);
+  assert.doesNotMatch(renderLoader({ type: 'progress-label-inline', value: 65, valueText: '' }).html, /data-wavelo-value-text|aria-valuetext/);
+  assert.doesNotMatch(renderLoader({ type: 'progress-label-inline', value: 65, valueText: '   ' }).html, /data-wavelo-value-text|aria-valuetext/);
   // An indeterminate design is not handed a number it cannot draw, and a design that
   // never prints the text pays nothing for the attribute.
   assert.doesNotMatch(renderLoader({ type: 'progress-ai-generate', value: 70, max: 100, label: 'Working' }).html, /--wavelo-count:/);
@@ -768,7 +785,7 @@ test('micro-interactions pass through data-wavelo-state', () => {
 });
 
 test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', async () => {
-  const { WaveloCategories, WaveloTypes, loaderIds } = await import('../packages/core/dist/index.js');
+  const { WaveloCategories, WaveloTypes, loaderIds, presetIds } = await import('../packages/core/dist/index.js');
   assert.ok(Array.isArray(WaveloCategories));
   assert.equal(WaveloCategories.length, 8);
   for (const cat of ['spinner', 'dots', 'bars', 'creative', 'skeleton', 'progress', 'application', 'ai']) {
@@ -780,6 +797,8 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
     assert.ok(WaveloTypes.includes(id));
   }
   assert.equal(WaveloTypes, loaderIds);
+  assert.deepEqual(presetIds, presetRegistry.map((preset) => preset.id));
+  assert.equal(new Set(presetIds).size, presetIds.length);
   assert.ok(WaveloTypes.includes('circular'));
   assert.ok(WaveloTypes.includes('atom-orbital'));
   assert.ok(WaveloTypes.includes('ai-tool-handoff'));
@@ -791,5 +810,24 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
   assert.ok(WaveloTypes.includes('eclipse-corona'));
   assert.ok(WaveloTypes.includes('spiral-galaxy'));
   assert.ok(WaveloTypes.includes('nebula-drift'));
+});
+
+test('configFromAttributes rejects invalid brand JSON with LoaderConfigurationError', async () => {
+  const { configFromAttributes, LoaderConfigurationError } = await import('../packages/core/dist/index.js');
+  assert.throws(() => configFromAttributes({ brand: '{not-json' }), LoaderConfigurationError);
+});
+
+test('createStyleCollector deduplicates rendered slices for SSR head injection', async () => {
+  const { createStyleCollector, renderLoader } = await import('../packages/core/dist/index.js');
+  const collector = createStyleCollector({ nonce: 'ssr-nonce' });
+  collector.add(renderLoader({ type: 'ring' }));
+  collector.add(renderLoader({ type: 'circular' }));
+  collector.add(renderLoader({ type: 'skeleton-card' }));
+  assert.equal(collector.styles().length, 2);
+  const head = collector.markup();
+  assert.equal(head.match(/<style /g)?.length, 2);
+  assert.ok(head.includes('nonce="ssr-nonce"'));
+  collector.clear();
+  assert.equal(collector.styles().length, 0);
 });
 

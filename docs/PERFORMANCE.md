@@ -71,16 +71,16 @@ Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,942 | `orbit` | 5,951 |
+| `overlay` | 1,942 | `orbit` | 6,007 |
 | `scroll` | 2,407 | `wave` | 6,141 |
-| `pulse` | 3,613 | `progress` | 6,380 |
-| `bars` | 4,599 | `skeleton` | 6,894 |
-| `rings` | 4,616 | `dots` | 7,312 |
-| `ring` | 4,747 | `shape` | 8,924 |
+| `pulse` | 3,613 | `progress` | 6,420 |
+| `bars` | 4,603 | `skeleton` | 6,957 |
+| `rings` | 4,616 | `dots` | 7,599 |
+| `ring` | 4,813 | `shape` | 8,908 |
 
 The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,516 bytes of every row above. The whole
-catalog sheet is 43,179 bytes gzipped, loaded once, for all 188 designs. Read down the
+catalog sheet is 43,693 bytes gzipped, loaded once, for all 188 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
@@ -93,7 +93,7 @@ exactly why `busiest-loader`
 in `npm run measure` samples a shape design today: a probe pinned to whatever kind held the
 record when it was written stops measuring the worst case the moment another kind
 overtakes it, and the budget still passes — which is what happened here, with the ceiling
-at 11,264 bytes while a shape design already cost 12,145. Redrawing a design moves its kind
+at 11,264 bytes while a shape design already cost 12,145 at that checkpoint. Redrawing a design moves its kind
 too, and not in proportion to the design's own size: `infinity` is one loader's worth of
 markup and what it ships is a sixteen-stop lemniscate inside the 4,378-byte `rings` slice,
 while `helix` needs eighteen parts in six rows inside the 5,382-byte `wave` slice. A design
@@ -101,16 +101,14 @@ in a crowded kind costs more than a design in a quiet one, whatever its own rule
 change to the renderer, which every design imports, costs all of them: the determinate fill
 path added 227 bytes to every single-design bundle.
 
-Importing one design's entry point costs the renderer, validation and that slice, and
-the six samples below are strictly ordered by the slice they pay for: `progress-battery`
-(`progress`) 8,986 bytes, `ring` 9,065, `skeleton-card` (`skeleton`) 9,526, `helix`
-(`wave`) 10,186, `bubble-rise` (`dots`) 10,618 and `voxel-cluster` (`shape`) 12,145
-— the largest, because `shape` is now the most crowded slice. `npm run measure` enforces
-both ends of that range: 10,240 bytes for the sampled `ring` and 13,824 for the busiest
-kind, so a new shape design cannot grow that slice without a number moving. Importing
-`renderLoader`, which chooses by string at runtime, costs 43.3 KB (44,372 bytes) because
-it must be able to draw anything. See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry
-point.
+Importing one design's entry point costs the renderer, validation and that slice. Six
+current samples show the spread: `ring` 12,302 B, `helix` (`wave`) 13,822 B,
+`progress-battery` (`progress`) 13,871 B, `skeleton-card` (`skeleton`) 14,500 B,
+`bubble-rise` (`dots`) 15,282 B and `voxel-cluster` (`shape`) 16,678 B — the largest,
+because `shape` is the most crowded slice. `npm run measure` enforces 12,800 bytes for
+the sampled `ring` and 17,920 for the busiest kind. Importing `renderLoader`, which chooses
+by string at runtime, costs 60.4 KB (61,871 bytes) because it must be able to draw anything.
+See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader
 

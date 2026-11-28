@@ -64,3 +64,38 @@ export function renderStylesheets(slices: Iterable<string>, options: StyleOption
   }
   return [...seen.values()].map((css) => stylesheetMarkup(css, options)).join('');
 }
+
+export interface StyleCollector {
+  /** Records a raw CSS slice string, deduplicating by `styleKey`. */
+  collect(css: string): void;
+  /** Records the `css` slice from a `renderLoader` / modular loader result. */
+  add(result: { css: string }): void;
+  /** Returns the unique CSS slice strings collected so far. */
+  styles(): string[];
+  /** Emits deduplicated `<style>` tags ready for SSR document `<head>` injection. */
+  markup(overrideOptions?: StyleOptions): string;
+  /** Clears all collected slices. */
+  clear(): void;
+}
+
+/**
+ * Request-scoped SSR style collector that deduplicates slices by content key
+ * so a server-rendered page injects only the exact loader CSS it rendered.
+ */
+export function createStyleCollector(options: StyleOptions = {}): StyleCollector {
+  const seen = new Map<string, string>();
+  const collect = (css: string) => {
+    if (!css) return;
+    const key = styleKey(css);
+    if (!seen.has(key)) seen.set(key, css);
+  };
+  return {
+    collect,
+    add(result) {
+      collect(result.css);
+    },
+    styles: () => [...seen.values()],
+    markup: (overrideOptions) => [...seen.values()].map((css) => stylesheetMarkup(css, overrideOptions ?? options)).join(''),
+    clear: () => seen.clear()
+  };
+}

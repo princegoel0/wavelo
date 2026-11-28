@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wavelo/core": "0.7.0",
-    "@wavelo/react": "0.7.0",
+    "@wavelo/core": "1.0.0",
+    "@wavelo/react": "1.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

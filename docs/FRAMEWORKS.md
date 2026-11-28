@@ -320,10 +320,10 @@ is the short form, and `npm run docs:check` keeps every range here equal to the 
 
 | Package | Declared `peerDependencies` | Floor rests on | Installed in CI |
 | :--- | :--- | :--- | :--- |
-| `@wavelo/react` | `react: ">=16.8.0"`, `react-dom: ">=16.8.0"` (optional) | Only 16.8 API is imported — context, effects, `createElement`; nothing imports `react-dom`. | React 19.3.1 |
+| `@wavelo/react` | `react: ">=16.8.0 <20.0.0"`, `react-dom: ">=16.8.0 <20.0.0"` (optional) | Only 16.8 API is imported — context, effects, `createElement`; nothing imports `react-dom`. | React 19.3.1 |
 | `@wavelo/vue` | `vue: ">=3.0.0 <4.0.0"` | Composition API only: `defineComponent`, `computed`, `watchEffect`, `h`, `provide`, `inject`, `useAttrs`. | Vue 3.5.46 |
 | `@wavelo/svelte` | `svelte: ">=5.0.0 <6.0.0"` | The shipped component is runes — `$props()`, `$derived()`, `$effect()`. | Svelte 5.59.2 |
-| `@wavelo/angular` | `@angular/core: ">=14.0.0"` | The package is built with `ngc` in partial mode, and its component declaration carries `minVersion: "14.0.0"`: the metadata and factory declarations around it say 12.0.0, and the floor is the newest of the three, because a linking application must satisfy every declaration. | Angular 22.3.0 |
+| `@wavelo/angular` | `@angular/core: ">=14.0.0 <23.0.0"` | The package is built with `ngc` in partial mode, and its component declaration carries `minVersion: "14.0.0"`: the metadata and factory declarations around it say 12.0.0, and the floor is the newest of the three, because a linking application must satisfy every declaration. | Angular 22.3.0 |
 | `@wavelo/web-components` | *None (zero runtime dependencies)* | Custom Elements v1 in light DOM, no `attachShadow`. | Chromium, Firefox, WebKit |
 
 `@wavelo/angular` is the only one of these that a test could not infer from its imports. A

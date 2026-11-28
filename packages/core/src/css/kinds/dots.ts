@@ -5,6 +5,7 @@ import { css as staggerDotFrames } from '../keyframes/stagger-dot.js';
 import { css as typingDotFrames } from '../keyframes/typing-dot.js';
 import { css as tripFrames } from '../keyframes/trip.js';
 import { css as neuralFrames } from '../keyframes/neural.js';
+import { css as dotMatrixFrames } from '../keyframes/dot-matrix.js';
 import { css as magnetFrames } from '../keyframes/magnet.js';
 import { css as pendulumFrames } from '../keyframes/pendulum.js';
 import { css as bubbleFrames } from '../keyframes/bubble.js';
@@ -78,20 +79,29 @@ export const dotsCss = `
 .wavelo--trip-orbit .wavelo__part{position:absolute;left:50%;top:50%;width:22%;height:22%;margin:calc(var(--wavelo-size,2.5rem) * -.11);border:var(--wavelo-stroke,3px) solid currentColor;border-right-color:transparent;background:transparent;transform-origin:50% 50%;animation:wavelo-trip var(--wavelo-duration,1s) var(--wavelo-ease,linear) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--trip-orbit .wavelo__part:nth-child(2){animation-delay:calc(var(--wavelo-duration,1s) / -3)}
 .wavelo--trip-orbit .wavelo__part:nth-child(3){animation-delay:calc(var(--wavelo-duration,1s) * -2 / 3)}
-/* Nine nodes pulsing along a diagonal, the way activity is drawn across a network. */
-.wavelo--neural-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,14%);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:radial-gradient(circle at 50% 50%,color-mix(in srgb,currentColor 12%,transparent) 0%,transparent 75%)}
+/* Nine nodes carry waves inward from opposite sides while twelve orthogonal
+   synapses illuminate in alternating horizontal and vertical directions. */
+.wavelo--neural-grid{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,14%);width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:radial-gradient(circle at 50% 50%,color-mix(in srgb,currentColor 12%,transparent) 0%,transparent 75%)}
 .wavelo--neural-grid.wavelo-inline{display:inline-grid}
+.wavelo__synapses{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.wavelo__synapse{fill:none;stroke:var(--wavelo-secondary-color,currentColor);stroke-width:1.5;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;opacity:.06;animation:wavelo-neural-synapse calc(var(--wavelo-duration,1s) * 1.8) linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:calc(var(--wavelo-duration,1s) * -.15 * var(--synapse-step,0))}
 .wavelo--neural-grid .wavelo__part{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,currentColor 45%,color-mix(in srgb,currentColor 75%,#000) 100%);box-shadow:0 0 8px currentColor,0 0 16px color-mix(in srgb,var(--wavelo-secondary-color,currentColor) 60%,transparent),inset 1px 1px 2px #fff;animation:wavelo-neural calc(var(--wavelo-duration,1s) * 1.5) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--neural-grid .wavelo__part:nth-child(2),.wavelo--neural-grid .wavelo__part:nth-child(4){animation-delay:calc(var(--wavelo-duration,1s) * -.25)}
-.wavelo--neural-grid .wavelo__part:nth-child(3),.wavelo--neural-grid .wavelo__part:nth-child(5),.wavelo--neural-grid .wavelo__part:nth-child(7){animation-delay:calc(var(--wavelo-duration,1s) * -.5)}
-.wavelo--neural-grid .wavelo__part:nth-child(6),.wavelo--neural-grid .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,1s) * -.75)}
-.wavelo--neural-grid .wavelo__part:nth-child(9){animation-delay:calc(var(--wavelo-duration,1s) * -1)}
-.wavelo--dot-matrix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 14));width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent}
+.wavelo--neural-grid .wavelo__part:nth-of-type(2){animation-delay:calc(var(--wavelo-duration,1s) * -.16)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(3){animation-delay:calc(var(--wavelo-duration,1s) * -.32)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(4){animation-delay:calc(var(--wavelo-duration,1s) * -.48)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(5){animation-delay:calc(var(--wavelo-duration,1s) * -.32)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(6){animation-delay:calc(var(--wavelo-duration,1s) * -.16)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(7){animation-delay:calc(var(--wavelo-duration,1s) * -.64)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(8){animation-delay:calc(var(--wavelo-duration,1s) * -.48)}
+.wavelo--neural-grid .wavelo__part:nth-of-type(9){animation-delay:calc(var(--wavelo-duration,1s) * -.32)}
+.wavelo--dot-matrix{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--wavelo-gap,calc(var(--wavelo-size,2.5rem) / 14));width:var(--wavelo-width,var(--wavelo-size,2.5rem));height:var(--wavelo-height,var(--wavelo-size,2.5rem));background:transparent;overflow:visible}
 .wavelo--dot-matrix.wavelo-inline{display:inline-grid}
-.wavelo--dot-matrix .wavelo__part{width:100%;height:100%;border-radius:28%;animation:wavelo-pulse var(--wavelo-duration,1.2s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-.wavelo--dot-matrix .wavelo__part:nth-child(5){animation-delay:calc(var(--wavelo-duration,1.2s) * -.66)}
-.wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4),.wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){animation-delay:calc(var(--wavelo-duration,1.2s) * -.33)}
-.wavelo--dot-matrix .wavelo__part:nth-child(1),.wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(7),.wavelo--dot-matrix .wavelo__part:nth-child(9){animation-delay:0s}
+.wavelo--dot-matrix .wavelo__part{position:relative;width:100%;height:100%;border-radius:50%;background:currentColor;animation:wavelo-dot-node var(--wavelo-duration,1.2s) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:var(--ripple-delay,0s)}
+.wavelo--dot-matrix .wavelo__part:nth-child(n){animation-delay:var(--ripple-delay,0s)}
+.wavelo--dot-matrix .wavelo__part:after{content:"";position:absolute;inset:-1px;border:1px solid currentColor;border-radius:50%;opacity:0;animation:wavelo-dot-ripple var(--wavelo-duration,1.2s) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running);animation-delay:var(--ripple-delay,0s)}
+.wavelo--dot-matrix .wavelo__part:nth-child(5){--ripple-delay:0s}
+.wavelo--dot-matrix .wavelo__part:nth-child(2),.wavelo--dot-matrix .wavelo__part:nth-child(4),.wavelo--dot-matrix .wavelo__part:nth-child(6),.wavelo--dot-matrix .wavelo__part:nth-child(8){--ripple-delay:calc(var(--wavelo-duration,1.2s) * .12)}
+.wavelo--dot-matrix .wavelo__part:nth-child(1),.wavelo--dot-matrix .wavelo__part:nth-child(3),.wavelo--dot-matrix .wavelo__part:nth-child(7),.wavelo--dot-matrix .wavelo__part:nth-child(9){--ripple-delay:calc(var(--wavelo-duration,1.2s) * .24)}
 /* Five dots pulled toward the middle and released. How far each one travels is its own,
    so the row breathes inward from both ends and the middle dot only shrinks. */
 .wavelo--magnetic-dots .wavelo__part{animation:wavelo-magnet calc(var(--wavelo-duration,1s) * 1.4) var(--wavelo-ease,ease-in-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
@@ -208,4 +218,4 @@ export const dotsCss = `
 .wavelo--newton-cradle .wavelo__part:nth-child(1){animation:wavelo-newton-left var(--wavelo-duration,1.2s) cubic-bezier(.25,.1,.25,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--newton-cradle .wavelo__part:nth-child(2){animation:none}
 .wavelo--newton-cradle .wavelo__part:nth-child(3){animation:wavelo-newton-right var(--wavelo-duration,1.2s) cubic-bezier(.25,.1,.25,1) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
-${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}${quantumFrames}${synapseFrames}${gitMergeFrames}${metaballOrbitFrames}${newtonLeftFrames}${newtonRightFrames}`;
+${fadeDotFrames}${altDotFrames}${altDotReverseFrames}${staggerDotFrames}${typingDotFrames}${tripFrames}${neuralFrames}${dotMatrixFrames}${magnetFrames}${pendulumFrames}${bubbleFrames}${constellationFrames}${constellationLineFrames}${dotRingFrames}${quantumFrames}${synapseFrames}${gitMergeFrames}${metaballOrbitFrames}${newtonLeftFrames}${newtonRightFrames}`;

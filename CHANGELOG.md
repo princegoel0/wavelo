@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.0
+
+- Patch `createRouteProgress` CSS progress tokens and `aria-valuenow` in place on
+  updates so transitions interpolate smoothly instead of replacing DOM nodes.
+- Keep the `brand-orbit` bead on its stationary pill track, default
+  `progress-label-inline` to percentage text, and preserve `valueText: ''` as an
+  explicit request to suppress that generated label.
+- Resolve every PRD visual "must fix": radar gains phosphor persistence and multiple
+  pings, dot-matrix ripples from its centre, alternating dots travel horizontally,
+  the solar system tilts in 3D, flames use a deep-orange-to-white gradient, sand has a
+  scaleY particle stream, AI shimmer uses three sequential lines, and neural-grid adds
+  twelve animated synapses.
+- Production-build all five maintained examples from packed local tarballs in CI and
+  release validation.
+- Add `@wavelo/core/styles.layer.css` (`@layer wavelo`) for Tailwind v4 / Cascade
+  Layers consumers, `createStyleCollector` for request-scoped SSR slice collection,
+  `@wavelo/web-components/register` auto-registration, `HTMLElementTagNameMap`
+  augmentation, `./package.json` export parity across all seven packages, Angular
+  `data-*` attribute observation, and router/data-fetching recipes.
+- Reject unknown root configuration keys instead of silently ignoring them, and
+  reserve internal `data-wavelo-*` attributes while keeping `data-wavelo-state`
+  and `data-wavelo-constellation` as the documented built-in controls.
+- Prevent route-progress config from overriding controller-owned `type`, `value`,
+  `max`, or `loading`.
+- Publish strict cross-version Vue component types and defer Vue progress
+  autostart to mount/browser execution so SSR creates no timer.
+- Add generated `PresetId`/`presetIds` exports and a 1.0 alias/preset freeze policy.
+- Prove React 16.8, Vue 3.0, Svelte 5.0, and Angular 14 floors; cap React at `<20`
+  and Angular at `<23` until newer majors are tested.
+- Resolve every packed core subpath and all 188 loader modules in consumer tests.
+
 ## 0.7.0
 
 - Added five one-click StackBlitz playgrounds seeded from the maintained Next.js,

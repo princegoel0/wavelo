@@ -14,7 +14,9 @@ not happen without explicit approval.
 ```powershell
 npm ci
 npm run build                  # core, generated catalog entry points, every adapter
-npm run check                  # typecheck · 59 unit and adapter tests · verify:angular · verify:react · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
+npm run check                  # typecheck · 69 unit and adapter tests · verify:angular · verify:react · verify:vue · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
+npm run verify:examples         # imports, Svelte/Vue compilation, Angular compiler, React types
+npm run verify:examples:build   # all five examples installed from packed tarballs and production-built
 npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
 npm run test:browser:firefox   # Gecko smoke suite
 npm run test:browser:webkit    # WebKit smoke suite
@@ -22,16 +24,19 @@ npm run audit:customization    # the measured option table, re-measured against 
 npm run audit:layout           # which designs cost a layout per frame, and why
 npm run audit:visual:correctness
 npm run docs:build
-npm run pack:check             # all seven tarballs, dry run
+npm run pack:check             # seven publishable packages plus private docs, dry run
 npm run pack:verify            # the seven installed into a clean consumer project and compiled
 npm run release:validate       # one version across the seven, and not already on npm
 ```
 
-This is the sequence `ci.yml` runs on every push and pull request, and the sequence the
-`Validate release` job runs on `main` before it will pack anything. Nothing in it publishes:
-the publish job needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm`
-environment deployment. `npm run measure` is inside `npm run check`; it is listed nowhere
-separately because a document that quotes a size is compared against it.
+The `verify` CI job runs `npm run check` and the five packed consumer production builds;
+`verify-browser` runs the Chromium, Firefox and WebKit suites plus customization and layout
+audits. The `Validate release` job repeats the broader sequence above, including documentation, visual-correctness,
+tarball and packed-consumer checks. `release:validate` runs there only when
+`RELEASE_ENABLED` is true. Nothing in CI publishes from a pull request: the publish job
+needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm` environment
+deployment. `npm run measure` is inside `npm run check`; it is listed nowhere separately
+because a document that quotes a size is compared against it.
 
 `npm run catalog` compares the generated loader modules, barrel and `src/ids.ts`
 against `packages/core/src/catalog.ts`; after changing the catalog run
@@ -80,7 +85,7 @@ workspace, not a restructure. `npm install @wavelo/core` and
 - every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
   `"access": "public"` under one `@wavelo` scope;
 - each package ships its own stylesheet — a consumer that never imports the new family
-  never downloads its rules, and the loaders' 43,179 B gzipped catalog sheet does not grow;
+  never downloads its rules, and the loaders' 43,693 B gzipped catalog sheet does not grow;
 - framework packages declare their framework as a peer and bundle none of it, and the
   core has no runtime dependency, so a second family cannot drag a first one's weight in;
 - design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.
@@ -115,6 +120,22 @@ reported, never silently ignored. From `1.0.0` the rules above apply in full, an
 "compatible" stops being an assertion — `npm run audit:customization` re-measures which
 options each design honours, and the Chromium, Gecko and WebKit suites re-render every
 design in the catalog.
+
+### The 1.0 freeze contract
+
+`LoaderId`, `PresetId`, exported entry points, configuration keys, and documented
+peer ranges are public API. From 1.0.0:
+
+- canonical design IDs and preset-to-design mappings are immutable; new IDs are
+  additive and never reuse a retired name;
+- a deprecated alias stays available for at least two minor releases and is removed
+  only in a major release;
+- `WaveloLoader.svelte` is the canonical Svelte component and `Wavelo.svelte` is its
+  supported compatibility alias; neither path is removed in a minor;
+- configuration keys and prop types change only in a major release, while new
+  optional keys and presets may arrive in a minor;
+- the generated `presetIds` union is checked against `presetRegistry` in CI so a
+  public preset cannot drift from its documented mapping.
 
 Two repository variables decide what a workflow is allowed to do, and both are
 the owner's to set:

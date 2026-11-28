@@ -1,4 +1,4 @@
-import { computed, getCurrentInstance, onUnmounted, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, onUnmounted, ref, type ComputedRef, type Ref } from 'vue';
 
 export type WaveloState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -238,7 +238,8 @@ export function useWaveloProgress(options: UseWaveloProgressOptions = {}): UseWa
   };
 
   if (autoStart) {
-    start();
+    if (getCurrentInstance()) onMounted(start);
+    else if (typeof window !== 'undefined') start();
   }
 
   if (getCurrentInstance()) {

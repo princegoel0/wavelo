@@ -20,14 +20,15 @@ const options = loaderConfigKeys.length;
 // what the documents quote, so it is derived here rather than typed.
 const threeD = loaderRegistry.filter((loader) => loader.dimension === '3d').length;
 
-async function gzipped(source, name) {
-  return (await bundleSize(source, name)).gzipped;
-}
-
 // Measured from the same entry points `npm run measure` budgets, so a document can never
 // quote a figure the gate disagrees with.
-const singleLoaderKb = ((await gzipped(entries['individual-loader'], 'doc-check-individual')) / 1024).toFixed(1);
-const catalogKb = ((await gzipped(entries['core-renderer'], 'doc-check-renderer')) / 1024).toFixed(1);
+const measurements = {};
+for (const [name, source] of Object.entries(entries)) measurements[name] = await bundleSize(source, `doc-check-${name}`);
+const singleLoaderBytes = measurements['individual-loader'].gzipped;
+const busiestLoaderBytes = measurements['busiest-loader'].gzipped;
+const catalogBytes = measurements['core-renderer'].gzipped;
+const singleLoaderKb = (singleLoaderBytes / 1024).toFixed(1);
+const catalogKb = (catalogBytes / 1024).toFixed(1);
 
 /** [file, strings that must appear] */
 const required = [
@@ -256,6 +257,42 @@ for (const file of ['docs/PERFORMANCE.md', 'docs/BUNDLE_SIZE.md', 'docs/RELEASE.
   if (!(await readFile(file, 'utf8')).replace(/\s+/g, ' ').includes(sheetGzipped)) {
     failures.push(`${file} does not state the whole-catalog sheet size (${sheetGzipped} B gzipped)`);
   }
+}
+
+// Rounded KB values let a few bytes drift unnoticed. The bundle table and the prose that
+// calls a number "current" are checked byte-for-byte against the same entries as measure.
+const bundleDoc = await readFile('docs/BUNDLE_SIZE.md', 'utf8');
+const tableRows = [...bundleDoc.matchAll(/^\| (.+) \| ([\d,]+)(?: raw)? \| (?:[\d.]+ KB \()?([\d,]+)(?: B)?\)? \| (?:[\d,]+|—) \|$/gm)]
+  .map((match) => ({ minified: Number(match[2].replaceAll(',', '')), gzipped: Number(match[3].replaceAll(',', '')) }));
+const expectedRows = [
+  ...Object.values(measurements).map(({ minified, gzipped }) => ({ minified, gzipped })),
+  { minified: stylesheet.length, gzipped: gzipSync(Buffer.from(stylesheet)).length }
+];
+if (tableRows.length !== expectedRows.length) {
+  failures.push(`docs/BUNDLE_SIZE.md has ${tableRows.length} measured rows; expected ${expectedRows.length}`);
+}
+for (const [index, expected] of expectedRows.entries()) {
+  const stated = tableRows[index];
+  if (stated && (stated.minified !== expected.minified || stated.gzipped !== expected.gzipped)) {
+    failures.push(`docs/BUNDLE_SIZE.md row ${index + 1} states ${stated.minified}/${stated.gzipped} B; the build measures ${expected.minified}/${expected.gzipped} B`);
+  }
+}
+const flatBundleDoc = bundleDoc.replace(/\s+/g, ' ');
+const currentBundleClaims = [
+  [/this 1\.0\.0 build measures ([\d,]+) B/, catalogBytes],
+  [/A runtime renderer .*? measures ([\d,]+) B gzipped/, catalogBytes],
+  [/still puts `ring` at ([\d,]+) B/, singleLoaderBytes],
+  [/`voxel-cluster` pays ([\d,]+) B/, busiestLoaderBytes]
+];
+for (const [pattern, expected] of currentBundleClaims) {
+  const match = flatBundleDoc.match(pattern);
+  const stated = match ? Number(match[1].replaceAll(',', '')) : undefined;
+  if (stated !== expected) failures.push(`docs/BUNDLE_SIZE.md has a stale current bundle claim; expected ${expected} B`);
+}
+const prdBundleClaims = [...(await readFile('PRD.md', 'utf8')).matchAll(/measured ([\d,]+) B/g)];
+for (const [index, expected] of [singleLoaderBytes, catalogBytes].entries()) {
+  const stated = prdBundleClaims[index] ? Number(prdBundleClaims[index][1].replaceAll(',', '')) : undefined;
+  if (stated !== expected) failures.push(`PRD.md bundle measurement ${index + 1} is stale; expected ${expected} B`);
 }
 
 // docs/COMPONENT_CUSTOMIZATION_API.md is written by hand, one section per design, and every

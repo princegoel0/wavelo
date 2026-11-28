@@ -1,6 +1,6 @@
 {
   "name": "wavelo",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Universal loading and motion library",
   "license": "MIT",
@@ -13,11 +13,13 @@
     "build": "npm run build:core && node scripts/generate-catalog.mjs && npm run build:all",
     "build:core": "npm run build --workspace @wavelo/core",
     "build:all": "npm run build --workspaces --if-present",
-    "check": "npm run build && npm run typecheck && npm test && npm run verify:angular && npm run verify:react && npm run verify:examples && npm run catalog && npm run packages:check && npm run docs:check && npm run measure",
+    "check": "npm run build && npm run typecheck && npm test && npm run verify:angular && npm run verify:react && npm run verify:vue && npm run verify:examples && npm run catalog && npm run packages:check && npm run docs:check && npm run measure",
     "packages:check": "node scripts/validate-packages.mjs",
     "verify:angular": "node scripts/verify-angular-package.mjs",
     "verify:react": "node scripts/verify-react-entries.mjs",
+    "verify:vue": "vue-tsc --noEmit -p tests/fixtures/vue-consumer/tsconfig.json",
     "verify:examples": "node scripts/verify-examples.mjs",
+    "verify:examples:build": "node scripts/verify-examples.mjs --build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test --test-concurrency=1 tests/core.test.mjs tests/framework.test.mjs tests/angular.test.mjs tests/angular-ssr.test.mjs",
     "catalog": "node scripts/validate-catalog.mjs",
@@ -59,6 +61,7 @@
     "svelte": "^5.59.1",
     "typescript": "6.0.3",
     "vue": "^3.5.46",
+    "vue-tsc": "^3.3.14",
     "zone.js": "^0.16.3"
   }
 }

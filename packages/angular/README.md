@@ -40,7 +40,7 @@ rendered content is cleared on destroy. Only markup is written into the host;
 `ensureStyles` puts the design's stylesheet slice in the document head, so a
 server-rendered page should add `@wavelo/core/styles.css` to the server styles.
 
-Supported peer range: `@angular/core >=14.0.0`.
+Supported peer range: `@angular/core >=14.0.0 <23.0.0`.
 
 Interactive documentation & live preview gallery: https://princegoel0.github.io/wavelo/
 

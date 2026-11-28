@@ -17,6 +17,11 @@ export function styleKey(css: string): string {
 const SVG_STAR =
   '<svg class="wavelo__part" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.36 1.4 6.66L12 16.9 6.05 20l1.4-6.66L2.5 8.98l6.6-.72z"/></svg>';
 
+const NEURAL_SYNAPSES = [
+  'M20 20H50', 'M50 20H80', 'M20 50H50', 'M50 50H80', 'M20 80H50', 'M50 80H80',
+  'M20 20V50', 'M20 50V80', 'M50 20V50', 'M50 50V80', 'M80 20V50', 'M80 50V80'
+].map((path, index) => `<path class="wavelo__synapse" d="${path}" pathLength="1" style="--synapse-step:${index}"/>`).join('');
+
 /** Part count for designs whose name promises a specific number of elements. */
 const PART_COUNTS: Record<string, number> = {
   'lotus-bloom': 5,
@@ -26,6 +31,7 @@ const PART_COUNTS: Record<string, number> = {
   'book-pages': 3,
   'pixel-weave': 9,
   snake: 5,
+  radar: 3,
   'three-dots': 3,
   'four-dots': 4,
   'five-dots': 5,
@@ -206,7 +212,8 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
     // Line, avatar and image placeholders are painted by the element itself; only
     // the composite layouts have child tracks. A line with a `count` becomes a
     // stack of tracks, because that is what a block of placeholder text is.
-    if (type === 'skeleton-avatar' || type === 'image-placeholder' || type === 'ai-shimmer') return '';
+    if (type === 'skeleton-avatar' || type === 'image-placeholder') return '';
+    if (type === 'ai-shimmer') return many(3);
     if (type === 'skeleton-line') return config.count && config.count > 1 ? many(config.count) : '';
     return many(config.count ?? SKELETON_TRACKS[type] ?? 5);
   }
@@ -218,6 +225,8 @@ function parts(kind: RenderKind, type: string, config: NormalizedLoaderConfig): 
   // The final strip meets the first with the radial edges exchanged: a half twist.
   if (type === 'mobius-band') return Array.from({ length: 48 }, (_, i) => '<span class="wavelo__part" aria-hidden="true" style="--segment-angle:' + i * 7.5 + 'deg;--segment-twist:' + i * 3.75 + 'deg"></span>').join('');
   if (type === 'scroll-chapters') return '<span class="wavelo__part" aria-hidden="true"><i></i></span>'.repeat(3);
+  if (type === 'neural-grid') return `<svg class="wavelo__synapses" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${NEURAL_SYNAPSES}</svg>${many(9)}`;
+  if (type === 'solar-system') return `<span class="wavelo__plane">${many(5)}</span>`;
   if (COUNTABLE.has(type)) return many(config.count ?? PART_COUNTS[type] ?? KIND_COUNTS[kind] ?? 1);
   if (PART_COUNTS[type] !== undefined) return many(PART_COUNTS[type]);
   return many(KIND_COUNTS[kind] ?? 1);
@@ -322,7 +331,12 @@ export function renderLoaderWithDefinition(input: LoaderConfig, definition: Load
     resolution === 'default' && typeof requestedType === 'string' && requestedType ? { 'data-wavelo-fallback': requestedType } : {};
   // `attr()` is how a value description reaches a pseudo-element's content, so the
   // label a design prints is the same string the assistive technology is told.
-  const valueLabel: Attributes = config.valueText ? { 'data-wavelo-value-text': config.valueText } : {};
+  const defaultValueLabel =
+    definition.id === 'progress-label-inline'
+      ? `${config.value !== undefined ? Math.round((config.value / config.max) * 100) : 35}%`
+      : undefined;
+  const resolvedValueLabel = config.valueText ?? defaultValueLabel;
+  const valueLabel: Attributes = resolvedValueLabel ? { 'data-wavelo-value-text': resolvedValueLabel } : {};
   const html =
     `<span class="${escapeHtml(classes)}"${inline ? ` style="${escapeHtml(inline)}"` : ''}` +
     ` data-wavelo-motion="${escapeHtml(motion)}" data-wavelo-theme="${escapeHtml(config.theme)}"` +

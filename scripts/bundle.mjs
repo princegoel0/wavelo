@@ -46,8 +46,8 @@ const budgets = {
   // the motion tranche's three ring designs joined it too, 8,440 B after the ring slice
   // gained a clock dial, a masked gradient ring and a snake room, 8,300 B back down
   // again once the duplicated ring and bar designs were consolidated away, 8,336 B after
-  // the token-consensus fix, and 9,073 B as measured now that the 3D work has spread across
-  // the kinds. The saving
+  // the token-consensus fix, 9,073 B when the 3D work had spread across the kinds,
+  // and 12,310 B in the current 1.0.0 build. The saving
   // lands per page instead — a default loader now carries no `style` attribute at all,
   // where it used to carry about 180 bytes of tokens, and a loader with `loading: false`
   // carries nothing.

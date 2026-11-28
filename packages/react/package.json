@@ -1,6 +1,6 @@
 {
   "name": "@wavelo/react",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "React components for CSS loading spinners, skeletons and progress, with a React Server Component boundary built in",
   "type": "module",
   "license": "MIT",
@@ -31,11 +31,11 @@
     "typescript"
   ],
   "dependencies": {
-    "@wavelo/core": "0.7.0"
+    "@wavelo/core": "1.0.0"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react": ">=16.8.0 <20.0.0",
+    "react-dom": ">=16.8.0 <20.0.0"
   },
   "peerDependenciesMeta": {
     "react-dom": {

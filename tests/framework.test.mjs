@@ -8,7 +8,7 @@ import { renderToString } from 'vue/server-renderer';
 import '@angular/compiler';
 import { loaderAttributes, loaderConfigKeys, renderLoader } from '../packages/core/dist/index.js';
 import { Loader as ReactLoader, loaderFor as reactLoaderFor, renderReactLoader } from '../packages/react/dist/index.js';
-import { Loader as VueLoader, loaderFor as vueLoaderFor } from '../packages/vue/dist/index.js';
+import { Loader as VueLoader, loaderFor as vueLoaderFor, renderVueLoader } from '../packages/vue/dist/index.js';
 import { LoaderComponent } from '../packages/angular/dist/index.js';
 import { compile } from 'svelte/compiler';
 
@@ -23,6 +23,7 @@ test('React and Vue render the same nested brand configuration as core', async (
 
 const fullConfig = {
   type: 'progress-bar',
+  brand: { text: 'ACME', animation: 'none' },
   size: 48,
   width: 90,
   height: 12,
@@ -36,13 +37,18 @@ const fullConfig = {
   direction: 'reverse',
   paused: true,
   label: 'Working',
+  labelledBy: 'loader-label',
+  describedBy: 'loader-help',
   className: 'adapter-case',
   style: { '--wavelo-radius': '9px' },
   reducedMotion: 'never',
   'data-testid': 'adapter',
   value: 30,
+  valueText: '30 of 60',
   max: 60,
+  decorative: false,
   loading: true,
+  count: 3,
   inline: true,
   'data-analytics': 'adapter-section'
 };
@@ -60,6 +66,10 @@ const expectedMarkers = [
   '--wavelo-direction:reverse',
   '--wavelo-play-state:paused',
   'aria-label="Working"',
+  'aria-labelledby="loader-label"',
+  'aria-describedby="loader-help"',
+  'aria-valuetext="30 of 60"',
+  'data-wavelo-value-text="30 of 60"',
   'adapter-case',
   '--wavelo-radius:9px',
   'data-wavelo-motion="never"',
@@ -75,6 +85,29 @@ function assertCarriesEveryKey(html, adapter) {
     assert.ok(html.includes(marker), `${adapter} dropped ${marker}`);
   }
 }
+
+test('every adapter render helper preserves the full normalized configuration', async () => {
+  const expected = renderLoader(fullConfig).config;
+  const { renderAngularLoader } = await import('../packages/angular/dist/index.js');
+  const { renderSvelteLoader } = await import('../packages/svelte/dist/index.js');
+  for (const [name, result] of Object.entries({
+    react: renderReactLoader(fullConfig),
+    vue: renderVueLoader(fullConfig),
+    angular: renderAngularLoader(fullConfig),
+    svelte: renderSvelteLoader(fullConfig)
+  })) {
+    assert.deepEqual(result.config, expected, `${name} changed the full configuration surface`);
+  }
+});
+
+test('every adapter rejects reserved attributes and unknown JavaScript options', async () => {
+  const { renderAngularLoader } = await import('../packages/angular/dist/index.js');
+  const { renderSvelteLoader } = await import('../packages/svelte/dist/index.js');
+  for (const render of [renderReactLoader, renderVueLoader, renderAngularLoader, renderSvelteLoader]) {
+    assert.throws(() => render({ type: 'inline', 'data-wavelo-theme': 'dark' }), /reserved by Wavelo/);
+    assert.throws(() => render({ type: 'inline', colour: '#fff' }), /not a Wavelo option/);
+  }
+});
 
 test('React component renders every configuration key without inlining styles', () => {
   const html = renderToStaticMarkup(createElement(ReactLoader, fullConfig));
@@ -428,4 +461,9 @@ test('Vue useWaveloState and useWaveloProgress composables provide reactive stat
   progressMgr.reset(10);
   assert.equal(progressMgr.progress.value, 10);
   assert.equal(progressMgr.percent.value, '10%');
+
+  const serverProgress = useWaveloProgress({ autoStart: true, mode: 'linear', duration: 100 });
+  await new Promise((resolve) => setTimeout(resolve, 140));
+  assert.equal(serverProgress.progress.value, 0, 'autoStart must not create a timer during SSR');
+  serverProgress.pause();
 });
