@@ -1,4 +1,4 @@
-import type { LoaderConfig } from './types.js';
+import { LoaderConfigurationError, type LoaderConfig } from './types.js';
 
 /**
  * Every `LoaderConfig` key that a framework adapter must expose. Adding a key
@@ -80,7 +80,7 @@ function parseStyleAttribute(value: string): Record<string, string> {
 function coerce(key: string, value: string): unknown {
   if (key === 'brand') {
     try { return JSON.parse(value); }
-    catch { throw new Error('brand must be a valid JSON object.'); }
+    catch { throw new LoaderConfigurationError('brand must be a valid JSON object.'); }
   }
   if (key === 'style') return parseStyleAttribute(value);
   if (LENGTH_OR_NUMBER.has(key)) return /^\d+(?:\.\d+)?$/.test(value) ? Number(value) : value;

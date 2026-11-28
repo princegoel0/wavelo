@@ -7,7 +7,7 @@ import { stylesheetMarkup } from '@wavelo/core/styles';
 
 const brandPreviewScript = buildSync({ stdin: { contents: "import { renderLoader } from '@wavelo/core'; window.waveloBrand = renderLoader;", resolveDir: process.cwd() }, bundle: true, format: 'iife', minify: true, write: false }).outputFiles[0].text;
 
-const version = '0.7.0';
+const version = '1.0.0';
 
 const totalCount = loaderRegistry.length;
 const categoryCounts = loaderRegistry.reduce((acc, l) => {
@@ -1351,7 +1351,9 @@ function generateCodeSnippet(id, fw, values) {
   } else if (fw === 'vanilla') {
     snippet = "import { mountWavelo } from '@wavelo/vanilla';\\n\\nconst detach = mountWavelo(document.querySelector('#slot'), " + JSON.stringify(config, null, 2) + ");";
   } else {
-    snippet = "renderLoader(" + JSON.stringify(config, null, 2) + ")";
+    const camelId = id.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    const { type: _omitType, ...modularConfig } = config;
+    snippet = "// Runtime (any design by string ID):\\nimport { renderLoader } from '@wavelo/core';\\nrenderLoader(" + JSON.stringify(config, null, 2) + ")\\n\\n// Tree-shaken modular import (single stylesheet slice):\\nimport { " + camelId + " } from '@wavelo/core/loaders/" + id + "';\\n" + camelId + "(" + JSON.stringify(modularConfig, null, 2) + ")";
     if (id === 'constellation' && vSelect && vSelect.value !== 'ursa-major') {
       snippet += "\\n\\n// Or using the named preset shortcut:\\nrenderLoader({\\n  type: 'constellation-" + vSelect.value + "',\\n  size: " + values.size + ",\\n  color: '" + values.color + "'\\n})";
     }

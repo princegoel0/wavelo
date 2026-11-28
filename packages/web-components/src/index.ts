@@ -65,3 +65,9 @@ export function defineWaveloElements(): void {
 /** `WaveloElement` is the alias for `WaveloLoaderElement`. */
 export const WaveloElement = WaveloLoaderElement;
 export type WaveloElement = WaveloLoaderElement;
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'wavelo-loader': WaveloLoaderElement;
+  }
+}

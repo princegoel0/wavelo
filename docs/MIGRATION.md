@@ -5,7 +5,7 @@ design ids below all exist in the catalog — browse all 188 designs with their 
 in the gallery (`npm run docs:build`, then open `apps/docs/dist/index.html`) before
 choosing.
 
-## Unreleased API hardening
+## 1.0.0 API hardening
 
 - Unknown root keys now throw `LoaderConfigurationError`; remove misspellings such
   as `colour` instead of relying on them being ignored.

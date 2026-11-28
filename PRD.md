@@ -2225,9 +2225,8 @@ implementation ambiguities discovered during technical review:
 - The token surface consists of exactly 23 verified `--wavelo-*` properties declared in `WaveloTokens`.
 - Micro-interactions communicate state changes via `data-wavelo-state` across `'idle'`, `'loading'`, `'success'`, and `'error'`.
 - `LoaderDefinition.category` is strictly taxonomic metadata used by the documentation gallery filter and catalog organization. The runtime core, validators, and framework adapters never branch on or restrict configuration based on `category`.
-- Bundle budgets are release gates only after measuring packed artifacts. Initial
-  targets are 10 KB gzipped for the basic core runtime and 5 KB gzipped for an
-  individual loader entry.
+- Bundle budgets are release gates enforced by `npm run measure` (`scripts/bundle.mjs`) across
+  all 11 entry-point targets, with measured baselines tracked in [docs/BUNDLE_SIZE.md](docs/BUNDLE_SIZE.md).
 - Framework compatibility claims must name tested versions. A successful
   monorepo build alone does not establish framework, SSR, hydration or clean
   installation support.

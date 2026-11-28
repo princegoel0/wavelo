@@ -28,6 +28,11 @@ test('Angular TestBed renders, updates, and cleans up the standalone component',
   fixture.detectChanges();
   assert.match(fixture.nativeElement.innerHTML, /aria-valuenow="25"/);
 
+  fixture.nativeElement.setAttribute('data-wavelo-state', 'success');
+  fixture.componentRef.setInput('type', 'ring');
+  fixture.detectChanges();
+  assert.match(fixture.nativeElement.innerHTML, /data-wavelo-state="success"/);
+
   fixture.destroy();
   assert.equal(fixture.nativeElement.innerHTML, '');
 });

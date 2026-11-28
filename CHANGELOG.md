@@ -1,7 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.0.0
 
+- Patch `createRouteProgress` CSS progress tokens and `aria-valuenow` in place on
+  updates so transitions interpolate smoothly instead of replacing DOM nodes.
+- Add `@wavelo/core/styles.layer.css` (`@layer wavelo`) for Tailwind v4 / Cascade
+  Layers consumers, `HTMLElementTagNameMap` augmentation in `@wavelo/web-components`,
+  `./package.json` export parity across all seven packages, and Angular `data-*`
+  attribute observation.
 - Reject unknown root configuration keys instead of silently ignoring them, and
   reserve internal `data-wavelo-*` attributes while keeping `data-wavelo-state`
   and `data-wavelo-constellation` as the documented built-in controls.

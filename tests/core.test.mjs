@@ -806,3 +806,8 @@ test('WaveloCategories, WaveloTypes, and loaderIds are exported and complete', a
   assert.ok(WaveloTypes.includes('nebula-drift'));
 });
 
+test('configFromAttributes rejects invalid brand JSON with LoaderConfigurationError', async () => {
+  const { configFromAttributes, LoaderConfigurationError } = await import('../packages/core/dist/index.js');
+  assert.throws(() => configFromAttributes({ brand: '{not-json' }), LoaderConfigurationError);
+});
+

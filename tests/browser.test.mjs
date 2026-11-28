@@ -1591,21 +1591,23 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   const read = await page.evaluate(async () => {
     const { createRouteProgress } = window.Wavelo;
     const bar = createRouteProgress({}, { trickle: 20, ceiling: 90, hold: 60 });
-    const percent = () => Number.parseFloat((bar.element.querySelector('.wavelo').getAttribute('style') ?? '').match(/--wavelo-progress:([\d.]+)%/)?.[1] ?? -1);
+    const percent = () => Number.parseFloat((bar.element.querySelector('.wavelo').getAttribute('style') ?? '').match(/--wavelo-progress:\s*([\d.]+)%/)?.[1] ?? -1);
     const sheets = () => document.querySelectorAll('style[data-wavelo-style]').length;
 
     bar.start();
+    const initialNode = bar.element.querySelector('.wavelo');
     const start = {
       connected: bar.visible,
-      design: bar.element.querySelector('.wavelo').className,
+      design: initialNode.className,
       percent: percent(),
-      announced: bar.element.querySelector('.wavelo').getAttribute('aria-hidden'),
+      announced: initialNode.getAttribute('aria-hidden'),
       sheets: sheets()
     };
     await new Promise((resolveWait) => setTimeout(resolveWait, 150));
     const creeping = percent();
     bar.set(42);
     const pinned = percent();
+    const sameNode = bar.element.querySelector('.wavelo') === initialNode;
     bar.done();
     const filled = percent();
     const stillUp = bar.visible;
@@ -1629,7 +1631,7 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
       visible: hostile.visible
     };
     hostile.destroy();
-    return { start, creeping, pinned, filled, stillUp, after, role, valueAnnounced, owned };
+    return { start, creeping, pinned, sameNode, filled, stillUp, after, role, valueAnnounced, owned };
   });
   assert.equal(read.start.connected, true, 'start() puts the bar on the page');
   assert.match(read.start.design, /wavelo--progress-top/, 'the route bar is the top-of-page design');
@@ -1638,6 +1640,7 @@ test('the route progress bar creeps, takes a value, finishes and removes itself'
   assert.equal(read.start.sheets, 1, 'one slice, however many renders the bar makes');
   assert.ok(read.creeping > 0 && read.creeping < 90, `the bar should creep toward the ceiling, saw ${read.creeping}`);
   assert.equal(read.pinned, 42, 'a router that reports progress is believed');
+  assert.equal(read.sameNode, true, 'updating progress patches the mounted node in place so CSS transitions run');
   assert.equal(read.filled, 100);
   assert.equal(read.stillUp, true, 'the completed bar holds briefly');
   assert.equal(read.after.visible, false, 'then it is gone');

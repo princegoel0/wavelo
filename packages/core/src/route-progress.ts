@@ -58,6 +58,14 @@ export function createRouteProgress(config: RouteProgressConfig = {}, options: R
   let finishing: ReturnType<typeof setTimeout> | undefined;
 
   const render = (loading: boolean) => {
+    const root = element.firstElementChild as HTMLElement | null;
+    if (loading && root?.classList.contains('wavelo--progress-top')) {
+      const clamped = Math.max(0, Math.min(100, value));
+      root.style.setProperty('--wavelo-progress', `${clamped}%`);
+      root.style.setProperty('--wavelo-count', String(Math.round(clamped)));
+      if (root.hasAttribute('aria-valuenow')) root.setAttribute('aria-valuenow', String(clamped));
+      return;
+    }
     mountLoader(element, { ...config, type: 'progress-top', value, max: 100, loading });
   };
   const stop = () => {

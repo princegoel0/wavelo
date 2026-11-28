@@ -275,3 +275,26 @@ seven stars stacked at the box origin, so an unknown name renders `ursa-major`. 
 is the same whichever pattern is asked for — the patterns are rules in one slice, so a
 page mixing constellations injects the dots slice once.
 
+## Cascade Layers (`@wavelo/core/styles.layer.css`)
+
+For Tailwind CSS v4 or applications using CSS Cascade Layers, import the layered catalog stylesheet so unlayered consumer utilities always win regardless of import order:
+
+```css
+@layer theme, base, wavelo, components, utilities;
+@import '@wavelo/core/styles.layer.css';
+```
+
+## Accessible loading overlay container
+
+To cover a table, form, or card while refreshing without layout shift, mark the container `aria-busy` and render `overlay` inside a `position: relative` wrapper:
+
+```tsx
+<section aria-busy={busy} style={{ position: 'relative' }}>
+  <div inert={busy ? true : undefined}>
+    {/* table, card, or form content */}
+  </div>
+  <Loader type="overlay" loading={busy} label="Refreshing results" />
+</section>
+```
+
+

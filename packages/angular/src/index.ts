@@ -6,6 +6,7 @@ import {
   inject,
   OnChanges,
   OnDestroy,
+  OnInit,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
@@ -42,7 +43,7 @@ export const WAVELO_DEFAULTS = new InjectionToken<WaveloDefaults>('WAVELO_DEFAUL
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderComponent implements OnChanges, OnDestroy {
+export class LoaderComponent implements OnInit, OnChanges, OnDestroy {
   brand?: LoaderConfig['brand'];
   type?: string;
   size?: number | string;
@@ -75,8 +76,25 @@ export class LoaderComponent implements OnChanges, OnDestroy {
   private readonly element = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
   private readonly defaults = inject(WAVELO_DEFAULTS, { optional: true });
+  private observer: MutationObserver | null = null;
+  private initialized = false;
+
+  ngOnInit(): void {
+    if (!this.initialized) this.render();
+    if (typeof MutationObserver !== 'undefined' && !this.observer) {
+      this.observer = new MutationObserver((records) => {
+        if (records.some((record) => record.attributeName?.startsWith('data-'))) this.render();
+      });
+      this.observer.observe(this.element.nativeElement, { attributes: true });
+    }
+  }
 
   ngOnChanges(_changes: SimpleChanges): void {
+    this.render();
+  }
+
+  private render(): void {
+    this.initialized = true;
     const config: LoaderConfig = {
       brand: this.brand,
       type: this.type,
@@ -123,6 +141,8 @@ export class LoaderComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.observer?.disconnect();
+    this.observer = null;
     this.renderer.setProperty(this.element.nativeElement, 'innerHTML', '');
   }
 }
