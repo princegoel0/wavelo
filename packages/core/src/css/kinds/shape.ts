@@ -79,7 +79,7 @@ export const shapeCss = `
 .wavelo--sand-timer:before,.wavelo--sand-timer:after{content:"";position:absolute;inset:0;background:var(--wavelo-secondary-color,currentColor);animation-duration:calc(var(--wavelo-duration,1s) * 6);animation-timing-function:linear;animation-iteration-count:infinite;animation-direction:var(--wavelo-direction,normal);animation-play-state:var(--wavelo-play-state,running)}
 .wavelo--sand-timer:before{clip-path:polygon(14% 6%,86% 6%,52% 50%,48% 50%);transform-origin:50% 50%;animation-name:wavelo-sand-top}
 .wavelo--sand-timer:after{clip-path:polygon(48% 50%,52% 50%,86% 94%,14% 94%);transform-origin:50% 94%;animation-name:wavelo-sand-bottom}
-.wavelo--sand-timer .wavelo__part{display:block;position:absolute;left:calc(50% - 1px);top:48%;width:2px;height:44%;background:repeating-linear-gradient(180deg,var(--wavelo-secondary-color,currentColor) 0 4px,transparent 4px 7px);background-size:2px 14px;animation:wavelo-sand-stream .35s linear infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--sand-timer .wavelo__part{display:block;position:absolute;left:calc(50% - 1px);top:48%;width:2px;height:44%;background:repeating-linear-gradient(180deg,var(--wavelo-secondary-color,currentColor) 0 4px,transparent 4px 7px);transform-origin:50% 0;animation:wavelo-sand-stream .35s ease-in-out infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 /* An eye, not an ellipse. The opening is an almond with pointed corners and a
    translucent sclera; the iris is its own disc carrying a pupil and a catchlight, so it
    can glance aside while the lid is up. The lid is a panel parked above the opening and

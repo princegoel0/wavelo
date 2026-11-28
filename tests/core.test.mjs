@@ -95,10 +95,11 @@ test('every design is labelled with the dimension its own motion runs in', async
   }
   for (const loader of loaderRegistry) {
     assert.ok(['2d', '3d'].includes(loader.dimension), `${loader.id} has invalid dimension: ${loader.dimension}`);
-    // The design's own rules name the frames it animates with; a label is only worth
-    // having if it follows from them. A design that reaches 3D through a parent's
-    // transform-style would need a different rule, and none does today.
-    const rules = [...sheet.matchAll(new RegExp(`\\.wavelo--${loader.id}(?::[a-z-]+)?[^{]*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]).join(';');
+    // Animated depth frames and static perspective/axis transforms both describe a 3D
+    // render, so descendant rules count as well as the root's own animation names.
+    const rules = [...sheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter(([, selector]) => selector.includes(`.wavelo--${loader.id}`))
+      .map(([, , body]) => body).join(';');
     const animated = [...rules.matchAll(/animation(?:-name)?:\s*(?:var\([^)]*\)\s*,\s*)?([a-z][a-z0-9-]*)/g)]
       .map(([, name]) => name)
       .filter((name) => name.startsWith('wavelo-'));
@@ -106,7 +107,7 @@ test('every design is labelled with the dimension its own motion runs in', async
     assert.equal(loader.dimension, deep ? '3d' : '2d', `${loader.id} animates ${animated.join(', ')} → ${deep ? '3d' : '2d'}, labelled ${loader.dimension}`);
   }
   const labelled = loaderRegistry.filter((loader) => loader.dimension === '3d').map((loader) => loader.id).sort();
-  assert.deepEqual(labelled, ['atom-orbital', 'aurora-borealis', 'black-hole-accretion', 'coin-flip', 'crystal-cluster', 'cube', 'cylindrical-wave', 'dna-decode', 'dna-double-helix', 'ellipse', 'folding-squares', 'gyroscope', 'helix', 'hologram-pyramid', 'isometric-deck', 'liquid-mercury', 'magnetic-field', 'mobius-band', 'prism-refraction', 'quantum-superposition', 'rotating-square', 'sphere-lattice', 'tesseract', 'torus-ring', 'vortex-tunnel', 'voxel-cluster'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
+  assert.deepEqual(labelled, ['atom-orbital', 'aurora-borealis', 'black-hole-accretion', 'coin-flip', 'crystal-cluster', 'cube', 'cylindrical-wave', 'dna-decode', 'dna-double-helix', 'ellipse', 'folding-squares', 'gyroscope', 'helix', 'hologram-pyramid', 'isometric-deck', 'liquid-mercury', 'magnetic-field', 'mobius-band', 'prism-refraction', 'quantum-superposition', 'rotating-square', 'solar-system', 'sphere-lattice', 'tesseract', 'torus-ring', 'vortex-tunnel', 'voxel-cluster'], 'the 3D set changed; update the gallery filter copy and the PRD taxonomy note with it');
 });
 
 test('the generated ID list matches the catalog', async () => {
@@ -149,7 +150,8 @@ test('designs whose names promise a count render that many parts', () => {
     'thinking-glow': 1,
     'stream-cursor': 1,
     'comet-orbit': 1,
-    'ai-shimmer': 0,
+    'ai-shimmer': 3,
+    radar: 3,
     'skeleton-chat': 3,
     'skeleton-metric': 3,
     'progress-dots-fill': 5,

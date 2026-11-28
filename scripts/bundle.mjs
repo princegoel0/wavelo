@@ -47,7 +47,7 @@ const budgets = {
   // gained a clock dial, a masked gradient ring and a snake room, 8,300 B back down
   // again once the duplicated ring and bar designs were consolidated away, 8,336 B after
   // the token-consensus fix, 9,073 B when the 3D work had spread across the kinds,
-  // and 12,090 B in the current 1.0.0 build. The saving
+  // and 12,310 B in the current 1.0.0 build. The saving
   // lands per page instead — a default loader now carries no `style` attribute at all,
   // where it used to carry about 180 bytes of tokens, and a loader with `loading: false`
   // carries nothing.

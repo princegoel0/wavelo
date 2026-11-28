@@ -7,6 +7,13 @@
 - Keep the `brand-orbit` bead on its stationary pill track, default
   `progress-label-inline` to percentage text, and preserve `valueText: ''` as an
   explicit request to suppress that generated label.
+- Resolve every PRD visual "must fix": radar gains phosphor persistence and multiple
+  pings, dot-matrix ripples from its centre, alternating dots travel horizontally,
+  the solar system tilts in 3D, flames use a deep-orange-to-white gradient, sand has a
+  scaleY particle stream, AI shimmer uses three sequential lines, and neural-grid adds
+  twelve animated synapses.
+- Production-build all five maintained examples from packed local tarballs in CI and
+  release validation.
 - Add `@wavelo/core/styles.layer.css` (`@layer wavelo`) for Tailwind v4 / Cascade
   Layers consumers, `createStyleCollector` for request-scoped SSR slice collection,
   `@wavelo/web-components/register` auto-registration, `HTMLElementTagNameMap`

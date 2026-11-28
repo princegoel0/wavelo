@@ -48,7 +48,7 @@ export const barsCss = `
    that the row never beats together. */
 .wavelo--fire-rise{position:relative;width:var(--wavelo-width,var(--wavelo-size,2.75rem));height:var(--wavelo-height,var(--wavelo-size,2.75rem));margin:auto;align-items:flex-end;justify-content:center;gap:3.5px}
 .wavelo--fire-rise:before{content:"";position:absolute;bottom:0;left:10%;right:10%;height:3px;border-radius:9999px;background:radial-gradient(ellipse at center,#fde047 0%,var(--wavelo-secondary-color,#f97316) 65%,transparent 100%);box-shadow:0 0 12px var(--wavelo-secondary-color,#f97316),0 -2px 6px #ef4444;z-index:1}
-.wavelo--fire-rise .wavelo__part{transform-origin:50% 100%;border-radius:6px 6px 2px 2px;background:linear-gradient(to top,#ef4444 0%,var(--wavelo-secondary-color,#f97316) 40%,#fbbf24 75%,#ffffff 100%);filter:drop-shadow(0 -2px 6px rgba(249,115,22,.7));animation:wavelo-fire calc(var(--wavelo-duration,1s) * 1.1) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
+.wavelo--fire-rise .wavelo__part{transform-origin:50% 100%;border-radius:6px 6px 2px 2px;background:linear-gradient(to top,#c2410c 0%,var(--wavelo-secondary-color,#f97316) 40%,#fbbf24 75%,#ffffff 100%);filter:drop-shadow(0 -2px 6px rgba(249,115,22,.7));animation:wavelo-fire calc(var(--wavelo-duration,1s) * 1.1) var(--wavelo-ease,ease-out) infinite var(--wavelo-direction,normal) var(--wavelo-play-state,running)}
 .wavelo--fire-rise .wavelo__part:nth-child(1){width:5px;height:75%;animation-delay:calc(var(--wavelo-duration,1s) * -.75)}
 .wavelo--fire-rise .wavelo__part:nth-child(2){width:7px;height:90%;animation-delay:calc(var(--wavelo-duration,1s) * -.2)}
 .wavelo--fire-rise .wavelo__part:nth-child(3){width:8px;height:100%;animation-delay:0s}

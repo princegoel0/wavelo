@@ -71,16 +71,16 @@ Gzipped together, as shipped — every slice, cheapest first:
 
 | Kind | Bytes | Kind | Bytes |
 | --- | --- | --- | --- |
-| `overlay` | 1,942 | `orbit` | 5,951 |
+| `overlay` | 1,942 | `orbit` | 6,007 |
 | `scroll` | 2,407 | `wave` | 6,141 |
 | `pulse` | 3,613 | `progress` | 6,420 |
-| `bars` | 4,599 | `skeleton` | 6,894 |
-| `rings` | 4,616 | `dots` | 7,312 |
-| `ring` | 4,747 | `shape` | 8,924 |
+| `bars` | 4,603 | `skeleton` | 6,957 |
+| `rings` | 4,616 | `dots` | 7,599 |
+| `ring` | 4,813 | `shape` | 8,908 |
 
 The shared base — layout shell, reduced-motion, forced-colors, and theme rules, and the four keyframe
 blocks more than one kind animates with — is 1,516 bytes of every row above. The whole
-catalog sheet is 43,220 bytes gzipped, loaded once, for all 188 designs. Read down the
+catalog sheet is 43,693 bytes gzipped, loaded once, for all 188 designs. Read down the
 left column then down the right, and the table is cheapest first.
 
 A kind's cost is the thing to watch when the catalog grows: it is shared by every
@@ -102,12 +102,12 @@ change to the renderer, which every design imports, costs all of them: the deter
 path added 227 bytes to every single-design bundle.
 
 Importing one design's entry point costs the renderer, validation and that slice. Six
-current samples show the spread: `ring` 12,082 B, `helix` (`wave`) 13,673 B,
-`progress-battery` (`progress`) 13,717 B, `skeleton-card` (`skeleton`) 14,285 B,
-`bubble-rise` (`dots`) 14,833 B and `voxel-cluster` (`shape`) 16,545 B — the largest,
+current samples show the spread: `ring` 12,302 B, `helix` (`wave`) 13,822 B,
+`progress-battery` (`progress`) 13,871 B, `skeleton-card` (`skeleton`) 14,500 B,
+`bubble-rise` (`dots`) 15,282 B and `voxel-cluster` (`shape`) 16,678 B — the largest,
 because `shape` is the most crowded slice. `npm run measure` enforces 12,800 bytes for
 the sampled `ring` and 17,920 for the busiest kind. Importing `renderLoader`, which chooses
-by string at runtime, costs 59.7 KB (61,146 bytes) because it must be able to draw anything.
+by string at runtime, costs 60.4 KB (61,871 bytes) because it must be able to draw anything.
 See [BUNDLE_SIZE.md](BUNDLE_SIZE.md) for every entry point.
 
 ## Styles are injected once, not per loader

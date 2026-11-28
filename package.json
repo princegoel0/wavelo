@@ -19,6 +19,7 @@
     "verify:react": "node scripts/verify-react-entries.mjs",
     "verify:vue": "vue-tsc --noEmit -p tests/fixtures/vue-consumer/tsconfig.json",
     "verify:examples": "node scripts/verify-examples.mjs",
+    "verify:examples:build": "node scripts/verify-examples.mjs --build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test --test-concurrency=1 tests/core.test.mjs tests/framework.test.mjs tests/angular.test.mjs tests/angular-ssr.test.mjs",
     "catalog": "node scripts/validate-catalog.mjs",

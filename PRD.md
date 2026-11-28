@@ -222,7 +222,7 @@ Wavelo must maximize useful variety without creating a maintenance burden.
 
 The release target is:
 
-- At least 60 distinct animation designs (Current tree: **188 designs**, 188 active designs across 8 functional categories, including 26 authentic 3D designs).
+- At least 60 distinct animation designs (Current tree: **188 designs**, 188 active designs across 8 functional categories, including 27 authentic 3D designs).
 - At least 20 skeleton presets or primitives (Shipped: 28 skeleton designs).
 - At least 10 progress-indicator designs or variants (Shipped: 20 progress designs).
 - At least 10 application-level loading patterns (Shipped: 19 application designs).
@@ -474,8 +474,8 @@ In addition to functional UX categories, the catalog is classified across spatia
 
 ### 5.11.1 Spatial Dimensionality Taxonomy (2D & 3D Loaders)
 
-- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 162 of the 188 designs are 2D.
-- **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 26 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
+- **2D Loaders (`2d`):** Planar vector, CSS keyframes, clip-paths, borders, and 2D transforms (`translate`, `rotate`, `scaleX/scaleY`). 161 of the 188 designs are 2D.
+- **3D Loaders (`3d`):** Loaders whose own motion runs in depth — CSS 3D transforms (`rotateX`, `rotateY`, `translateZ`, `rotate3d`, `perspective`) — rather than imitating depth with a flat scale. 27 designs: `atom-orbital`, `aurora-borealis`, `black-hole-accretion`, `coin-flip`, `crystal-cluster`, `cube`, `cylindrical-wave`, `dna-decode`, `dna-double-helix`, `ellipse`, `folding-squares`, `gyroscope`, `helix`, `hologram-pyramid`, `isometric-deck`, `liquid-mercury`, `magnetic-field`, `mobius-band`, `prism-refraction`, `quantum-superposition`, `rotating-square`, `solar-system`, `sphere-lattice`, `tesseract`, `torus-ring`, `vortex-tunnel` and `voxel-cluster`. Optional future WebGL/Canvas rendering slices stay in this class.
 - **Dimensionality Requirements:**
   1. Every catalog entry must explicitly declare its dimensionality (`dimension: '2d' | '3d'`).
   2. The label is derived, not hand-asserted: a unit test reads each design's own rules and keyframes and requires the label to match the transforms they actually animate, and it pins the 3D set above so a new or re-labelled design fails until the gallery filter copy and this section follow. The list is alphabetical for exactly that reason — it can be diffed against the assertion in `tests/core.test.mjs`.
@@ -513,7 +513,7 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `snake` | 5-segment perimeter chase — excellent. | The head's two-dot "eyes" are tiny. Make them **flash/blink** using a micro-pulse animation so the snake reads as alive even at small sizes. | 🟢 |
 | `clock-spinner` | Dial face + two hands — good. | The four hour-markers are just gradient dots. Replace them with **actual tick marks** (short radial lines via `linear-gradient` at four corners) for authentic clock geometry. | 🟡 |
 | `monochrome` | Half-opaque conic gradient — too simple. | Transform into a **fluid mercury drop** — the dark half sweeps faster through the bottom half and slows at the top, simulating viscous fluid inertia. | 🟡 |
-| `radar` | Simple conic sweep. | 🔴 Most important upgrade. Needs **CRT phosphor decay** — the swept region leaves a decaying luminous afterglow trail. Currently reads as a plain spinner with a gradient. | 🔴 |
+| `radar` | ✅ Range rings, HUD crosshairs, a rotating phosphor-afterglow sweep and three staggered pings. | Resolved in v1.0.0; the swept trail fades through layered conic stops and each ping decays independently. | 🟢 |
 | `spiral` | Multi-arc conic — static. | The "spiral" should actually **tighten and loosen** — animate the conic stops so the arcs converge inward then expand outward, creating a breathing vortex. | 🟡 |
 | `svg-star` | Rotating star shape. | Add a **scale pulse** synced to the rotation so the star pulses large at 4 cardinal points and small at 45° — like a twinkling star with radial symmetry. | 🟡 |
 
@@ -527,9 +527,9 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `pulsing-dots` | Scale pulse in place. | Add **color depth** — each dot warms from `color` at its smallest to `secondaryColor` at its largest, making the pulse feel like a heartbeat rather than just scaling. | 🟢 |
 | `fading-dots` | Opacity wave. | Combine opacity fade with a **micro-scale reduction** — dots should shrink by 15% as they fade, like particles dissolving rather than just dimming. | 🟢 |
 | `dot-wave` | 5 circular dots undulating — good. | Add **depth shading** — the dot at the crest of the sine wave (at peak height) lightens to `secondaryColor`, the dot at the trough darkens. Creates an illusion of a physical wave catching light. | 🟡 |
-| `dot-matrix` | Uniform grid pulse. | Implement a **ripple origin** — pulses radiate outward from the center of the grid in expanding concentric rings, like a stone dropped in water. Currently all nodes pulse identically. | 🔴 |
+| `dot-matrix` | ✅ Nine nodes with centre-origin node pulses and expanding fading ripple rings. | Resolved in v1.0.0; centre, edge and corner phases propagate outward. | 🟢 |
 | `grid-pulse` | Similar to dot-matrix. | Differentiate: make this a **scanning line** — a bright horizontal row sweeps from top to bottom through the matrix (like a progress scanner). Makes it distinct from dot-matrix. | 🟡 |
-| `alternating-dots` | Odd/even dots counter-phase. | Add **horizontal travel** — the dots should physically move apart and together, not just change in opacity/scale. The "alternating" motion should be spatial, not just chromatic. | 🔴 |
+| `alternating-dots` | ✅ Odd/even groups translate apart and together horizontally in counter-phase. | Resolved in v1.0.0; measured inter-group separation grows and contracts. | 🟢 |
 | `expanding-dot` | Single dot expanding. | Add **concentric ring echoes** — as the dot expands, it leaves a fading ring at each pulse peak, like sonar echoes. Currently just a single scale animation. | 🟡 |
 | `ripple-dot` | ✅ Already good. | Ensure the ring echoes **stagger** rather than all emanating simultaneously — sequential launch creates a more naturalistic water-drop feel. | 🟢 |
 | `staggered-dots` | ✅ Good phase stagger. | Add a **color cascade** — each dot progressively shifts hue across the group (`color-mix` interpolation) so the wave isn't just kinetic but chromatic. | 🟢 |
@@ -538,7 +538,7 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `constellation` | Star patterns + lines — excellent. | The connecting lines should **animate sequentially** — drawing themselves link by link rather than appearing all at once, like a starmap being traced. | 🟡 |
 | `bubble-rise` | 8 buoyant bubbles — great. | Bubbles should **accelerate toward the top** (realistic buoyancy physics: slower at the bottom, faster at the surface). Currently they use linear timing. | 🟡 |
 | `fireflies` | 10 bioluminescent motes. | Add **pulse synchronization events** — occasionally (every 3s) 3-4 fireflies should flare simultaneously before diverging, like real Photinus pyralis synchronous flashing. | 🟢 |
-| `solar-system` | 5 planets orbiting flat. | 🔴 The orbital plane should be **tilted at 60°** in 3D space. Currently purely flat 2D. Add Keplerian speed variation (faster closer, slower farther). See §5.11.2 spec. | 🔴 |
+| `solar-system` | ✅ Radiant Sun, five planets and a perspectival orbital plane animated around a 60° tilt. | Resolved in v1.0.0; the five periods increase monotonically outward. | 🟢 |
 | `rotating-dots` | 5 dots orbiting in formation. | Add **size depth perspective** — dots at the bottom of the orbit (notionally "closer") are larger; dots at the top are smaller. Creates illusion of a circular 3D orbit. | 🟡 |
 
 ---
@@ -553,7 +553,7 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `growing-bars` | Sequential bar growth. | Add a **spring overshoot** on the max-height arrival — the bar overshoots 15% then snaps back. One `cubic-bezier(0.34, 1.56, 0.64, 1)` timing on scaleY achieves this. | 🟢 |
 | `alternating-bars` | Every-other bar counter-phase. | Make bars **cross the center line** — instead of `scaleY(0.2)` at minimum, they compress and immediately flip to grow from the opposite side. Like an audio peak-flip visualization. | 🟡 |
 | `piano-keys` | Keys pressing down. | Add **individual key release spring** — after each key presses (scaleY shrinks), it bounces back with a slight overshoot before settling. Real piano keys do this. | 🟡 |
-| `fire-rise` | Flame bars rising. | Add a **color gradient from base to tip**: each bar grades from deep orange at the base to pale yellow/white at the top, using `linear-gradient` on `scaleY` — matches real flame thermodynamics. | 🔴 |
+| `fire-rise` | ✅ Five flames rise, stretch and burn out from deep-orange bases through yellow to white tips. | Resolved in v1.0.0; the gradient and bottom transform origin match the named behavior. | 🟢 |
 | `heartbeat` | Clinical ECG waveform — excellent. | Add a **scanning cursor line** — a faint vertical line sweeps left-to-right across the monitor width in sync with the waveform, like a real oscilloscope CRT beam. | 🟡 |
 | `breathing` | Slow scale oscillation. | The breathing should follow the **human respiratory curve**: rapid sharp inhalation, long plateau hold, controlled slow exhalation. Currently uniform sinusoidal which feels robotic. | 🟡 |
 | `moving-stripe` | Diagonal stripe translation. | Add **depth chevron** — alternate strips in slightly different shades (alternating `color` / `color-mix(color 80%, white)`) for a 3D depth-banding optical illusion. | 🟢 |
@@ -579,11 +579,11 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `concentric-pulse` | Pulsing rings. | The rings should pulse **in sequence inward** (outermost pulses first, then the inner rings cascade inward one by one), like a radar ping propagating inward. | 🟡 |
 | `trip-orbit` | 3 arc spinners on one ring. | Give each arc a **unique color** (`color`, `secondaryColor`, and an auto-derived third via `hue-rotate(120deg)`) — three-arc RGB triad is visually stunning. | 🟡 |
 | `liquid-blob` | Organic squircle morphing. | Add a **surface tension ripple** — when the blob transitions between two corner-radius states, a tiny circular ripple pulse (`:before` pseudo) emanates from the morph pivot point. | 🟢 |
-| `sand-timer` | Glass silhouette with animated sand. | 🔴 Add **particle stream** — the sand between upper and lower chambers should appear as a thin animated stream (1-2px column animated via `scaleY`) rather than just the chambers scaling. | 🔴 |
+| `sand-timer` | ✅ Glass chambers drain and fill around a visible 2px particle stream. | Resolved in v1.0.0; the stream animates with scaleY while the timer retains its 180° turnover. | 🟢 |
 | `eye-blink` | Almond eye with iris and lid. | Add **micro-saccade** — the iris should drift slightly left/right (small `translateX` motion) between blinks, like an eye glancing around rather than staring straight ahead. | 🟡 |
 | `metronome` | Swinging arm. | Add a **tick sound visualization** — at the extreme left and right swing positions, a brief bright flash (opacity spike on the arm) to represent the audible "tick" of a real metronome. | 🟢 |
 | `spiral` | Multi-band conic gradient. | The arms should **tighten inward** over time (like a contracting galaxy) before snapping back out — periodic tighten/release cycle rather than continuous uniform spin. | 🟡 |
-| `radar` | Simple conic sweep. | 🔴 Full redesign per §5.11.2 — concentric range rings, HUD crosshairs, phosphor persistence trail, acoustic ping blips. The current design is misleadingly simple for its name. | 🔴 |
+| `radar` | ✅ Concentric range rings, HUD crosshairs, phosphor persistence and staggered ping blips. | Resolved in v1.0.0; browser regressions assert the sweep, ping decay and layered geometry. | 🟢 |
 | `particle-orbit` | Small dots on orbital paths. | Give particles **size variation by orbital position** — particles appear larger at orbital perigee (closest approach to the center) and smaller at apogee, like Keplerian objects. | 🟡 |
 
 ---
@@ -633,8 +633,8 @@ A thorough UX, visual, and kinesthetic audit across the active catalog identifie
 | `thinking-glow` | Breathing orb with halo. | Add a **second pulsing halo ring** that breathes at a lower, slower frequency — the two desynchronized breathing rings create a meditative, alive quality. | 🟡 |
 | `stream-cursor` | Blinking block cursor. | Add **insertion-point flicker** — the cursor doesn't uniformly blink but occasionally flickers (shorter dark intervals) like a real terminal cursor in a live environment. | 🟢 |
 | `token-stream` | Left-to-right dash flow. | Add **variable dash velocity** — dashes should accelerate and decelerate in bursts to match real LLM token generation patterns (tokens arrive in irregular rhythm, not uniform flow). | 🟡 |
-| `ai-shimmer` | Tall card swept by light. | Add **multi-line shimmer stagger** — the bright band should sweep the first line, then the second line with a delay, then the third, simulating actual line-by-line text streaming. | 🔴 |
-| `neural-grid` | 3x3 grid diagonal pulse. | 🔴 Upgrade to **directional wave propagation** — pulses should travel along distinct paths (not just diagonal) with animated connecting "synapse" lines briefly lighting between adjacent nodes. | 🔴 |
+| `ai-shimmer` | ✅ A rounded response card with three text lines shimmering in sequence. | Resolved in v1.0.0; ordered delays simulate line-by-line token arrival. | 🟢 |
+| `neural-grid` | ✅ Nine nodes carry directional waves through twelve briefly illuminated synapses. | Resolved in v1.0.0; horizontal and vertical links draw and fade on staggered phases. | 🟢 |
 
 ---
 
@@ -1617,8 +1617,8 @@ Initial proposed targets:
 These are initial targets, not guaranteed measurements.
 
 > **How they turned out.** The budgets `scripts/bundle.mjs` enforces today are 12,800 B for a
-> single design chosen at build time (measured 12,090 B gzipped), 17,920 B for the busiest
-> kind, and 67,584 B for the runtime renderer (measured 61,146 B; Angular's ceiling is
+> single design chosen at build time (measured 12,310 B gzipped), 17,920 B for the busiest
+> kind, and 67,584 B for the runtime renderer (measured 61,871 B; Angular's ceiling is
 > 68,096 B). The 5 KB loader target is met at the small end of the catalog
 > and missed by designs that share a crowded render kind, because a design imports its whole
 > kind's rules; the 10 KB core target is missed by design — a runtime-selected renderer has to
@@ -1785,9 +1785,9 @@ A successful monorepo build alone is insufficient evidence that the published pa
 A release candidate must pass:
 
 - Linting and strict TypeScript type checking (`tsc --noEmit`).
-- Unit and framework adapter test suites (52 tests).
-- Cross-browser test suites (Chromium 37 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
-- Layout recalculation profiler (`npm run audit:layout` — 151/153 zero-layout).
+- Unit and framework adapter test suites (69 tests).
+- Cross-browser test suites (Chromium 47 tests, Gecko smoke 6 tests, WebKit smoke 7 tests).
+- Layout recalculation profiler (`npm run audit:layout` — 187/188 zero-layout).
 - Visual correctness audit (`npm run audit:visual:correctness`).
 - Measured options customization verification (`npm run audit:customization`).
 - Catalog drift validation (`npm run catalog`).

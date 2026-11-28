@@ -15,6 +15,8 @@ not happen without explicit approval.
 npm ci
 npm run build                  # core, generated catalog entry points, every adapter
 npm run check                  # typecheck · 69 unit and adapter tests · verify:angular · verify:react · verify:vue · verify:examples · catalog drift · packages:check · docs:check · bundle budgets
+npm run verify:examples         # imports, Svelte/Vue compilation, Angular compiler, React types
+npm run verify:examples:build   # all five examples installed from packed tarballs and production-built
 npm run test:browser           # Chromium: computed styles, style injection, slice isolation, axe
 npm run test:browser:firefox   # Gecko smoke suite
 npm run test:browser:webkit    # WebKit smoke suite
@@ -27,9 +29,9 @@ npm run pack:verify            # the seven installed into a clean consumer proje
 npm run release:validate       # one version across the seven, and not already on npm
 ```
 
-The `verify` CI job runs `npm run check`; `verify-browser` runs the Chromium,
-Firefox and WebKit suites plus customization and layout audits. The `Validate release`
-job repeats the broader sequence above, including documentation, visual-correctness,
+The `verify` CI job runs `npm run check` and the five packed consumer production builds;
+`verify-browser` runs the Chromium, Firefox and WebKit suites plus customization and layout
+audits. The `Validate release` job repeats the broader sequence above, including documentation, visual-correctness,
 tarball and packed-consumer checks. `release:validate` runs there only when
 `RELEASE_ENABLED` is true. Nothing in CI publishes from a pull request: the publish job
 needs `RELEASE_ENABLED`, the `main` ref, and your approval of the `npm` environment
@@ -83,7 +85,7 @@ workspace, not a restructure. `npm install @wavelo/core` and
 - every package publishes its own tarball from `dist`, `README.md` and `LICENSE`, with
   `"access": "public"` under one `@wavelo` scope;
 - each package ships its own stylesheet — a consumer that never imports the new family
-  never downloads its rules, and the loaders' 43,220 B gzipped catalog sheet does not grow;
+  never downloads its rules, and the loaders' 43,693 B gzipped catalog sheet does not grow;
 - framework packages declare their framework as a peer and bundle none of it, and the
   core has no runtime dependency, so a second family cannot drag a first one's weight in;
 - design ids are per registry, so a `bar` in a chart catalog is not the `bar` loader.

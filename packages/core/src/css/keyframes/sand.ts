@@ -1,1 +1,1 @@
-export const css = `@keyframes wavelo-sand{0%,75%{transform:rotate(0deg)}90%,100%{transform:rotate(180deg)}}@keyframes wavelo-sand-stream{from{background-position:0 0}to{background-position:0 14px}}`;
+export const css = `@keyframes wavelo-sand{0%,75%{transform:rotate(0deg)}90%,100%{transform:rotate(180deg)}}@keyframes wavelo-sand-stream{0%,100%{transform:scaleY(.2);opacity:.2}50%{transform:scaleY(1);opacity:1}}`;
