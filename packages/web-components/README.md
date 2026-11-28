@@ -10,6 +10,11 @@ then use it in markup.
   defineWaveloElements();
 </script>
 
+<!-- Or auto-register in one import (safe no-op during SSR): -->
+<script type="module">
+  import '@wavelo/web-components/register';
+</script>
+
 <wavelo-loader type="ring" label="Loading data" stroke-width="5" paused></wavelo-loader>
 ```
 

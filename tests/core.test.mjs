@@ -811,3 +811,17 @@ test('configFromAttributes rejects invalid brand JSON with LoaderConfigurationEr
   assert.throws(() => configFromAttributes({ brand: '{not-json' }), LoaderConfigurationError);
 });
 
+test('createStyleCollector deduplicates rendered slices for SSR head injection', async () => {
+  const { createStyleCollector, renderLoader } = await import('../packages/core/dist/index.js');
+  const collector = createStyleCollector({ nonce: 'ssr-nonce' });
+  collector.add(renderLoader({ type: 'ring' }));
+  collector.add(renderLoader({ type: 'dual-ring' }));
+  collector.add(renderLoader({ type: 'skeleton-card' }));
+  assert.equal(collector.styles().length, 2);
+  const head = collector.markup();
+  assert.equal(head.match(/<style /g)?.length, 2);
+  assert.ok(head.includes('nonce="ssr-nonce"'));
+  collector.clear();
+  assert.equal(collector.styles().length, 0);
+});
+

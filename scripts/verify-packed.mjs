@@ -133,6 +133,9 @@ const sheet = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/
 assert.ok(sheet.includes('.wavelo--ring') && sheet.includes('.wavelo--skeleton-card'), 'the shipped sheet is missing designs');
 assert.ok(sheet.includes('prefers-reduced-motion'), 'the shipped sheet lost the reduced-motion rules');
 
+const layeredSheet = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/styles.layer.css'), 'utf8');
+assert.ok(layeredSheet.includes('@layer wavelo') && layeredSheet.includes('.wavelo--ring'), 'the layered sheet is missing @layer wavelo');
+
 const tokens = readFileSync(createRequire(import.meta.url).resolve('@wavelo/core/tokens.css'), 'utf8');
 assert.ok(tokens.includes(':root{') && tokens.includes('--wavelo-color:'), 'the tokens sheet does not declare the defaults');
 assert.ok(!tokens.includes('--wavelo-radius:'), 'tokens.css declares a property the designs do not agree on');
@@ -146,6 +149,7 @@ const bar = vanilla.createRouteProgress();
 assert.equal(bar.element, null, 'the route bar created an element on a server');
 assert.doesNotThrow(() => { bar.start(); bar.set(40); bar.done(); bar.destroy(); });
 await import('@wavelo/web-components');
+await import('@wavelo/web-components/register');
 
 // The React package is split by boundary: the entry that renders on a server must
 // declare no client boundary, and the one that injects styles must. Read the

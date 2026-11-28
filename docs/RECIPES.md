@@ -297,4 +297,77 @@ To cover a table, form, or card while refreshing without layout shift, mark the 
 </section>
 ```
 
+## Request-scoped SSR slice collector (`createStyleCollector`)
+
+Instead of shipping the entire catalog stylesheet, collect only the slices rendered during a request:
+
+```ts
+import { createStyleCollector, renderLoader } from '@wavelo/core';
+
+const styles = createStyleCollector({ nonce });
+const spinner = renderLoader({ type: 'ring', label: 'Loading' });
+styles.add(spinner);
+
+const headMarkup = styles.markup(); // deduplicated <style> tags for the slices rendered
+```
+
+## Router & data-fetching recipes
+
+### Next.js App Router (`createRouteProgress`)
+
+```tsx
+'use client';
+import { useEffect, useRef } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { createRouteProgress } from '@wavelo/core';
+
+export function RouteProgressBar() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const bar = useRef(createRouteProgress({ color: '#6366f1' }));
+
+  useEffect(() => {
+    bar.current.done();
+    return () => bar.current.start();
+  }, [pathname, searchParams]);
+
+  return null;
+}
+```
+
+### Vue Router / SvelteKit / Angular Router
+
+```ts
+// Vue Router
+const bar = createRouteProgress();
+router.beforeEach(() => bar.start());
+router.afterEach(() => bar.done());
+```
+
+```ts
+// Angular Router
+router.events.subscribe((event) => {
+  if (event instanceof NavigationStart) bar.start();
+  if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) bar.done();
+});
+```
+
+### React `<Suspense>` & TanStack Query
+
+```tsx
+<Suspense fallback={<Loader type="skeleton-card" count={3} />}>
+  <Dashboard />
+</Suspense>
+
+// TanStack Query: skeleton on first load, overlay scrim on background refetch
+if (isPending) return <Loader type="skeleton-table" count={5} />;
+return (
+  <div aria-busy={isFetching} style={{ position: 'relative' }}>
+    <DataTable data={data} />
+    <Loader type="overlay" loading={isFetching} label="Updating rows" />
+  </div>
+);
+```
+
+
 

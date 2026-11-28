@@ -5,9 +5,10 @@
 - Patch `createRouteProgress` CSS progress tokens and `aria-valuenow` in place on
   updates so transitions interpolate smoothly instead of replacing DOM nodes.
 - Add `@wavelo/core/styles.layer.css` (`@layer wavelo`) for Tailwind v4 / Cascade
-  Layers consumers, `HTMLElementTagNameMap` augmentation in `@wavelo/web-components`,
-  `./package.json` export parity across all seven packages, and Angular `data-*`
-  attribute observation.
+  Layers consumers, `createStyleCollector` for request-scoped SSR slice collection,
+  `@wavelo/web-components/register` auto-registration, `HTMLElementTagNameMap`
+  augmentation, `./package.json` export parity across all seven packages, Angular
+  `data-*` attribute observation, and router/data-fetching recipes.
 - Reject unknown root configuration keys instead of silently ignoring them, and
   reserve internal `data-wavelo-*` attributes while keeping `data-wavelo-state`
   and `data-wavelo-constellation` as the documented built-in controls.
