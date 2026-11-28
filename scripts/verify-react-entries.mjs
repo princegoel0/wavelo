@@ -52,6 +52,7 @@ const source = {
 
 for (const file of ['dist/client.js', 'dist/hooks.js']) {
   check(hasDirective(source[file]), `${file} declares no client boundary, so a Server Component importing it renders nothing usable`);
+  check(!/\bexport\s*\*/.test(source[file]), `${file} uses "export *", which Next.js App Router rejects in client boundaries`);
 }
 for (const file of ['dist/index.js', 'dist/server.js']) {
   check(!hasDirective(source[file]), `${file} declares a client boundary, so calling its server-side export from a Server Component throws`);

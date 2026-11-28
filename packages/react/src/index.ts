@@ -5,5 +5,12 @@
 // across the boundary.
 export { Loader, Wavelo, loaderFor, useWaveloDefaults, WaveloProvider } from './client.js';
 export { renderReactLoader } from './server.js';
-export * from './hooks.js';
+export { useWaveloState, useWaveloProgress } from './hooks.js';
+export type {
+  WaveloState,
+  UseWaveloStateOptions,
+  UseWaveloStateReturn,
+  UseWaveloProgressOptions,
+  UseWaveloProgressReturn
+} from './hooks.js';
 export type { WaveloProps, WaveloProviderProps } from './types.js';

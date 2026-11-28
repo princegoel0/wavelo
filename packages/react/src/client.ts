@@ -65,4 +65,11 @@ export function loaderFor(type: string, defaults: WaveloDefaults = {}): FC<Wavel
   return component;
 }
 
-export * from './hooks.js';
+export { useWaveloState, useWaveloProgress } from './hooks.js';
+export type {
+  WaveloState,
+  UseWaveloStateOptions,
+  UseWaveloStateReturn,
+  UseWaveloProgressOptions,
+  UseWaveloProgressReturn
+} from './hooks.js';
