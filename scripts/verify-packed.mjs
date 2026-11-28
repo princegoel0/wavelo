@@ -212,10 +212,11 @@ const check = (label, action) => {
 check('the packed core, vanilla, web-components and React entries render and stay inert without a DOM', () => node(['check.mjs'], consumer));
 check('the packed web-components registration entry survives tree shaking', () => {
   writeFileSync(resolve(consumer, 'register-consumer.js'), `import '@wavelo/web-components/register'; console.log('consumer');`);
-  node(
-    [resolve(root, 'node_modules/esbuild/bin/esbuild'), 'register-consumer.js', '--bundle', '--platform=browser', '--format=esm', '--outfile=dist/register-consumer.js'],
-    consumer
-  );
+  const esbuild = resolve(root, 'node_modules/esbuild/bin/esbuild');
+  const args = ['register-consumer.js', '--bundle', '--platform=browser', '--format=esm', '--outfile=dist/register-consumer.js'];
+  // The root package installs a native executable on Unix and a JavaScript shim on Windows.
+  if (isWindows) node([esbuild, ...args], consumer);
+  else execFileSync(esbuild, args, { cwd: consumer, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   const output = readFileSync(resolve(consumer, 'dist/register-consumer.js'), 'utf8');
   assert.ok(output.includes('customElements') && output.includes('wavelo-loader'), 'bundling removed the custom-element registration');
 });
